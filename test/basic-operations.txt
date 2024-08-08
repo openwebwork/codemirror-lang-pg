@@ -1,0 +1,180 @@
+# arithmetic operations
+
+1 + 2 + 3;
+1 - 2 - 3;
+1 * 2 * 3;
+1 / 2 / 3;
+1 % 2 % 4;
+1 ** 2 ** 3;
+(0) x 3;
+1 + 2 * 3;
+5 - 4 / 2;
++5;
+-6;
+!0;
+++$var;
+--$var;
+$var++;
+$var--;
+
+==>
+
+Program(
+    ExpressionStatement(BinaryExpression(BinaryExpression(Integer, ArithOp, Integer), ArithOp, Integer), ";"),
+    ExpressionStatement(BinaryExpression(BinaryExpression(Integer, ArithOp, Integer), ArithOp, Integer), ";"),
+    ExpressionStatement(BinaryExpression(BinaryExpression(Integer, ArithOp, Integer), ArithOp, Integer), ";"),
+    ExpressionStatement(BinaryExpression(BinaryExpression(Integer, "/", Integer), "/", Integer), ";"),
+    ExpressionStatement(BinaryExpression(BinaryExpression(Integer, "%", Integer), "%", Integer), ";"),
+    ExpressionStatement(BinaryExpression(Integer, ArithOp, BinaryExpression(Integer, ArithOp, Integer)), ";"),
+    ExpressionStatement(BinaryExpression(List("(", Integer, ")"), x, Integer), ";"),
+    ExpressionStatement(BinaryExpression(Integer, ArithOp, BinaryExpression(Integer, ArithOp, Integer)), ";"),
+    ExpressionStatement(BinaryExpression(Integer, ArithOp, BinaryExpression(Integer, "/", Integer)), ";"),
+    ExpressionStatement(UnaryExpression(ArithOp, Integer), ";"),
+    ExpressionStatement(UnaryExpression(ArithOp, Integer), ";"),
+    ExpressionStatement(UnaryExpression(LogicOp, Integer), ";"),
+    ExpressionStatement(UpdateExpression(ArithOp, ScalarVariable), ";"),
+    ExpressionStatement(UpdateExpression(ArithOp, ScalarVariable), ";"),
+    ExpressionStatement(UpdateExpression(ScalarVariable, ArithOp), ";"),
+    ExpressionStatement(UpdateExpression(ScalarVariable, ArithOp), ";")
+)
+
+# comparison operations
+
+1 < 1;
+1 > 2;
+1 <= 2;
+1 >= 2;
+'a' lt 'b';
+'a' gt 'b';
+'a' le 'b';
+1 == 2;
+1 <=> 2;
+1 != 2;
+'a' eq 'b';
+'a' ne 'b';
+'a' cmp 'b';
+
+==>
+
+Program(
+    ExpressionStatement(BinaryExpression(Integer, CompareOp, Integer), ";"),
+    ExpressionStatement(BinaryExpression(Integer, CompareOp, Integer), ";"),
+    ExpressionStatement(BinaryExpression(Integer, CompareOp, Integer), ";"),
+    ExpressionStatement(BinaryExpression(Integer, CompareOp, Integer), ";"),
+    ExpressionStatement(BinaryExpression(StringSingleQuoted, lt, StringSingleQuoted), ";"),
+    ExpressionStatement(BinaryExpression(StringSingleQuoted, gt, StringSingleQuoted), ";"),
+    ExpressionStatement(BinaryExpression(StringSingleQuoted, le, StringSingleQuoted), ";"),
+    ExpressionStatement(BinaryExpression(Integer, CompareOp, Integer), ";"),
+    ExpressionStatement(BinaryExpression(Integer, CompareOp, Integer), ";"),
+    ExpressionStatement(BinaryExpression(Integer, CompareOp, Integer), ";"),
+    ExpressionStatement(BinaryExpression(StringSingleQuoted, eq, StringSingleQuoted), ";"),
+    ExpressionStatement(BinaryExpression(StringSingleQuoted, ne, StringSingleQuoted), ";"),
+    ExpressionStatement(BinaryExpression(StringSingleQuoted, cmp, StringSingleQuoted), ";")
+)
+
+# logic operations
+
+$a && $b;
+$a || $b;
+$a // $b;
+$a && $b || $c;
+$a || $b && $c;
+$a // $b && $c;
+$a && $b // $c;
+$a || $b || $c;
+$a && $b && $c;
+$a and $b;
+$a or $b;
+$a xor $b;
+$a and $b or $c;
+$a or $b and $d;
+$a and $b xor $c;
+$a xor $b and $d;
+$a and $b and $c;
+$a or $b or $c;
+
+==>
+
+Program(
+    ExpressionStatement(BinaryExpression(ScalarVariable, LogicOp, ScalarVariable), ";"),
+    ExpressionStatement(BinaryExpression(ScalarVariable, LogicOp, ScalarVariable), ";"),
+    ExpressionStatement(BinaryExpression(ScalarVariable, LogicOp, ScalarVariable), ";"),
+    ExpressionStatement(
+        BinaryExpression(BinaryExpression(ScalarVariable, LogicOp, ScalarVariable), LogicOp, ScalarVariable),
+        ";"
+    ),
+    ExpressionStatement(
+        BinaryExpression(ScalarVariable, LogicOp, BinaryExpression(ScalarVariable, LogicOp, ScalarVariable)),
+        ";"
+    ),
+    ExpressionStatement(
+        BinaryExpression(ScalarVariable, LogicOp, BinaryExpression(ScalarVariable, LogicOp, ScalarVariable)),
+        ";"
+    ),
+    ExpressionStatement(
+        BinaryExpression(BinaryExpression(ScalarVariable, LogicOp, ScalarVariable), LogicOp, ScalarVariable),
+        ";"
+    ),
+    ExpressionStatement(
+        BinaryExpression(BinaryExpression(ScalarVariable, LogicOp, ScalarVariable), LogicOp, ScalarVariable),
+        ";"
+    ),
+    ExpressionStatement(
+        BinaryExpression(BinaryExpression(ScalarVariable, LogicOp, ScalarVariable), LogicOp, ScalarVariable),
+        ";"
+    ),
+    ExpressionStatement(BinaryExpression(ScalarVariable, and, ScalarVariable), ";"),
+    ExpressionStatement(BinaryExpression(ScalarVariable, or, ScalarVariable), ";"),
+    ExpressionStatement(BinaryExpression(ScalarVariable, xor, ScalarVariable), ";"),
+    ExpressionStatement(
+        BinaryExpression(BinaryExpression(ScalarVariable, and, ScalarVariable), or, ScalarVariable),
+        ";"
+    ),
+    ExpressionStatement(
+        BinaryExpression(ScalarVariable, or, BinaryExpression(ScalarVariable, and, ScalarVariable)),
+        ";"
+    ),
+    ExpressionStatement(
+        BinaryExpression(BinaryExpression(ScalarVariable, and, ScalarVariable), xor, ScalarVariable),
+        ";"
+    ),
+    ExpressionStatement(
+        BinaryExpression(ScalarVariable, xor, BinaryExpression(ScalarVariable, and, ScalarVariable)),
+        ";"
+    ),
+    ExpressionStatement(
+        BinaryExpression(BinaryExpression(ScalarVariable, and, ScalarVariable), and, ScalarVariable),
+        ";"
+    ),
+    ExpressionStatement(BinaryExpression(BinaryExpression(ScalarVariable, or, ScalarVariable), or, ScalarVariable), ";")
+)
+
+# bitwise operations
+
+1 | 2;
+1 & 2;
+1 ^ 2;
+1 >> 2;
+1 << 2;
+1 & 2 | 3;
+1 | 2 & 3;
+1 & 2 ^ 3;
+1 ^ 2 & 3;
+1 | 2 ^ 3;
+1 ^ 2 | 3;
+
+==>
+
+Program(
+    ExpressionStatement(BinaryExpression(Integer, BitOp, Integer), ";"),
+    ExpressionStatement(BinaryExpression(Integer, BitOp("&"), Integer), ";"),
+    ExpressionStatement(BinaryExpression(Integer, BitOp, Integer), ";"),
+    ExpressionStatement(BinaryExpression(Integer, BitOp, Integer), ";"),
+    ExpressionStatement(BinaryExpression(Integer, "<<", Integer), ";"),
+    ExpressionStatement(BinaryExpression(BinaryExpression(Integer, BitOp("&"), Integer), BitOp, Integer), ";"),
+    ExpressionStatement(BinaryExpression(Integer, BitOp, BinaryExpression(Integer, BitOp("&"), Integer)), ";"),
+    ExpressionStatement(BinaryExpression(BinaryExpression(Integer, BitOp("&"), Integer), BitOp, Integer), ";"),
+    ExpressionStatement(BinaryExpression(Integer, BitOp, BinaryExpression(Integer, BitOp("&"), Integer)), ";"),
+    ExpressionStatement(BinaryExpression(BinaryExpression(Integer, BitOp, Integer), BitOp, Integer), ";"),
+    ExpressionStatement(BinaryExpression(BinaryExpression(Integer, BitOp, Integer), BitOp, Integer), ";")
+)

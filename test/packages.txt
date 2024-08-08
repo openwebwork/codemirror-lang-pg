@@ -1,0 +1,61 @@
+# use statements
+
+use strict;
+no strict;
+use Foo::Package;
+use Foo::Package qw(import1 import2);
+use Foo::Package 'BasePackage', -option;
+use constant MESSAGE => 'hello';
+use if $] < 5.008, "utf8";
+use if WANT_WARNINGS, warnings => qw(all);
+use Exception::Class ('Package::Ex' => { description => 'error' });
+
+==>
+
+Program(
+    UseNoStatement(use, PackageName(Identifier), ";"),
+    UseNoStatement(no, PackageName(Identifier), ";"),
+    UseNoStatement(use, PackageName(Identifier, "::", Identifier), ";"),
+    UseNoStatement(
+        use,
+        PackageName(Identifier, "::", Identifier),
+        Arguments(QWList(qw, QWListContent(QuoteLikeStartDelimiter, QWElement, QWElement, QuoteLikeEndDelimiter))),
+        ";"
+    ),
+    UseNoStatement(
+        use,
+        PackageName(Identifier, "::", Identifier),
+        Arguments(StringSingleQuoted, Comma, Option),
+    ";"),
+    UseConstantStatement(use, constant, Constant(Identifier), FatComma, StringSingleQuoted),
+    UseNoIfStatement(
+        use,
+        if,
+        BinaryExpression(SpecialScalarVariable, CompareOp, Float),
+        Comma,
+        StringDoubleQuoted(InterpolatedStringContent),
+        ";"
+    ),
+    UseNoIfStatement(
+        use,
+        if,
+        Constant(Identifier),
+        Comma,
+        PackageName(Identifier),
+        FatComma,
+        Arguments(QWList(qw, QWListContent(QuoteLikeStartDelimiter, QWElement, QuoteLikeEndDelimiter))),
+        ";"
+    ),
+    UseNoStatement(
+        use,
+        PackageName(Identifier, "::", Identifier),
+        ParenthesizedArguments(
+            "(",
+            StringSingleQuoted,
+            FatComma,
+            HashRef("{", Pair(Identifier, FatComma, StringSingleQuoted), "}"),
+            ")"
+        ),
+        ";"
+    )
+)

@@ -1,0 +1,257 @@
+# single quoted tag
+
+print(<< 'END');
+basic text content
+END
+
+==>
+
+Program(
+    ExpressionStatement(OutputFunction(print, "(", HeredocInitializer("<<", HeredocStartIdentifier), ")"), ";"),
+    UninterpolatedHeredocBody(HeredocEndIdentifier)
+)
+
+# doubled quoted tag
+
+my $m = << "END";
+deref hash access: $var->{b} $var2->{a}{b} $var3->{a}->{b}
+dereferenced scalar reference ${\($a + 2)}
+dereferenced arary reference @{['a' . 'b']}
+END
+
+==>
+
+Program(
+    ExpressionStatement(
+        Assignment(VariableDeclaration(my, ScalarVariable), "=", HeredocInitializer("<<", HeredocStartIdentifier)),
+        ";"
+    ),
+    InterpolatedHeredocBody(
+        InterpolatedStringContent,
+        HashAccessVariable(ScalarVariable, "->{", Identifier, "}"),
+        InterpolatedStringContent,
+        HashAccessVariable(ScalarVariable, "->{", Identifier, "}", "{", Identifier, "}"),
+        InterpolatedStringContent,
+        HashAccessVariable(ScalarVariable, "->{", Identifier, "}", "->{", Identifier, "}"),
+        InterpolatedStringContent,
+        ScalarDereference(
+            DerefOp,
+            "{",
+            UnaryExpression(RefOp, List("(", BinaryExpression(ScalarVariable, ArithOp, Integer), ")")),
+            "}"
+        ),
+        InterpolatedStringContent,
+        ArrayDereference(
+            DerefOp,
+            "{",
+            ArrayRef("[", BinaryExpression(StringSingleQuoted, ConcatOp, StringSingleQuoted), "]"),
+            "}"
+        ),
+        InterpolatedStringContent,
+        HeredocEndIdentifier
+    )
+)
+
+# unquoted tag
+
+my $m = <<END;
+variable: $var
+array access: $a[1]
+deref array access: $a->[1] $a->[-1] $b->[1][1] $c->[1]->[1]
+hash access: $var{b}
+END
+
+==>
+
+Program(
+    ExpressionStatement(
+        Assignment(VariableDeclaration(my, ScalarVariable), "=", HeredocInitializer("<<", HeredocStartIdentifier)),
+        ";"
+    ),
+    InterpolatedHeredocBody(
+        InterpolatedStringContent,
+        ScalarVariable,
+        InterpolatedStringContent,
+        ArrayAccessVariable(ScalarVariable, "[", Integer, "]"),
+        InterpolatedStringContent,
+        ArrayAccessVariable(ScalarVariable, "->[", Integer, "]"),
+        InterpolatedStringContent,
+        ArrayAccessVariable(ScalarVariable, "->[", ArithOp, Integer, "]"),
+        InterpolatedStringContent,
+        ArrayAccessVariable(ScalarVariable, "->[", Integer, "]", "[", Integer, "]"),
+        InterpolatedStringContent,
+        ArrayAccessVariable(ScalarVariable, "->[", Integer, "]", "->[", Integer, "]"),
+        InterpolatedStringContent,
+        HashAccessVariable(ScalarVariable, "{", Identifier, "}"),
+        InterpolatedStringContent,
+        HeredocEndIdentifier
+    )
+)
+
+# backtick quoted tag
+
+print(<< `END`);
+echo 'hello $var'
+END
+
+==>
+
+Program(
+    ExpressionStatement(OutputFunction(print, "(", HeredocInitializer("<<", HeredocStartIdentifier), ")"), ";"),
+    InterpolatedHeredocBody(InterpolatedStringContent, ScalarVariable, InterpolatedStringContent, HeredocEndIdentifier)
+)
+
+# tag with space at end consumed
+
+print(<< 'END');
+basic text content
+END 
+END
+
+print(<< "END");
+basic text content
+END 
+END
+
+==>
+
+Program(
+    ExpressionStatement(OutputFunction(print, "(", HeredocInitializer("<<", HeredocStartIdentifier), ")"), ";"),
+    UninterpolatedHeredocBody(HeredocEndIdentifier),
+    ExpressionStatement(OutputFunction(print, "(", HeredocInitializer("<<", HeredocStartIdentifier), ")"), ";"),
+    InterpolatedHeredocBody(InterpolatedStringContent, HeredocEndIdentifier)
+)
+
+# indented tag is consumed
+
+print(<< 'END');
+basic text content
+    END
+END
+
+print(<<END);
+basic text content
+    END
+END
+
+==>
+
+Program(
+    ExpressionStatement(OutputFunction(print, "(", HeredocInitializer("<<", HeredocStartIdentifier), ")"), ";"),
+    UninterpolatedHeredocBody(HeredocEndIdentifier),
+    ExpressionStatement(OutputFunction(print, "(", HeredocInitializer("<<", HeredocStartIdentifier), ")"), ";"),
+    InterpolatedHeredocBody(InterpolatedStringContent, HeredocEndIdentifier)
+)
+
+# indented heredoc
+
+print <<~ 'EOF';
+    this is indented
+    EOF
+
+print <<~ "EOF";
+    this is indented and $var is interpolated
+    EOF
+
+==>
+
+Program(
+    ExpressionStatement(OutputFunction(print, HeredocInitializer("<<", HeredocStartIdentifier)), ";"),
+    UninterpolatedHeredocBody(HeredocEndIdentifier),
+    ExpressionStatement(OutputFunction(print, HeredocInitializer("<<", HeredocStartIdentifier)), ";"),
+    InterpolatedHeredocBody(InterpolatedStringContent, ScalarVariable, InterpolatedStringContent, HeredocEndIdentifier)
+)
+
+# multiple heredocs
+
+print(<< 'THIS', << "THAT");
+this text $var
+THIS
+that text $var
+THAT
+
+print(<<THIS, << 'THAT', << "THEN");
+this text $var
+THIS
+that text $var
+THAT
+then text $var
+THEN
+
+==>
+
+Program(
+    ExpressionStatement(
+        OutputFunction(
+            print,
+            "(",
+            HeredocInitializer("<<", HeredocStartIdentifier),
+            Comma,
+            HeredocInitializer("<<", HeredocStartIdentifier),
+            ")"
+        ),
+        ";"
+    ),
+    UninterpolatedHeredocBody(HeredocEndIdentifier),
+    InterpolatedHeredocBody(InterpolatedStringContent, ScalarVariable, InterpolatedStringContent, HeredocEndIdentifier),
+    ExpressionStatement(
+        OutputFunction(
+            print,
+            "(",
+            HeredocInitializer("<<", HeredocStartIdentifier),
+            Comma,
+            HeredocInitializer("<<", HeredocStartIdentifier),
+            Comma,
+            HeredocInitializer("<<", HeredocStartIdentifier),
+            ")"
+        ),
+        ";"
+    ),
+    InterpolatedHeredocBody(InterpolatedStringContent, ScalarVariable, InterpolatedStringContent, HeredocEndIdentifier),
+    UninterpolatedHeredocBody(HeredocEndIdentifier),
+    InterpolatedHeredocBody(InterpolatedStringContent, ScalarVariable, InterpolatedStringContent, HeredocEndIdentifier)
+)
+
+# heredocs with quote like operator mixed in
+
+print(<< 'END', q{quote-like content});
+heredoc content
+END
+
+print(<< "THIS", qq!middle quote like!, << 'THAT');
+this text $var
+THIS
+that text $var
+THAT
+
+==>
+
+Program(
+    ExpressionStatement(
+        OutputFunction(
+            print,
+            "(",
+            HeredocInitializer("<<", HeredocStartIdentifier),
+            Comma,
+            StringQQuoted(q, QuoteLikeStartDelimiter, StringContent, QuoteLikeEndDelimiter),
+            ")"
+        ),
+        ";"
+    ),
+    UninterpolatedHeredocBody(HeredocEndIdentifier),
+    ExpressionStatement(
+        OutputFunction(
+            print,
+            "(",
+            HeredocInitializer("<<", HeredocStartIdentifier),
+            Comma,
+            StringQqQuoted(qq, QuoteLikeStartDelimiter, InterpolatedStringContent, QuoteLikeEndDelimiter),
+            Comma,
+            HeredocInitializer("<<", HeredocStartIdentifier),
+            ")"
+        ),
+        ";"
+    ),
+    InterpolatedHeredocBody(InterpolatedStringContent, ScalarVariable, InterpolatedStringContent, HeredocEndIdentifier),
+    UninterpolatedHeredocBody(HeredocEndIdentifier)
+)

@@ -1,0 +1,508 @@
+# array function
+
+my @var = grep { $_ eq '4' } @array;
+my @var = definedArrayFunction { $_ eq '4' } @array;
+
+==>
+
+Program(
+    ExpressionStatement(
+        Assignment(
+            VariableDeclaration(my, ArrayVariable),
+            "=",
+            ArrayFunction(
+                grep,
+                Block("{", ExpressionStatement(BinaryExpression(ScalarVariable, eq, StringSingleQuoted)), "}"),
+                ArrayVariable
+            )
+        ),
+        ";"
+    ),
+    ExpressionStatement(
+        Assignment(
+            VariableDeclaration(my, ArrayVariable),
+            "=",
+            ArrayFunction(
+                FunctionName(Identifier),
+                Block("{", ExpressionStatement(BinaryExpression(ScalarVariable, eq, StringSingleQuoted)), "}"),
+                ArrayVariable
+            )
+        ),
+        ";"
+    )
+)
+
+# method calls
+
+method($arg1, $arg2);
+method2();
+Frog::Foo::method(6);
+&someMethod(1, 2);
+&anotherMethod;
+grep $_ eq 'a', @array;
+eval { say 'hello' };
+eval "use Foo::Package";
+do { $var += 1 } until $var > 10;
+
+==>
+
+Program(
+    ExpressionStatement(
+        CallExpression(
+            FunctionName(Identifier),
+            ParenthesizedArguments("(", ScalarVariable, Comma, ScalarVariable, ")")
+        ),
+        ";"
+    ),
+    ExpressionStatement(CallExpression(FunctionName(Identifier), ParenthesizedArguments("(", ")")), ";"),
+    ExpressionStatement(
+        CallExpression(
+            FunctionName(PackageName(Identifier, "::", Identifier, "::", Identifier)),
+            ParenthesizedArguments("(", Integer, ")")
+        ),
+        ";"
+    ),
+    ExpressionStatement(
+        CallExpression(FunctionName("&", Identifier), ParenthesizedArguments("(", Integer, Comma, Integer, ")")),
+        ";"
+    ),
+    ExpressionStatement(CallExpressionWithBareword(FunctionName("&", Identifier)), ";"),
+    ExpressionStatement(
+        ListOperator(grep, Arguments(BinaryExpression(ScalarVariable, eq, StringSingleQuoted), Comma, ArrayVariable)),
+        ";"
+    ),
+	ExpressionStatement(
+        EvalExpression(Eval, Block("{", ExpressionStatement(OutputFunction(say, StringSingleQuoted)), "}")),
+        ";"
+    ),
+    ExpressionStatement(NamedUnaryOperator(Eval, StringDoubleQuoted(InterpolatedStringContent)), ";"),
+    SingleLineStatement(
+        DoExpression(do, Block("{", ExpressionStatement(UpdateExpression(ScalarVariable, UpdateOp, Integer)), "}")),
+        until,
+        Arguments(BinaryExpression(ScalarVariable, CompareOp, Integer)),
+        ";"
+    )
+)
+
+# print and say
+
+print "output\n";
+print 'a', 'b', "\n";
+print('a', 'b', "\n"), exit;
+print STDOUT "output\n";
+print(STDOUT "output\n");
+print { $files[$i] } "stuff\n";
+print for @array;
+print STDERR for @error;
+say 'output';
+say 'a', 'b';
+say('a', 'b'), exit;
+say STDERR 'error';
+say(STDERR 'error');
+say { $files[$i] } 'stuff';
+say for @array;
+say STDERR for @error;
+
+==>
+
+Program(
+    ExpressionStatement(
+        OutputFunction(print, StringDoubleQuoted(InterpolatedStringContent, EscapeSequence)),
+        ";"
+    ),
+    ExpressionStatement(
+        OutputFunction(print, StringSingleQuoted, Comma, StringSingleQuoted, Comma, StringDoubleQuoted(EscapeSequence)),
+        ";"
+    ),
+    ExpressionStatement(
+        OutputFunction(
+            print,
+            "(",
+            StringSingleQuoted,
+            Comma,
+            StringSingleQuoted,
+            Comma,
+            StringDoubleQuoted(EscapeSequence),
+            ")"
+        )
+        Comma,
+        NamedUnaryOperator(exit),
+        ";"
+    ),
+    ExpressionStatement(
+        OutputFunction(print, STDOUT, StringDoubleQuoted(InterpolatedStringContent, EscapeSequence)),
+        ";"
+    ),
+    ExpressionStatement(
+        OutputFunction(print, "(", STDOUT, StringDoubleQuoted(InterpolatedStringContent, EscapeSequence), ")"),
+        ";"
+    ),
+    ExpressionStatement(
+        OutputFunction(
+            print,
+            Block("{", ExpressionStatement(ArrayAccessVariable(ScalarVariable, "[", ScalarVariable, "]")), "}"),
+            StringDoubleQuoted(InterpolatedStringContent, EscapeSequence)
+        ),
+        ";"
+    ),
+    SingleLineStatement(OutputFunction(print), for, Arguments(ArrayVariable), ";"),
+    SingleLineStatement(OutputFunction(print, STDERR), for, Arguments(ArrayVariable), ";")
+    ExpressionStatement(OutputFunction(say, StringSingleQuoted), ";"),
+    ExpressionStatement(OutputFunction(say, StringSingleQuoted, Comma, StringSingleQuoted), ";"),
+    ExpressionStatement(
+        OutputFunction(say, "(", StringSingleQuoted, Comma, StringSingleQuoted, ")"),
+        Comma,
+        NamedUnaryOperator(exit),
+        ";"
+    ),
+    ExpressionStatement(OutputFunction(say, STDERR, StringSingleQuoted), ";"),
+    ExpressionStatement(OutputFunction(say, "(", STDERR, StringSingleQuoted, ")"), ";"),
+    ExpressionStatement(
+        OutputFunction(
+            say,
+            Block("{", ExpressionStatement(ArrayAccessVariable(ScalarVariable, "[", ScalarVariable, "]")), "}"),
+            StringSingleQuoted
+        ),
+        ";"
+    ),
+    SingleLineStatement(OutputFunction(say), for, Arguments(ArrayVariable), ";"),
+    SingleLineStatement(OutputFunction(say, STDERR), for, Arguments(ArrayVariable), ";")
+)
+
+# anonymous functions
+
+my $f = sub { my ($m, $n) = @_; return $m + $n; };
+my $f = sub ($$) { my ($m, $n) = @_; return $m + $n; };
+my $f = sub ($m, $n) { return $m + $n; };
+
+==>
+
+Program(
+    ExpressionStatement(
+        Assignment(
+            VariableDeclaration(my, ScalarVariable),
+            "=",
+            AnonymousFunction(
+                sub,
+                Block(
+                    "{",
+                    ExpressionStatement(
+                        Assignment(
+                            VariableDeclaration(my, "(", ScalarVariable, Comma, ScalarVariable, ")"),
+                            "=",
+                            ArrayVariable
+                        ),
+                        ";"
+                    ),
+                    ReturnExpression(return, BinaryExpression(ScalarVariable, ArithOp, ScalarVariable)),
+                    ";",
+                    "}"
+                )
+            )
+        ),
+        ";"
+    ),
+    ExpressionStatement(
+        Assignment(
+            VariableDeclaration(my, ScalarVariable),
+            "=",
+            AnonymousFunction(
+                sub,
+                FunctionPrototype("(", Prototype, ")"),
+                Block(
+                    "{",
+                    ExpressionStatement(
+                        Assignment(
+                            VariableDeclaration(my, "(", ScalarVariable, Comma, ScalarVariable, ")"),
+                            "=",
+                            ArrayVariable
+                        ),
+                        ";"
+                    ),
+                    ReturnExpression(return, BinaryExpression(ScalarVariable, ArithOp, ScalarVariable)),
+                    ";",
+                    "}"
+                )
+            )
+        ),
+        ";"
+    ),
+    ExpressionStatement(
+        Assignment(
+            VariableDeclaration(my, ScalarVariable),
+            "=",
+            AnonymousFunction(
+                sub,
+                FunctionSignature(ParenthesizedArguments("(", ScalarVariable, Comma, ScalarVariable, ")")),
+                Block(
+                    "{",
+                    ReturnExpression(return, BinaryExpression(ScalarVariable, ArithOp, ScalarVariable)),
+                    ";",
+                    "}"
+                )
+            )
+        ),
+        ";"
+    )
+)
+
+# method invocations
+
+my $object1 = Frog::Foo->new($arg1, $arg2);
+my $object2 = Fish::Foo->new;
+my $speed = $horse->gallop(5);
+$var->do('hello');
+$method->($arg1, @arrayArg);
+
+==>
+
+Program(
+    ExpressionStatement(
+        Assignment(
+            VariableDeclaration(my, ScalarVariable),
+            "=",
+            MethodInvocation(
+                PackageName(Identifier, "::", Identifier),
+                ArrowOperator,
+                FunctionName(Identifier),
+                ParenthesizedArguments("(", ScalarVariable, Comma, ScalarVariable, ")")
+            )
+        ),
+        ";"
+    ),
+    ExpressionStatement(
+        Assignment(
+            VariableDeclaration(my, ScalarVariable),
+            "=",
+            MethodInvocation(PackageName(Identifier, "::", Identifier), ArrowOperator, FunctionName(Identifier))
+        ),
+        ";"
+    ),
+    ExpressionStatement(
+        Assignment(
+            VariableDeclaration(my, ScalarVariable),
+            "=",
+            MethodInvocation(
+                ScalarVariable,
+                ArrowOperator,
+                FunctionName(Identifier),
+                ParenthesizedArguments("(", Integer, ")")
+            )
+        ),
+        ";"
+    ),
+    ExpressionStatement(
+        MethodInvocation(
+            ScalarVariable,
+            ArrowOperator,
+            FunctionName(Identifier),
+            ParenthesizedArguments("(", StringSingleQuoted, ")")
+        ),
+        ";"
+    ),
+    ExpressionStatement(
+        MethodInvocation(
+            ScalarVariable,
+            ArrowOperator,
+            ParenthesizedArguments("(", ScalarVariable, Comma, ArrayVariable, ")")
+        ),
+        ";"
+    )
+)
+
+# indrect method invocations
+
+my $object1 = new Frog::Foo($arg1, $arg2);
+my $object2 = new Fish::Foo;
+my $speed = gallop $horse(5);
+do $var('hello');
+
+==>
+
+Program(
+    ExpressionStatement(
+        Assignment(
+            VariableDeclaration(my, ScalarVariable),
+            "=",
+            IndirectMethodInvocation(
+                FunctionName(Identifier),
+                PackageName(Identifier, "::", Identifier),
+                ParenthesizedArguments("(", ScalarVariable, Comma, ScalarVariable, ")")
+            )
+        ),
+        ";"
+    ),
+    ExpressionStatement(
+        Assignment(
+            VariableDeclaration(my, ScalarVariable),
+            "=",
+            IndirectMethodInvocation(FunctionName(Identifier), PackageName(Identifier, "::", Identifier))
+        ),
+        ";"
+    ),
+    ExpressionStatement(
+        Assignment(
+            VariableDeclaration(my, ScalarVariable),
+            "=",
+            IndirectMethodInvocation(
+                FunctionName(Identifier),
+                ScalarVariable,
+                ParenthesizedArguments("(", Integer, ")")
+            )
+        ),
+        ";"
+    ),
+    ExpressionStatement(
+        IndirectMethodInvocation(
+            FunctionName(Identifier),
+            ScalarVariable,
+            ParenthesizedArguments("(", StringSingleQuoted, ")")
+        ),
+        ";"
+    )
+)
+
+# hash and array functions
+
+push(@array, 1, 2, 3);
+push @array, 1, 2, 3;
+unshift @array, 1;
+unshift(@array, 1);
+push(@{$array}, 1, 2, 3);
+keys %{ methodReturn($var) };
+values %hash;
+each @array;
+reverse @array;
+shift @array;
+shift;
+pop @array;
+pop;
+
+==>
+
+Program(
+    ExpressionStatement(
+        ArrayModifierFunction(push, "(", ArrayVariable, Comma, Arguments(Integer, Comma, Integer, Comma, Integer), ")"),
+        ";"
+    ),
+    ExpressionStatement(
+        ArrayModifierFunction(push, ArrayVariable, Comma, Arguments(Integer, Comma, Integer, Comma, Integer)),
+        ";"
+    ),
+    ExpressionStatement(ArrayModifierFunction(unshift, ArrayVariable, Comma, Arguments(Integer)), ";"),
+    ExpressionStatement(ArrayModifierFunction(unshift, "(", ArrayVariable, Comma, Arguments(Integer), ")"), ";"),
+    ExpressionStatement(
+        ArrayModifierFunction(
+            push,
+            "(",
+            ArrayDereference(DerefOp, HashRef("{", ScalarVariable, "}")),
+            Comma,
+            Arguments(Integer, Comma, Integer, Comma, Integer),
+            ")"
+        ),
+        ";"
+    ),
+    ExpressionStatement(
+        HashOrArrayDestructureFunction(
+            keys,
+            HashDereference(
+                "%{",
+                CallExpression(FunctionName(Identifier), ParenthesizedArguments("(", ScalarVariable, ")")),
+                "}"
+            )
+        ),
+        ";"
+    ),
+    ExpressionStatement(HashOrArrayDestructureFunction(values, HashVariable), ";"),
+    ExpressionStatement(HashOrArrayDestructureFunction(each, ArrayVariable), ";"),
+    ExpressionStatement(ListOperator(reverse, Arguments(ArrayVariable)), ";"),
+    ExpressionStatement(ArrayPopOrShift(shift, ArrayVariable), ";"),
+    ExpressionStatement(ArrayPopOrShift(shift), ";"),
+    ExpressionStatement(ArrayPopOrShift(pop, ArrayVariable), ";"),
+    ExpressionStatement(ArrayPopOrShift(pop), ";")
+)
+
+# named unary operators
+
+delete $var->method->{key};
+defined $var->method->[0];
+!defined $user_authen_module || $user_authen_module == 3;
+chdir $foo;
+chdir($foo);
+rand(10) * 20;
+
+==>
+
+Program(
+    ExpressionStatement(
+        NamedUnaryOperator(
+            delete,
+            HashAccessVariable(
+                MethodInvocation(ScalarVariable, ArrowOperator, FunctionName(Identifier)),
+                "->{",
+                Identifier,
+                "}"
+            )
+        ),
+        ";"
+    ),
+    ExpressionStatement(
+        NamedUnaryOperator(
+            defined,
+            ArrayAccessVariable(
+                MethodInvocation(ScalarVariable, ArrowOperator, FunctionName(Identifier)),
+                "->[",
+                Integer,
+                "]"
+            )
+        ),
+        ";"
+    ),
+    ExpressionStatement(
+        BinaryExpression(
+            UnaryExpression(LogicOp, NamedUnaryOperator(defined, ScalarVariable)),
+            LogicOp,
+            BinaryExpression(ScalarVariable, CompareOp, Integer)
+        ),
+        ";"
+    ),
+    ExpressionStatement(NamedUnaryOperator(chdir, ScalarVariable), ";"),
+    ExpressionStatement(NamedUnaryOperator(chdir, List("(", ScalarVariable, ")")), ";"),
+    ExpressionStatement(BinaryExpression(NamedUnaryOperator(rand, List("(", Integer, ")")), ArithOp, Integer), ";")
+)
+
+# async/await
+
+async sub method {
+    my $var = shift;
+    my $result = await another_method($var);
+    return $result;
+}
+
+==>
+
+Program(
+    FunctionDefinition(
+        async,
+        sub,
+        FunctionName(Identifier),
+        Block(
+            "{",
+            ExpressionStatement(Assignment(VariableDeclaration(my, ScalarVariable), "=", ArrayPopOrShift(shift)), ";"),
+            ExpressionStatement(
+                Assignment(
+                    VariableDeclaration(my, ScalarVariable),
+                    "=",
+                    NamedUnaryOperator(
+                        await,
+                        CallExpression(FunctionName(Identifier), ParenthesizedArguments("(", ScalarVariable, ")"))
+                    )
+                ),
+                ";"
+            ),
+            ReturnExpression(return, ScalarVariable),
+            ";",
+            "}"
+        )
+    )
+)

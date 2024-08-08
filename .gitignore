@@ -1,0 +1,7 @@
+/node_modules
+/dist
+.vim
+vim-*-project
+src/parser.js
+src/parser.terms.js
+/misc

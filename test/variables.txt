@@ -1,0 +1,256 @@
+# variable declaration and assignment
+
+my $scalar = 3;
+my @array = (1, 2);
+my %hash = (a => 3, b => 2);
+my ($var1, $var2) = (1, 2);
+
+==>
+
+Program(
+    ExpressionStatement(Assignment(VariableDeclaration(my, ScalarVariable), "=", Integer), ";"),
+    ExpressionStatement(
+        Assignment(VariableDeclaration(my, ArrayVariable), "=", List("(", Integer, Comma, Integer, ")")), ";"
+    ),
+    ExpressionStatement(
+        Assignment(
+            VariableDeclaration(my, HashVariable),
+            "=",
+            List("(", Pair(Identifier, FatComma, Integer), Comma, Pair(Identifier, FatComma, Integer), ")")
+        ),
+        ";"
+    ),
+    ExpressionStatement(
+        Assignment(
+            VariableDeclaration(my, "(", ScalarVariable, Comma, ScalarVariable, ")"),
+            "=",
+            List("(", Integer, Comma, Integer, ")")
+        ),
+        ";"
+    )
+)
+
+# update operators
+
+$var **= 2;
+$var *= 2;
+$var /= 2;
+$var %= 2;
+$var += 2;
+$var -= 2;
+$var .= 'a';
+$var <<= 2;
+$var >>= 2;
+$var &= 2;
+$var &.= 2;
+$var &&= 2;
+$var ^= 2;
+$var ^.= 2;
+$var |= 2;
+$var ||= 2;
+$var |.= 2;
+$var //= 2;
+$var x= 2;
+
+==>
+
+Program(
+    ExpressionStatement(UpdateExpression(ScalarVariable, UpdateOp, Integer), ";"),
+    ExpressionStatement(UpdateExpression(ScalarVariable, UpdateOp, Integer), ";"),
+    ExpressionStatement(UpdateExpression(ScalarVariable, UpdateOp, Integer), ";"),
+    ExpressionStatement(UpdateExpression(ScalarVariable, UpdateOp, Integer), ";"),
+    ExpressionStatement(UpdateExpression(ScalarVariable, UpdateOp, Integer), ";"),
+    ExpressionStatement(UpdateExpression(ScalarVariable, UpdateOp, Integer), ";"),
+    ExpressionStatement(UpdateExpression(ScalarVariable, UpdateOp, StringSingleQuoted), ";"),
+    ExpressionStatement(UpdateExpression(ScalarVariable, UpdateOp, Integer), ";"),
+    ExpressionStatement(UpdateExpression(ScalarVariable, UpdateOp, Integer), ";"),
+    ExpressionStatement(UpdateExpression(ScalarVariable, UpdateOp, Integer), ";"),
+    ExpressionStatement(UpdateExpression(ScalarVariable, UpdateOp, Integer), ";"),
+    ExpressionStatement(UpdateExpression(ScalarVariable, UpdateOp, Integer), ";"),
+    ExpressionStatement(UpdateExpression(ScalarVariable, UpdateOp, Integer), ";"),
+    ExpressionStatement(UpdateExpression(ScalarVariable, UpdateOp, Integer), ";"),
+    ExpressionStatement(UpdateExpression(ScalarVariable, UpdateOp, Integer), ";"),
+    ExpressionStatement(UpdateExpression(ScalarVariable, UpdateOp, Integer), ";"),
+    ExpressionStatement(UpdateExpression(ScalarVariable, UpdateOp, Integer), ";"),
+    ExpressionStatement(UpdateExpression(ScalarVariable, UpdateOp, Integer), ";"),
+    ExpressionStatement(UpdateExpression(ScalarVariable, x, "=", Integer), ";")
+)
+
+# variable dereferencing
+
+$$var;
+${$var};
+@$var;
+@{$var};
+%$var;
+%{$var};
+
+==>
+
+Program(
+    ExpressionStatement(ScalarDereference(DerefOp, ScalarVariable), ";"),
+    ExpressionStatement(ScalarDereference(DerefOp, "{", ScalarVariable, "}"), ";"),
+    ExpressionStatement(ArrayDereference(DerefOp, ScalarVariable), ";"),
+    ExpressionStatement(ArrayDereference(DerefOp, HashRef("{", ScalarVariable, "}")), ";"),
+    ExpressionStatement(HashDereference("%", ScalarVariable), ";"),
+    ExpressionStatement(HashDereference("%{", ScalarVariable, "}"), ";")
+)
+
+# hash and array references
+
+my $var = \@array;
+my $var = [1, 2];
+my $var = { a => 1, b => 2 };
+my $var = +{ a => 1, b => 2 };
+
+==>
+
+Program(
+    ExpressionStatement(
+        Assignment(VariableDeclaration(my, ScalarVariable), "=", UnaryExpression(RefOp, ArrayVariable)),
+        ";"
+    ),
+    ExpressionStatement(
+        Assignment(VariableDeclaration(my, ScalarVariable), "=", ArrayRef("[", Integer, Comma, Integer, "]")),
+        ";"
+    ),
+    ExpressionStatement(
+        Assignment(
+            VariableDeclaration(my, ScalarVariable),
+            "=",
+            HashRef("{", Pair(Identifier, FatComma, Integer), Comma, Pair(Identifier, FatComma, Integer), "}")
+        ),
+        ";"
+    ),
+    ExpressionStatement(
+        Assignment(
+            VariableDeclaration(my, ScalarVariable),
+            "=",
+            HashRef(ArithOp, "{", Pair(Identifier, FatComma, Integer), Comma, Pair(Identifier, FatComma, Integer), "}")
+        ),
+        ";"
+    )
+)
+
+# hash and array accessors
+
+$var[1];
+$var[1][2];
+$var->[1];
+$var->[-1];
+$var->[1][1];
+$var->[1]->[1];
+$var{a};
+$var{a}{b};
+$var->{a};
+$var->{'-1 + 3'};
+$var->{a}{a};
+$var->{a}->{a};
+
+==>
+
+Program(
+    ExpressionStatement(ArrayAccessVariable(ScalarVariable, "[", Integer, "]"), ";"),
+    ExpressionStatement(ArrayAccessVariable(ScalarVariable, "[", Integer, "]", "[", Integer, "]"), ";"),
+    ExpressionStatement(ArrayAccessVariable(ScalarVariable, "->[", Integer, "]"), ";"),
+    ExpressionStatement(ArrayAccessVariable(ScalarVariable, "->[", UnaryExpression(ArithOp, Integer), "]"), ";"),
+    ExpressionStatement(ArrayAccessVariable(ScalarVariable, "->[", Integer, "]", "[", Integer, "]"), ";"),
+    ExpressionStatement(ArrayAccessVariable(ScalarVariable, "->[", Integer, "]", "->[", Integer, "]"), ";"),
+    ExpressionStatement(HashAccessVariable(ScalarVariable, "{", Identifier, "}"), ";"),
+    ExpressionStatement(HashAccessVariable(ScalarVariable, "{", Identifier, "}", "{", Identifier, "}"), ";"),
+    ExpressionStatement(HashAccessVariable(ScalarVariable, "->{", Identifier, "}"), ";"),
+    ExpressionStatement(HashAccessVariable(ScalarVariable, "->{", StringSingleQuoted, "}"), ";"),
+    ExpressionStatement(HashAccessVariable(ScalarVariable, "->{", Identifier, "}", "{", Identifier, "}"), ";"),
+    ExpressionStatement(HashAccessVariable(ScalarVariable, "->{", Identifier, "}", "->{", Identifier, "}"), ";")
+)
+
+# special scalar variables
+
+$!;
+$@;
+$$;
+$^E;
+${^CHILD_ERROR_NATIVE};
+
+==>
+
+Program(
+    ExpressionStatement(SpecialScalarVariable, ";"),
+    ExpressionStatement(SpecialScalarVariable, ";"),
+    ExpressionStatement(SpecialScalarVariable, ";"),
+    ExpressionStatement(SpecialScalarVariable, ";"),
+    ExpressionStatement(SpecialScalarVariable, ";")
+)
+
+# misc mixed operations
+
+!$user_authen_module || $user_authen_module == 3;
+my $var = { expires  => time + 2, valid => 0 };
+my $var = Package->method($var);
+
+==>
+
+Program(
+    ExpressionStatement(
+        BinaryExpression(
+            UnaryExpression(LogicOp, ScalarVariable),
+            LogicOp,
+            BinaryExpression(ScalarVariable, CompareOp, Integer)
+        ),
+        ";"
+    ),
+    ExpressionStatement(
+        Assignment(
+            VariableDeclaration(my, ScalarVariable),
+            "=",
+            HashRef(
+                "{",
+                Pair(Identifier, FatComma, BinaryExpression(NoArgumentNamedUnaryOperator(time), ArithOp, Integer)),
+                Comma,
+                Pair(Identifier, FatComma, Integer),
+                "}"
+            )
+        ),
+        ";"
+    ),
+    ExpressionStatement(
+        Assignment(
+            VariableDeclaration(my, ScalarVariable),
+            "=",
+            MethodInvocation(
+                Constant(Identifier),
+                ArrowOperator,
+                FunctionName(Identifier),
+                ParenthesizedArguments("(", ScalarVariable, ")")
+            )
+        ),
+        ";"
+    )
+)
+
+# type globs
+
+*this = *that;
+local *Here::blue = \$There::green;
+$fh = *STDOUT;
+$fh = \*STDOUT;
+local *fh;
+*foo{THING};
+
+==>
+
+Program(
+    ExpressionStatement(Assignment(TypeGlob, "=", TypeGlob), ";"),
+    ExpressionStatement(
+        Assignment(
+            VariableDeclaration(local, TypeGlob),
+            "=",
+            UnaryExpression(RefOp, PackageVariable(PackageName(ScalarVariable, "::", Identifier)))
+        ),
+        ";"
+    ),
+    ExpressionStatement(Assignment(ScalarVariable, "=", TypeGlob), ";"),
+    ExpressionStatement(Assignment(ScalarVariable, "=", UnaryExpression(RefOp, TypeGlob)), ";"),
+    ExpressionStatement(VariableDeclaration(local, TypeGlob), ";"),
+    ExpressionStatement(HashAccessVariable(TypeGlob, "{", Identifier, "}"), ";")
+)

@@ -1,0 +1,690 @@
+# double quoted strings
+
+"variable: $var";
+"array access: $a[1]";
+"deref array access: $a->[1] $a->[-1] $b->[1][1] $c->[1]->[1]";
+"hash access: $var{b}";
+"deref hash access: $var->{b} $var2->{a}{b} $var3->{a}->{b}";
+"dereferenced scalar reference ${\($a + 2)}";
+"dereferenced arary reference @{['a' . 'b']}";
+
+==>
+
+Program(
+    ExpressionStatement(StringDoubleQuoted(InterpolatedStringContent, ScalarVariable), ";"),
+    ExpressionStatement(
+        StringDoubleQuoted(InterpolatedStringContent, ArrayAccessVariable(ScalarVariable, "[", Integer, "]")),
+        ";"
+    ),
+    ExpressionStatement(
+        StringDoubleQuoted(
+            InterpolatedStringContent,
+            ArrayAccessVariable(ScalarVariable, "->[", Integer, "]"),
+            InterpolatedStringContent,
+            ArrayAccessVariable(ScalarVariable, "->[", ArithOp, Integer, "]"),
+            InterpolatedStringContent,
+            ArrayAccessVariable(ScalarVariable, "->[", Integer, "]", "[", Integer, "]"),
+            InterpolatedStringContent,
+            ArrayAccessVariable(ScalarVariable, "->[", Integer, "]", "->[", Integer, "]")
+        ),
+        ";"
+    ),
+    ExpressionStatement(
+        StringDoubleQuoted(InterpolatedStringContent, HashAccessVariable(ScalarVariable, "{", Identifier, "}")),
+        ";"
+    ),
+    ExpressionStatement(
+        StringDoubleQuoted(
+            InterpolatedStringContent,
+            HashAccessVariable(ScalarVariable, "->{", Identifier, "}"),
+            InterpolatedStringContent,
+            HashAccessVariable(ScalarVariable, "->{", Identifier, "}", "{", Identifier, "}"),
+            InterpolatedStringContent,
+            HashAccessVariable(ScalarVariable, "->{", Identifier, "}", "->{", Identifier, "}")
+        ),
+        ";"
+    ),
+    ExpressionStatement(
+        StringDoubleQuoted(
+            InterpolatedStringContent,
+            ScalarDereference(
+                DerefOp,
+                "{",
+                UnaryExpression(RefOp, List("(", BinaryExpression(ScalarVariable, ArithOp, Integer), ")")),
+                "}"
+            )
+        ),
+        ";"
+    ),
+    ExpressionStatement(
+        StringDoubleQuoted(
+            InterpolatedStringContent,
+            ArrayDereference(
+                DerefOp,
+                "{",
+                ArrayRef("[", BinaryExpression(StringSingleQuoted, ConcatOp, StringSingleQuoted), "]"),
+                "}"
+            )
+        ),
+        ";"
+    )
+)
+
+# backtick quoted commands
+
+`echo "value is $var"`;
+`echo "array access: $a[1]"`;
+`echo "deref array access: $a->[-1]"`;
+`echo "hash access: $var{b}"`;
+`echo "deref hash access: $var->{b}"`;
+`echo "dereferenced scalar reference ${\($a + 2)}"`;
+`echo "dereferenced array reference @{['a' . 'b']}"`;
+
+==>
+
+Program(
+    ExpressionStatement(BacktickQuoted(InterpolatedStringContent, ScalarVariable, InterpolatedStringContent), ";"),
+    ExpressionStatement(
+        BacktickQuoted(
+            InterpolatedStringContent,
+            ArrayAccessVariable(ScalarVariable, "[", Integer, "]"),
+            InterpolatedStringContent
+        ),
+        ";"
+    ),
+    ExpressionStatement(
+        BacktickQuoted(
+            InterpolatedStringContent,
+            ArrayAccessVariable(ScalarVariable, "->[", ArithOp, Integer, "]"),
+            InterpolatedStringContent
+        ),
+        ";"
+    ),
+    ExpressionStatement(
+        BacktickQuoted(
+            InterpolatedStringContent,
+            HashAccessVariable(ScalarVariable, "{", Identifier, "}"),
+            InterpolatedStringContent
+        ),
+        ";"
+    ),
+    ExpressionStatement(
+        BacktickQuoted(
+            InterpolatedStringContent,
+            HashAccessVariable(ScalarVariable, "->{", Identifier, "}"),
+            InterpolatedStringContent
+        ),
+        ";"
+    ),
+    ExpressionStatement(
+        BacktickQuoted(
+            InterpolatedStringContent,
+            ScalarDereference(
+                DerefOp,
+                "{",
+                UnaryExpression(RefOp, List("(", BinaryExpression(ScalarVariable, ArithOp, Integer), ")")),
+                "}"
+            ),
+            InterpolatedStringContent
+        ),
+        ";"
+    ),
+    ExpressionStatement(
+        BacktickQuoted(
+            InterpolatedStringContent,
+            ArrayDereference(
+                DerefOp,
+                "{",
+                ArrayRef("[", BinaryExpression(StringSingleQuoted, ConcatOp, StringSingleQuoted), "]"),
+                "}"
+            ),
+            InterpolatedStringContent
+        ),
+        ";"
+    )
+)
+
+# q quoted strings
+
+q/abc/;
+q!a b c!;
+q abcda;
+q(ab(cd(ef)));
+q/a b\/c d/;
+q # this is a comment
+    # this is another comment
+    (abc);
+
+==>
+
+Program(
+    ExpressionStatement(StringQQuoted(q, QuoteLikeStartDelimiter, StringContent, QuoteLikeEndDelimiter), ";"),
+    ExpressionStatement(StringQQuoted(q, QuoteLikeStartDelimiter, StringContent, QuoteLikeEndDelimiter), ";"),
+    ExpressionStatement(StringQQuoted(q, QuoteLikeStartDelimiter, StringContent, QuoteLikeEndDelimiter), ";"),
+    ExpressionStatement(StringQQuoted(q, QuoteLikeStartDelimiter, StringContent, QuoteLikeEndDelimiter), ";"),
+    ExpressionStatement(StringQQuoted(q, QuoteLikeStartDelimiter, StringContent, QuoteLikeEndDelimiter), ";"),
+    ExpressionStatement(
+        StringQQuoted(q, Comment, Comment, QuoteLikeStartDelimiter, StringContent, QuoteLikeEndDelimiter),
+        ";"
+    )
+)
+
+# qq quoted strings
+
+qq/variable: $var/;
+qq{array access: $a[1]};
+qq!deref array access: $a->[-1]!;
+qq/hash access: $var{b}/;
+qq[deref hash access: $var->{b};];
+qq<dereferenced scalar reference ${\($a + 2)}>;
+qq(dereferenced array reference @{['a' . 'b']});
+qq[ab[c]d];
+qq # Comment
+    # another Comment
+    (content $var more);
+
+==>
+
+Program(
+    ExpressionStatement(
+        StringQqQuoted(qq, QuoteLikeStartDelimiter, InterpolatedStringContent, ScalarVariable, QuoteLikeEndDelimiter),
+        ";"
+    ),
+    ExpressionStatement(
+        StringQqQuoted(
+            qq,
+            QuoteLikeStartDelimiter,
+            InterpolatedStringContent,
+            ArrayAccessVariable(ScalarVariable, "[", Integer, "]"),
+            QuoteLikeEndDelimiter
+        ),
+        ";"
+    ),
+    ExpressionStatement(
+        StringQqQuoted(
+            qq,
+            QuoteLikeStartDelimiter,
+            InterpolatedStringContent,
+            ArrayAccessVariable(ScalarVariable, "->[", ArithOp, Integer, "]"),
+            QuoteLikeEndDelimiter
+        ),
+        ";"
+    ),
+    ExpressionStatement(
+        StringQqQuoted(
+            qq,
+            QuoteLikeStartDelimiter,
+            InterpolatedStringContent,
+            HashAccessVariable(ScalarVariable, "{", Identifier, "}"),
+            QuoteLikeEndDelimiter
+        ),
+        ";"
+    ),
+    ExpressionStatement(
+        StringQqQuoted(
+            qq,
+            QuoteLikeStartDelimiter,
+            InterpolatedStringContent,
+            HashAccessVariable(ScalarVariable, "->{", Identifier, "}"),
+            InterpolatedStringContent,
+            QuoteLikeEndDelimiter
+        ),
+        ";"
+    ),
+    ExpressionStatement(
+        StringQqQuoted(
+            qq,
+            QuoteLikeStartDelimiter,
+            InterpolatedStringContent,
+            ScalarDereference(
+                DerefOp,
+                "{",
+                UnaryExpression(RefOp, List("(", BinaryExpression(ScalarVariable, ArithOp, Integer), ")")),
+                "}"
+            ),
+            QuoteLikeEndDelimiter
+        ),
+        ";"
+    ),
+    ExpressionStatement(
+        StringQqQuoted(
+            qq,
+            QuoteLikeStartDelimiter,
+            InterpolatedStringContent,
+            ArrayDereference(
+                DerefOp,
+                "{",
+                ArrayRef("[", BinaryExpression(StringSingleQuoted, ConcatOp, StringSingleQuoted), "]"),
+                "}"
+            ),
+            QuoteLikeEndDelimiter
+        ),
+        ";"
+    ),
+    ExpressionStatement(
+        StringQqQuoted(qq, QuoteLikeStartDelimiter, InterpolatedStringContent, QuoteLikeEndDelimiter),
+        ";"
+    ),
+    ExpressionStatement(
+        StringQqQuoted(
+            qq,
+            Comment,
+            Comment,
+            QuoteLikeStartDelimiter,
+            InterpolatedStringContent,
+            ScalarVariable,
+            InterpolatedStringContent,
+            QuoteLikeEndDelimiter
+        ),
+        ";"
+    )
+)
+
+# qw lists
+
+qw/a b c/;
+qw!a b c!;
+qw a b c d a;
+qw(a b(c d (e f)));
+qw/a b\/c d/;
+qw  # this is a comment
+    # this is another comment
+    (a b c);
+
+==>
+
+Program(
+    ExpressionStatement(
+        QWList(qw, QWListContent(QuoteLikeStartDelimiter, QWElement, QWElement, QWElement, QuoteLikeEndDelimiter)),
+        ";"
+    ),
+    ExpressionStatement(
+        QWList(qw, QWListContent(QuoteLikeStartDelimiter, QWElement, QWElement, QWElement, QuoteLikeEndDelimiter)),
+        ";"
+    ),
+    ExpressionStatement(
+        QWList(qw, QWListContent(QuoteLikeStartDelimiter, QWElement, QWElement, QWElement, QuoteLikeEndDelimiter)),
+        ";"
+    ),
+    ExpressionStatement(
+        QWList(
+            qw,
+            QWListContent(
+                QuoteLikeStartDelimiter,
+                QWElement,
+                QWElement,
+                QWElement,
+                QWElement,
+                QWElement,
+                QuoteLikeEndDelimiter
+            )
+        ),
+        ";"
+    ),
+    ExpressionStatement(
+        QWList(qw, QWListContent(QuoteLikeStartDelimiter, QWElement, QWElement, QWElement, QuoteLikeEndDelimiter)),
+        ";"
+    ),
+    ExpressionStatement(
+        QWList(
+            qw,
+            Comment,
+            Comment,
+            QWListContent(QuoteLikeStartDelimiter, QWElement, QWElement, QWElement, QuoteLikeEndDelimiter)
+        ),
+        ";"
+    )
+)
+
+# qx commands
+
+qx/echo "value is $var"/;
+qx{echo "array access: $a[1]"};
+qx!echo "deref array access: $a->[-1]"!;
+qx/echo "hash access: $var{b}"/;
+qx[echo "deref hash access: $var->{b}"];
+qx<echo "dereferenced scalar reference ${\($a + 2)}">;
+qx(echo "dereferenced array reference @{['a' . 'b']}");
+qx'echo "uninterpolated contents $var"';
+qx # Comment
+    {echo "hello"};
+
+==>
+
+Program(
+    ExpressionStatement(
+        CommandQxQuoted(
+            qx,
+            QuoteLikeStartDelimiter,
+            InterpolatedStringContent,
+            ScalarVariable,
+            InterpolatedStringContent,
+            QuoteLikeEndDelimiter
+        ),
+        ";"
+    ),
+    ExpressionStatement(
+        CommandQxQuoted(
+            qx,
+            QuoteLikeStartDelimiter,
+            InterpolatedStringContent,
+            ArrayAccessVariable(ScalarVariable, "[", Integer, "]"),
+            InterpolatedStringContent,
+            QuoteLikeEndDelimiter
+        ),
+        ";"
+    ),
+    ExpressionStatement(
+        CommandQxQuoted(
+            qx,
+            QuoteLikeStartDelimiter,
+            InterpolatedStringContent,
+            ArrayAccessVariable(ScalarVariable, "->[", ArithOp, Integer, "]"),
+            InterpolatedStringContent,
+            QuoteLikeEndDelimiter
+        ),
+        ";"
+    ),
+    ExpressionStatement(
+        CommandQxQuoted(
+            qx,
+            QuoteLikeStartDelimiter,
+            InterpolatedStringContent,
+            HashAccessVariable(ScalarVariable, "{", Identifier, "}"),
+            InterpolatedStringContent,
+            QuoteLikeEndDelimiter
+        ),
+        ";"
+    ),
+    ExpressionStatement(
+        CommandQxQuoted(
+            qx,
+            QuoteLikeStartDelimiter,
+            InterpolatedStringContent,
+            HashAccessVariable(ScalarVariable, "->{", Identifier, "}"),
+            InterpolatedStringContent,
+            QuoteLikeEndDelimiter
+        ),
+        ";"
+    ),
+    ExpressionStatement(
+        CommandQxQuoted(
+            qx,
+            QuoteLikeStartDelimiter,
+            InterpolatedStringContent,
+            ScalarDereference(
+                DerefOp,
+                "{",
+                UnaryExpression(RefOp, List("(", BinaryExpression(ScalarVariable, ArithOp, Integer), ")")),
+                "}"
+            ),
+            InterpolatedStringContent,
+            QuoteLikeEndDelimiter
+        ),
+        ";"
+    ),
+    ExpressionStatement(
+        CommandQxQuoted(
+            qx,
+            QuoteLikeStartDelimiter,
+            InterpolatedStringContent,
+            ArrayDereference(
+                DerefOp,
+                "{",
+                ArrayRef("[", BinaryExpression(StringSingleQuoted, ConcatOp, StringSingleQuoted), "]"),
+                "}"
+            ),
+            InterpolatedStringContent,
+            QuoteLikeEndDelimiter
+        ),
+        ";"
+    ),
+    ExpressionStatement(CommandQxQuoted(qx, QuoteLikeStartDelimiter, StringContent, QuoteLikeEndDelimiter), ";"),
+    ExpressionStatement(
+        CommandQxQuoted(qx, Comment, QuoteLikeStartDelimiter, InterpolatedStringContent, QuoteLikeEndDelimiter),
+        ";"
+    )
+)
+
+# pattern matching regular expressions
+
+m/([+-]?\d+)/g;
+m'([+-]?\d+)'g;
+m # comment
+    '([+-]?\d+)'g;
+$var =~ /([+-]?\d+)/;
+$var =~ /foo/gi;
+$var =~ /\//g;
+m/\//g;
+/^${var}a$/;
+
+==>
+
+Program(
+    ExpressionStatement(
+        PatternMatchM(
+            m,
+            QuoteLikeStartDelimiter,
+            InterpolatedStringContent,
+            EscapeSequence,
+            InterpolatedStringContent,
+            QuoteLikeEndDelimiter,
+            RegexOptions
+        ),
+        ";"
+    ),
+    ExpressionStatement(
+        PatternMatchM(m, QuoteLikeStartDelimiter, StringContent, QuoteLikeEndDelimiter, RegexOptions),
+        ";"
+    ),
+    ExpressionStatement(
+        PatternMatchM(m, Comment, QuoteLikeStartDelimiter, StringContent, QuoteLikeEndDelimiter, RegexOptions),
+        ";"
+    ),
+    ExpressionStatement(
+        BinaryExpression(
+            ScalarVariable,
+            BindingOp,
+            PatternMatch("/", InterpolatedStringContent, EscapeSequence, InterpolatedStringContent, "/")
+        ),
+        ";"
+    ),
+    ExpressionStatement(
+        BinaryExpression(ScalarVariable, BindingOp, PatternMatch("/", InterpolatedStringContent, "/", RegexOptions)),
+        ";"
+    ),
+    ExpressionStatement(
+        BinaryExpression(ScalarVariable, BindingOp, PatternMatch("/", EscapeSequence, "/", RegexOptions)),
+        ";"
+    ),
+    ExpressionStatement(
+        PatternMatchM(m, QuoteLikeStartDelimiter, EscapeSequence, QuoteLikeEndDelimiter, RegexOptions),
+        ";"
+    ),
+    ExpressionStatement(
+        PatternMatch("/", InterpolatedStringContent, ScalarVariable, InterpolatedStringContent, "/"),
+        ";"
+    )
+)
+
+# qr regular expressions
+
+qr/foo/i;
+qr'foo'i;
+qr # comment
+    'foo'i;
+
+==>
+
+Program(
+    ExpressionStatement(
+        RegexQr(qr, QuoteLikeStartDelimiter, InterpolatedStringContent, QuoteLikeEndDelimiter, RegexOptions),
+        ";"
+    ),
+    ExpressionStatement(RegexQr(qr, QuoteLikeStartDelimiter, StringContent, QuoteLikeEndDelimiter, RegexOptions), ";"),
+    ExpressionStatement(
+        RegexQr(qr, Comment, QuoteLikeStartDelimiter, StringContent, QuoteLikeEndDelimiter, RegexOptions),
+        ";"
+    )
+)
+
+# substitution regular expressions
+
+s/foo$var\n/frog\n/;
+s#hello#bye#r;
+s'foo$var'frog';
+s{a{b}}{ab}r;
+s # comment at beginning end of line
+    # comment at beginning on next line
+    {hello} # comment at middle end of line
+    # comment at middle on next line
+    {bye}r;
+
+==>
+
+Program(
+    ExpressionStatement(
+        SubstitutionS(
+            s,
+            QuoteLikeStartDelimiter,
+            InterpolatedStringContent,
+            ScalarVariable,
+            EscapeSequence,
+            QuoteLikeSeparatorDelimiter,
+            InterpolatedStringContent,
+            EscapeSequence,
+            QuoteLikeEndDelimiter
+        ),
+        ";"
+    ),
+    ExpressionStatement(
+        SubstitutionS(
+            s,
+            QuoteLikeStartDelimiter,
+            InterpolatedStringContent,
+            QuoteLikeSeparatorDelimiter,
+            InterpolatedStringContent,
+            QuoteLikeEndDelimiter,
+            RegexOptions
+        ),
+        ";"
+    ),
+    ExpressionStatement(
+        SubstitutionS(
+            s,
+            QuoteLikeStartDelimiter,
+            StringContent,
+            QuoteLikeSeparatorDelimiter,
+            StringContent,
+            QuoteLikeEndDelimiter
+        ),
+        ";"
+    ),
+    ExpressionStatement(
+        SubstitutionS(
+            s,
+            QuoteLikeStartDelimiter,
+            InterpolatedStringContent,
+            QuoteLikeEndDelimiter,
+            QuoteLikeStartDelimiter,
+            InterpolatedStringContent,
+            QuoteLikeEndDelimiter,
+            RegexOptions
+        ),
+        ";"
+    ),
+    ExpressionStatement(
+        SubstitutionS(
+            s,
+            Comment,
+            Comment,
+            QuoteLikeStartDelimiter,
+            InterpolatedStringContent,
+            QuoteLikeEndDelimiter,
+            Comment,
+            Comment,
+            QuoteLikeStartDelimiter,
+            InterpolatedStringContent,
+            QuoteLikeEndDelimiter,
+            RegexOptions
+        ),
+        ";"
+    )
+)
+
+# transliterations
+
+tr/a/b/;
+y/a/b/;
+tr # comment at beginning end of line
+    # comment at beginning on next line
+    {a} # comment at middle end of line
+    # comment at middle on next line
+    {b}cdsr;
+
+y # comment at beginning end of line
+    # comment at beginning on next line
+    {a} # comment at middle end of line
+    # comment at middle on next line
+    {b}cdsr;
+
+==>
+
+Program(
+    ExpressionStatement(
+        TransliterationTrOrY(
+            tr,
+            QuoteLikeStartDelimiter,
+            StringContent,
+            QuoteLikeSeparatorDelimiter,
+            StringContent,
+            QuoteLikeEndDelimiter
+        ),
+        ";"
+    ),
+    ExpressionStatement(
+        TransliterationTrOrY(
+            y,
+            QuoteLikeStartDelimiter,
+            StringContent,
+            QuoteLikeSeparatorDelimiter,
+            StringContent,
+            QuoteLikeEndDelimiter
+        ),
+        ";"
+    ),
+    ExpressionStatement(
+        TransliterationTrOrY(
+            tr,
+            Comment,
+            Comment,
+            QuoteLikeStartDelimiter,
+            StringContent,
+            QuoteLikeEndDelimiter,
+            Comment,
+            Comment,
+            QuoteLikeStartDelimiter,
+            StringContent,
+            QuoteLikeEndDelimiter,
+            RegexOptions
+        ),
+        ";"
+    ),
+    ExpressionStatement(
+        TransliterationTrOrY(
+            y,
+            Comment,
+            Comment,
+            QuoteLikeStartDelimiter,
+            StringContent,
+            QuoteLikeEndDelimiter,
+            Comment,
+            Comment,
+            QuoteLikeStartDelimiter,
+            StringContent,
+            QuoteLikeEndDelimiter,
+            RegexOptions
+        ),
+        ";"
+    )
+)
