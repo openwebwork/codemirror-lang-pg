@@ -171,6 +171,9 @@ expression[@isGroup=Expression] {
     ScalarDereference |
     ArrayDereference |
     HashDereference |
+    // FIXME: The "&" in this should be a DerefOp, but that conflicts
+    // with the bitwise and operator and call expressions.
+    FunctionDereference { "&" !unary (ScalarVariable | "{" expression "}") } |
     // FIXME: The "*" in this should also be a DerefOp, but that conflicts with the multiplication operator.
     TypeGlobDereference { ArithOp<"*"> !unary (expression | "{" expression "}") } |
     Constant |

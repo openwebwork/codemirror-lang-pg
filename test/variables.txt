@@ -86,6 +86,8 @@ ${$var};
 %{$var};
 *{$var};
 *$var;
+&{ $pkg . "::$var" };
+&$var;
 
 ==>
 
@@ -97,7 +99,17 @@ Program(
     ExpressionStatement(HashDereference("%", ScalarVariable), ";"),
     ExpressionStatement(HashDereference("%{", ScalarVariable, "}"), ";"),
     ExpressionStatement(TypeGlobDereference(ArithOp, HashRef("{", ScalarVariable, "}")), ";"),
-    ExpressionStatement(TypeGlobDereference(ArithOp, ScalarVariable), ";")
+    ExpressionStatement(TypeGlobDereference(ArithOp, ScalarVariable), ";"),
+    ExpressionStatement(
+        FunctionDereference(
+            "&",
+            "{",
+            BinaryExpression(ScalarVariable, ConcatOp, StringDoubleQuoted(InterpolatedStringContent, ScalarVariable)),
+            "}"
+        ),
+        ";"
+    ),
+    ExpressionStatement(FunctionDereference("&", ScalarVariable), ";")
 )
 
 # hash and array references
