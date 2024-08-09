@@ -1,0 +1,84 @@
+# pod
+
+package Foo::Frog;
+
+=head
+
+This is a bad package.
+
+=cut
+
+sub new { return bless {}, shift }
+
+1;
+
+==>
+
+Program(
+    PackageStatement(package, PackageName(Identifier, "::", Identifier), ";"),
+    PodStatement,
+    FunctionDefinition(
+        sub,
+        FunctionName(Identifier),
+        Block("{", ReturnExpression(return, Bless(bless, HashRef("{", "}")), Comma, ArrayPopOrShift(shift)), "}")
+    ),
+    ExpressionStatement(Integer, ";")
+)
+
+# __END__
+
+package Foo::Frog;
+
+sub new { return bless {}, shift }
+
+1;
+
+__END__
+
+Stuff that should be ignored.
+
+$var = 5;
+
+$result = $compartment->reval($unsafe_code);
+
+==>
+
+Program(
+    PackageStatement(package, PackageName(Identifier, "::", Identifier), ";"),
+    FunctionDefinition(
+        sub,
+        FunctionName(Identifier),
+        Block("{", ReturnExpression(return, Bless(bless, HashRef("{", "}")), Comma, ArrayPopOrShift(shift)), "}")
+    ),
+    ExpressionStatement(Integer, ";"),
+    EndDataStatement(__END__)
+)
+
+# __DATA__
+
+package Foo::Frog;
+
+sub new { return bless {}, shift }
+
+1;
+
+__DATA__
+
+Stuff that should be ignored.
+
+$var = 5;
+
+$result = $compartment->reval($unsafe_code);
+
+==>
+
+Program(
+    PackageStatement(package, PackageName(Identifier, "::", Identifier), ";"),
+    FunctionDefinition(
+        sub,
+        FunctionName(Identifier),
+        Block("{", ReturnExpression(return, Bless(bless, HashRef("{", "}")), Comma, ArrayPopOrShift(shift)), "}")
+    ),
+    ExpressionStatement(Integer, ";"),
+    EndDataStatement(__DATA__)
+)

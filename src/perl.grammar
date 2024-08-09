@@ -135,7 +135,8 @@ statement[@isGroup=Statement] {
     Ellipsis { "..." } |
     UninterpolatedHeredocBody |
     InterpolatedHeredocBody |
-    PodStatement
+    PodStatement |
+    EndDataStatement[@dynamicPrecedence=4] { (kw<"__END__"> | kw<"__DATA__">) endDataBlock }
 }
 
 expression[@isGroup=Expression] {
@@ -150,9 +151,7 @@ expression[@isGroup=Expression] {
         kw<"__FILE__"> |
         kw<"__LINE__"> |
         kw<"__PACKAGE__"> |
-        kw<"__SUB__"> |
-        kw<"__END__"> |
-        kw<"__DATA__">
+        kw<"__SUB__">
     } |
     Pair |
     listType |
@@ -534,6 +533,7 @@ maybeParens<content> { !noParens content | "(" !parens content ")" }
 }
 @external tokens regex from "./tokens" { patternMatchStart RegexOptions regexEnd }
 @external tokens podStatement from "./tokens" { podBlock }
+@external tokens endData from "./tokens" { endDataBlock }
 
 @tokens {
     whitespace { $[ \t\n\r] }

@@ -27,6 +27,7 @@ import {
     RegexOptions,
     regexEnd,
     podBlock,
+    endDataBlock,
     m,
     q,
     qq,
@@ -833,5 +834,12 @@ export const podStatement = new ExternalTokenizer((input, stack) => {
             }
             input.acceptToken(podBlock);
         }
+    }
+});
+
+export const endData = new ExternalTokenizer((input, stack) => {
+    if (stack.canShift(endDataBlock)) {
+        while (input.advance() >= 0);
+        input.acceptToken(endDataBlock);
     }
 });
