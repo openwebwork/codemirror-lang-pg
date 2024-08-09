@@ -84,6 +84,8 @@ ${$var};
 @{$var};
 %$var;
 %{$var};
+*{$var};
+*$var;
 
 ==>
 
@@ -93,7 +95,9 @@ Program(
     ExpressionStatement(ArrayDereference(DerefOp, ScalarVariable), ";"),
     ExpressionStatement(ArrayDereference(DerefOp, HashRef("{", ScalarVariable, "}")), ";"),
     ExpressionStatement(HashDereference("%", ScalarVariable), ";"),
-    ExpressionStatement(HashDereference("%{", ScalarVariable, "}"), ";")
+    ExpressionStatement(HashDereference("%{", ScalarVariable, "}"), ";"),
+    ExpressionStatement(TypeGlobDereference(ArithOp, HashRef("{", ScalarVariable, "}")), ";"),
+    ExpressionStatement(TypeGlobDereference(ArithOp, ScalarVariable), ";")
 )
 
 # hash and array references

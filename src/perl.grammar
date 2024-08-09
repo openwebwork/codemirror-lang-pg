@@ -171,6 +171,8 @@ expression[@isGroup=Expression] {
     ScalarDereference |
     ArrayDereference |
     HashDereference |
+    // FIXME: The "*" in this should also be a DerefOp, but that conflicts with the multiplication operator.
+    TypeGlobDereference { ArithOp<"*"> !unary (expression | "{" expression "}") } |
     Constant |
     VariableDeclaration { scope ("(" commaSep<maybeParens<variable | TypeGlob>> ")" | variable | TypeGlob) } |
     AnonymousFunction |
