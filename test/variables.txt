@@ -187,6 +187,7 @@ Program(
 !$user_authen_module || $user_authen_module == 3;
 my $var = { expires  => time + 2, valid => 0 };
 my $var = Package->method($var);
+say $_ for grep { $_ ne 'a' } @array;
 
 ==>
 
@@ -222,6 +223,18 @@ Program(
                 ArrowOperator,
                 FunctionName(Identifier),
                 ParenthesizedArguments("(", ScalarVariable, ")")
+            )
+        ),
+        ";"
+    ),
+    SingleLineStatement(
+        OutputFunction(say, ScalarVariable),
+        for,
+        Arguments(
+            ArrayFunction(
+                grep,
+                Block("{", ExpressionStatement(BinaryExpression(ScalarVariable, ne, StringSingleQuoted)), "}"),
+                ArrayVariable
             )
         ),
         ";"
