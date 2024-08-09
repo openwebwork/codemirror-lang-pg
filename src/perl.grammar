@@ -213,8 +213,8 @@ expression[@isGroup=Expression] {
     NoArgumentNamedUnaryOperator {
         (kw<"fork"> | kw<"getpid"> | kw<"time"> | kw<"times"> | kw<"wait"> | kw<"wantarray">) ("(" ")")?
     } |
-    NamedUnaryOperator { namedUnaryOperator !namedUnary maybeParens<expression>? } |
-    ListOperator { listOperator (ParenthesizedArguments | Arguments) } |
+    NamedUnaryExpression { NamedUnaryOperator !namedUnary maybeParens<expression>? } |
+    ListOperatorExpression { (ListOperator | builtinArrayFunction) (ParenthesizedArguments | Arguments) } |
     CallExpression {
         FunctionName { "&"? (PackageName | (!bareword Identifier ~identifier)) }
         (ParenthesizedArguments | Arguments)
@@ -258,22 +258,15 @@ expression[@isGroup=Expression] {
     CallExpressionRecursive { kw<"__SUB__"> !recursive ArrowOperator ParenthesizedArguments } |
     ArrayFunction {
         !arrayFunction
-        (
-            kw<"grep"> |
-            kw<"map"> |
-            kw<"join"> |
-            kw<"sort"> |
-            kw<"unpack"> |
-            FunctionName { !bareword Identifier ~identifier }
-        )
+        (builtinArrayFunction | FunctionName { !bareword Identifier ~identifier })
         ~listOperator
         Block
         commaSep1<maybeParens<expression>>
     } |
     FileTest { FileTestOp !namedUnary expression } |
     IOOperator |
-    EvalExpression[@dynamicPrecedence=1] { Eval ~namedUnary Block } |
-    DoExpression[@dynamicPrecedence=1] { kw<"do"> ~namedUnary Block } |
+    EvalExpression { Eval !namedUnary (Block | maybeParens<expression>?) } |
+    DoExpression { kw<"do"> !namedUnary (Block | maybeParens<expression>?) } |
     GotoExpression { !goto kw<"goto"> (Identifier | expression) } |
     TernaryExpression { expression !ternary LogicOp<"?"> expression? ":" expression } |
     ArrayModifierFunction {
@@ -381,130 +374,6 @@ AnonymousFunction {
     Block
 }
 
-namedUnaryOperator {
-    (
-        kw<"abs"> |
-        kw<"alarm"> |
-        kw<"await"> |
-        kw<"caller"> |
-        kw<"chdir"> |
-        kw<"chr"> |
-        kw<"chroot"> |
-        kw<"close"> |
-        kw<"closedir"> |
-        kw<"cos"> |
-        kw<"defined"> |
-        kw<"delete"> |
-        kw<"do"> |
-        kw<"eof"> |
-        Eval |
-        kw<"evalbytes"> |
-        kw<"exists"> |
-        kw<"exit"> |
-        kw<"exp"> |
-        kw<"fileno"> |
-        kw<"getc"> |
-        kw<"gethostbyname"> |
-        kw<"getnetbyname"> |
-        kw<"getpgrp"> |
-        kw<"getprotobyname"> |
-        kw<"glob"> |
-        kw<"gmtime"> |
-        kw<"hex"> |
-        kw<"int"> |
-        kw<"lc"> |
-        kw<"lcfirst"> |
-        kw<"length">
-        kw<"localtime"> |
-        kw<"lock"> |
-        kw<"log"> |
-        kw<"lstat"> |
-        kw<"oct"> |
-        kw<"ord"> |
-        kw<"pos"> |
-        kw<"quotemeta"> |
-        kw<"rand"> |
-        kw<"readdir"> |
-        kw<"readline"> |
-        kw<"readlink"> |
-        kw<"readpipe"> |
-        kw<"reset"> |
-        kw<"rewinddir"> |
-        kw<"ref"> |
-        kw<"rmdir"> |
-        kw<"scalar"> |
-        kw<"select"> |
-        kw<"sin"> |
-        kw<"sleep"> |
-        kw<"sqrt"> |
-        kw<"srand"> |
-        kw<"stat"> |
-        kw<"tell"> |
-        kw<"telldir"> |
-        kw<"tied"> |
-        kw<"uc"> |
-        kw<"ucfirst"> |
-        kw<"umask"> |
-        kw<"undef"> |
-        kw<"untie">
-    )
-    ~namedUnary
-}
-
-listOperator {
-    (
-        kw<"atan2"> |
-        kw<"chomp"> |
-        kw<"chop"> |
-        kw<"chmod"> |
-        kw<"chown"> |
-        kw<"crypt"> |
-        kw<"die"> |
-        kw<"fcntl"> |
-        kw<"flock"> |
-        kw<"grep"> |
-        kw<"getpriority"> |
-        kw<"join"> |
-        kw<"index"> |
-        kw<"ioctl"> |
-        kw<"kill"> |
-        kw<"link"> |
-        kw<"map"> |
-        kw<"mkdir"> |
-        kw<"open"> |
-        kw<"opendir"> |
-        kw<"pack"> |
-        kw<"pipe"> |
-        kw<"read"> |
-        kw<"rename"> |
-        kw<"reverse"> |
-        kw<"rindex"> |
-        kw<"seek"> |
-        kw<"seekdir"> |
-        kw<"setpgrp"> |
-        kw<"setpriority"> |
-        kw<"sort"> |
-        kw<"split"> |
-        kw<"sprintf"> |
-        kw<"substr"> |
-        kw<"symlink"> |
-        kw<"syscall"> |
-        kw<"sysopen"> |
-        kw<"sysread"> |
-        kw<"sysseek"> |
-        kw<"syswrite"> |
-        kw<"tie"> |
-        kw<"truncate"> |
-        kw<"unlink"> |
-        kw<"unpack"> |
-        kw<"utime"> |
-        kw<"vec"> |
-        kw<"waitpid"> |
-        kw<"warn">
-    )
-    ~listOperator
-}
-
 reference {
     ArrayRef |
     HashRef |
@@ -512,6 +381,8 @@ reference {
     toReference |
     AnonymousFunction
 }
+
+builtinArrayFunction { (kw<"grep"> | kw<"map"> | kw<"join"> | kw<"sort"> | kw<"unpack">) ~arrayFunction }
 
 scope { kw<"our"> | kw<"state"> | kw<"my"> | kw<"local"> }
 
@@ -631,6 +502,7 @@ maybeParens<content> { !noParens content | "(" !parens content ")" }
 @external tokens semicolon from "./tokens" { automaticSemicolon }
 @external tokens unrestrictedIdentifier from "./tokens" { UnrestrictedIdentifier }
 @external tokens specialScalarVariable from "./tokens" { SpecialScalarVariable }
+@external tokens builtinOperator from "./tokens" { NamedUnaryOperator, ListOperator }
 @external tokens fileIO from "./tokens" {
     FileTestOp,
     IOOperatorStart[closedBy=IOOperatorEnd],

@@ -68,14 +68,17 @@ Program(
     ),
     ExpressionStatement(CallExpressionWithBareword(FunctionName("&", Identifier)), ";"),
     ExpressionStatement(
-        ListOperator(grep, Arguments(BinaryExpression(ScalarVariable, eq, StringSingleQuoted), Comma, ArrayVariable)),
+        ListOperatorExpression(
+            grep,
+            Arguments(BinaryExpression(ScalarVariable, eq, StringSingleQuoted), Comma, ArrayVariable)
+        ),
         ";"
     ),
 	ExpressionStatement(
         EvalExpression(Eval, Block("{", ExpressionStatement(OutputFunction(say, StringSingleQuoted)), "}")),
         ";"
     ),
-    ExpressionStatement(NamedUnaryOperator(Eval, StringDoubleQuoted(InterpolatedStringContent)), ";"),
+    ExpressionStatement(EvalExpression(Eval, StringDoubleQuoted(InterpolatedStringContent)), ";"),
     SingleLineStatement(
         DoExpression(do, Block("{", ExpressionStatement(UpdateExpression(ScalarVariable, UpdateOp, Integer)), "}")),
         until,
@@ -106,10 +109,7 @@ say STDERR for @error;
 ==>
 
 Program(
-    ExpressionStatement(
-        OutputFunction(print, StringDoubleQuoted(InterpolatedStringContent, EscapeSequence)),
-        ";"
-    ),
+    ExpressionStatement(OutputFunction(print, StringDoubleQuoted(InterpolatedStringContent, EscapeSequence)), ";"),
     ExpressionStatement(
         OutputFunction(print, StringSingleQuoted, Comma, StringSingleQuoted, Comma, StringDoubleQuoted(EscapeSequence)),
         ";"
@@ -126,7 +126,7 @@ Program(
             ")"
         )
         Comma,
-        NamedUnaryOperator(exit),
+        NamedUnaryExpression(NamedUnaryOperator),
         ";"
     ),
     ExpressionStatement(
@@ -152,7 +152,7 @@ Program(
     ExpressionStatement(
         OutputFunction(say, "(", StringSingleQuoted, Comma, StringSingleQuoted, ")"),
         Comma,
-        NamedUnaryOperator(exit),
+        NamedUnaryExpression(NamedUnaryOperator),
         ";"
     ),
     ExpressionStatement(OutputFunction(say, STDERR, StringSingleQuoted), ";"),
@@ -415,7 +415,7 @@ Program(
     ),
     ExpressionStatement(HashOrArrayDestructureFunction(values, HashVariable), ";"),
     ExpressionStatement(HashOrArrayDestructureFunction(each, ArrayVariable), ";"),
-    ExpressionStatement(ListOperator(reverse, Arguments(ArrayVariable)), ";"),
+    ExpressionStatement(ListOperatorExpression(ListOperator, Arguments(ArrayVariable)), ";"),
     ExpressionStatement(ArrayPopOrShift(shift, ArrayVariable), ";"),
     ExpressionStatement(ArrayPopOrShift(shift), ";"),
     ExpressionStatement(ArrayPopOrShift(pop, ArrayVariable), ";"),
@@ -435,8 +435,8 @@ rand(10) * 20;
 
 Program(
     ExpressionStatement(
-        NamedUnaryOperator(
-            delete,
+        NamedUnaryExpression(
+            NamedUnaryOperator,
             HashAccessVariable(
                 MethodInvocation(ScalarVariable, ArrowOperator, FunctionName(Identifier)),
                 "->{",
@@ -447,8 +447,8 @@ Program(
         ";"
     ),
     ExpressionStatement(
-        NamedUnaryOperator(
-            defined,
+        NamedUnaryExpression(
+            NamedUnaryOperator,
             ArrayAccessVariable(
                 MethodInvocation(ScalarVariable, ArrowOperator, FunctionName(Identifier)),
                 "->[",
@@ -460,15 +460,17 @@ Program(
     ),
     ExpressionStatement(
         BinaryExpression(
-            UnaryExpression(LogicOp, NamedUnaryOperator(defined, ScalarVariable)),
+            UnaryExpression(LogicOp, NamedUnaryExpression(NamedUnaryOperator, ScalarVariable)),
             LogicOp,
             BinaryExpression(ScalarVariable, CompareOp, Integer)
         ),
         ";"
     ),
-    ExpressionStatement(NamedUnaryOperator(chdir, ScalarVariable), ";"),
-    ExpressionStatement(NamedUnaryOperator(chdir, List("(", ScalarVariable, ")")), ";"),
-    ExpressionStatement(BinaryExpression(NamedUnaryOperator(rand, List("(", Integer, ")")), ArithOp, Integer), ";")
+    ExpressionStatement(NamedUnaryExpression(NamedUnaryOperator, ScalarVariable), ";"),
+    ExpressionStatement(NamedUnaryExpression(NamedUnaryOperator, List("(", ScalarVariable, ")")), ";"),
+    ExpressionStatement(
+        BinaryExpression(NamedUnaryExpression(NamedUnaryOperator, List("(", Integer, ")")), ArithOp, Integer), ";"
+    )
 )
 
 # async/await
@@ -493,8 +495,8 @@ Program(
                 Assignment(
                     VariableDeclaration(my, ScalarVariable),
                     "=",
-                    NamedUnaryOperator(
-                        await,
+                    NamedUnaryExpression(
+                        NamedUnaryOperator,
                         CallExpression(FunctionName(Identifier), ParenthesizedArguments("(", ScalarVariable, ")"))
                     )
                 ),

@@ -9,6 +9,8 @@ import {
     ReadonlySTDIN,
     IOOperatorEnd,
     SpecialScalarVariable,
+    NamedUnaryOperator,
+    ListOperator,
     HeredocStartIdentifier,
     uninterpolatedHeredocStart,
     interpolatedHeredocStart,
@@ -39,7 +41,8 @@ import {
 } from './parser.terms.js';
 
 const isUpperCaseASCIILetter = (ch: number) => ch >= 65 && ch <= 90;
-const isASCIILetter = (ch: number) => (ch >= 97 && ch <= 122) || isUpperCaseASCIILetter(ch);
+const isLowerCaseASCIILetter = (ch: number) => ch >= 97 && ch <= 122;
+const isASCIILetter = (ch: number) => isLowerCaseASCIILetter(ch) || isUpperCaseASCIILetter(ch);
 const isDigit = (ch: number) => ch >= 48 && ch <= 55;
 
 const isIdentifierChar = (ch: number) => ch == 95 /* '_' */ || isASCIILetter(ch) || isDigit(ch);
@@ -333,6 +336,145 @@ export const specialScalarVariable = new ExternalTokenizer((input, stack) => {
         if (first == 36 /* '$' */ && isIdentifierChar(second)) return;
         input.acceptToken(SpecialScalarVariable, 2);
         return;
+    }
+});
+
+// Note that 'eval' and 'do' are not in this list as they can accept a block.
+const namedUnaryOperators = [
+    'abs',
+    'alarm',
+    'await',
+    'caller',
+    'chdir',
+    'chr',
+    'chroot',
+    'close',
+    'closedir',
+    'cos',
+    'defined',
+    'delete',
+    'eof',
+    'evalbytes',
+    'exists',
+    'exit',
+    'exp',
+    'fileno',
+    'getc',
+    'gethostbyname',
+    'getnetbyname',
+    'getpgrp',
+    'getprotobyname',
+    'glob',
+    'gmtime',
+    'hex',
+    'int',
+    'lc',
+    'lcfirst',
+    'length',
+    'localtime',
+    'lock',
+    'log',
+    'lstat',
+    'oct',
+    'ord',
+    'pos',
+    'quotemeta',
+    'rand',
+    'readdir',
+    'readline',
+    'readlink',
+    'readpipe',
+    'reset',
+    'rewinddir',
+    'ref',
+    'rmdir',
+    'scalar',
+    'select',
+    'sin',
+    'sleep',
+    'sqrt',
+    'srand',
+    'stat',
+    'tell',
+    'telldir',
+    'tied',
+    'uc',
+    'ucfirst',
+    'umask',
+    'undef',
+    'untie'
+];
+
+// The list operators that can operate on a block (grep, map, join, sort, and unpack) are handled separately.
+const listOperators = [
+    'atan2',
+    'chomp',
+    'chop',
+    'chmod',
+    'chown',
+    'crypt',
+    'die',
+    'fcntl',
+    'flock',
+    'getpriority',
+    'index',
+    'ioctl',
+    'kill',
+    'link',
+    'mkdir',
+    'open',
+    'opendir',
+    'pack',
+    'pipe',
+    'read',
+    'rename',
+    'reverse',
+    'rindex',
+    'seek',
+    'seekdir',
+    'setpgrp',
+    'setpriority',
+    'split',
+    'sprintf',
+    'substr',
+    'symlink',
+    'syscall',
+    'sysopen',
+    'sysread',
+    'sysseek',
+    'syswrite',
+    'tie',
+    'truncate',
+    'unlink',
+    'utime',
+    'vec',
+    'waitpid',
+    'warn'
+];
+
+// Finds the longest lower case word coming up in the stream.  Returns an array
+// containing the word and the ascii character code of the next character after it.
+const peekLCWord = (input: InputStream): [string, number] => {
+    let pos = 0;
+    let word = '',
+        nextChar: number;
+    while (isLowerCaseASCIILetter((nextChar = input.peek(pos)))) {
+        ++pos;
+        word += String.fromCharCode(nextChar);
+    }
+    return [word, nextChar];
+};
+
+export const builtinOperator = new ExternalTokenizer((input, stack) => {
+    if (stack.canShift(NamedUnaryOperator)) {
+        const [word, nextChar] = peekLCWord(input);
+        if (namedUnaryOperators.includes(word) && !isIdentifierChar(nextChar))
+            input.acceptToken(NamedUnaryOperator, word.length);
+    }
+
+    if (stack.canShift(ListOperator)) {
+        const [word, nextChar] = peekLCWord(input);
+        if (listOperators.includes(word) && !isIdentifierChar(nextChar)) input.acceptToken(ListOperator, word.length);
     }
 });
 
