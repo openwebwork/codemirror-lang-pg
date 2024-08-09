@@ -16,6 +16,7 @@
 --$var;
 $var++;
 $var--;
+(0.23 + 0.5) * 5;
 
 ==>
 
@@ -35,7 +36,11 @@ Program(
     ExpressionStatement(UpdateExpression(ArithOp, ScalarVariable), ";"),
     ExpressionStatement(UpdateExpression(ArithOp, ScalarVariable), ";"),
     ExpressionStatement(UpdateExpression(ScalarVariable, ArithOp), ";"),
-    ExpressionStatement(UpdateExpression(ScalarVariable, ArithOp), ";")
+    ExpressionStatement(UpdateExpression(ScalarVariable, ArithOp), ";"),
+    ExpressionStatement(
+        BinaryExpression(List("(", BinaryExpression(Float, ArithOp, Float), ")"), ArithOp, Integer),
+        ";"
+    )
 )
 
 # comparison operations

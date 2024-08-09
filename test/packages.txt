@@ -1,4 +1,4 @@
-# use statements
+# use/no statements
 
 use strict;
 no strict;
@@ -9,6 +9,8 @@ use constant MESSAGE => 'hello';
 use if $] < 5.008, "utf8";
 use if WANT_WARNINGS, warnings => qw(all);
 use Exception::Class ('Package::Ex' => { description => 'error' });
+use v5.38;
+use 5.12.0;
 
 ==>
 
@@ -57,5 +59,7 @@ Program(
             ")"
         ),
         ";"
-    )
+    ),
+    UseNoVersion(use, Version, ";"),
+    UseNoVersion(use, Version, ";"),
 )

@@ -600,9 +600,9 @@ maybeParens<content> { !noParens content | "(" !parens content ")" }
     @precedence {
         ModuleName,
         StringSingleQuoted,
+        Version,
         Float,
         Integer,
-        Version,
         RefOp<"\\">,
         Identifier,
         Option,
