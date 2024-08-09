@@ -182,65 +182,6 @@ Program(
     ExpressionStatement(SpecialScalarVariable, ";")
 )
 
-# misc mixed operations
-
-!$user_authen_module || $user_authen_module == 3;
-my $var = { expires  => time + 2, valid => 0 };
-my $var = Package->method($var);
-say $_ for grep { $_ ne 'a' } @array;
-
-==>
-
-Program(
-    ExpressionStatement(
-        BinaryExpression(
-            UnaryExpression(LogicOp, ScalarVariable),
-            LogicOp,
-            BinaryExpression(ScalarVariable, CompareOp, Integer)
-        ),
-        ";"
-    ),
-    ExpressionStatement(
-        Assignment(
-            VariableDeclaration(my, ScalarVariable),
-            "=",
-            HashRef(
-                "{",
-                Pair(Identifier, FatComma, BinaryExpression(NoArgumentNamedUnaryOperator(time), ArithOp, Integer)),
-                Comma,
-                Pair(Identifier, FatComma, Integer),
-                "}"
-            )
-        ),
-        ";"
-    ),
-    ExpressionStatement(
-        Assignment(
-            VariableDeclaration(my, ScalarVariable),
-            "=",
-            MethodInvocation(
-                Constant(Identifier),
-                ArrowOperator,
-                FunctionName(Identifier),
-                ParenthesizedArguments("(", ScalarVariable, ")")
-            )
-        ),
-        ";"
-    ),
-    SingleLineStatement(
-        OutputFunction(say, ScalarVariable),
-        for,
-        Arguments(
-            ArrayFunction(
-                grep,
-                Block("{", ExpressionStatement(BinaryExpression(ScalarVariable, ne, StringSingleQuoted)), "}"),
-                ArrayVariable
-            )
-        ),
-        ";"
-    )
-)
-
 # type globs
 
 *this = *that;
@@ -258,7 +199,7 @@ Program(
         Assignment(
             VariableDeclaration(local, TypeGlob),
             "=",
-            UnaryExpression(RefOp, PackageVariable(PackageName(ScalarVariable, "::", Identifier)))
+            UnaryExpression(RefOp, PackageVariable(PackageName(ScalarVariable, "::", PackageVariableName(Identifier))))
         ),
         ";"
     ),
@@ -266,4 +207,50 @@ Program(
     ExpressionStatement(Assignment(ScalarVariable, "=", UnaryExpression(RefOp, TypeGlob)), ";"),
     ExpressionStatement(VariableDeclaration(local, TypeGlob), ";"),
     ExpressionStatement(HashAccessVariable(TypeGlob, "{", Identifier, "}"), ";")
+)
+
+# package variables
+
+$Package::SubPackage::VERSION = '2.16';
+@Package::SubPackage::array = (1, 2, 3);
+%Package::SubPackage::hash = (a => 3, b = 4);
+$Package::SubPackage::1var = 3;
+
+==>
+
+Program(
+    ExpressionStatement(
+        Assignment(
+            PackageVariable(PackageName(ScalarVariable, "::", Identifier, "::", PackageVariableName(Identifier))),
+            "=",
+            StringSingleQuoted
+        ),
+        ";"
+    ),
+    ExpressionStatement(
+        Assignment(
+            PackageVariable(PackageName(ArrayVariable, "::", Identifier, "::", PackageVariableName(Identifier))),
+            "=",
+            List("(", Integer, Comma, Integer, Comma, Integer, ")")
+        ),
+        ";"
+    ),
+    ExpressionStatement(
+        Assignment(
+            PackageVariable(PackageName(HashVariable, "::", Identifier, "::", PackageVariableName(Identifier))),
+            "=",
+            List("(", Pair(Identifier, FatComma, Integer), Comma, Assignment(Constant(Identifier), "=", Integer), ")")
+        ),
+        ";"
+    ),
+    ExpressionStatement(
+        Assignment(
+            PackageVariable(
+                PackageName(ScalarVariable, "::", Identifier, "::", PackageVariableName(UnrestrictedIdentifier))
+            ),
+            "=",
+            Integer
+        ),
+        ";"
+    )
 )

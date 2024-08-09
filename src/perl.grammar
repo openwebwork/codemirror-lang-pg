@@ -318,7 +318,13 @@ blockStatement {
 NamedBlock { (Identifier !named "{" (statement | ReturnExpression semicolon)* "}")+ }
 
 PackageVariable {
-    PackageName { !packageVariable basicVariable ("::" !packageName (UnrestrictedIdentifier | Identifier))+ }
+    PackageName {
+        !packageVariable
+        basicVariable
+        ("::" (UnrestrictedIdentifier | Identifier))*
+        "::"
+        PackageVariableName { UnrestrictedIdentifier | Identifier }
+    }
 }
 
 basicVariable[@dynamicPrecedence=1] {
