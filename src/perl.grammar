@@ -91,9 +91,9 @@ statement[@isGroup=Statement] {
         ((Constant | string) commaOperator expression | HashRef)
         semicolon
     } |
-    UseParentStatement {
+    UseParentOrBaseStatement {
         kw<"use">
-        kw<"parent">
+        (kw<"parent"> | kw<"base">)
         (NoRequire Comma)?
         (commaSep<maybeParens<string>> | QWList)
         semicolon
@@ -160,10 +160,7 @@ expression[@isGroup=Expression] {
     ArrayRef |
     HashRef |
     ArrayAccessVariable { expression (!arrayMember ("->[" | "[") expression "]")+ } |
-    HashAccessVariable {
-        expression
-        (!hashMember ("->{" | "{") ((!bareword Identifier) | expression) "}")+
-    } |
+    HashAccessVariable { expression (!hashMember ("->{" | "{") ((!bareword Identifier) | expression) "}")+ } |
     BacktickQuoted |
     CommandQxQuoted |
     PatternMatchM |
@@ -333,7 +330,7 @@ basicVariable[@dynamicPrecedence=1] {
 variable {
     basicVariable |
     SpecialScalarVariable
-    //PackageVariable | // FIXME: This causes an inconsistency in the interpolatedExpression.
+    //PackageVariable // FIXME: This causes an inconsistency for the interpolatedExpression in the skip set.
 }
 
 listType { List | QWList }

@@ -53,7 +53,6 @@ const processFile = async (file) => {
             fs.writeFileSync(path.resolve(srcDir, 'parser.terms.js'), terms);
         } catch (e) {
             console.log(`ERROR: ${e.message}`);
-            return;
         }
         console.timeEnd(endMessage);
     } else {

@@ -11,6 +11,8 @@ use if WANT_WARNINGS, warnings => qw(all);
 use Exception::Class ('Package::Ex' => { description => 'error' });
 use v5.38;
 use 5.12.0;
+use parent qw(Parent::Package);
+use base qw(Base::Package);
 
 ==>
 
@@ -62,4 +64,16 @@ Program(
     ),
     UseNoVersion(use, Version, ";"),
     UseNoVersion(use, Version, ";"),
+    UseParentOrBaseStatement(
+        use,
+        parent,
+        QWList(qw, QWListContent(QuoteLikeStartDelimiter, QWElement, QuoteLikeEndDelimiter)),
+        ";"
+    ),
+    UseParentOrBaseStatement(
+        use,
+        base,
+        QWList(qw, QWListContent(QuoteLikeStartDelimiter, QWElement, QuoteLikeEndDelimiter)),
+        ";"
+    )
 )
