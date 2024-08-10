@@ -255,3 +255,117 @@ Program(
     InterpolatedHeredocBody(InterpolatedStringContent, ScalarVariable, InterpolatedStringContent, HeredocEndIdentifier),
     UninterpolatedHeredocBody(HeredocEndIdentifier)
 )
+
+# quote like operator containing dereferenced quantities with heredoc starts
+
+say qq{before @{[ << 'INNER1' ]}middle ${\( <<INNER2 )}after};
+inside interpolated array deref $var
+INNER1
+inside interpolated scalar deref $var2
+INNER2
+
+==>
+
+Program(
+    ExpressionStatement(
+        OutputFunction(
+            say,
+            StringQqQuoted(
+                qq,
+                QuoteLikeStartDelimiter,
+                InterpolatedStringContent,
+                ArrayDereference(
+                    DerefOp,
+                    "{",
+                    ArrayRef("[", HeredocInitializer("<<", HeredocStartIdentifier), "]"),
+                    "}"
+                ),
+                InterpolatedStringContent,
+                ScalarDereference(
+                    DerefOp,
+                    "{",
+                    UnaryExpression(RefOp, List("(", HeredocInitializer("<<", HeredocStartIdentifier), ")")),
+                    "}"
+                ),
+                InterpolatedStringContent,
+                QuoteLikeEndDelimiter
+            )
+        ),
+        ";"
+    ),
+    UninterpolatedHeredocBody(HeredocEndIdentifier),
+    InterpolatedHeredocBody(InterpolatedStringContent, ScalarVariable, InterpolatedStringContent, HeredocEndIdentifier)
+)
+
+# interpolated heredoc with body containing dereferenced quantity that starts another heredoc
+
+print << "END";
+@{[ << "INNER" ]}
+inner stuff $var
+INNER
+outer stuff $var
+END
+
+==>
+
+Program(
+    ExpressionStatement(OutputFunction(print, HeredocInitializer("<<", HeredocStartIdentifier)), ";"),
+    InterpolatedHeredocBody(
+        InterpolatedStringContent,
+        ArrayDereference(DerefOp, "{", ArrayRef("[", HeredocInitializer("<<", HeredocStartIdentifier), "]"), "}"),
+        InterpolatedHeredocBody(
+            InterpolatedStringContent,
+            ScalarVariable,
+            InterpolatedStringContent,
+            HeredocEndIdentifier
+        ),
+        InterpolatedStringContent,
+        ScalarVariable,
+        InterpolatedStringContent,
+        HeredocEndIdentifier
+    )
+)
+
+# interpolated heredoc with nested dereferencing and quoting
+
+print << "END";
+before
+@{[ qq{inside quote like ${\("interpolate $var")} in heredoc} ]}
+after
+END
+
+==>
+
+Program(
+    ExpressionStatement(OutputFunction(print, HeredocInitializer("<<", HeredocStartIdentifier)), ";"),
+    InterpolatedHeredocBody(
+        InterpolatedStringContent,
+        ArrayDereference(
+            DerefOp,
+            "{",
+            ArrayRef(
+                "[",
+                StringQqQuoted(
+                    qq,
+                    QuoteLikeStartDelimiter,
+                    InterpolatedStringContent,
+                    ScalarDereference(
+                        DerefOp,
+                        "{",
+                        UnaryExpression(
+                            RefOp,
+                            List("(", StringDoubleQuoted(InterpolatedStringContent, ScalarVariable), ")")
+                        ),
+                        "}"
+                    ),
+                    InterpolatedStringContent,
+                    QuoteLikeEndDelimiter
+                ),
+                "]"
+            ),
+            "}"
+        ),
+        InterpolatedStringContent,
+        HeredocEndIdentifier
+    )
+)

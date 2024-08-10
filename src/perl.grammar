@@ -459,7 +459,9 @@ semicolon { ";" | automaticSemicolon }
         InterpolatedStringContent |
         EscapeSequence |
         interpolatedExpression |
-        interpolation
+        interpolation |
+        UninterpolatedHeredocBody |
+        InterpolatedHeredocBody
     }
 
     // The afterInterpolation token isn't actually real, but used as a

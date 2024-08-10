@@ -135,6 +135,9 @@ class Context {
     // Used by heredocs.
     tag?: number[];
     indented = false;
+    inBody = false;
+
+    // Used by any interpolating context.
     interpolating = false;
 
     constructor(
@@ -188,16 +191,15 @@ class Context {
 }
 
 const contextStack: Context[] = [];
-// FIXME: This is some annoying thing that Lezer does.  I believe that due to the ambiguity marker in the PrintOrSay
-// expression it causes the heredoc external tokenizer to get called twice with the same input.  So this lastTerm is a
-// protection against the context for a second heredoc on the same line from being pushed onto the contextStack.
-// Lezer is really a crappy and extremely fragile system.
+// FIXME: This is some annoying thing that Lezer does.  I believe that due ambiguity markers in the grammar the heredoc
+// external tokenizer can be called twice with the same input.  So this lastTerm is a protection against a second
+// context from being pushed onto the contextStack for the same input.
 let lastTerm = -1;
 
 export const contextTracker = new ContextTracker<Context | null>({
     start: null,
     shift(context, term, _stack, input) {
-        const previousTerm = lastTerm;
+        if (lastTerm === term) return context;
         lastTerm = term;
 
         if (term === q || term === qq || term === qx || term === qw) {
@@ -207,9 +209,9 @@ export const contextTracker = new ContextTracker<Context | null>({
             if (context) contextStack.push(context);
             return new Context('quoteLike&regex', { quoteLikeType: term });
         } else if (term === IOOperatorStart) {
-            if (context) contextStack.push(context); // FIXME: Could there actually be an active context here?
+            if (context) contextStack.push(context);
             return new Context('iooperator');
-        } else if (term === HeredocStartIdentifier && term != previousTerm) {
+        } else if (term === HeredocStartIdentifier) {
             let pos = 0;
             const indented = input.next == 126; /* '~' */
             if (indented) ++pos;
@@ -232,24 +234,40 @@ export const contextTracker = new ContextTracker<Context | null>({
                 tag.push(next);
             }
             if (context) {
-                contextStack.unshift(
-                    new Context('heredoc', { tag, interpolating: !quote || quote === 34 || quote === 96, indented })
-                );
+                // FIXME: THis needs more thought. I believe that it is not so simple as the new context needing to go
+                // onto the beginning or end of the stack. I am rather certain there are cases where the context will
+                // need to be more precisely positioned in the stack.
+                if (context.type === 'heredoc' && context.inBody) {
+                    contextStack.push(context);
+                    return new Context('heredoc', {
+                        tag,
+                        interpolating: !quote || quote === 34 || quote === 96,
+                        indented
+                    });
+                } else {
+                    contextStack.unshift(
+                        new Context('heredoc', { tag, interpolating: !quote || quote === 34 || quote === 96, indented })
+                    );
+                }
                 return context;
             } else {
                 return new Context('heredoc', { tag, interpolating: !quote || quote === 34 || quote === 96, indented });
             }
-        } else if (!context) {
-            const startDelimiter = input.next;
-            if (startDelimiter == 34 /* '"' */ || startDelimiter === 96 /* '`' */) {
-                return new Context('quote', { startDelimiter });
-            } else if (term === patternMatchStart) {
-                let pos = 0;
-                let next;
-                while (isWhitespace((next = input.peek(pos)))) ++pos;
-                if (next == 47 /* '/' */) {
-                    return new Context('regex', { startDelimiter: 47, quoteLikeType: m });
-                }
+        } else if (term === patternMatchStart) {
+            let pos = 0;
+            let next;
+            while (isWhitespace((next = input.peek(pos)))) ++pos;
+            if (next == 47 /* '/' */) {
+                if (context) contextStack.push(context);
+                return new Context('regex', { startDelimiter: 47, quoteLikeType: m });
+            }
+        } else if (
+            !context ||
+            ((context.type !== 'quote' || input.next != context.endDelimiter) && term !== InterpolatedStringContent)
+        ) {
+            if (input.next == 34 /* '"' */ || input.next === 96 /* '`' */) {
+                if (context) contextStack.push(context);
+                return new Context('quote', { startDelimiter: input.next });
             }
         }
 
@@ -277,6 +295,9 @@ export const contextTracker = new ContextTracker<Context | null>({
             }
         }
 
+        if (context.type === 'heredoc' && (term === interpolatedHeredocStart || term === uninterpolatedHeredocStart))
+            context.inBody = true;
+
         if (
             (context.type === 'quote' && input.next === context.endDelimiter) ||
             (context.type === 'quoteLike' && term === QuoteLikeEndDelimiter) ||
@@ -284,8 +305,9 @@ export const contextTracker = new ContextTracker<Context | null>({
             (context.type === 'quoteLike&regex' && term === regexEnd) ||
             term === HeredocEndIdentifier ||
             term === IOOperatorEnd
-        )
+        ) {
             return contextStack.pop() ?? null;
+        }
 
         return context;
     }
@@ -556,6 +578,7 @@ export const heredoc = new ExternalTokenizer(
         if (!(stack.context instanceof Context) || stack.context.type !== 'heredoc') return;
         if (
             (stack.canShift(uninterpolatedHeredocStart) || stack.canShift(interpolatedHeredocStart)) &&
+            !stack.context.inBody &&
             input.next === 10 /* '\n' */
         ) {
             if (stack.context.interpolating) input.acceptToken(interpolatedHeredocStart);
