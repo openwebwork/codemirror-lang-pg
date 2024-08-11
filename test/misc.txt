@@ -4,6 +4,7 @@
 my $var = { expires  => time + 2, valid => 0 };
 my $var = Package->method($var);
 say $_ for grep { $_ ne 'a' } @array;
+;
 
 ==>
 
@@ -54,5 +55,6 @@ Program(
             )
         ),
         ";"
-    )
+    ),
+    EmptyStatement(";")
 )

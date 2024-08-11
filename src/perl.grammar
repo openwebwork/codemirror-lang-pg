@@ -129,12 +129,13 @@ statement[@isGroup=Statement] {
         Block
         Continue?
     } |
-    StandaloneBlock { Label? Block Continue? semicolon? } |
+    StandaloneBlock { Label? Block Continue? ~block semicolon? } |
     NamedBlockStatement { NamedBlock semicolon } |
     SpecialBlock { kw<"sub">? (kw<"BEGIN"> | kw<"UNITCHECK"> | kw<"CHECK"> | kw<"INIT"> | kw<"END">) Block } |
     Ellipsis { "..." } |
     UninterpolatedHeredocBody |
     InterpolatedHeredocBody |
+    EmptyStatement { ~block ";" } |
     PodStatement |
     EndDataStatement[@dynamicPrecedence=4] { (kw<"__END__"> | kw<"__DATA__">) endDataBlock }
 }
@@ -315,7 +316,8 @@ blockStatement {
         !loopControl
         (kw<"next"> | kw<"last"> | kw<"redo">)
         Identifier?
-        (statementModifier? semicolon)
+        statementModifier?
+        semicolon
     }
 }
 
