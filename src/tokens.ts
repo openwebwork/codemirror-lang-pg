@@ -595,19 +595,25 @@ export const heredoc = new ExternalTokenizer(
                     return;
                 }
             } else {
+                const endCount = stack.context.atEnd(input);
+                if (endCount) {
+                    input.acceptToken(HeredocEndIdentifier, endCount);
+                    return;
+                }
+
                 for (;;) {
                     if (input.next < 0) {
                         input.acceptToken(HeredocEndIdentifier);
                         return;
                     }
-                    if (input.next != 10) {
+                    if (input.next != 10 /* '\n' */) {
                         input.advance();
                         continue;
                     }
                     input.advance();
                     const endCount = stack.context.atEnd(input);
                     if (endCount) {
-                        input.acceptToken(HeredocEndIdentifier, endCount);
+                        input.acceptToken(StringContent);
                         return;
                     }
                     input.advance();

@@ -8,7 +8,7 @@ END
 
 Program(
     ExpressionStatement(OutputFunction(print, "(", HeredocInitializer("<<", HeredocStartIdentifier), ")"), ";"),
-    UninterpolatedHeredocBody(HeredocEndIdentifier)
+    UninterpolatedHeredocBody(StringContent, HeredocEndIdentifier)
 )
 
 # doubled quoted tag
@@ -117,7 +117,7 @@ END
 
 Program(
     ExpressionStatement(OutputFunction(print, "(", HeredocInitializer("<<", HeredocStartIdentifier), ")"), ";"),
-    UninterpolatedHeredocBody(HeredocEndIdentifier),
+    UninterpolatedHeredocBody(StringContent, HeredocEndIdentifier),
     ExpressionStatement(OutputFunction(print, "(", HeredocInitializer("<<", HeredocStartIdentifier), ")"), ";"),
     InterpolatedHeredocBody(InterpolatedStringContent, HeredocEndIdentifier)
 )
@@ -138,7 +138,7 @@ END
 
 Program(
     ExpressionStatement(OutputFunction(print, "(", HeredocInitializer("<<", HeredocStartIdentifier), ")"), ";"),
-    UninterpolatedHeredocBody(HeredocEndIdentifier),
+    UninterpolatedHeredocBody(StringContent, HeredocEndIdentifier),
     ExpressionStatement(OutputFunction(print, "(", HeredocInitializer("<<", HeredocStartIdentifier), ")"), ";"),
     InterpolatedHeredocBody(InterpolatedStringContent, HeredocEndIdentifier)
 )
@@ -157,7 +157,7 @@ print <<~ "EOF";
 
 Program(
     ExpressionStatement(OutputFunction(print, HeredocInitializer("<<", HeredocStartIdentifier)), ";"),
-    UninterpolatedHeredocBody(HeredocEndIdentifier),
+    UninterpolatedHeredocBody(StringContent, HeredocEndIdentifier),
     ExpressionStatement(OutputFunction(print, HeredocInitializer("<<", HeredocStartIdentifier)), ";"),
     InterpolatedHeredocBody(InterpolatedStringContent, ScalarVariable, InterpolatedStringContent, HeredocEndIdentifier)
 )
@@ -192,7 +192,7 @@ Program(
         ),
         ";"
     ),
-    UninterpolatedHeredocBody(HeredocEndIdentifier),
+    UninterpolatedHeredocBody(StringContent, HeredocEndIdentifier),
     InterpolatedHeredocBody(InterpolatedStringContent, ScalarVariable, InterpolatedStringContent, HeredocEndIdentifier),
     ExpressionStatement(
         OutputFunction(
@@ -208,7 +208,7 @@ Program(
         ";"
     ),
     InterpolatedHeredocBody(InterpolatedStringContent, ScalarVariable, InterpolatedStringContent, HeredocEndIdentifier),
-    UninterpolatedHeredocBody(HeredocEndIdentifier),
+    UninterpolatedHeredocBody(StringContent, HeredocEndIdentifier),
     InterpolatedHeredocBody(InterpolatedStringContent, ScalarVariable, InterpolatedStringContent, HeredocEndIdentifier)
 )
 
@@ -238,7 +238,7 @@ Program(
         ),
         ";"
     ),
-    UninterpolatedHeredocBody(HeredocEndIdentifier),
+    UninterpolatedHeredocBody(StringContent, HeredocEndIdentifier),
     ExpressionStatement(
         OutputFunction(
             print,
@@ -253,7 +253,7 @@ Program(
         ";"
     ),
     InterpolatedHeredocBody(InterpolatedStringContent, ScalarVariable, InterpolatedStringContent, HeredocEndIdentifier),
-    UninterpolatedHeredocBody(HeredocEndIdentifier)
+    UninterpolatedHeredocBody(StringContent, HeredocEndIdentifier)
 )
 
 # quote like operator containing dereferenced quantities with heredoc starts
@@ -293,7 +293,7 @@ Program(
         ),
         ";"
     ),
-    UninterpolatedHeredocBody(HeredocEndIdentifier),
+    UninterpolatedHeredocBody(StringContent, HeredocEndIdentifier),
     InterpolatedHeredocBody(InterpolatedStringContent, ScalarVariable, InterpolatedStringContent, HeredocEndIdentifier)
 )
 

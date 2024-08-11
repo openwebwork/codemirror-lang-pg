@@ -21,7 +21,13 @@ export const perlLanguage = LRLanguage.define({
                 String: () => null,
                 Statement: continuedIndent()
             }),
-            foldNodeProp.add({ 'Block Array ArrayRef HashRef': foldInside }),
+            foldNodeProp.add({
+                'Block Array ArrayRef HashRef': foldInside,
+                'InterpolatedHeredocBody UninterpolatedHeredocBody': (node) => ({
+                    from: node.prevSibling?.to ?? 0,
+                    to: node.lastChild?.prevSibling?.to ?? 0
+                })
+            }),
             styleTags({
                 'do continue else elsif for foreach goto if last next redo return unless until when while':
                     t.controlKeyword,

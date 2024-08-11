@@ -452,7 +452,7 @@ semicolon { ";" | automaticSemicolon }
     // tokenizer (via canShift) to indicate where the UninterpolatedHeredocBody and InterpolatedHeredocBody start which
     // is at the first new line found after the HeredocInitializer.
     HeredocInitializer { !heredoc "<<" HeredocStartIdentifier }
-    UninterpolatedHeredocBody { uninterpolatedHeredocStart HeredocEndIdentifier }
+    UninterpolatedHeredocBody { uninterpolatedHeredocStart StringContent? HeredocEndIdentifier }
     InterpolatedHeredocBody { interpolatedHeredocStart interpolationContent* HeredocEndIdentifier }
 
     interpolationContent {
