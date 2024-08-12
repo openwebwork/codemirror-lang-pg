@@ -48,8 +48,8 @@
 
     bareword,
     option,
-    packageName,
     packageVariable,
+    packageName,
     constant,
     heredocString,
     callExpressionName,
@@ -326,13 +326,11 @@ blockStatement {
 NamedBlock { (Identifier !named "{" (statement | ReturnExpression semicolon)* "}")+ }
 
 PackageVariable {
-    PackageName {
-        !packageVariable
-        basicVariable
-        ("::" (UnrestrictedIdentifier | Identifier))*
-        "::"
-        PackageVariableName { UnrestrictedIdentifier | Identifier }
-    }
+    PackageName { basicVariable (~package "::" !packageName (UnrestrictedIdentifier | Identifier))* }
+    ~package
+    "::"
+    !packageVariable
+    PackageVariableName { UnrestrictedIdentifier | Identifier }
 }
 
 basicVariable[@dynamicPrecedence=1] {
@@ -343,8 +341,8 @@ basicVariable[@dynamicPrecedence=1] {
 
 variable {
     basicVariable |
-    SpecialScalarVariable
-    //PackageVariable // FIXME: This causes an inconsistency for the interpolatedExpression in the skip set.
+    SpecialScalarVariable |
+    PackageVariable
 }
 
 listType { List | QWList }
@@ -473,7 +471,9 @@ semicolon { ";" | automaticSemicolon }
     // signal (via canShift) to the tokenizer to indicate it shouldn't
     // consume array or hash accessors.
     interpolatedExpression {
-        variable |
+        basicVariable |
+        SpecialScalarVariable |
+        // PackageVariable | // FIXME: This causes an inconsitency in the skip set.
         ArrayAccessVariable {
             ScalarVariable
             (

@@ -50,7 +50,7 @@ export const perlLanguage = LRLanguage.define({
                 '__FILE__ __LINE__ __PACKAGE__ __SUB__': t.literal,
                 'ScalarVariable SpecialScalarVariable ArrayVariable HashVariable': t.variableName,
                 'ArrayLength/Identifier Prototype Constant/Identifier': t.variableName,
-                'PackageVariable/PackageName/PackageVariableName/Identifier': t.variableName,
+                'PackageVariable/PackageVariableName/...': t.variableName,
                 'PackageName/Identifier PackageName/UnrestrictedIdentifier PackageName/ScalarVariable': t.namespace,
                 'PackageName/ArrayVariable PackageName/HashVariable SUPER': t.namespace,
                 'NamedType/...': t.typeName,

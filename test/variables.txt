@@ -215,7 +215,7 @@ Program(
         Assignment(
             VariableDeclaration(local, TypeGlob),
             "=",
-            UnaryExpression(RefOp, PackageVariable(PackageName(ScalarVariable, "::", PackageVariableName(Identifier))))
+            UnaryExpression(RefOp, PackageVariable(PackageName(ScalarVariable), "::", PackageVariableName(Identifier)))
         ),
         ";"
     ),
@@ -237,7 +237,7 @@ $Package::SubPackage::1var = 3;
 Program(
     ExpressionStatement(
         Assignment(
-            PackageVariable(PackageName(ScalarVariable, "::", Identifier, "::", PackageVariableName(Identifier))),
+            PackageVariable(PackageName(ScalarVariable, "::", Identifier), "::", PackageVariableName(Identifier)),
             "=",
             StringSingleQuoted
         ),
@@ -245,7 +245,7 @@ Program(
     ),
     ExpressionStatement(
         Assignment(
-            PackageVariable(PackageName(ArrayVariable, "::", Identifier, "::", PackageVariableName(Identifier))),
+            PackageVariable(PackageName(ArrayVariable, "::", Identifier), "::", PackageVariableName(Identifier)),
             "=",
             List("(", Integer, Comma, Integer, Comma, Integer, ")")
         ),
@@ -253,7 +253,7 @@ Program(
     ),
     ExpressionStatement(
         Assignment(
-            PackageVariable(PackageName(HashVariable, "::", Identifier, "::", PackageVariableName(Identifier))),
+            PackageVariable(PackageName(HashVariable, "::", Identifier), "::", PackageVariableName(Identifier)),
             "=",
             List("(", Pair(Identifier, FatComma, Integer), Comma, Pair(Identifier, FatComma, Integer), ")")
         ),
@@ -262,7 +262,9 @@ Program(
     ExpressionStatement(
         Assignment(
             PackageVariable(
-                PackageName(ScalarVariable, "::", Identifier, "::", PackageVariableName(UnrestrictedIdentifier))
+                PackageName(ScalarVariable, "::", Identifier),
+                "::",
+                PackageVariableName(UnrestrictedIdentifier)
             ),
             "=",
             Integer
