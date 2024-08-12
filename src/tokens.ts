@@ -228,6 +228,8 @@ export const contextTracker = new ContextTracker<Context | null>({
                     : undefined;
             if (!quote && haveWhitespace) return context;
             if (quote) ++pos;
+            const backslashedTag = !quote && input.peek(pos) == 92; /* '\\' */
+            if (backslashedTag && (haveWhitespace || isWhitespace(input.peek(++pos)))) return context;
             if (!isIdentifierChar(input.peek(pos))) return context;
             const tag = [input.peek(pos++)];
             for (;;) {
@@ -243,7 +245,7 @@ export const contextTracker = new ContextTracker<Context | null>({
                     if (contextStack.slice(-1)[0]?.pos !== context.pos) contextStack.push(context);
                     return new Context('heredoc', stack.pos, {
                         tag,
-                        interpolating: !quote || quote === 34 || quote === 96,
+                        interpolating: (!quote || quote === 34 || quote === 96) && !backslashedTag,
                         indented
                     });
                 } else {
@@ -251,7 +253,7 @@ export const contextTracker = new ContextTracker<Context | null>({
                         contextStack.unshift(
                             new Context('heredoc', stack.pos, {
                                 tag,
-                                interpolating: !quote || quote === 34 || quote === 96,
+                                interpolating: (!quote || quote === 34 || quote === 96) && !backslashedTag,
                                 indented
                             })
                         );
@@ -261,7 +263,7 @@ export const contextTracker = new ContextTracker<Context | null>({
             } else {
                 return new Context('heredoc', stack.pos, {
                     tag,
-                    interpolating: !quote || quote === 34 || quote === 96,
+                    interpolating: (!quote || quote === 34 || quote === 96) && !backslashedTag,
                     indented
                 });
             }
@@ -576,6 +578,7 @@ export const heredoc = new ExternalTokenizer(
                     : undefined;
             if (!quote && isWhitespace(input.peek(-1))) return;
             if (quote) input.advance();
+            if (input.next == 92 /* '\\' */ && (isWhitespace(input.peek(-1)) || isWhitespace(input.advance()))) return;
             if (!isIdentifierChar(input.next)) return;
             for (;;) {
                 input.advance();

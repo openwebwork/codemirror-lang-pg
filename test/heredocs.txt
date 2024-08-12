@@ -88,6 +88,19 @@ Program(
     )
 )
 
+# backslashed tag
+
+say <<\END;
+uninterpolated content $var
+END
+
+==>
+
+Program(
+    ExpressionStatement(OutputFunction(say, HeredocString("<<", HeredocStartIdentifier)), ";"),
+    UninterpolatedHeredocBody(StringContent, HeredocEndIdentifier)
+)
+
 # backtick quoted tag
 
 print(<< `END`);
