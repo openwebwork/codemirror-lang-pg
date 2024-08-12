@@ -92,14 +92,14 @@ ${$var};
 ==>
 
 Program(
-    ExpressionStatement(ScalarDereference(DerefOp, ScalarVariable), ";"),
-    ExpressionStatement(ScalarDereference(DerefOp, "{", ScalarVariable, "}"), ";"),
-    ExpressionStatement(ArrayDereference(DerefOp, ScalarVariable), ";"),
-    ExpressionStatement(ArrayDereference(DerefOp, HashRef("{", ScalarVariable, "}")), ";"),
+    ExpressionStatement(ScalarDereference("$", ScalarVariable), ";"),
+    ExpressionStatement(ScalarDereference("$", "{", ScalarVariable, "}"), ";"),
+    ExpressionStatement(ArrayDereference("@", ScalarVariable), ";"),
+    ExpressionStatement(ArrayDereference("@" "{", ScalarVariable, "}"), ";"),
     ExpressionStatement(HashDereference("%", ScalarVariable), ";"),
-    ExpressionStatement(HashDereference("%{", ScalarVariable, "}"), ";"),
-    ExpressionStatement(TypeGlobDereference(ArithOp, HashRef("{", ScalarVariable, "}")), ";"),
-    ExpressionStatement(TypeGlobDereference(ArithOp, ScalarVariable), ";"),
+    ExpressionStatement(HashDereference("%", "{", ScalarVariable, "}"), ";"),
+    ExpressionStatement(TypeGlobDereference("*", "{", ScalarVariable, "}"), ";"),
+    ExpressionStatement(TypeGlobDereference("*", ScalarVariable), ";"),
     ExpressionStatement(
         FunctionDereference(
             "&",

@@ -23,12 +23,12 @@ $var--;
 Program(
     ExpressionStatement(BinaryExpression(BinaryExpression(Integer, ArithOp, Integer), ArithOp, Integer), ";"),
     ExpressionStatement(BinaryExpression(BinaryExpression(Integer, ArithOp, Integer), ArithOp, Integer), ";"),
-    ExpressionStatement(BinaryExpression(BinaryExpression(Integer, ArithOp, Integer), ArithOp, Integer), ";"),
+    ExpressionStatement(BinaryExpression(BinaryExpression(Integer, "*", Integer), "*", Integer), ";"),
     ExpressionStatement(BinaryExpression(BinaryExpression(Integer, "/", Integer), "/", Integer), ";"),
     ExpressionStatement(BinaryExpression(BinaryExpression(Integer, "%", Integer), "%", Integer), ";"),
     ExpressionStatement(BinaryExpression(Integer, ArithOp, BinaryExpression(Integer, ArithOp, Integer)), ";"),
     ExpressionStatement(BinaryExpression(List("(", Integer, ")"), x, Integer), ";"),
-    ExpressionStatement(BinaryExpression(Integer, ArithOp, BinaryExpression(Integer, ArithOp, Integer)), ";"),
+    ExpressionStatement(BinaryExpression(Integer, ArithOp, BinaryExpression(Integer, "*", Integer)), ";"),
     ExpressionStatement(BinaryExpression(Integer, ArithOp, BinaryExpression(Integer, "/", Integer)), ";"),
     ExpressionStatement(UnaryExpression(ArithOp, Integer), ";"),
     ExpressionStatement(UnaryExpression(ArithOp, Integer), ";"),
@@ -38,7 +38,7 @@ Program(
     ExpressionStatement(UpdateExpression(ScalarVariable, ArithOp), ";"),
     ExpressionStatement(UpdateExpression(ScalarVariable, ArithOp), ";"),
     ExpressionStatement(
-        BinaryExpression(List("(", BinaryExpression(Float, ArithOp, Float), ")"), ArithOp, Integer),
+        BinaryExpression(List("(", BinaryExpression(Float, ArithOp, Float), ")"), "*", Integer),
         ";"
     )
 )

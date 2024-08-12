@@ -395,7 +395,7 @@ Program(
         ArrayModifierFunction(
             push,
             "(",
-            ArrayDereference(DerefOp, HashRef("{", ScalarVariable, "}")),
+            ArrayDereference("@", "{", ScalarVariable, "}"),
             Comma,
             Arguments(Integer, Comma, Integer, Comma, Integer),
             ")"
@@ -406,7 +406,8 @@ Program(
         HashOrArrayDestructureFunction(
             keys,
             HashDereference(
-                "%{",
+                "%",
+                "{",
                 CallExpression(FunctionName(Identifier), ParenthesizedArguments("(", ScalarVariable, ")")),
                 "}"
             )
@@ -469,7 +470,7 @@ Program(
     ExpressionStatement(NamedUnaryExpression(NamedUnaryOperator, ScalarVariable), ";"),
     ExpressionStatement(NamedUnaryExpression(NamedUnaryOperator, List("(", ScalarVariable, ")")), ";"),
     ExpressionStatement(
-        BinaryExpression(NamedUnaryExpression(NamedUnaryOperator, List("(", Integer, ")")), ArithOp, Integer), ";"
+        BinaryExpression(NamedUnaryExpression(NamedUnaryOperator, List("(", Integer, ")")), "*", Integer), ";"
     )
 )
 

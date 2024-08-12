@@ -173,11 +173,8 @@ expression[@isGroup=Expression] {
     ScalarDereference |
     ArrayDereference |
     HashDereference |
-    // FIXME: The "&" in this should be a DerefOp, but that conflicts
-    // with the bitwise and operator and call expressions.
-    FunctionDereference { "&" !unary (ScalarVariable | "{" expression "}") } |
-    // FIXME: The "*" in this should also be a DerefOp, but that conflicts with the multiplication operator.
-    TypeGlobDereference { ArithOp<"*"> !unary (expression | "{" expression "}") } |
+    FunctionDereference { "&" (ScalarDereference | ScalarVariable | "{" expression "}") } |
+    TypeGlobDereference { "*" (ScalarDereference | ScalarVariable | "{" expression "}") } |
     Constant |
     VariableDeclaration { scope ("(" commaSep<maybeParens<variable | TypeGlob>> ")" | variable | TypeGlob) } |
     AnonymousFunction |
@@ -187,7 +184,7 @@ expression[@isGroup=Expression] {
         expression !exponent ArithOp<"**"> expression |
         expression !binding BindingOp<"=~" | "!~"> expression |
         !op expression !mult "%" expression |
-        expression !mult (ArithOp<"*"> | "/" | kw<"x">) expression |
+        expression !mult ("*" | "/" | kw<"x">) expression |
         expression !plus (ArithOp<"+"> | ArithOp<"-">) expression |
         expression !plus ConcatOp<"."> expression |
         expression !shift ("<<" | BitOp<">>">) expression |
@@ -347,11 +344,6 @@ variable {
 
 listType { List | QWList }
 
-interpolation {
-    ScalarDereference |
-    ArrayDereference { DerefOp<"@"> !unary (ScalarVariable | ScalarDereference | "{" expression "}") }
-}
-
 quotedString { StringSingleQuoted | StringQQuoted | StringDoubleQuoted | StringQqQuoted }
 HeredocString { heredocInitializer (!heredocString UninterpolatedHeredocBody | InterpolatedHeredocBody)? }
 string { quotedString | HeredocString }
@@ -364,13 +356,9 @@ List { !list "(" !listContents commaSep<expression> ")" }
 ArrayRef { "[" commaSep<expression> "]" }
 HashRef { ArithOp<"+">? "{" commaSep<expression> "}" }
 
-ScalarDereference {
-    DerefOp<"$"> "{" (expression | !scalarDeref ScalarDereference | !scalar ScalarVariable) "}" |
-    DerefOp<"$"> (ScalarDereference | ScalarVariable)
-}
-ArrayDereference { DerefOp<"@"> !unary (expression | "{" expression "}") }
-// FIXME: The "%" in this should also be a DerefOp, but that conflicts with the modulus operator.
-HashDereference { "%" !unary expression | "%{" expression "}" }
+ScalarDereference { "$" (ScalarDereference | ScalarVariable | "{" expression "}") }
+ArrayDereference { "@" (ScalarDereference | ScalarVariable | "{" expression "}") }
+HashDereference { "%" (ScalarDereference | ScalarVariable | "{" expression "}") }
 
 toReference { RefOp<"\\"> !unary expression }
 
@@ -462,7 +450,8 @@ semicolon { ";" | automaticSemicolon }
         InterpolatedStringContent |
         EscapeSequence |
         interpolatedExpression |
-        interpolation |
+        ScalarDereference |
+        ArrayDereference |
         UninterpolatedHeredocBody |
         InterpolatedHeredocBody
     }
@@ -584,7 +573,6 @@ maybeParens<content> { !noParens content | "(" !parens content ")" }
     BitOp<term> { term }
     ConcatOp<term> { term }
     RangeOp<term> { term }
-    DerefOp<term> { term }
 
     ModuleName { "'" ![\n]* ".pm" "'" | "\"" ![\n]* ".pm" "\"" }
 
@@ -609,8 +597,8 @@ maybeParens<content> { !noParens content | "(" !parens content ")" }
 
     Comment[isolate] { "#" ![\n]* }
 
-    "%{"[closedBy="}"] "->{"[closedBy="}"] "{" "}" "->["[closedBy="]"] "[" "]" "(" ")"
-    "<<" "$#" "%" ";" ":" "::" "\\" "&" "=" "/"
+    "->{"[closedBy="}"] "{" "}" "->["[closedBy="]"] "[" "]" "(" ")"
+    "$" "@" "%" "&" "*" "<<" "$#" ";" ":" "::" "\\" "=" "/"
 
     @precedence {
         ModuleName,
@@ -627,15 +615,16 @@ maybeParens<content> { !noParens content | "(" !parens content ")" }
         TypeGlob,
         Prototype,
         "$#",
-        "%{",
         UpdateOp,
-        "%",
         ConcatOp,
         ArithOp,
-        DerefOp,
+        "$",
+        "@",
+        "%",
+        "&",
+        "*",
         "/",
-        "[",
-        "&"
+        "["
     }
 }
 

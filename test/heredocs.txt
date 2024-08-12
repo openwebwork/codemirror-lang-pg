@@ -35,14 +35,14 @@ Program(
         HashAccessVariable(ScalarVariable, "->{", Identifier, "}", "->{", Identifier, "}"),
         InterpolatedStringContent,
         ScalarDereference(
-            DerefOp,
+            "$",
             "{",
             UnaryExpression(RefOp, List("(", BinaryExpression(ScalarVariable, ArithOp, Integer), ")")),
             "}"
         ),
         InterpolatedStringContent,
         ArrayDereference(
-            DerefOp,
+            "@",
             "{",
             ArrayRef("[", BinaryExpression(StringSingleQuoted, ConcatOp, StringSingleQuoted), "]"),
             "}"
@@ -288,14 +288,14 @@ Program(
                 QuoteLikeStartDelimiter,
                 InterpolatedStringContent,
                 ArrayDereference(
-                    DerefOp,
+                    "@",
                     "{",
                     ArrayRef("[", HeredocString("<<", HeredocStartIdentifier), "]"),
                     "}"
                 ),
                 InterpolatedStringContent,
                 ScalarDereference(
-                    DerefOp,
+                    "$",
                     "{",
                     UnaryExpression(RefOp, List("(", HeredocString("<<", HeredocStartIdentifier), ")")),
                     "}"
@@ -325,7 +325,7 @@ Program(
     ExpressionStatement(OutputFunction(print, HeredocString("<<", HeredocStartIdentifier)), ";"),
     InterpolatedHeredocBody(
         InterpolatedStringContent,
-        ArrayDereference(DerefOp, "{", ArrayRef("[", HeredocString("<<", HeredocStartIdentifier), "]"), "}"),
+        ArrayDereference("@", "{", ArrayRef("[", HeredocString("<<", HeredocStartIdentifier), "]"), "}"),
         InterpolatedHeredocBody(
             InterpolatedStringContent,
             ScalarVariable,
@@ -354,7 +354,7 @@ Program(
     InterpolatedHeredocBody(
         InterpolatedStringContent,
         ArrayDereference(
-            DerefOp,
+            "@",
             "{",
             ArrayRef(
                 "[",
@@ -363,7 +363,7 @@ Program(
                     QuoteLikeStartDelimiter,
                     InterpolatedStringContent,
                     ScalarDereference(
-                        DerefOp,
+                        "$",
                         "{",
                         UnaryExpression(
                             RefOp,
