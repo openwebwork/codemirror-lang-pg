@@ -447,7 +447,7 @@ semicolon { ";" | automaticSemicolon }
         QuoteLikeEndDelimiter
         RegexOptions? regexEnd
     }
-    PodStatement { podBlock }
+    PodStatement { PodDirective PodContent PodCut }
 
     quoteLikeMiddle { QuoteLikeSeparatorDelimiter | QuoteLikeEndDelimiter injectedComments? QuoteLikeStartDelimiter }
 
@@ -538,8 +538,8 @@ maybeParens<content> { !noParens content | "(" !parens content ")" }
     StringContent
     QWElement
 }
-@external tokens regex from "./tokens" { patternMatchStart RegexOptions regexEnd }
-@external tokens podStatement from "./tokens" { podBlock }
+@external tokens regex from "./tokens" { patternMatchStart, RegexOptions, regexEnd }
+@external tokens pod from "./tokens" { PodDirective, PodContent, PodCut }
 @external tokens endData from "./tokens" { endDataBlock }
 
 @tokens {

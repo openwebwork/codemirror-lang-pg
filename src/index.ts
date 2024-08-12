@@ -23,10 +23,19 @@ export const perlLanguage = LRLanguage.define({
             }),
             foldNodeProp.add({
                 'Block Array ArrayRef HashRef': foldInside,
-                'InterpolatedHeredocBody UninterpolatedHeredocBody': (node) => ({
-                    from: node.prevSibling?.to ?? 0,
-                    to: node.lastChild?.prevSibling?.to ?? 0
-                })
+                'InterpolatedHeredocBody UninterpolatedHeredocBody': (node) => {
+                    if (node.prevSibling && node.lastChild?.prevSibling)
+                        return { from: node.prevSibling.to, to: node.lastChild.prevSibling.to };
+                    return null;
+                },
+                PodStatement(node) {
+                    if (
+                        node.firstChild?.type.name === 'PodDirective' &&
+                        node.firstChild.nextSibling?.type.name === 'PodContent'
+                    )
+                        return { from: node.firstChild.nextSibling.from, to: node.firstChild.nextSibling.to };
+                    return null;
+                }
             }),
             styleTags({
                 'do continue else elsif for foreach goto if last next redo return unless until when while':
