@@ -123,6 +123,7 @@ type ContextType = 'quote' | 'quoteLike' | 'regex' | 'quoteLike&regex' | 'heredo
 // Base class that all tracker contexts extend.
 class Context {
     type: ContextType;
+    pos: number;
 
     // Used by quote and quoteLike operators.
     startDelimiter?: number;
@@ -142,6 +143,7 @@ class Context {
 
     constructor(
         type: ContextType,
+        pos: number,
         options: {
             startDelimiter?: number;
             quoteLikeType?: number;
@@ -151,6 +153,7 @@ class Context {
         } = {}
     ) {
         this.type = type;
+        this.pos = pos;
         this.quoteLikeType = options.quoteLikeType;
         this.interpolating = options.interpolating ?? true;
         this.indented = options.indented ?? false;
@@ -192,25 +195,22 @@ class Context {
 
 const contextStack: Context[] = [];
 // FIXME: This is some annoying thing that Lezer does.  I believe that due ambiguity markers in the grammar the heredoc
-// external tokenizer can be called twice with the same input.  So this lastTerm is a protection against a second
-// context from being pushed onto the contextStack for the same input.
-let lastTerm = -1;
+// external tokenizer can be called twice with the same input.  So lastContextPos is a protection against a second
+// context from being removed from the stack at the end position of a previous context.
+let lastContextEndPos = -1;
 
 export const contextTracker = new ContextTracker<Context | null>({
     start: null,
-    shift(context, term, _stack, input) {
-        if (lastTerm === term) return context;
-        lastTerm = term;
-
+    shift(context, term, stack, input) {
         if (term === q || term === qq || term === qx || term === qw) {
-            if (context) contextStack.push(context);
-            return new Context('quoteLike', { quoteLikeType: term });
+            if (context && contextStack.slice(-1)[0]?.pos !== context.pos) contextStack.push(context);
+            return new Context('quoteLike', stack.pos, { quoteLikeType: term });
         } else if (term === m || term === qr || term === s || term === tr || term === y) {
-            if (context) contextStack.push(context);
-            return new Context('quoteLike&regex', { quoteLikeType: term });
+            if (context && contextStack.slice(-1)[0]?.pos !== context.pos) contextStack.push(context);
+            return new Context('quoteLike&regex', stack.pos, { quoteLikeType: term });
         } else if (term === IOOperatorStart) {
-            if (context) contextStack.push(context);
-            return new Context('iooperator');
+            if (context && contextStack.slice(-1)[0]?.pos !== context.pos) contextStack.push(context);
+            return new Context('iooperator', stack.pos);
         } else if (term === HeredocStartIdentifier) {
             let pos = 0;
             const indented = input.next == 126; /* '~' */
@@ -238,36 +238,46 @@ export const contextTracker = new ContextTracker<Context | null>({
                 // onto the beginning or end of the stack. I am rather certain there are cases where the context will
                 // need to be more precisely positioned in the stack.
                 if (context.type === 'heredoc' && context.inBody) {
-                    contextStack.push(context);
-                    return new Context('heredoc', {
+                    if (contextStack.slice(-1)[0]?.pos !== context.pos) contextStack.push(context);
+                    return new Context('heredoc', stack.pos, {
                         tag,
                         interpolating: !quote || quote === 34 || quote === 96,
                         indented
                     });
                 } else {
-                    contextStack.unshift(
-                        new Context('heredoc', { tag, interpolating: !quote || quote === 34 || quote === 96, indented })
-                    );
+                    if (!contextStack.length || contextStack[0].pos !== stack.pos) {
+                        contextStack.unshift(
+                            new Context('heredoc', stack.pos, {
+                                tag,
+                                interpolating: !quote || quote === 34 || quote === 96,
+                                indented
+                            })
+                        );
+                    }
                 }
                 return context;
             } else {
-                return new Context('heredoc', { tag, interpolating: !quote || quote === 34 || quote === 96, indented });
+                return new Context('heredoc', stack.pos, {
+                    tag,
+                    interpolating: !quote || quote === 34 || quote === 96,
+                    indented
+                });
             }
         } else if (term === patternMatchStart) {
             let pos = 0;
             let next;
             while (isWhitespace((next = input.peek(pos)))) ++pos;
             if (next == 47 /* '/' */) {
-                if (context) contextStack.push(context);
-                return new Context('regex', { startDelimiter: 47, quoteLikeType: m });
+                if (context && contextStack.slice(-1)[0]?.pos !== context.pos) contextStack.push(context);
+                return new Context('regex', stack.pos, { startDelimiter: 47, quoteLikeType: m });
             }
         } else if (
             !context ||
             ((context.type !== 'quote' || input.next != context.endDelimiter) && term !== InterpolatedStringContent)
         ) {
             if (input.next == 34 /* '"' */ || input.next === 96 /* '`' */) {
-                if (context) contextStack.push(context);
-                return new Context('quote', { startDelimiter: input.next });
+                if (context && contextStack.slice(-1)[0]?.pos !== context.pos) contextStack.push(context);
+                return new Context('quote', stack.pos, { startDelimiter: input.next });
             }
         }
 
@@ -291,7 +301,6 @@ export const contextTracker = new ContextTracker<Context | null>({
                         startDelimiter === 39) /* "'" */
                 )
                     context.interpolating = false;
-                return context;
             }
         }
 
@@ -299,13 +308,15 @@ export const contextTracker = new ContextTracker<Context | null>({
             context.inBody = true;
 
         if (
-            (context.type === 'quote' && input.next === context.endDelimiter) ||
-            (context.type === 'quoteLike' && term === QuoteLikeEndDelimiter) ||
-            (context.type === 'regex' && term === regexEnd) ||
-            (context.type === 'quoteLike&regex' && term === regexEnd) ||
-            term === HeredocEndIdentifier ||
-            term === IOOperatorEnd
+            lastContextEndPos !== stack.pos &&
+            ((context.type === 'quote' && input.next === context.endDelimiter) ||
+                (context.type === 'quoteLike' && term === QuoteLikeEndDelimiter) ||
+                (context.type === 'regex' && term === regexEnd) ||
+                (context.type === 'quoteLike&regex' && term === regexEnd) ||
+                term === HeredocEndIdentifier ||
+                term === IOOperatorEnd)
         ) {
+            lastContextEndPos = stack.pos;
             return contextStack.pop() ?? null;
         }
 
@@ -584,7 +595,7 @@ export const heredoc = new ExternalTokenizer(
             if (stack.context.interpolating) input.acceptToken(interpolatedHeredocStart);
             else input.acceptToken(uninterpolatedHeredocStart);
             return;
-        } else if (stack.context.tag) {
+        } else if (stack.context.inBody && stack.context.tag) {
             if (stack.context.interpolating) {
                 const endCount = stack.context.atEnd(input);
                 if (endCount) {

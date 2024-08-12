@@ -51,6 +51,8 @@
     packageName,
     packageVariable,
     constant,
+    heredocString,
+    callExpressionName,
 
     loopControl,
     return @left,
@@ -218,7 +220,7 @@ expression[@isGroup=Expression] {
     NamedUnaryExpression { NamedUnaryOperator !namedUnary maybeParens<expression>? } |
     ListOperatorExpression { (ListOperator | builtinArrayFunction) (ParenthesizedArguments | Arguments) } |
     CallExpression {
-        FunctionName { "&"? (PackageName | (!bareword Identifier ~identifier)) }
+        FunctionName { "&"? !callExpressionName (PackageName | Identifier) ~methodName }
         (ParenthesizedArguments | Arguments)
     } |
     CallExpressionWithBareword {
@@ -353,7 +355,8 @@ interpolation {
 }
 
 quotedString { StringSingleQuoted | StringQQuoted | StringDoubleQuoted | StringQqQuoted }
-string { quotedString | HeredocInitializer }
+HeredocString { heredocInitializer (!heredocString UninterpolatedHeredocBody | InterpolatedHeredocBody)? }
+string { quotedString | HeredocString }
 
 list { listType | ArrayVariable }
 
@@ -452,8 +455,8 @@ semicolon { ";" | automaticSemicolon }
 
     // The uninterpolatedHeredocStart and interpolatedHeredocStart tokens are fake tokens that are used as signals the
     // tokenizer (via canShift) to indicate where the UninterpolatedHeredocBody and InterpolatedHeredocBody start which
-    // is at the first new line found after the HeredocInitializer.
-    HeredocInitializer { !heredoc "<<" HeredocStartIdentifier }
+    // is at the first new line found after the heredocInitializer.
+    heredocInitializer { !heredoc "<<" HeredocStartIdentifier }
     UninterpolatedHeredocBody { uninterpolatedHeredocStart StringContent? HeredocEndIdentifier }
     InterpolatedHeredocBody { interpolatedHeredocStart interpolationContent* HeredocEndIdentifier }
 
