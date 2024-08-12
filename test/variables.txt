@@ -229,7 +229,7 @@ Program(
 
 $Package::SubPackage::VERSION = '2.16';
 @Package::SubPackage::array = (1, 2, 3);
-%Package::SubPackage::hash = (a => 3, b = 4);
+%Package::SubPackage::hash = (a => 3, b => 4);
 $Package::SubPackage::1var = 3;
 
 ==>
@@ -255,7 +255,7 @@ Program(
         Assignment(
             PackageVariable(PackageName(HashVariable, "::", Identifier, "::", PackageVariableName(Identifier))),
             "=",
-            List("(", Pair(Identifier, FatComma, Integer), Comma, Assignment(Constant(Identifier), "=", Integer), ")")
+            List("(", Pair(Identifier, FatComma, Integer), Comma, Pair(Identifier, FatComma, Integer), ")")
         ),
         ";"
     ),
