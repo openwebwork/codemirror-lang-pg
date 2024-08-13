@@ -18,6 +18,7 @@ import {
     InterpolatedStringContent,
     EscapeSequence,
     afterInterpolation,
+    packageNamePart,
     afterPackageName,
     QuoteLikeStartDelimiter,
     QuoteLikeSeparatorDelimiter,
@@ -730,12 +731,12 @@ export const interpolated = new ExternalTokenizer(
                 !content &&
                 input.next === 58 /* ':' */ &&
                 input.peek(1) === 58 &&
-                (stack.canShift(afterInterpolation) || stack.canShift(afterPackageName))
+                (stack.canShift(packageNamePart) || stack.canShift(afterPackageName))
             ) {
                 let pos = 2,
                     ch;
                 while (isIdentifierChar((ch = input.peek(pos)))) ++pos;
-                if (ch === 58 && input.peek(pos + 1) === 58) input.acceptToken(afterInterpolation);
+                if (ch === 58 && input.peek(pos + 1) === 58) input.acceptToken(packageNamePart);
                 else input.acceptToken(afterPackageName);
                 return;
             }

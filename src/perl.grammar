@@ -464,7 +464,7 @@ semicolon { ";" | automaticSemicolon }
         basicVariable |
         SpecialScalarVariable |
         PackageVariable {
-            PackageName { ScalarVariable (afterInterpolation "::" (UnrestrictedIdentifier | Identifier))* }
+            PackageName { ScalarVariable (packageNamePart "::" (UnrestrictedIdentifier | Identifier))* }
             afterPackageName
             "::"
             PackageVariableName { UnrestrictedIdentifier | Identifier }
@@ -484,7 +484,9 @@ semicolon { ";" | automaticSemicolon }
             (
                 afterInterpolation?
                 !hashMember
-                (("->{" | "{") ((!bareword Identifier) | ScalarVariable | quotedString) "}")
+                ("->{" | "{")
+                ((!bareword Identifier) | ScalarVariable | quotedString)
+                "}"
             )+
         }
     }
@@ -529,6 +531,7 @@ maybeParens<content> { !noParens content | "(" !parens content ")" }
     InterpolatedStringContent,
     EscapeSequence,
     afterInterpolation,
+    packageNamePart,
     afterPackageName
 }
 @external tokens quoteLikeOperator from "./tokens" {
