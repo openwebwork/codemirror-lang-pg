@@ -56,7 +56,6 @@
 
     loopControl,
     return @left,
-    scalar,
     zeroOrMore,
     atLeastOne
 }
@@ -236,7 +235,7 @@ expression[@isGroup=Expression] {
         (kw<"exec"> | kw<"system">) maybeParens<(Block | ScalarVariable)? (~arguments commaSep<expression>)>
     } |
     MethodInvocation {
-        ((PackageName | StringSingleQuoted | ScalarVariable | expression) ~methodName)
+        ((Identifier | PackageName | StringSingleQuoted | ScalarVariable | expression) ~methodName)
         (
             !method
             ArrowOperator

@@ -36,7 +36,7 @@ Program(
             VariableDeclaration(my, ScalarVariable),
             "=",
             MethodInvocation(
-                Constant(Identifier),
+                Identifier,
                 ArrowOperator,
                 FunctionName(Identifier),
                 ParenthesizedArguments("(", ScalarVariable, ")")
