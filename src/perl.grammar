@@ -145,7 +145,6 @@ statement[@isGroup=Statement] {
 expression[@isGroup=Expression] {
     variable |
     TypeGlob |
-    PackageVariable |
     Option |
     string |
     Integer |
@@ -411,7 +410,8 @@ semicolon { ";" | automaticSemicolon }
         QuoteLikeStartDelimiter
         (StringContent | interpolationContent*)
         QuoteLikeEndDelimiter
-        RegexOptions? regexEnd
+        RegexOptions?
+        regexEnd
     }
     SubstitutionS {
         kw<"s">
@@ -421,7 +421,8 @@ semicolon { ";" | automaticSemicolon }
         quoteLikeMiddle
         (StringContent | interpolationContent*)
         QuoteLikeEndDelimiter
-        RegexOptions? regexEnd
+        RegexOptions?
+        regexEnd
     }
     TransliterationTrOrY {
         (kw<"tr"> | kw<"y">)
@@ -431,7 +432,8 @@ semicolon { ";" | automaticSemicolon }
         quoteLikeMiddle
         StringContent
         QuoteLikeEndDelimiter
-        RegexOptions? regexEnd
+        RegexOptions?
+        regexEnd
     }
     PodStatement { PodDirective PodContent PodCut }
 
