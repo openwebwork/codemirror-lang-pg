@@ -7,6 +7,7 @@
 "deref hash access: $var->{b} $var2->{a}{b} $var3->{a}->{b}";
 "dereferenced scalar reference ${\($a + 2)}";
 "dereferenced arary reference @{['a' . 'b']}";
+"interpolated package variable $Foo::Package::var";
 
 ==>
 
@@ -65,6 +66,13 @@ Program(
                 ArrayRef("[", BinaryExpression(StringSingleQuoted, ConcatOp, StringSingleQuoted), "]"),
                 "}"
             )
+        ),
+        ";"
+    ),
+    ExpressionStatement(
+        StringDoubleQuoted(
+            InterpolatedStringContent,
+            PackageVariable(PackageName(ScalarVariable, "::", Identifier), "::", PackageVariableName(Identifier))
         ),
         ";"
     )

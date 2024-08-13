@@ -464,7 +464,12 @@ semicolon { ";" | automaticSemicolon }
     interpolatedExpression {
         basicVariable |
         SpecialScalarVariable |
-        // PackageVariable | // FIXME: This causes an inconsitency in the skip set.
+        PackageVariable {
+            PackageName { ScalarVariable (afterInterpolation "::" (UnrestrictedIdentifier | Identifier))* }
+            afterPackageName
+            "::"
+            PackageVariableName { UnrestrictedIdentifier | Identifier }
+        } |
         ArrayAccessVariable {
             ScalarVariable
             (
@@ -521,7 +526,12 @@ maybeParens<content> { !noParens content | "(" !parens content ")" }
     interpolatedHeredocStart,
     HeredocEndIdentifier
 }
-@external tokens interpolated from "./tokens" { InterpolatedStringContent, EscapeSequence, afterInterpolation }
+@external tokens interpolated from "./tokens" {
+    InterpolatedStringContent,
+    EscapeSequence,
+    afterInterpolation,
+    afterPackageName
+}
 @external tokens quoteLikeOperator from "./tokens" {
     QuoteLikeStartDelimiter
     QuoteLikeSeparatorDelimiter
