@@ -7,8 +7,8 @@
 
     recursive,
     arrayFunction,
-    method,
-    callExpressionBare,
+
+    arrowOperator @left,
 
     incdec @left,
     unary @right,
@@ -159,8 +159,14 @@ expression[@isGroup=Expression] {
     ArrayLength { "$#" (Identifier | ScalarVariable | "{" expression "}") } |
     ArrayRef |
     HashRef |
-    ArrayAccessVariable { expression (!arrayMember ("->[" | "[") expression "]")+ } |
-    HashAccessVariable { expression (!hashMember ("->{" | "{") ((!bareword Identifier) | expression) "}")+ } |
+    ArrayAccessVariable {
+        (ScalarVariable | expression)
+        (!arrayMember (ArrowOperator !arrowOperator)? "[" expression "]")
+    } |
+    HashAccessVariable {
+        (ScalarVariable | expression)
+        (!hashMember (ArrowOperator !arrowOperator)? "{" ((!bareword Identifier) | expression) "}")
+    } |
     BacktickQuoted |
     CommandQxQuoted |
     PatternMatchM |
@@ -219,7 +225,7 @@ expression[@isGroup=Expression] {
         (ParenthesizedArguments | Arguments)
     } |
     CallExpressionWithBareword {
-        FunctionName { "&" !callExpressionBare (PackageName | (!bareword Identifier)) }
+        FunctionName { "&" (PackageName | (!bareword Identifier)) }
     } |
     Bless { kw<"bless"> maybeParens<reference (commaOperator expression)?> } |
     OutputFunction {
@@ -235,10 +241,10 @@ expression[@isGroup=Expression] {
         (kw<"exec"> | kw<"system">) maybeParens<(Block | ScalarVariable)? (~arguments commaSep<expression>)>
     } |
     MethodInvocation {
-        ((Identifier | PackageName | StringSingleQuoted | ScalarVariable | expression) ~methodName)
+        ((!bareword Identifier | PackageName | StringSingleQuoted | ScalarVariable | expression) ~methodName)
         (
-            !method
             ArrowOperator
+            !arrowOperator
             (
                 (kw<"SUPER"> "::")? FunctionName { !bareword Identifier } |
                 SpecialScalarVariable |
@@ -247,7 +253,7 @@ expression[@isGroup=Expression] {
                 ParenthesizedArguments
             )
             ParenthesizedArguments?
-        )+
+        )
     } |
     IndirectMethodInvocation {
         (kw<"SUPER"> "::")? FunctionName { !bareword Identifier ~identifier }
@@ -474,7 +480,8 @@ semicolon { ";" | automaticSemicolon }
             (
                 afterInterpolation?
                 !arrayMember
-                ("->[" | "[")
+                (ArrowOperator !arrowOperator)?
+                "["
                 (Integer | ArithOp<"-"> Integer | Float | ScalarVariable | quotedString)
                 "]"
             )+
@@ -484,7 +491,8 @@ semicolon { ";" | automaticSemicolon }
             (
                 afterInterpolation?
                 !hashMember
-                ("->{" | "{")
+                (ArrowOperator !arrowOperator)?
+                "{"
                 ((!bareword Identifier) | ScalarVariable | quotedString)
                 "}"
             )+
@@ -611,8 +619,7 @@ maybeParens<content> { !noParens content | "(" !parens content ")" }
 
     Comment[isolate] { "#" ![\n]* }
 
-    "->{"[closedBy="}"] "{" "}" "->["[closedBy="]"] "[" "]" "(" ")"
-    "$" "@" "%" "&" "*" "<<" "$#" ";" ":" "::" "\\" "=" "/"
+    "{" "}" "[" "]" "(" ")" "$" "@" "%" "&" "*" "<<" "$#" ";" ":" "::" "\\" "=" "/"
 
     @precedence {
         ModuleName,

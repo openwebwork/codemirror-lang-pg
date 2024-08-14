@@ -440,7 +440,8 @@ Program(
             NamedUnaryOperator,
             HashAccessVariable(
                 MethodInvocation(ScalarVariable, ArrowOperator, FunctionName(Identifier)),
-                "->{",
+                ArrowOperator,
+                "{",
                 Identifier,
                 "}"
             )
@@ -452,7 +453,8 @@ Program(
             NamedUnaryOperator,
             ArrayAccessVariable(
                 MethodInvocation(ScalarVariable, ArrowOperator, FunctionName(Identifier)),
-                "->[",
+                ArrowOperator,
+                "[",
                 Integer,
                 "]"
             )

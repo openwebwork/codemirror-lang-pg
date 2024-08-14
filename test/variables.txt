@@ -167,17 +167,55 @@ $var->{a}->{a};
 
 Program(
     ExpressionStatement(ArrayAccessVariable(ScalarVariable, "[", Integer, "]"), ";"),
-    ExpressionStatement(ArrayAccessVariable(ScalarVariable, "[", Integer, "]", "[", Integer, "]"), ";"),
-    ExpressionStatement(ArrayAccessVariable(ScalarVariable, "->[", Integer, "]"), ";"),
-    ExpressionStatement(ArrayAccessVariable(ScalarVariable, "->[", UnaryExpression(ArithOp, Integer), "]"), ";"),
-    ExpressionStatement(ArrayAccessVariable(ScalarVariable, "->[", Integer, "]", "[", Integer, "]"), ";"),
-    ExpressionStatement(ArrayAccessVariable(ScalarVariable, "->[", Integer, "]", "->[", Integer, "]"), ";"),
+    ExpressionStatement(
+        ArrayAccessVariable(ArrayAccessVariable(ScalarVariable, "[", Integer, "]"), "[", Integer, "]"),
+        ";"
+    ),
+    ExpressionStatement(ArrayAccessVariable(ScalarVariable, ArrowOperator, "[", Integer, "]"), ";"),
+    ExpressionStatement(
+        ArrayAccessVariable(ScalarVariable, ArrowOperator, "[", UnaryExpression(ArithOp, Integer), "]"),
+        ";"
+    ),
+    ExpressionStatement(
+        ArrayAccessVariable(ArrayAccessVariable(ScalarVariable, ArrowOperator, "[", Integer, "]"), "[", Integer, "]"),
+        ";"
+    ),
+    ExpressionStatement(
+        ArrayAccessVariable(
+            ArrayAccessVariable(ScalarVariable, ArrowOperator, "[", Integer, "]"),
+            ArrowOperator,
+            "[",
+            Integer,
+            "]"
+        ),
+        ";"
+    ),
     ExpressionStatement(HashAccessVariable(ScalarVariable, "{", Identifier, "}"), ";"),
-    ExpressionStatement(HashAccessVariable(ScalarVariable, "{", Identifier, "}", "{", Identifier, "}"), ";"),
-    ExpressionStatement(HashAccessVariable(ScalarVariable, "->{", Identifier, "}"), ";"),
-    ExpressionStatement(HashAccessVariable(ScalarVariable, "->{", StringSingleQuoted, "}"), ";"),
-    ExpressionStatement(HashAccessVariable(ScalarVariable, "->{", Identifier, "}", "{", Identifier, "}"), ";"),
-    ExpressionStatement(HashAccessVariable(ScalarVariable, "->{", Identifier, "}", "->{", Identifier, "}"), ";")
+    ExpressionStatement(
+        HashAccessVariable(HashAccessVariable(ScalarVariable, "{", Identifier, "}"), "{", Identifier, "}"),
+        ";"
+    ),
+    ExpressionStatement(HashAccessVariable(ScalarVariable, ArrowOperator, "{", Identifier, "}"), ";"),
+    ExpressionStatement(HashAccessVariable(ScalarVariable, ArrowOperator, "{", StringSingleQuoted, "}"), ";"),
+    ExpressionStatement(
+        HashAccessVariable(
+            HashAccessVariable(ScalarVariable, ArrowOperator, "{", Identifier, "}"),
+            "{",
+            Identifier,
+            "}"
+        ),
+        ";"
+    ),
+    ExpressionStatement(
+        HashAccessVariable(
+            HashAccessVariable(ScalarVariable, ArrowOperator, "{", Identifier, "}"),
+            ArrowOperator,
+            "{",
+            Identifier,
+            "}"
+        ),
+        ";"
+    )
 )
 
 # special scalar variables

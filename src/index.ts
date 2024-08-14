@@ -66,7 +66,7 @@ export const perlLanguage = LRLanguage.define({
                 '<<': t.special(t.bitwiseOperator),
                 'CompareOp < lt gt le ge eq ne cmp isa': t.compareOperator,
                 '=': t.definitionOperator,
-                '$ $# @ % & "*"': t.derefOperator,
+                '$ $# @ % & "*" ArrowOperator \\': t.derefOperator,
                 'ScalarDereference/{ ScalarDereference/}': t.derefOperator,
                 'ArrayDereference/{ ArrayDereference/}': t.derefOperator,
                 'HashDereference/{ HashDereference/}': t.derefOperator,
@@ -85,9 +85,8 @@ export const perlLanguage = LRLanguage.define({
                 EscapeSequence: t.escape,
                 'Comma FatComma': t.punctuation,
                 '( )': t.paren,
-                '->[ [ ]': t.squareBracket,
-                '%{ ->{ { }': t.brace,
-                'ArrowOperator \\': t.derefOperator,
+                '[ ]': t.squareBracket,
+                '%{ { }': t.brace,
                 '; :: :': t.separator
             })
         ]

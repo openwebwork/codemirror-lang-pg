@@ -20,13 +20,13 @@ Program(
     ExpressionStatement(
         StringDoubleQuoted(
             InterpolatedStringContent,
-            ArrayAccessVariable(ScalarVariable, "->[", Integer, "]"),
+            ArrayAccessVariable(ScalarVariable, ArrowOperator, "[", Integer, "]"),
             InterpolatedStringContent,
-            ArrayAccessVariable(ScalarVariable, "->[", ArithOp, Integer, "]"),
+            ArrayAccessVariable(ScalarVariable, ArrowOperator, "[", ArithOp, Integer, "]"),
             InterpolatedStringContent,
-            ArrayAccessVariable(ScalarVariable, "->[", Integer, "]", "[", Integer, "]"),
+            ArrayAccessVariable(ScalarVariable, ArrowOperator, "[", Integer, "]", "[", Integer, "]"),
             InterpolatedStringContent,
-            ArrayAccessVariable(ScalarVariable, "->[", Integer, "]", "->[", Integer, "]")
+            ArrayAccessVariable(ScalarVariable, ArrowOperator, "[", Integer, "]", ArrowOperator, "[", Integer, "]")
         ),
         ";"
     ),
@@ -37,11 +37,11 @@ Program(
     ExpressionStatement(
         StringDoubleQuoted(
             InterpolatedStringContent,
-            HashAccessVariable(ScalarVariable, "->{", Identifier, "}"),
+            HashAccessVariable(ScalarVariable, ArrowOperator, "{", Identifier, "}"),
             InterpolatedStringContent,
-            HashAccessVariable(ScalarVariable, "->{", Identifier, "}", "{", Identifier, "}"),
+            HashAccessVariable(ScalarVariable, ArrowOperator, "{", Identifier, "}", "{", Identifier, "}"),
             InterpolatedStringContent,
-            HashAccessVariable(ScalarVariable, "->{", Identifier, "}", "->{", Identifier, "}")
+            HashAccessVariable(ScalarVariable, ArrowOperator, "{", Identifier, "}", ArrowOperator, "{", Identifier, "}")
         ),
         ";"
     ),
@@ -103,7 +103,7 @@ Program(
     ExpressionStatement(
         BacktickQuoted(
             InterpolatedStringContent,
-            ArrayAccessVariable(ScalarVariable, "->[", ArithOp, Integer, "]"),
+            ArrayAccessVariable(ScalarVariable, ArrowOperator, "[", ArithOp, Integer, "]"),
             InterpolatedStringContent
         ),
         ";"
@@ -119,7 +119,7 @@ Program(
     ExpressionStatement(
         BacktickQuoted(
             InterpolatedStringContent,
-            HashAccessVariable(ScalarVariable, "->{", Identifier, "}"),
+            HashAccessVariable(ScalarVariable, ArrowOperator, "{", Identifier, "}"),
             InterpolatedStringContent
         ),
         ";"
@@ -213,7 +213,7 @@ Program(
             qq,
             QuoteLikeStartDelimiter,
             InterpolatedStringContent,
-            ArrayAccessVariable(ScalarVariable, "->[", ArithOp, Integer, "]"),
+            ArrayAccessVariable(ScalarVariable, ArrowOperator, "[", ArithOp, Integer, "]"),
             QuoteLikeEndDelimiter
         ),
         ";"
@@ -233,7 +233,7 @@ Program(
             qq,
             QuoteLikeStartDelimiter,
             InterpolatedStringContent,
-            HashAccessVariable(ScalarVariable, "->{", Identifier, "}"),
+            HashAccessVariable(ScalarVariable, ArrowOperator, "{", Identifier, "}"),
             InterpolatedStringContent,
             QuoteLikeEndDelimiter
         ),
@@ -387,7 +387,7 @@ Program(
             qx,
             QuoteLikeStartDelimiter,
             InterpolatedStringContent,
-            ArrayAccessVariable(ScalarVariable, "->[", ArithOp, Integer, "]"),
+            ArrayAccessVariable(ScalarVariable, ArrowOperator, "[", ArithOp, Integer, "]"),
             InterpolatedStringContent,
             QuoteLikeEndDelimiter
         ),
@@ -409,7 +409,7 @@ Program(
             qx,
             QuoteLikeStartDelimiter,
             InterpolatedStringContent,
-            HashAccessVariable(ScalarVariable, "->{", Identifier, "}"),
+            HashAccessVariable(ScalarVariable, ArrowOperator, "{", Identifier, "}"),
             InterpolatedStringContent,
             QuoteLikeEndDelimiter
         ),
