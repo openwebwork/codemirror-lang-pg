@@ -300,7 +300,6 @@ PackageName { Identifier ("::" !packageName (UnrestrictedIdentifier | Identifier
 Label { Identifier ":" }
 Constant { !constant Identifier }
 
-// FIXME: Signatures are too general. They should not be any list.
 FunctionSignature { !signature ParenthesizedArguments }
 FunctionPrototype { !prototype "(" Prototype? ")" }
 FunctionPrototypeAttribute { ":" kw<"prototype"> FunctionPrototype }
@@ -448,23 +447,33 @@ semicolon { ";" | automaticSemicolon }
         RegexOptions?
         regexEnd
     }
-    PodStatement { PodDirective PodContent PodCut }
 
     quoteLikeMiddle { QuoteLikeSeparatorDelimiter | QuoteLikeEndDelimiter injectedComments? QuoteLikeStartDelimiter }
 
     injectedComments { whitespace+ Comment (whitespace* Comment)* }
 
-    // The uninterpolatedHeredocStart and interpolatedHeredocStart tokens are fake tokens that are used as signals the
-    // tokenizer (via canShift) to indicate where the UninterpolatedHeredocBody and InterpolatedHeredocBody start which
+    // The uninterpolatedHeredocStart and interpolatedHeredocStart tokens invisible markers used to signal
+    // (via canShift) where the UninterpolatedHeredocBody and InterpolatedHeredocBody start which
     // is at the first new line found after the heredocInitializer.
     heredocInitializer { !heredoc "<<" HeredocStartIdentifier }
     UninterpolatedHeredocBody { uninterpolatedHeredocStart StringContent? HeredocEndIdentifier }
     InterpolatedHeredocBody { interpolatedHeredocStart interpolationContent* HeredocEndIdentifier }
 
+    // The afterInterpolation, packageNamePart, and afterPackageName tokens are invisible markers used to signal
+    // (via canShift) that the tokenzier shouldn't consume things that the grammar should tokenize.
     interpolationContent {
         InterpolatedStringContent |
         EscapeSequence |
-        interpolatedExpression |
+        basicVariable |
+        SpecialScalarVariable |
+        PackageVariable {
+            PackageName { ScalarVariable (packageNamePart "::" (UnrestrictedIdentifier | Identifier))* }
+            afterPackageName
+            "::"
+            PackageVariableName { UnrestrictedIdentifier | Identifier }
+        } |
+        ArrayAccessVariable |
+        HashAccessVariable |
         ScalarDereference |
         ArrayDereference |
         UninterpolatedHeredocBody |
@@ -490,27 +499,13 @@ semicolon { ";" | automaticSemicolon }
         "}"
     }
 
-    // The afterInterpolation token isn't actually real, but used as a
-    // signal (via canShift) to the tokenizer to indicate it shouldn't
-    // consume array or hash accessors.
-    interpolatedExpression {
-        basicVariable |
-        SpecialScalarVariable |
-        PackageVariable {
-            PackageName { ScalarVariable (packageNamePart "::" (UnrestrictedIdentifier | Identifier))* }
-            afterPackageName
-            "::"
-            PackageVariableName { UnrestrictedIdentifier | Identifier }
-        } |
-        ArrayAccessVariable |
-        HashAccessVariable
-    }
-
     IOOperator {
         IOOperatorStart
         (kw<"STDIN"> | kw<"STDERR"> | kw<"STDOUT"> | ScalarVariable | Identifier | Glob | ReadonlySTDIN )?
         IOOperatorEnd
     }
+
+    PodStatement { PodDirective PodContent PodCut }
 }
 
 @skip { Comment | whitespace }

@@ -1,5 +1,6 @@
 import type { InputStream } from '@lezer/lr';
 import { ContextTracker, ExternalTokenizer } from '@lezer/lr';
+import { namedUnaryOperators, listOperators } from './operators';
 import {
     automaticSemicolon,
     UnrestrictedIdentifier,
@@ -52,6 +53,7 @@ const isDigit = (ch: number) => ch >= 48 && ch <= 55;
 
 const isIdentifierChar = (ch: number) => ch == 95 /* '_' */ || isASCIILetter(ch) || isDigit(ch);
 const isVariableStartChar = (ch: number) => ch == 95 /* '_' */ || isASCIILetter(ch);
+
 const isRegexOptionChar = (ch: number, regexType: number) => {
     if (regexType === tr || regexType === y) {
         if (ch == 99 /* 'c' */ || ch == 100 /* 'd' */ || ch == 115 /* 's' */ || ch == 114 /* 'r' */) return true;
@@ -78,6 +80,7 @@ const isRegexOptionChar = (ch: number, regexType: number) => {
 
     return false;
 };
+
 // !"$%&'()*+,-./0123456789:;<=>?@[\]`~
 const isSpecialVariableChar = (ch: number) =>
     (ch >= 33 && ch != 35 && ch <= 64) || ch == 91 || ch == 92 || ch == 93 || ch == 96 || ch == 126;
@@ -198,9 +201,10 @@ class Context {
 }
 
 const contextStack: Context[] = [];
-// FIXME: This is some annoying thing that Lezer does.  I believe that due ambiguity markers in the grammar the heredoc
-// external tokenizer can be called twice with the same input.  So lastContextPos is a protection against a second
-// context from being removed from the stack at the end position of a previous context.
+
+// FIXME: This is some annoying thing that Lezer does.  I believe that due to ambiguity markers in the grammar the
+// heredoc external tokenizer can be called twice with the same input.  So lastContextPos is a protection against a
+// duplicate context from being added to the stack, or a previous context being removed from the stack to early.
 let lastContextEndPos = -1;
 
 export const contextTracker = new ContextTracker<Context | null>({
@@ -379,119 +383,6 @@ export const specialScalarVariable = new ExternalTokenizer((input, stack) => {
     }
 });
 
-// Note that 'eval' and 'do' are not in this list as they can accept a block.
-const namedUnaryOperators = [
-    'abs',
-    'alarm',
-    'await',
-    'caller',
-    'chdir',
-    'chr',
-    'chroot',
-    'close',
-    'closedir',
-    'cos',
-    'defined',
-    'delete',
-    'eof',
-    'evalbytes',
-    'exists',
-    'exit',
-    'exp',
-    'fileno',
-    'getc',
-    'gethostbyname',
-    'getnetbyname',
-    'getpgrp',
-    'getprotobyname',
-    'glob',
-    'gmtime',
-    'hex',
-    'int',
-    'lc',
-    'lcfirst',
-    'length',
-    'localtime',
-    'lock',
-    'log',
-    'lstat',
-    'oct',
-    'ord',
-    'pos',
-    'quotemeta',
-    'rand',
-    'readdir',
-    'readline',
-    'readlink',
-    'readpipe',
-    'reset',
-    'rewinddir',
-    'ref',
-    'rmdir',
-    'scalar',
-    'select',
-    'sin',
-    'sleep',
-    'sqrt',
-    'srand',
-    'stat',
-    'tell',
-    'telldir',
-    'tied',
-    'uc',
-    'ucfirst',
-    'umask',
-    'undef',
-    'untie'
-];
-
-// The list operators that can operate on a block (grep, map, join, sort, and unpack) are handled separately.
-const listOperators = [
-    'atan2',
-    'chomp',
-    'chop',
-    'chmod',
-    'chown',
-    'crypt',
-    'die',
-    'fcntl',
-    'flock',
-    'getpriority',
-    'index',
-    'ioctl',
-    'kill',
-    'link',
-    'mkdir',
-    'open',
-    'opendir',
-    'pack',
-    'pipe',
-    'read',
-    'rename',
-    'reverse',
-    'rindex',
-    'seek',
-    'seekdir',
-    'setpgrp',
-    'setpriority',
-    'split',
-    'sprintf',
-    'substr',
-    'symlink',
-    'syscall',
-    'sysopen',
-    'sysread',
-    'sysseek',
-    'syswrite',
-    'tie',
-    'truncate',
-    'unlink',
-    'utime',
-    'vec',
-    'waitpid',
-    'warn'
-];
-
 // Finds the longest lower case word coming up in the stream.  Returns an array
 // containing the word and the ascii character code of the next character after it.
 const peekLCWord = (input: InputStream): [string, number] => {
@@ -526,9 +417,11 @@ export const fileIO = new ExternalTokenizer(
                 input.acceptToken(FileTestOp, 2);
         }
 
+        // Start an IO operator if the following input contains a '<' character that is not followed by another
+        // one or the following input specifically contains <<>>.
         if (
             stack.canShift(IOOperatorStart) &&
-            input.next == 60 /* '<' */ &&
+            input.next == 60 &&
             (input.peek(1) != 60 || (input.peek(2) == 62 && input.peek(3) == 62))
         ) {
             input.acceptToken(IOOperatorStart, 1);
@@ -536,10 +429,15 @@ export const fileIO = new ExternalTokenizer(
         }
 
         if (!(stack.context instanceof Context) || stack.context.type !== 'iooperator') return;
-        if (stack.canShift(IOOperatorEnd) && input.next == 62 /* '>' */) {
+
+        // End the IO operator when the '>' character is encountered.
+        if (stack.canShift(IOOperatorEnd) && input.next == 62) {
             input.acceptToken(IOOperatorEnd, 1);
             return;
         }
+
+        // In this case the initial '<' started the IO operator, and what follows is '<>>'
+        // to finish the read only standard input declaration.
         if (input.peek(0) == 60 && input.peek(1) == 62 && input.peek(2) === 62) {
             input.acceptToken(ReadonlySTDIN, 2);
             return;
