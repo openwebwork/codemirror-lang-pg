@@ -754,3 +754,81 @@ Program(
         ";"
     )
 )
+
+# interpolation of special scalar variables
+
+say qq(
+    $"
+    $$
+    $0
+    $1
+    $2
+    $<
+    $>
+    $;
+    $]
+    $^F
+    $&
+    $`
+    $'
+    $+
+    @+
+    @-
+    ${^MATCH}
+    $,
+    $.
+    $|
+);
+
+==>
+
+Program(
+    ExpressionStatement(
+        OutputFunction(
+            say,
+            StringQqQuoted(
+                qq,
+                QuoteLikeStartDelimiter,
+                InterpolatedStringContent,
+                SpecialScalarVariable,
+                InterpolatedStringContent,
+                SpecialScalarVariable,
+                InterpolatedStringContent,
+                SpecialScalarVariable,
+                InterpolatedStringContent,
+                SpecialScalarVariable,
+                InterpolatedStringContent,
+                SpecialScalarVariable,
+                InterpolatedStringContent,
+                SpecialScalarVariable,
+                InterpolatedStringContent,
+                SpecialScalarVariable,
+                InterpolatedStringContent,
+                SpecialScalarVariable,
+                InterpolatedStringContent,
+                SpecialScalarVariable,
+                InterpolatedStringContent,
+                SpecialScalarVariable,
+                InterpolatedStringContent,
+                SpecialScalarVariable,
+                InterpolatedStringContent,
+                SpecialScalarVariable,
+                InterpolatedStringContent,
+                SpecialScalarVariable,
+                InterpolatedStringContent,
+                ArrayVariable,
+                InterpolatedStringContent,
+                ArrayVariable,
+                InterpolatedStringContent,
+                SpecialScalarVariable,
+                InterpolatedStringContent,
+                SpecialScalarVariable,
+                InterpolatedStringContent,
+                SpecialScalarVariable,
+                InterpolatedStringContent,
+                QuoteLikeEndDelimiter
+            )
+        ),
+        ";"
+    )
+)

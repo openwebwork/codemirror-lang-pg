@@ -204,7 +204,7 @@ const contextStack: Context[] = [];
 
 // FIXME: This is some annoying thing that Lezer does.  I believe that due to ambiguity markers in the grammar the
 // heredoc external tokenizer can be called twice with the same input.  So lastContextPos is a protection against a
-// duplicate context from being added to the stack, or a previous context being removed from the stack to early.
+// a previous context being removed from the stack to early.
 let lastContextEndPos = -1;
 
 export const contextTracker = new ContextTracker<Context | null>({
@@ -353,9 +353,8 @@ export const unrestrictedIdentifier = new ExternalTokenizer((input, stack) => {
 });
 
 // Note that is only to pick up special variables that won't be considered as a ScalarVariable already.
-// FIXME: For now special scalar variables are skipped when interpolating. They shouldn't be.
 export const specialScalarVariable = new ExternalTokenizer((input, stack) => {
-    if (stack.canShift(SpecialScalarVariable) && input.next == 36 /* '$' */ && !stack.context) {
+    if (stack.canShift(SpecialScalarVariable) && input.next == 36 /* '$' */) {
         if (stack.canShift(Prototype)) return;
         const first = input.peek(1);
         const second = input.peek(2);
@@ -594,7 +593,10 @@ export const interpolated = new ExternalTokenizer(
                 (stack.context.nestLevel === 0 && stack.context.atEnd(input)) ||
                 input.next < 0 ||
                 ((input.next == 36 /* '$' */ || input.next == 64) /* '@' */ &&
-                    (isVariableStartChar(input.peek(1)) || input.peek(1) == 123)) /* '{' */
+                    (isVariableStartChar(input.peek(1)) ||
+                        input.peek(1) == 123 /* '{' */ ||
+                        (isSpecialVariableChar(input.peek(1)) &&
+                            (stack.context.nestLevel > 0 || input.peek(1) !== stack.context.endDelimiter))))
             ) {
                 break;
             } else if (

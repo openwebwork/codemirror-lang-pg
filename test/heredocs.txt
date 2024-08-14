@@ -307,12 +307,7 @@ Program(
                 qq,
                 QuoteLikeStartDelimiter,
                 InterpolatedStringContent,
-                ArrayDereference(
-                    "@",
-                    "{",
-                    ArrayRef("[", HeredocString("<<", HeredocStartIdentifier), "]"),
-                    "}"
-                ),
+                ArrayDereference("@", "{", ArrayRef("[", HeredocString("<<", HeredocStartIdentifier), "]"), "}"),
                 InterpolatedStringContent,
                 ScalarDereference(
                     "$",
