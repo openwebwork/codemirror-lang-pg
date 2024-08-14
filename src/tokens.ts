@@ -297,7 +297,7 @@ export const contextTracker = new ContextTracker<Context | null>({
             let pos = 1;
             let startDelimiter = input.next;
             while (isWhitespace(startDelimiter)) startDelimiter = input.peek(pos++);
-            if (input.next >= 0) {
+            if (startDelimiter >= 0) {
                 context.setStartAndEndDelimiters(startDelimiter);
                 // Note that q and qw are not interpolated, but don't need to set this because they can't accept
                 // interpolated content.
@@ -496,8 +496,8 @@ export const heredoc = new ExternalTokenizer(
             !stack.context.inBody &&
             input.next === 10 /* '\n' */
         ) {
-            if (stack.context.interpolating) input.acceptToken(interpolatedHeredocStart);
-            else input.acceptToken(uninterpolatedHeredocStart);
+            if (stack.context.interpolating) input.acceptToken(interpolatedHeredocStart, 1);
+            else input.acceptToken(uninterpolatedHeredocStart, 1);
             return;
         } else if (stack.context.inBody && stack.context.tag) {
             if (stack.context.interpolating) {
@@ -586,7 +586,12 @@ const scanEscape = (input: InputStream) => {
 
 export const interpolated = new ExternalTokenizer(
     (input, stack) => {
-        if (!(stack.context instanceof Context) || !stack.context.interpolating) return;
+        if (
+            !(stack.context instanceof Context) ||
+            !stack.context.interpolating ||
+            (stack.context.type === 'heredoc' && !stack.context.inBody)
+        )
+            return;
         let content = false;
         for (; ; content = true) {
             if (

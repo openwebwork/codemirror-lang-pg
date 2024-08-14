@@ -339,7 +339,6 @@ END
 Program(
     ExpressionStatement(OutputFunction(print, HeredocString("<<", HeredocStartIdentifier)), ";"),
     InterpolatedHeredocBody(
-        InterpolatedStringContent,
         ArrayDereference("@", "{", ArrayRef("[", HeredocString("<<", HeredocStartIdentifier), "]"), "}"),
         InterpolatedHeredocBody(
             InterpolatedStringContent,
