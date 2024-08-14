@@ -86,7 +86,7 @@ export const perlLanguage = LRLanguage.define({
                 'Comma FatComma': t.punctuation,
                 '( )': t.paren,
                 '[ ]': t.squareBracket,
-                '%{ { }': t.brace,
+                '{ }': t.brace,
                 '; :: :': t.separator
             })
         ]

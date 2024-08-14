@@ -471,6 +471,25 @@ semicolon { ";" | automaticSemicolon }
         InterpolatedHeredocBody
     }
 
+    ArrayAccessVariable {
+        (ScalarVariable | ArrayAccessVariable | HashAccessVariable)
+        afterInterpolation?
+        !arrayMember
+        (ArrowOperator !arrowOperator)?
+        "["
+        (Integer | ArithOp<"-"> Integer | Float | ScalarVariable | quotedString)
+        "]"
+    }
+    HashAccessVariable {
+        (ScalarVariable | ArrayAccessVariable | HashAccessVariable)
+        afterInterpolation?
+        !hashMember
+        (ArrowOperator !arrowOperator)?
+        "{"
+        ((!bareword Identifier) | ScalarVariable | quotedString)
+        "}"
+    }
+
     // The afterInterpolation token isn't actually real, but used as a
     // signal (via canShift) to the tokenizer to indicate it shouldn't
     // consume array or hash accessors.
@@ -483,28 +502,8 @@ semicolon { ";" | automaticSemicolon }
             "::"
             PackageVariableName { UnrestrictedIdentifier | Identifier }
         } |
-        ArrayAccessVariable {
-            ScalarVariable
-            (
-                afterInterpolation?
-                !arrayMember
-                (ArrowOperator !arrowOperator)?
-                "["
-                (Integer | ArithOp<"-"> Integer | Float | ScalarVariable | quotedString)
-                "]"
-            )+
-        } |
-        HashAccessVariable {
-            ScalarVariable
-            (
-                afterInterpolation?
-                !hashMember
-                (ArrowOperator !arrowOperator)?
-                "{"
-                ((!bareword Identifier) | ScalarVariable | quotedString)
-                "}"
-            )+
-        }
+        ArrayAccessVariable |
+        HashAccessVariable
     }
 
     IOOperator {

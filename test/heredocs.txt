@@ -31,9 +31,20 @@ Program(
         InterpolatedStringContent,
         HashAccessVariable(ScalarVariable, ArrowOperator, "{", Identifier, "}"),
         InterpolatedStringContent,
-        HashAccessVariable(ScalarVariable, ArrowOperator, "{", Identifier, "}", "{", Identifier, "}"),
+        HashAccessVariable(
+            HashAccessVariable(ScalarVariable, ArrowOperator, "{", Identifier, "}"),
+            "{",
+            Identifier,
+            "}"
+        ),
         InterpolatedStringContent,
-        HashAccessVariable(ScalarVariable, ArrowOperator, "{", Identifier, "}", ArrowOperator, "{", Identifier, "}"),
+        HashAccessVariable(
+            HashAccessVariable(ScalarVariable, ArrowOperator, "{", Identifier, "}"),
+            ArrowOperator,
+            "{",
+            Identifier,
+            "}"
+        ),
         InterpolatedStringContent,
         ScalarDereference(
             "$",
@@ -81,9 +92,15 @@ Program(
         InterpolatedStringContent,
         ArrayAccessVariable(ScalarVariable, ArrowOperator, "[", ArithOp, Integer, "]"),
         InterpolatedStringContent,
-        ArrayAccessVariable(ScalarVariable, ArrowOperator, "[", Integer, "]", "[", Integer, "]"),
+        ArrayAccessVariable(ArrayAccessVariable(ScalarVariable, ArrowOperator, "[", Integer, "]"), "[", Integer, "]"),
         InterpolatedStringContent,
-        ArrayAccessVariable(ScalarVariable, ArrowOperator, "[", Integer, "]", ArrowOperator, "[", Integer, "]"),
+        ArrayAccessVariable(
+            ArrayAccessVariable(ScalarVariable, ArrowOperator, "[", Integer, "]"),
+            ArrowOperator,
+            "[",
+            Integer,
+            "]"
+        ),
         InterpolatedStringContent,
         HashAccessVariable(ScalarVariable, "{", Identifier, "}"),
         InterpolatedStringContent,
