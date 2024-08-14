@@ -161,11 +161,19 @@ expression[@isGroup=Expression] {
     HashRef |
     ArrayAccessVariable {
         (ScalarVariable | expression)
-        (!arrayMember (ArrowOperator !arrowOperator)? "[" expression "]")
+        !arrayMember
+        (ArrowOperator !arrowOperator)?
+        "["
+        expression
+        "]"
     } |
     HashAccessVariable {
         (ScalarVariable | expression)
-        (!hashMember (ArrowOperator !arrowOperator)? "{" ((!bareword Identifier) | expression) "}")
+        !hashMember
+        (ArrowOperator !arrowOperator)?
+        "{"
+        ((!bareword Identifier) | expression)
+        "}"
     } |
     BacktickQuoted |
     CommandQxQuoted |

@@ -511,3 +511,50 @@ Program(
         )
     )
 )
+
+# recursive method call
+
+sub factorial {
+    my $n = shift;
+    return 1 if $n == 0 || $n == 1;
+    return $n * __SUB__->($n - 1);
+}
+
+==>
+
+Program(
+    FunctionDefinition(
+        sub,
+        FunctionName(Identifier),
+        Block(
+            "{",
+            ExpressionStatement(Assignment(VariableDeclaration(my, ScalarVariable), "=", ArrayPopOrShift(shift)), ";"),
+            SingleLineStatement(
+                ReturnExpression(return, Integer),
+                if,
+                Arguments(
+                    BinaryExpression(
+                        BinaryExpression(ScalarVariable, CompareOp, Integer),
+                        LogicOp,
+                        BinaryExpression(ScalarVariable, CompareOp, Integer)
+                    )
+                ),
+                ";"
+            ),
+            ReturnExpression(
+                return,
+                BinaryExpression(
+                    ScalarVariable,
+                    "*",
+                    CallExpressionRecursive(
+                        __SUB__,
+                        ArrowOperator,
+                        ParenthesizedArguments("(", BinaryExpression(ScalarVariable, ArithOp, Integer), ")")
+                    )
+                )
+            ),
+            ";",
+            "}"
+        )
+    )
+)
