@@ -440,3 +440,42 @@ Program(
         ";"
     )
 )
+
+# heredoc with dereferenced array with quotelike also with dereferenced array that starts another heredoc
+
+print << "END1";
+first heredoc before
+@{[ qq{quoteLike before @{[<< 'END2' ]}qouteLike after} ]}
+inner heredoc content
+END2
+first heredoc after
+END1
+
+==>
+
+Program(
+    ExpressionStatement(OutputFunction(print, HeredocString("<<", HeredocStartIdentifier)), ";"),
+    InterpolatedHeredocBody(
+        InterpolatedStringContent,
+        ArrayDereference(
+            "@",
+            "{",
+            ArrayRef(
+                "[",
+                StringQqQuoted(
+                    qq,
+                    QuoteLikeStartDelimiter,
+                    InterpolatedStringContent,
+                    ArrayDereference("@", "{", ArrayRef("[", HeredocString("<<", HeredocStartIdentifier), "]"), "}"),
+                    InterpolatedStringContent,
+                    QuoteLikeEndDelimiter
+                ),
+                "]"
+            ),
+            "}"
+        ),
+        UninterpolatedHeredocBody(StringContent, HeredocEndIdentifier),
+        InterpolatedStringContent,
+        HeredocEndIdentifier
+    )
+)

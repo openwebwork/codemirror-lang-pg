@@ -125,12 +125,15 @@ const isFileTestOperatorChar = (ch: number) =>
     ch == 65 ||
     ch == 67;
 
-type ContextType = 'quote' | 'quoteLike' | 'regex' | 'quoteLike&regex' | 'heredoc' | 'iooperator';
+type ContextType = 'root' | 'quote' | 'quoteLike' | 'regex' | 'quoteLike&regex' | 'heredoc' | 'iooperator';
+
+const heredocQueue: Context[] = [];
 
 // Base class that all tracker contexts extend.
 class Context {
     type: ContextType;
-    pos: number;
+    parent: Context | null;
+    stackPos: number;
 
     // Used by quote and quoteLike operators.
     startDelimiter?: number;
@@ -144,28 +147,33 @@ class Context {
     tag?: number[];
     indented = false;
     inBody = false;
+    newlinePos?: number;
 
     // Used by any interpolating context.
     interpolating = false;
 
     constructor(
         type: ContextType,
-        pos: number,
+        parent: Context | null = null,
+        stackPos = -1,
         options: {
             startDelimiter?: number;
             quoteLikeType?: number;
             tag?: number[];
             interpolating?: boolean;
             indented?: boolean;
+            newlinePos?: number;
         } = {}
     ) {
         this.type = type;
-        this.pos = pos;
+        this.parent = parent;
+        this.stackPos = stackPos;
         this.quoteLikeType = options.quoteLikeType;
         this.interpolating = options.interpolating ?? true;
         this.indented = options.indented ?? false;
         if (options.tag) this.tag = options.tag;
         if (typeof options.startDelimiter === 'number') this.setStartAndEndDelimiters(options.startDelimiter);
+        if (typeof options.newlinePos === 'number') this.newlinePos = options.newlinePos;
     }
 
     setStartAndEndDelimiters(start: number) {
@@ -200,25 +208,15 @@ class Context {
     }
 }
 
-const contextStack: Context[] = [];
-
-// FIXME: This is some annoying thing that Lezer does.  I believe that due to ambiguity markers in the grammar the
-// heredoc external tokenizer can be called twice with the same input.  So lastContextPos is a protection against a
-// a previous context being removed from the stack to early.
-let lastContextEndPos = -1;
-
-export const contextTracker = new ContextTracker<Context | null>({
-    start: null,
+export const contextTracker = new ContextTracker<Context>({
+    start: new Context('root'),
     shift(context, term, stack, input) {
         if (term === q || term === qq || term === qx || term === qw) {
-            if (context && contextStack.slice(-1)[0]?.pos !== context.pos) contextStack.push(context);
-            return new Context('quoteLike', stack.pos, { quoteLikeType: term });
+            return new Context('quoteLike', context, stack.pos, { quoteLikeType: term });
         } else if (term === m || term === qr || term === s || term === tr || term === y) {
-            if (context && contextStack.slice(-1)[0]?.pos !== context.pos) contextStack.push(context);
-            return new Context('quoteLike&regex', stack.pos, { quoteLikeType: term });
+            return new Context('quoteLike&regex', context, stack.pos, { quoteLikeType: term });
         } else if (term === IOOperatorStart) {
-            if (context && contextStack.slice(-1)[0]?.pos !== context.pos) contextStack.push(context);
-            return new Context('iooperator', stack.pos);
+            return new Context('iooperator', context);
         } else if (term === HeredocStartIdentifier) {
             let pos = 0;
             const indented = input.next == 126; /* '~' */
@@ -243,55 +241,33 @@ export const contextTracker = new ContextTracker<Context | null>({
                 if (!isIdentifierChar(next)) break;
                 tag.push(next);
             }
-            if (context) {
-                // FIXME: THis needs more thought. I believe that it is not so simple as the new context needing to go
-                // onto the beginning or end of the stack. I am rather certain there are cases where the context will
-                // need to be more precisely positioned in the stack.
-                if (context.type === 'heredoc' && context.inBody) {
-                    if (contextStack.slice(-1)[0]?.pos !== context.pos) contextStack.push(context);
-                    return new Context('heredoc', stack.pos, {
+            if (heredocQueue[0]?.stackPos !== stack.pos) {
+                while (input.peek(pos) != 10 /* '\n' */ && input.peek(pos) >= 0) ++pos;
+                heredocQueue.unshift(
+                    new Context('heredoc', context, stack.pos, {
                         tag,
                         interpolating: (!quote || quote === 34 || quote === 96) && !backslashedTag,
-                        indented
-                    });
-                } else {
-                    if (!contextStack.length || contextStack[0].pos !== stack.pos) {
-                        contextStack.unshift(
-                            new Context('heredoc', stack.pos, {
-                                tag,
-                                interpolating: (!quote || quote === 34 || quote === 96) && !backslashedTag,
-                                indented
-                            })
-                        );
-                    }
-                }
-                return context;
-            } else {
-                return new Context('heredoc', stack.pos, {
-                    tag,
-                    interpolating: (!quote || quote === 34 || quote === 96) && !backslashedTag,
-                    indented
-                });
+                        indented,
+                        newlinePos: input.pos + pos
+                    })
+                );
             }
+            return context;
         } else if (term === patternMatchStart) {
             let pos = 0;
             let next;
             while (isWhitespace((next = input.peek(pos)))) ++pos;
             if (next == 47 /* '/' */) {
-                if (context && contextStack.slice(-1)[0]?.pos !== context.pos) contextStack.push(context);
-                return new Context('regex', stack.pos, { startDelimiter: 47, quoteLikeType: m });
+                return new Context('regex', context, stack.pos, { startDelimiter: 47, quoteLikeType: m });
             }
         } else if (
-            !context ||
-            ((context.type !== 'quote' || input.next != context.endDelimiter) && term !== InterpolatedStringContent)
+            (context.type !== 'quote' || input.next != context.endDelimiter) &&
+            term !== InterpolatedStringContent
         ) {
             if (input.next == 34 /* '"' */ || input.next === 96 /* '`' */) {
-                if (context && contextStack.slice(-1)[0]?.pos !== context.pos) contextStack.push(context);
-                return new Context('quote', stack.pos, { startDelimiter: input.next });
+                return new Context('quote', context, stack.pos, { startDelimiter: input.next });
             }
         }
-
-        if (!(context instanceof Context)) return context;
 
         if (context.type.startsWith('quoteLike') && term === QuoteLikeStartDelimiter) {
             let pos = 1;
@@ -311,23 +287,32 @@ export const contextTracker = new ContextTracker<Context | null>({
                         startDelimiter === 39) /* "'" */
                 )
                     context.interpolating = false;
+                return context;
             }
         }
 
-        if (context.type === 'heredoc' && (term === interpolatedHeredocStart || term === uninterpolatedHeredocStart))
-            context.inBody = true;
+        if (
+            (term === interpolatedHeredocStart || term === uninterpolatedHeredocStart) &&
+            heredocQueue.slice(-1)[0]?.newlinePos !== context.newlinePos
+        ) {
+            const heredocContext = heredocQueue.pop();
+            if (heredocContext) {
+                heredocContext.parent = context;
+                heredocContext.inBody = true;
+                return heredocContext;
+            }
+        }
 
         if (
-            lastContextEndPos !== stack.pos &&
+            context.parent &&
             ((context.type === 'quote' && input.next === context.endDelimiter) ||
                 (context.type === 'quoteLike' && term === QuoteLikeEndDelimiter) ||
                 (context.type === 'regex' && term === regexEnd) ||
                 (context.type === 'quoteLike&regex' && term === regexEnd) ||
-                term === HeredocEndIdentifier ||
-                term === IOOperatorEnd)
+                (context.type === 'heredoc' && term === HeredocEndIdentifier) ||
+                (context.type === 'iooperator' && term === IOOperatorEnd))
         ) {
-            lastContextEndPos = stack.pos;
-            return contextStack.pop() ?? null;
+            return context.parent;
         }
 
         return context;
@@ -490,49 +475,54 @@ export const heredoc = new ExternalTokenizer(
             input.acceptToken(HeredocStartIdentifier);
             return;
         }
-        if (!(stack.context instanceof Context) || stack.context.type !== 'heredoc') return;
+
+        if (!(stack.context instanceof Context)) return;
+
         if (
-            (stack.canShift(uninterpolatedHeredocStart) || stack.canShift(interpolatedHeredocStart)) &&
-            !stack.context.inBody &&
-            input.next === 10 /* '\n' */
+            input.next === 10 /* '\n' */ &&
+            heredocQueue.length &&
+            heredocQueue.slice(-1)[0]?.newlinePos !== stack.context.newlinePos &&
+            (stack.canShift(uninterpolatedHeredocStart) || stack.canShift(interpolatedHeredocStart))
         ) {
-            if (stack.context.interpolating) input.acceptToken(interpolatedHeredocStart, 1);
+            if (heredocQueue.slice(-1)[0]?.interpolating) input.acceptToken(interpolatedHeredocStart, 1);
             else input.acceptToken(uninterpolatedHeredocStart, 1);
             return;
-        } else if (stack.context.inBody && stack.context.tag) {
-            if (stack.context.interpolating) {
-                const endCount = stack.context.atEnd(input);
-                if (endCount) {
-                    input.acceptToken(HeredocEndIdentifier, endCount);
-                    return;
-                } else if (input.next < 0) {
+        }
+
+        if (stack.context.type !== 'heredoc' || !stack.context.inBody) return;
+
+        if (stack.context.interpolating) {
+            const endCount = stack.context.atEnd(input);
+            if (endCount) {
+                input.acceptToken(HeredocEndIdentifier, endCount);
+                return;
+            } else if (input.next < 0) {
+                input.acceptToken(HeredocEndIdentifier);
+                return;
+            }
+        } else {
+            const endCount = stack.context.atEnd(input);
+            if (endCount) {
+                input.acceptToken(HeredocEndIdentifier, endCount);
+                return;
+            }
+
+            for (;;) {
+                if (input.next < 0) {
                     input.acceptToken(HeredocEndIdentifier);
                     return;
                 }
-            } else {
+                if (input.next != 10 /* '\n' */) {
+                    input.advance();
+                    continue;
+                }
+                input.advance();
                 const endCount = stack.context.atEnd(input);
                 if (endCount) {
-                    input.acceptToken(HeredocEndIdentifier, endCount);
+                    input.acceptToken(StringContent);
                     return;
                 }
-
-                for (;;) {
-                    if (input.next < 0) {
-                        input.acceptToken(HeredocEndIdentifier);
-                        return;
-                    }
-                    if (input.next != 10 /* '\n' */) {
-                        input.advance();
-                        continue;
-                    }
-                    input.advance();
-                    const endCount = stack.context.atEnd(input);
-                    if (endCount) {
-                        input.acceptToken(StringContent);
-                        return;
-                    }
-                    input.advance();
-                }
+                input.advance();
             }
         }
     },
@@ -586,12 +576,8 @@ const scanEscape = (input: InputStream) => {
 
 export const interpolated = new ExternalTokenizer(
     (input, stack) => {
-        if (
-            !(stack.context instanceof Context) ||
-            !stack.context.interpolating ||
-            (stack.context.type === 'heredoc' && !stack.context.inBody)
-        )
-            return;
+        if (!(stack.context instanceof Context) || !stack.context.interpolating) return;
+
         let content = false;
         for (; ; content = true) {
             if (
