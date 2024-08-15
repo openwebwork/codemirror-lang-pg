@@ -479,3 +479,31 @@ Program(
         HeredocEndIdentifier
     )
 )
+
+# heredoc started inside qq string with text after on same line and ended after body
+
+say qq{quoteLike before @{[<< 'END' ]}quoteLike after
+inner heredoc content
+END
+};
+
+==>
+
+Program(
+    ExpressionStatement(
+        OutputFunction(
+            say,
+            StringQqQuoted(
+                qq,
+                QuoteLikeStartDelimiter,
+                InterpolatedStringContent,
+                ArrayDereference("@", "{", ArrayRef("[", HeredocString("<<", HeredocStartIdentifier), "]"), "}"),
+                InterpolatedStringContent,
+                UninterpolatedHeredocBody(StringContent, HeredocEndIdentifier),
+                InterpolatedStringContent,
+                QuoteLikeEndDelimiter
+            )
+        ),
+        ";"
+    )
+)

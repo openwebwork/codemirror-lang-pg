@@ -578,6 +578,15 @@ export const interpolated = new ExternalTokenizer(
         let content = false;
         for (; ; content = true) {
             if (
+                heredocQueue.length &&
+                (stack.context.type !== 'heredoc' ||
+                    heredocQueue.slice(-1)[0]?.newlinePos !== stack.context.newlinePos) &&
+                input.next == 10 /* \n */
+            ) {
+                break;
+            }
+
+            if (
                 (stack.context.nestLevel == 0 && stack.context.atEnd(input)) ||
                 input.next < 0 ||
                 ((input.next == 36 /* $ */ || input.next == 64) /* @ */ &&
@@ -587,7 +596,9 @@ export const interpolated = new ExternalTokenizer(
                             (stack.context.nestLevel > 0 || input.peek(1) !== stack.context.endDelimiter))))
             ) {
                 break;
-            } else if (
+            }
+
+            if (
                 stack.context.type.startsWith('quoteLike') &&
                 stack.context.startDelimiter !== stack.context.endDelimiter &&
                 input.next === stack.context.startDelimiter
