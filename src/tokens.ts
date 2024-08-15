@@ -51,32 +51,32 @@ const isLowerCaseASCIILetter = (ch: number) => ch >= 97 && ch <= 122;
 const isASCIILetter = (ch: number) => isLowerCaseASCIILetter(ch) || isUpperCaseASCIILetter(ch);
 const isDigit = (ch: number) => ch >= 48 && ch <= 55;
 
-const isIdentifierChar = (ch: number) => ch == 95 /* '_' */ || isASCIILetter(ch) || isDigit(ch);
-const isVariableStartChar = (ch: number) => ch == 95 /* '_' */ || isASCIILetter(ch);
+const isIdentifierChar = (ch: number) => ch == 95 /* _ */ || isASCIILetter(ch) || isDigit(ch);
+const isVariableStartChar = (ch: number) => ch == 95 /* _ */ || isASCIILetter(ch);
 
 const isRegexOptionChar = (ch: number, regexType: number) => {
     if (regexType === tr || regexType === y) {
-        if (ch == 99 /* 'c' */ || ch == 100 /* 'd' */ || ch == 115 /* 's' */ || ch == 114 /* 'r' */) return true;
+        if (ch == 99 /* c */ || ch == 100 /* d */ || ch == 115 /* s */ || ch == 114 /* r */) return true;
         return false;
     }
 
     if (
-        ch == 109 /* 'm' */ ||
-        ch == 115 /* 's' */ ||
-        ch == 105 /* 'i' */ ||
-        ch == 120 /* 'x' */ ||
-        ch == 112 /* 'p' */ ||
-        ch == 111 /* 'o' */ ||
-        ch == 100 /* 'd' */ ||
-        ch == 117 /* 'u' */ ||
-        ch == 97 /* 'a' */ ||
-        ch == 108 /* 'l' */ ||
-        ch == 110 /* 'n' */
+        ch == 109 /* m */ ||
+        ch == 115 /* s */ ||
+        ch == 105 /* i */ ||
+        ch == 120 /* x */ ||
+        ch == 112 /* p */ ||
+        ch == 111 /* o */ ||
+        ch == 100 /* d */ ||
+        ch == 117 /* u */ ||
+        ch == 97 /* a */ ||
+        ch == 108 /* l */ ||
+        ch == 110 /* n */
     )
         return true;
 
-    if ((regexType === m || regexType == s) && (ch == 103 /* 'g' */ || ch == 99) /* 'c' */) return true;
-    if (regexType == s && (ch == 101 /* 'e' */ || ch == 114) /* 'r' */) return true;
+    if ((regexType === m || regexType === s) && (ch == 103 /* g */ || ch == 99) /* c */) return true;
+    if (regexType == s && (ch == 101 /* e */ || ch == 114) /* r */) return true;
 
     return false;
 };
@@ -89,7 +89,7 @@ const isSpecialVariableChar = (ch: number) =>
 const isHex = (ch: number) => (ch >= 48 && ch <= 55) || (ch >= 97 && ch <= 102) || (ch >= 65 && ch <= 70);
 
 // ' ', \t, \n, \r
-const isWhitespace = (ch: number) => ch === 32 || ch === 9 || ch === 10 || ch === 13;
+const isWhitespace = (ch: number) => ch == 32 || ch == 9 || ch == 10 || ch == 13;
 
 const gobbleWhitespace = (input: InputStream) => {
     while (isWhitespace(input.next)) input.advance();
@@ -178,14 +178,14 @@ class Context {
 
     setStartAndEndDelimiters(start: number) {
         this.startDelimiter = start;
-        if (start === 40 /* '(' */) {
-            this.endDelimiter = 41 /* ')' */;
-        } else if (start === 60 /* '<' */) {
-            this.endDelimiter = 62 /* '>' */;
-        } else if (start === 91 /* '[' */) {
-            this.endDelimiter = 93 /* ']' */;
-        } else if (start === 123 /* '{' */) {
-            this.endDelimiter = 125 /* '}' */;
+        if (start == 40 /* ( */) {
+            this.endDelimiter = 41 /* ) */;
+        } else if (start == 60 /* < */) {
+            this.endDelimiter = 62 /* > */;
+        } else if (start == 91 /* [ */) {
+            this.endDelimiter = 93 /* ] */;
+        } else if (start == 123 /* { */) {
+            this.endDelimiter = 125 /* } */;
         } else this.endDelimiter = start;
     }
 
@@ -200,7 +200,7 @@ class Context {
             for (const tagCh of this.tag) {
                 if (input.peek(pos++) !== tagCh) return false;
             }
-            if (input.peek(pos) < 0 || input.peek(pos) === 10) return pos;
+            if (input.peek(pos) < 0 || input.peek(pos) == 10) return pos;
             return false;
         } else {
             return input.next === this.endDelimiter ? 1 : false;
@@ -219,7 +219,7 @@ export const contextTracker = new ContextTracker<Context>({
             return new Context('iooperator', context);
         } else if (term === HeredocStartIdentifier) {
             let pos = 0;
-            const indented = input.next == 126; /* '~' */
+            const indented = input.next == 126; /* ~ */
             if (indented) ++pos;
             let haveWhitespace = false;
             while (isWhitespace(input.peek(pos))) {
@@ -227,12 +227,12 @@ export const contextTracker = new ContextTracker<Context>({
                 ++pos;
             }
             const quote =
-                input.peek(pos) === 39 /* "'" */ || input.peek(pos) === 34 /* '"' */ || input.peek(pos) === 96 /* "`" */
+                input.peek(pos) == 39 /* ' */ || input.peek(pos) == 34 /* " */ || input.peek(pos) == 96 /* ` */
                     ? input.peek(pos)
                     : undefined;
             if (!quote && haveWhitespace) return context;
             if (quote) ++pos;
-            const backslashedTag = !quote && input.peek(pos) == 92; /* '\\' */
+            const backslashedTag = !quote && input.peek(pos) == 92; /* \\ */
             if (backslashedTag && (haveWhitespace || isWhitespace(input.peek(++pos)))) return context;
             if (!isIdentifierChar(input.peek(pos))) return context;
             const tag = [input.peek(pos++)];
@@ -242,11 +242,11 @@ export const contextTracker = new ContextTracker<Context>({
                 tag.push(next);
             }
             if (heredocQueue[0]?.stackPos !== stack.pos) {
-                while (input.peek(pos) != 10 /* '\n' */ && input.peek(pos) >= 0) ++pos;
+                while (input.peek(pos) != 10 /* \n */ && input.peek(pos) >= 0) ++pos;
                 heredocQueue.unshift(
                     new Context('heredoc', context, stack.pos, {
                         tag,
-                        interpolating: (!quote || quote === 34 || quote === 96) && !backslashedTag,
+                        interpolating: (!quote || quote == 34 || quote == 96) && !backslashedTag,
                         indented,
                         newlinePos: input.pos + pos
                     })
@@ -257,14 +257,14 @@ export const contextTracker = new ContextTracker<Context>({
             let pos = 0;
             let next;
             while (isWhitespace((next = input.peek(pos)))) ++pos;
-            if (next == 47 /* '/' */) {
+            if (next == 47 /* / */) {
                 return new Context('regex', context, stack.pos, { startDelimiter: 47, quoteLikeType: m });
             }
         } else if (
             (context.type !== 'quote' || input.next != context.endDelimiter) &&
             term !== InterpolatedStringContent
         ) {
-            if (input.next == 34 /* '"' */ || input.next === 96 /* '`' */) {
+            if (input.next == 34 /* " */ || input.next == 96 /* ` */) {
                 return new Context('quote', context, stack.pos, { startDelimiter: input.next });
             }
         }
@@ -284,7 +284,7 @@ export const contextTracker = new ContextTracker<Context>({
                         context.quoteLikeType === qr ||
                         context.quoteLikeType === qx ||
                         context.quoteLikeType === s) &&
-                        startDelimiter === 39) /* "'" */
+                        startDelimiter == 39) /* ' */
                 )
                     context.interpolating = false;
                 return context;
@@ -316,22 +316,19 @@ export const contextTracker = new ContextTracker<Context>({
         }
 
         return context;
-    }
+    },
+    strict: false
 });
 
 export const semicolon = new ExternalTokenizer((input, stack) => {
-    if (
-        stack.canShift(automaticSemicolon) &&
-        input.next !== 59 /* ';' */ &&
-        (input.next < 0 || input.next === 125) /* '}' */
-    )
+    if (stack.canShift(automaticSemicolon) && input.next != 59 /* ; */ && (input.next < 0 || input.next == 125) /* } */)
         input.acceptToken(automaticSemicolon);
 });
 
 export const unrestrictedIdentifier = new ExternalTokenizer((input, stack) => {
     if (stack.canShift(UnrestrictedIdentifier)) {
         gobbleWhitespace(input);
-        if (input.next < 0 || isASCIILetter(input.next) || input.next === 95 /* _ */) return;
+        if (input.next < 0 || isASCIILetter(input.next) || input.next == 95 /* _ */) return;
         while (input.next >= 0 && isIdentifierChar(input.next)) input.advance();
         input.acceptToken(UnrestrictedIdentifier);
     }
@@ -339,29 +336,29 @@ export const unrestrictedIdentifier = new ExternalTokenizer((input, stack) => {
 
 // Note that is only to pick up special variables that won't be considered as a ScalarVariable already.
 export const specialScalarVariable = new ExternalTokenizer((input, stack) => {
-    if (stack.canShift(SpecialScalarVariable) && input.next == 36 /* '$' */) {
+    if (stack.canShift(SpecialScalarVariable) && input.next == 36 /* $ */) {
         if (stack.canShift(Prototype)) return;
         const first = input.peek(1);
         const second = input.peek(2);
-        if (first == 123 /* '{' */ && isSpecialVariableChar(second) && input.peek(3) == 125 /* '}' */) {
+        if (first == 123 /* { */ && isSpecialVariableChar(second) && input.peek(3) == 125 /* } */) {
             input.acceptToken(SpecialScalarVariable, 4);
             return;
         }
-        if (first == 123 /* '{' */ && second == 94 /* '^' */) {
+        if (first == 123 /* { */ && second == 94 /* ^ */) {
             let pos = 3,
                 ch;
-            while ((isUpperCaseASCIILetter((ch = input.peek(pos))) || ch == 95) /* '_' */ && ch != 125 /* '}' */) ++pos;
+            while ((isUpperCaseASCIILetter((ch = input.peek(pos))) || ch == 95) /* _ */ && ch != 125 /* } */) ++pos;
             if (ch == 125) {
                 input.acceptToken(SpecialScalarVariable, pos + 1);
                 return;
             }
         }
-        if (first == 94 /* '^' */ && (isUpperCaseASCIILetter(second) || second == 95) /* '_' */) {
+        if (first == 94 /* ^ */ && (isUpperCaseASCIILetter(second) || second == 95) /* _ */) {
             input.acceptToken(SpecialScalarVariable, 3);
             return;
         }
         if (!isSpecialVariableChar(first)) return;
-        if (first == 36 /* '$' */ && isIdentifierChar(second)) return;
+        if (first == 36 /* $ */ && isIdentifierChar(second)) return;
         input.acceptToken(SpecialScalarVariable, 2);
         return;
     }
@@ -397,7 +394,7 @@ export const fileIO = new ExternalTokenizer(
     (input, stack) => {
         if (stack.canShift(FileTestOp) && !stack.canShift(PackageName)) {
             gobbleWhitespace(input);
-            if (input.next == 45 /* '-' */ && isFileTestOperatorChar(input.peek(1)) && !isASCIILetter(input.peek(2)))
+            if (input.next == 45 /* - */ && isFileTestOperatorChar(input.peek(1)) && !isASCIILetter(input.peek(2)))
                 input.acceptToken(FileTestOp, 2);
         }
 
@@ -422,18 +419,18 @@ export const fileIO = new ExternalTokenizer(
 
         // In this case the initial '<' started the IO operator, and what follows is '<>>'
         // to finish the read only standard input declaration.
-        if (input.peek(0) == 60 && input.peek(1) == 62 && input.peek(2) === 62) {
+        if (input.peek(0) == 60 && input.peek(1) == 62 && input.peek(2) == 62) {
             input.acceptToken(ReadonlySTDIN, 2);
             return;
         }
 
         let pos = 0,
             ch: number;
-        const isPossibleVariable = input.next == 36; /* '$' */
+        const isPossibleVariable = input.next == 36; /* $ */
         if (isPossibleVariable) ++pos;
         let haveWhitespace = false,
             haveNonASCII = false;
-        while ((ch = input.peek(pos)) >= 0 && ch != 62 /* '>' */) {
+        while ((ch = input.peek(pos)) >= 0 && ch != 62 /* > */) {
             if (isWhitespace(ch)) haveWhitespace = true;
             if (!isASCIILetter(ch)) haveNonASCII = true;
             ++pos;
@@ -453,16 +450,16 @@ export const fileIO = new ExternalTokenizer(
 export const heredoc = new ExternalTokenizer(
     (input, stack) => {
         if (stack.canShift(HeredocStartIdentifier)) {
-            const indented = input.next == 126; /* '~' */
+            const indented = input.next == 126; /* ~ */
             if (indented) input.advance();
             gobbleWhitespace(input);
             const quote =
-                input.next == 39 /* "'" */ || input.next == 34 /* '"' */ || input.next === 96 /* "`" */
+                input.next == 39 /* ' */ || input.next == 34 /* " */ || input.next == 96 /* ` */
                     ? input.next
                     : undefined;
             if (!quote && isWhitespace(input.peek(-1))) return;
             if (quote) input.advance();
-            if (input.next == 92 /* '\\' */ && (isWhitespace(input.peek(-1)) || isWhitespace(input.advance()))) return;
+            if (input.next == 92 /* \\ */ && (isWhitespace(input.peek(-1)) || isWhitespace(input.advance()))) return;
             if (!isIdentifierChar(input.next)) return;
             for (;;) {
                 input.advance();
@@ -479,7 +476,7 @@ export const heredoc = new ExternalTokenizer(
         if (!(stack.context instanceof Context)) return;
 
         if (
-            input.next === 10 /* '\n' */ &&
+            input.next == 10 /* \n */ &&
             heredocQueue.length &&
             heredocQueue.slice(-1)[0]?.newlinePos !== stack.context.newlinePos &&
             (stack.canShift(uninterpolatedHeredocStart) || stack.canShift(interpolatedHeredocStart))
@@ -512,7 +509,7 @@ export const heredoc = new ExternalTokenizer(
                     input.acceptToken(HeredocEndIdentifier);
                     return;
                 }
-                if (input.next != 10 /* '\n' */) {
+                if (input.next != 10 /* \n */) {
                     input.advance();
                     continue;
                 }
@@ -533,7 +530,7 @@ const scanEscape = (input: InputStream) => {
     const after = input.peek(1);
 
     // Restricted range octal character
-    if (after >= 48 && after <= 55 /* '0'-'7' */) {
+    if (after >= 48 && after <= 55 /* 0-7 */) {
         let size = 2,
             next;
         while (size < 5 && (next = input.peek(size)) >= 48 && next <= 55) ++size;
@@ -541,33 +538,33 @@ const scanEscape = (input: InputStream) => {
     }
 
     // Restricted range hexidecimal character
-    if (after === 120 /* 'x' */ && isHex(input.peek(2))) return isHex(input.peek(3)) ? 4 : 3;
+    if (after == 120 /* x */ && isHex(input.peek(2))) return isHex(input.peek(3)) ? 4 : 3;
 
     // Hexidecimal character
-    if (after === 120 /* 'x' */ && input.peek(2) === 123 /* '{' */) {
+    if (after == 120 /* x */ && input.peek(2) == 123 /* { */) {
         // FIXME: There could be optional blanks at the beginning and end inside the braces.
         for (let size = 3; ; ++size) {
             const next = input.peek(size);
-            if (next == 125 /* '}' */) return size + 1;
+            if (next == 125 /* } */) return size + 1;
             if (!isHex(next)) break;
         }
     }
 
     // This could be any named unicode character or character sequence.
-    if (after === 78 /* 'N' */ && input.peek(2) === 123 /* '{' */) {
+    if (after == 78 /* N */ && input.peek(2) == 123 /* { */) {
         for (let size = 3; ; ++size) {
             const next = input.peek(size);
-            if (next == 125 /* '}' */) return size + 1;
+            if (next == 125 /* } */) return size + 1;
             if (next < 0) break;
         }
     }
 
     // Octal character
-    if (after === 111 /* 'o' */ && input.peek(2) === 123 /* '{' */) {
+    if (after == 111 /* o */ && input.peek(2) == 123 /* { */) {
         for (let size = 3; ; ++size) {
             const next = input.peek(size);
-            if (next == 125 /* '}' */) return size + 1;
-            if (next < 48 || next > 55 /* not '0'-'7' */) break;
+            if (next == 125 /* } */) return size + 1;
+            if (next < 48 || next > 55 /* not 0-7 */) break;
         }
     }
 
@@ -581,11 +578,11 @@ export const interpolated = new ExternalTokenizer(
         let content = false;
         for (; ; content = true) {
             if (
-                (stack.context.nestLevel === 0 && stack.context.atEnd(input)) ||
+                (stack.context.nestLevel == 0 && stack.context.atEnd(input)) ||
                 input.next < 0 ||
-                ((input.next == 36 /* '$' */ || input.next == 64) /* '@' */ &&
+                ((input.next == 36 /* $ */ || input.next == 64) /* @ */ &&
                     (isVariableStartChar(input.peek(1)) ||
-                        input.peek(1) == 123 /* '{' */ ||
+                        input.peek(1) == 123 /* { */ ||
                         (isSpecialVariableChar(input.peek(1)) &&
                             (stack.context.nestLevel > 0 || input.peek(1) !== stack.context.endDelimiter))))
             ) {
@@ -598,7 +595,7 @@ export const interpolated = new ExternalTokenizer(
                 ++stack.context.nestLevel;
             } else if (stack.context.nestLevel > 0 && input.next === stack.context.endDelimiter) {
                 --stack.context.nestLevel;
-            } else if (input.next == 92 /* '\\' */) {
+            } else if (input.next == 92 /* \\ */) {
                 const escaped = scanEscape(input);
                 if (escaped) {
                     if (content) break;
@@ -609,25 +606,25 @@ export const interpolated = new ExternalTokenizer(
                 }
             } else if (
                 !content &&
-                (input.next === 91 /* '[' */ ||
-                    input.next === 123 /* '{' */ ||
-                    (input.next === 45 /* '-' */ &&
-                        input.peek(1) === 62 /* '>' */ &&
-                        (input.peek(2) === 91 /* '[' */ || input.peek(2) === 123))) /* '{' */ &&
+                (input.next == 91 /* [ */ ||
+                    input.next == 123 /* { */ ||
+                    (input.next == 45 /* - */ &&
+                        input.peek(1) == 62 /* > */ &&
+                        (input.peek(2) == 91 /* [ */ || input.peek(2) == 123))) /* { */ &&
                 stack.canShift(afterInterpolation)
             ) {
                 input.acceptToken(afterInterpolation);
                 return;
             } else if (
                 !content &&
-                input.next === 58 /* ':' */ &&
-                input.peek(1) === 58 &&
+                input.next == 58 /* : */ &&
+                input.peek(1) == 58 &&
                 (stack.canShift(packageNamePart) || stack.canShift(afterPackageName))
             ) {
                 let pos = 2,
                     ch;
                 while (isIdentifierChar((ch = input.peek(pos)))) ++pos;
-                if (ch === 58 && input.peek(pos + 1) === 58) input.acceptToken(packageNamePart);
+                if (ch == 58 && input.peek(pos + 1) == 58) input.acceptToken(packageNamePart);
                 else input.acceptToken(afterPackageName);
                 return;
             }
@@ -738,7 +735,7 @@ export const regex = new ExternalTokenizer(
     (input, stack) => {
         if (stack.canShift(patternMatchStart)) {
             gobbleWhitespace(input);
-            if (input.next == 47 /* '/' */) input.acceptToken(patternMatchStart);
+            if (input.next == 47 /* / */) input.acceptToken(patternMatchStart);
         }
 
         if (!(stack.context instanceof Context) || !stack.context.type.endsWith('regex')) return;
@@ -764,8 +761,8 @@ export const regex = new ExternalTokenizer(
 export const pod = new ExternalTokenizer((input, stack) => {
     if (stack.canShift(PodDirective)) {
         if (
-            (input.peek(-1) == 10 /* '\n' */ || input.peek(-1) < 0) &&
-            input.next == 61 /* '=' */ &&
+            (input.peek(-1) == 10 /* \n */ || input.peek(-1) < 0) &&
+            input.next == 61 /* = */ &&
             isASCIILetter(input.peek(1))
         ) {
             while ((input.next as number) >= 0 && (input.next as number) != 10) input.advance();
@@ -782,10 +779,10 @@ export const pod = new ExternalTokenizer((input, stack) => {
             }
             input.advance();
             if (
-                input.peek(0) == 61 /* '=' */ &&
-                input.peek(1) == 99 /* 'c' */ &&
-                input.peek(2) == 117 /* 'u' */ &&
-                input.peek(3) == 116 /* 't' */ &&
+                input.peek(0) == 61 /* = */ &&
+                input.peek(1) == 99 /* c */ &&
+                input.peek(2) == 117 /* u */ &&
+                input.peek(3) == 116 /* t */ &&
                 (input.peek(4) == 10 || input.peek(4) < 0)
             )
                 break;
@@ -797,10 +794,10 @@ export const pod = new ExternalTokenizer((input, stack) => {
     if (stack.canShift(PodCut)) {
         if (
             (input.peek(-1) == 10 || input.peek(-1) < 0) &&
-            input.peek(0) == 61 /* '=' */ &&
-            input.peek(1) == 99 /* 'c' */ &&
-            input.peek(2) == 117 /* 'u' */ &&
-            input.peek(3) == 116 /* 't' */ &&
+            input.peek(0) == 61 /* = */ &&
+            input.peek(1) == 99 /* c */ &&
+            input.peek(2) == 117 /* u */ &&
+            input.peek(3) == 116 /* t */ &&
             (input.peek(4) == 10 || input.peek(4) < 0)
         ) {
             input.acceptToken(PodCut, 4);
