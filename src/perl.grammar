@@ -356,7 +356,7 @@ variable {
 listType { List | QWList }
 
 quotedString { StringSingleQuoted | StringQQuoted | StringDoubleQuoted | StringQqQuoted }
-HeredocString { heredocInitializer (!heredocString (UninterpolatedHeredocBody | InterpolatedHeredocBody))? }
+HeredocString { HeredocInitializer (!heredocString (UninterpolatedHeredocBody | InterpolatedHeredocBody))? }
 string { quotedString | HeredocString }
 
 list { listType | ArrayVariable }
@@ -454,8 +454,8 @@ semicolon { ";" | automaticSemicolon }
 
     // The uninterpolatedHeredocStart and interpolatedHeredocStart tokens invisible markers used to signal
     // (via canShift) where the UninterpolatedHeredocBody and InterpolatedHeredocBody start which
-    // is at the first new line found after the heredocInitializer.
-    heredocInitializer { !heredoc "<<" HeredocStartIdentifier }
+    // is at the first new line found after the HeredocInitializer.
+    HeredocInitializer { !heredoc "<<" HeredocStartIdentifier }
     UninterpolatedHeredocBody { uninterpolatedHeredocStart StringContent? HeredocEndIdentifier }
     InterpolatedHeredocBody { interpolatedHeredocStart interpolationContent* HeredocEndIdentifier }
 
