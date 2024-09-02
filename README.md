@@ -1,19 +1,10 @@
-# CodeMirror 6 perl language package
+# CodeMirror 6 Perl language package
 
-This is an example repository containing a minimal [CodeMirror](https://codemirror.net/6/) language support package. The
-idea is to clone it, rename it, and edit it to create support for a new language.
+This package implements Perl language support for the [CodeMirror](https://codemirror.net/6/) code editor.
 
-Things you'll need to do (see the [language support example](https://codemirror.net/6/examples/lang-package/) for a more
-detailed tutorial):
+This code is released under an [MIT license](https://github.com/drgrice1/lang-perl/tree/main/LICENSE).
 
-- Adjust the metadata in `src/index.ts` to work with your new grammar.
+## API Reference
 
-- Adjust the grammar tests in `test/cases.txt`.
-
-- Build (`npm run prepare`) and test (`npm test`).
-
-- Rewrite this readme file.
-
-- Optionally add a license.
-
-- Publish. Put your package on npm under a name like `codemirror-lang-perl`.
+- perl() → [LanguageSupport](https://codemirror.net/docs/ref#language.LanguageSupport)
+- perlLanguage: [LRLanguage](https://codemirror.net/docs/ref#language.LRLanguage)
