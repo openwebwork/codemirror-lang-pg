@@ -7,10 +7,7 @@ END
 ==>
 
 Program(
-    ExpressionStatement(
-        OutputFunction(print, "(", HeredocString(HeredocInitializer("<<", HeredocStartIdentifier)), ")"),
-        ";"
-    ),
+    ExpressionStatement(OutputFunction(print, "(", HeredocInitializer("<<", HeredocStartIdentifier), ")"), ";"),
     UninterpolatedHeredocBody(StringContent, HeredocEndIdentifier)
 )
 
@@ -27,11 +24,7 @@ END
 
 Program(
     ExpressionStatement(
-        Assignment(
-            VariableDeclaration(my, ScalarVariable),
-            "=",
-            HeredocString(HeredocInitializer("<<", HeredocStartIdentifier))
-        ),
+        Assignment(VariableDeclaration(my, ScalarVariable), "=", HeredocInitializer("<<", HeredocStartIdentifier)),
         ";"
     ),
     InterpolatedHeredocBody(
@@ -86,11 +79,7 @@ END
 
 Program(
     ExpressionStatement(
-        Assignment(
-            VariableDeclaration(my, ScalarVariable),
-            "=",
-            HeredocString(HeredocInitializer("<<", HeredocStartIdentifier))
-        ),
+        Assignment(VariableDeclaration(my, ScalarVariable), "=", HeredocInitializer("<<", HeredocStartIdentifier)),
         ";"
     ),
     InterpolatedHeredocBody(
@@ -128,7 +117,7 @@ END
 ==>
 
 Program(
-    ExpressionStatement(OutputFunction(say, HeredocString(HeredocInitializer("<<", HeredocStartIdentifier))), ";"),
+    ExpressionStatement(OutputFunction(say, HeredocInitializer("<<", HeredocStartIdentifier)), ";"),
     UninterpolatedHeredocBody(StringContent, HeredocEndIdentifier)
 )
 
@@ -141,10 +130,7 @@ END
 ==>
 
 Program(
-    ExpressionStatement(
-        OutputFunction(print, "(", HeredocString(HeredocInitializer("<<", HeredocStartIdentifier)), ")"),
-        ";"
-    ),
+    ExpressionStatement(OutputFunction(print, "(", HeredocInitializer("<<", HeredocStartIdentifier), ")"), ";"),
     InterpolatedHeredocBody(InterpolatedStringContent, ScalarVariable, InterpolatedStringContent, HeredocEndIdentifier)
 )
 
@@ -163,15 +149,9 @@ END
 ==>
 
 Program(
-    ExpressionStatement(
-        OutputFunction(print, "(", HeredocString(HeredocInitializer("<<", HeredocStartIdentifier)), ")"),
-        ";"
-    ),
+    ExpressionStatement(OutputFunction(print, "(", HeredocInitializer("<<", HeredocStartIdentifier), ")"), ";"),
     UninterpolatedHeredocBody(StringContent, HeredocEndIdentifier),
-    ExpressionStatement(
-        OutputFunction(print, "(", HeredocString(HeredocInitializer("<<", HeredocStartIdentifier)), ")"),
-        ";"
-    ),
+    ExpressionStatement(OutputFunction(print, "(", HeredocInitializer("<<", HeredocStartIdentifier), ")"), ";"),
     InterpolatedHeredocBody(InterpolatedStringContent, HeredocEndIdentifier)
 )
 
@@ -190,15 +170,9 @@ END
 ==>
 
 Program(
-    ExpressionStatement(
-        OutputFunction(print, "(", HeredocString(HeredocInitializer("<<", HeredocStartIdentifier)), ")"),
-        ";"
-    ),
+    ExpressionStatement(OutputFunction(print, "(", HeredocInitializer("<<", HeredocStartIdentifier), ")"), ";"),
     UninterpolatedHeredocBody(StringContent, HeredocEndIdentifier),
-    ExpressionStatement(
-        OutputFunction(print, "(", HeredocString(HeredocInitializer("<<", HeredocStartIdentifier)), ")"),
-        ";"
-    ),
+    ExpressionStatement(OutputFunction(print, "(", HeredocInitializer("<<", HeredocStartIdentifier), ")"), ";"),
     InterpolatedHeredocBody(InterpolatedStringContent, HeredocEndIdentifier)
 )
 
@@ -215,9 +189,9 @@ print <<~ "EOF";
 ==>
 
 Program(
-    ExpressionStatement(OutputFunction(print, HeredocString(HeredocInitializer("<<", HeredocStartIdentifier))), ";"),
+    ExpressionStatement(OutputFunction(print, HeredocInitializer("<<", HeredocStartIdentifier)), ";"),
     UninterpolatedHeredocBody(StringContent, HeredocEndIdentifier),
-    ExpressionStatement(OutputFunction(print, HeredocString(HeredocInitializer("<<", HeredocStartIdentifier))), ";"),
+    ExpressionStatement(OutputFunction(print, HeredocInitializer("<<", HeredocStartIdentifier)), ";"),
     InterpolatedHeredocBody(InterpolatedStringContent, ScalarVariable, InterpolatedStringContent, HeredocEndIdentifier)
 )
 
@@ -244,9 +218,9 @@ Program(
         OutputFunction(
             print,
             "(",
-            HeredocString(HeredocInitializer("<<", HeredocStartIdentifier)),
+            HeredocInitializer("<<", HeredocStartIdentifier),
             Comma,
-            HeredocString(HeredocInitializer("<<", HeredocStartIdentifier)),
+            HeredocInitializer("<<", HeredocStartIdentifier),
             ")"
         ),
         ";"
@@ -257,11 +231,11 @@ Program(
         OutputFunction(
             print,
             "(",
-            HeredocString(HeredocInitializer("<<", HeredocStartIdentifier)),
+            HeredocInitializer("<<", HeredocStartIdentifier),
             Comma,
-            HeredocString(HeredocInitializer("<<", HeredocStartIdentifier)),
+            HeredocInitializer("<<", HeredocStartIdentifier),
             Comma,
-            HeredocString(HeredocInitializer("<<", HeredocStartIdentifier)),
+            HeredocInitializer("<<", HeredocStartIdentifier),
             ")"
         ),
         ";"
@@ -290,7 +264,7 @@ Program(
         OutputFunction(
             print,
             "(",
-            HeredocString(HeredocInitializer("<<", HeredocStartIdentifier)),
+            HeredocInitializer("<<", HeredocStartIdentifier),
             Comma,
             StringQQuoted(q, QuoteLikeStartDelimiter, StringContent, QuoteLikeEndDelimiter),
             ")"
@@ -302,11 +276,11 @@ Program(
         OutputFunction(
             print,
             "(",
-            HeredocString(HeredocInitializer("<<", HeredocStartIdentifier)),
+            HeredocInitializer("<<", HeredocStartIdentifier),
             Comma,
             StringQqQuoted(qq, QuoteLikeStartDelimiter, InterpolatedStringContent, QuoteLikeEndDelimiter),
             Comma,
-            HeredocString(HeredocInitializer("<<", HeredocStartIdentifier)),
+            HeredocInitializer("<<", HeredocStartIdentifier),
             ")"
         ),
         ";"
@@ -333,19 +307,14 @@ Program(
                 qq,
                 QuoteLikeStartDelimiter,
                 InterpolatedStringContent,
-                ArrayDereference(
-                    "@",
-                    "{",
-                    ArrayRef("[", HeredocString(HeredocInitializer("<<", HeredocStartIdentifier)), "]"),
-                    "}"
-                ),
+                ArrayDereference("@", "{", ArrayRef("[", HeredocInitializer("<<", HeredocStartIdentifier), "]"), "}"),
                 InterpolatedStringContent,
                 ScalarDereference(
                     "$",
                     "{",
                     UnaryExpression(
                         RefOp,
-                        List("(", HeredocString(HeredocInitializer("<<", HeredocStartIdentifier)), ")")
+                        List("(", HeredocInitializer("<<", HeredocStartIdentifier), ")")
                     ),
                     "}"
                 ),
@@ -371,14 +340,9 @@ END
 ==>
 
 Program(
-    ExpressionStatement(OutputFunction(print, HeredocString(HeredocInitializer("<<", HeredocStartIdentifier))), ";"),
+    ExpressionStatement(OutputFunction(print, HeredocInitializer("<<", HeredocStartIdentifier)), ";"),
     InterpolatedHeredocBody(
-        ArrayDereference(
-            "@",
-            "{",
-            ArrayRef("[", HeredocString(HeredocInitializer("<<", HeredocStartIdentifier)), "]"),
-            "}"
-        ),
+        ArrayDereference("@", "{", ArrayRef("[", HeredocInitializer("<<", HeredocStartIdentifier), "]"), "}"),
         InterpolatedHeredocBody(
             InterpolatedStringContent,
             ScalarVariable,
@@ -403,7 +367,7 @@ END
 ==>
 
 Program(
-    ExpressionStatement(OutputFunction(print, HeredocString(HeredocInitializer("<<", HeredocStartIdentifier))), ";"),
+    ExpressionStatement(OutputFunction(print, HeredocInitializer("<<", HeredocStartIdentifier)), ";"),
     InterpolatedHeredocBody(
         InterpolatedStringContent,
         ArrayDereference(
@@ -456,10 +420,8 @@ Program(
         Assignment(
             VariableDeclaration(my, ScalarVariable),
             "=",
-            HeredocString(
-                HeredocInitializer("<<", HeredocStartIdentifier),
-                UninterpolatedHeredocBody(StringContent, HeredocEndIdentifier)
-            )
+            HeredocInitializer("<<", HeredocStartIdentifier),
+            UninterpolatedHeredocBody(StringContent, HeredocEndIdentifier)
         ),
         ";"
     ),
@@ -467,15 +429,13 @@ Program(
         OutputFunction(
             print,
             "(",
-            HeredocString(
-                HeredocInitializer("<<", HeredocStartIdentifier),
-                InterpolatedHeredocBody(
-                    InterpolatedStringContent,
-                    ScalarVariable,
-                    InterpolatedStringContent,
-                    HeredocEndIdentifier
-                )
-            ),
+            HeredocInitializer("<<", HeredocStartIdentifier),
+            InterpolatedHeredocBody(
+                InterpolatedStringContent,
+                ScalarVariable,
+                InterpolatedStringContent,
+                HeredocEndIdentifier
+             ),
             ")"
         ),
         ";"
@@ -492,10 +452,19 @@ END2
 first heredoc after
 END1
 
+print << "END1";
+first heredoc before
+@{[ qq{quoteLike before @{[<< 'END2'
+inner heredoc content
+END2
+]}quoteLike after} ]}
+first heredoc after
+END1
+
 ==>
 
 Program(
-    ExpressionStatement(OutputFunction(print, HeredocString(HeredocInitializer("<<", HeredocStartIdentifier))), ";"),
+    ExpressionStatement(OutputFunction(print, HeredocInitializer("<<", HeredocStartIdentifier)), ";"),
     InterpolatedHeredocBody(
         InterpolatedStringContent,
         ArrayDereference(
@@ -510,7 +479,7 @@ Program(
                     ArrayDereference(
                         "@",
                         "{",
-                        ArrayRef("[", HeredocString(HeredocInitializer("<<", HeredocStartIdentifier)), "]"),
+                        ArrayRef("[", HeredocInitializer("<<", HeredocStartIdentifier), "]"),
                         "}"
                     ),
                     InterpolatedStringContent,
@@ -521,6 +490,39 @@ Program(
             "}"
         ),
         UninterpolatedHeredocBody(StringContent, HeredocEndIdentifier),
+        InterpolatedStringContent,
+        HeredocEndIdentifier
+    ),
+    ExpressionStatement(OutputFunction(print, HeredocInitializer("<<", HeredocStartIdentifier)), ";"),
+    InterpolatedHeredocBody(
+        InterpolatedStringContent,
+        ArrayDereference(
+            "@",
+            "{",
+            ArrayRef(
+                "[",
+                StringQqQuoted(
+                    qq,
+                    QuoteLikeStartDelimiter,
+                    InterpolatedStringContent,
+                    ArrayDereference(
+                        "@",
+                        "{",
+                        ArrayRef(
+                            "[",
+                            HeredocInitializer("<<", HeredocStartIdentifier),
+                            UninterpolatedHeredocBody(StringContent, HeredocEndIdentifier),
+                            "]"
+                        ),
+                        "}"
+                    ),
+                    InterpolatedStringContent,
+                    QuoteLikeEndDelimiter
+                ),
+                "]"
+            ),
+            "}"
+        ),
         InterpolatedStringContent,
         HeredocEndIdentifier
     )
@@ -543,12 +545,7 @@ Program(
                 qq,
                 QuoteLikeStartDelimiter,
                 InterpolatedStringContent,
-                ArrayDereference(
-                    "@",
-                    "{",
-                    ArrayRef("[", HeredocString(HeredocInitializer("<<", HeredocStartIdentifier)), "]"),
-                    "}"
-                ),
+                ArrayDereference("@", "{", ArrayRef("[", HeredocInitializer("<<", HeredocStartIdentifier), "]"), "}"),
                 InterpolatedStringContent,
                 UninterpolatedHeredocBody(StringContent, HeredocEndIdentifier),
                 InterpolatedStringContent,

@@ -79,7 +79,7 @@ export const perlLanguage = LRLanguage.define({
                 'StringSingleQuoted StringDoubleQuoted q qq qx */StringContent */InterpolatedStringContent': t.string,
                 '*/QuoteLikeStartDelimiter QuoteLikeSeparatorDelimiter */QuoteLikeEndDelimiter': t.string,
                 'qw QWListContent/... Pair/Identifier HashAccessVariable/Identifier Version': t.string,
-                'HeredocString/HeredocInitializer/... HeredocEndIdentifier Glob': t.string,
+                'HeredocInitializer/... HeredocEndIdentifier Glob': t.string,
                 'm qr s tr y RegexOptions': t.special(t.string),
                 'PodStatement EndDataStatement/...': t.blockComment,
                 EscapeSequence: t.escape,

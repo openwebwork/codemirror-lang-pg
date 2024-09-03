@@ -134,8 +134,6 @@ statement[@isGroup=Statement] {
     NamedBlockStatement { NamedBlock semicolon } |
     SpecialBlock { kw<"sub">? (kw<"BEGIN"> | kw<"UNITCHECK"> | kw<"CHECK"> | kw<"INIT"> | kw<"END">) Block } |
     Ellipsis { "..." } |
-    UninterpolatedHeredocBody |
-    InterpolatedHeredocBody |
     EmptyStatement { ~block ";" } |
     PodStatement |
     EndDataStatement[@dynamicPrecedence=4] { (kw<"__END__"> | kw<"__DATA__">) endDataBlock }
@@ -356,8 +354,7 @@ variable {
 listType { List | QWList }
 
 quotedString { StringSingleQuoted | StringQQuoted | StringDoubleQuoted | StringQqQuoted }
-HeredocString { HeredocInitializer (!heredocString (UninterpolatedHeredocBody | InterpolatedHeredocBody))? }
-string { quotedString | HeredocString }
+string { quotedString | HeredocInitializer }
 
 list { listType | ArrayVariable }
 
@@ -508,7 +505,7 @@ semicolon { ";" | automaticSemicolon }
     PodStatement { PodDirective PodContent PodCut }
 }
 
-@skip { Comment | whitespace }
+@skip { Comment | whitespace | UninterpolatedHeredocBody | InterpolatedHeredocBody }
 
 kw[@dynamicPrecedence=1]<term> { @extend[@name={term}]<Identifier, term> ~identifier }
 Eval[@dynamicPrecedence=1] { @extend<Identifier, "eval"> ~identifier }
