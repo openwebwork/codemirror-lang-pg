@@ -1,8 +1,13 @@
 {
     "name": "codemirror-lang-perl",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "Perl language support for CodeMirror",
     "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/drgrice1/codemirror-lang-perl.git"
+    },
+    "homepage": "https://github.com/drgrice1/codemirror-lang-perl",
     "scripts": {
         "format:prettier": "prettier --write .",
         "lint:eslint": "eslint . --fix",
