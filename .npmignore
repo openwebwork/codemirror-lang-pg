@@ -3,3 +3,11 @@
 /node_modules
 rollup.config.js
 tsconfig.json
+.vim
+/misc
+show-tree.js
+.editorconfig
+.prettierrc
+eslint.config.mjs
+generate-parser.js
+vim-*-project
