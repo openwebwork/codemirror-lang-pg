@@ -11,3 +11,4 @@ show-tree.js
 eslint.config.mjs
 generate-parser.js
 vim-*-project
+.mocharc.cjs
