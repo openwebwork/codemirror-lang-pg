@@ -1,20 +1,18 @@
 {
-    "name": "codemirror-lang-perl",
+    "name": "codemirror-lang-pg",
     "version": "0.1.2",
     "description": "Perl language support for CodeMirror",
     "license": "MIT",
     "repository": {
         "type": "git",
-        "url": "https://github.com/drgrice1/codemirror-lang-perl.git"
+        "url": "git+https://github.com/drgrice1/codemirror-lang-pg.git"
     },
-    "homepage": "https://github.com/drgrice1/codemirror-lang-perl",
+    "homepage": "https://github.com/drgrice1/codemirror-lang-pg",
     "scripts": {
         "format:prettier": "prettier --write .",
         "lint:eslint": "eslint . --fix",
-        "generate-parser": "node generate-parser.js",
-        "build:parser": "NODE_OPTIONS='--no-warnings=ExperimentalWarning' rollup -c",
-        "build": "node generate-parser.js && npm run build:parser",
-        "watch:terms": "node generate-parser.js -w",
+        "generate-terms": "node generate-terms.js",
+        "build": "NODE_OPTIONS='--no-warnings=ExperimentalWarning' rollup -c",
         "watch": "NODE_OPTIONS='--no-warnings=ExperimentalWarning' rollup -cw",
         "test": "mocha"
     },

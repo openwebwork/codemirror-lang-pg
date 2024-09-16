@@ -6,17 +6,12 @@ import stylistic from '@stylistic/eslint-plugin';
 import mochaPlugin from 'eslint-plugin-mocha';
 
 export default [
-    { ignores: ['**/dist/*', 'src/parser.js', 'src/parser.terms.js'] },
+    { ignores: ['**/dist/*', 'src/pg.grammar.terms.js'] },
     { files: ['**/*.{js,mjs,cjs,ts}'] },
     pluginJs.configs.recommended,
     mochaPlugin.configs.flat.recommended,
     ...tseslint.configs.strictTypeChecked,
     ...tseslint.configs.stylisticTypeChecked,
-    {
-        files: ['**/*.{js,mjs,cjs}'],
-        ...tseslint.configs.disableTypeChecked
-    },
-    eslintConfigPrettier,
     {
         languageOptions: {
             globals: { ...globals.node, ...globals.browser },
@@ -24,7 +19,18 @@ export default [
                 projectService: true,
                 tsconfigRootDir: import.meta.dirname
             }
-        },
+        }
+    },
+    {
+        files: ['**/*.{js,mjs,cjs}'],
+        ...tseslint.configs.disableTypeChecked
+    },
+    {
+        files: ['test/test.ts'],
+        rules: { '@typescript-eslint/unbound-method': 'off' }
+    },
+    eslintConfigPrettier,
+    {
         plugins: { '@stylistic': stylistic },
         rules: {
             // General syntax
@@ -49,7 +55,7 @@ export default [
                 'error',
                 { named: 'never', anonymous: 'always', asyncArrow: 'ignore' }
             ],
-            '@stylistic/space-in-parens': ['error', 'never'],
+            //'@stylistic/space-in-parens': ['error', 'never'],
             '@stylistic/space-infix-ops': ['error'],
 
             'no-void': 'off',

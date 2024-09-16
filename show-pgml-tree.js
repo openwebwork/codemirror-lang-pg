@@ -7,14 +7,14 @@ import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import { format } from 'prettier';
 import { fileTests } from '@lezer/generator/dist/test';
-import { pgLanguage } from './dist/index.js';
+import { pgmlLanguage } from './dist/index.js';
 
 const argv = yargs(hideBin(process.argv))
     .usage('$0 <file>')
     .version(false)
     .option('file', {
         alias: 'f',
-        description: 'Show the tree for code in a given PG file.',
+        description: 'Show the tree for code in a given Perl file.',
         type: 'string'
     })
     .option('test-suite', {
@@ -107,7 +107,7 @@ for (const { name, text } of sources) {
     console.log(text.trim());
     console.log('\n\x1b[1m\x1b[32m==>\x1b[0m\n');
 
-    const tree = pgLanguage.parser.parse(text);
+    const tree = pgmlLanguage.parser.parse(text);
 
     try {
         let adjustedSource = tree.toString().replaceAll('⚠', '"⚠"');

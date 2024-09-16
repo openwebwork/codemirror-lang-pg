@@ -2,7 +2,7 @@ import { readdirSync, readFileSync } from 'fs';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 import { fileTests } from '@lezer/generator/dist/test';
-import { perlLanguage } from '../dist/index.js';
+import { pgLanguage } from '../dist/index.js';
 
 const caseDir = dirname(fileURLToPath(import.meta.url));
 
@@ -15,7 +15,7 @@ for (const file of readdirSync(caseDir)) {
     describe(name, function () {
         for (const { name, run } of tests)
             it(name, function () {
-                run(perlLanguage.parser);
+                run(pgLanguage.parser);
             });
     });
 }

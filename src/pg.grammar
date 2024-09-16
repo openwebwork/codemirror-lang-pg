@@ -136,7 +136,9 @@ statement[@isGroup=Statement] {
     Ellipsis { "..." } |
     EmptyStatement { ~block ";" } |
     PodStatement |
-    EndDataStatement[@dynamicPrecedence=4] { (kw<"__END__"> | kw<"__DATA__">) endDataBlock }
+    EndDataStatement[@dynamicPrecedence=4] { (kw<"__END__"> | kw<"__DATA__">) endDataBlock } |
+    PGMLStatement |
+    PGTextStatement
 }
 
 expression[@isGroup=Expression] {
@@ -503,6 +505,9 @@ semicolon { ";" | automaticSemicolon }
     }
 
     PodStatement { PodDirective PodContent PodCut }
+
+    PGMLStatement { BeginPG PGMLContent EndPG }
+    PGTextStatement { BeginPG PGTextContent EndPG }
 }
 
 @skip { Comment | whitespace | UninterpolatedHeredocBody | InterpolatedHeredocBody }
@@ -551,6 +556,7 @@ maybeParens<content> { !noParens content | "(" !parens content ")" }
 @external tokens regex from "./tokens" { patternMatchStart, RegexOptions, regexEnd }
 @external tokens pod from "./tokens" { PodDirective, PodContent, PodCut }
 @external tokens endData from "./tokens" { endDataBlock }
+@external tokens pgml from "./tokens" { BeginPG[closedBy=EndPG], PGMLContent, PGTextContent, EndPG[openedBy=BeginPG] }
 
 @tokens {
     whitespace { $[ \t\n\r] }
@@ -647,5 +653,7 @@ maybeParens<content> { !noParens content | "(" !parens content ")" }
         "["
     }
 }
+
+@external propSource pgHighlighting from "./highlight"
 
 @detectDelim

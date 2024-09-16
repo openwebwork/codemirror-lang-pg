@@ -43,8 +43,12 @@ import {
     tr,
     y,
     Prototype,
-    PackageName
-} from './parser.terms.js';
+    PackageName,
+    BeginPG,
+    PGMLContent,
+    PGTextContent,
+    EndPG
+} from './pg.grammar.terms.js';
 
 const isUpperCaseASCIILetter = (ch: number) => ch >= 65 && ch <= 90;
 const isLowerCaseASCIILetter = (ch: number) => ch >= 97 && ch <= 122;
@@ -88,8 +92,11 @@ const isSpecialVariableChar = (ch: number) =>
 /* 0-9, a-f, A-F */
 const isHex = (ch: number) => (ch >= 48 && ch <= 55) || (ch >= 97 && ch <= 102) || (ch >= 65 && ch <= 70);
 
+// ' ', \t
+const isHWhitespace = (ch: number) => ch == 32 || ch == 9;
+
 // ' ', \t, \n, \r
-const isWhitespace = (ch: number) => ch == 32 || ch == 9 || ch == 10 || ch == 13;
+const isWhitespace = (ch: number) => isHWhitespace(ch) || ch == 10 || ch == 13;
 
 const gobbleWhitespace = (input: InputStream) => {
     while (isWhitespace(input.next)) input.advance();
@@ -125,7 +132,18 @@ const isFileTestOperatorChar = (ch: number) =>
     ch == 65 ||
     ch == 67;
 
-type ContextType = 'root' | 'quote' | 'quoteLike' | 'regex' | 'quoteLike&regex' | 'heredoc' | 'iooperator';
+const beginPGPrefix = [66, 69, 71, 73, 78, 95]; // BEGIN_
+const pgVariants = [
+    [80, 71, 77, 76, 95, 72, 73, 78, 84], // PGML_HINT
+    [80, 71, 77, 76, 95, 83, 79, 76, 85, 84, 73, 79, 78], // PGML_SOLUTION
+    [80, 71, 77, 76], // PGML
+    [84, 69, 88, 84], // TEXT
+    [72, 73, 78, 84], // HINT
+    [83, 79, 76, 85, 84, 73, 79, 78] // SOLUTION
+];
+const endPGPrefix = [69, 78, 68, 95];
+
+type ContextType = 'root' | 'quote' | 'quoteLike' | 'regex' | 'quoteLike&regex' | 'heredoc' | 'iooperator' | 'pg';
 
 const heredocQueue: Context[] = [];
 
@@ -202,6 +220,17 @@ class Context {
             }
             if (input.peek(pos) < 0 || input.peek(pos) == 10) return pos;
             return false;
+        } else if (this.type === 'pg') {
+            if (!this.tag || input.peek(-1) !== 10) return false;
+            let pos = 0;
+            let ch = input.peek(pos);
+            while (isHWhitespace(ch)) ch = input.peek(++pos);
+            for (const tagCh of this.tag) {
+                if (ch !== tagCh) return false;
+                ch = input.peek(++pos);
+            }
+            while (isHWhitespace(ch) || ch == 59 /* ; */) ch = input.peek(++pos);
+            if (ch == 10 || ch < 0) return pos;
         } else {
             return input.next === this.endDelimiter ? 1 : false;
         }
@@ -260,6 +289,22 @@ export const contextTracker = new ContextTracker<Context>({
             if (next == 47 /* / */) {
                 return new Context('regex', context, stack.pos, { startDelimiter: 47, quoteLikeType: m });
             }
+        } else if (term === BeginPG) {
+            let pos = -1;
+            while (isHWhitespace(input.peek(++pos)));
+
+            if (!beginPGPrefix.every((l, index) => l == input.peek(pos + index))) return context;
+            pos += beginPGPrefix.length;
+
+            const pgVariant = pgVariants.findIndex((variant) =>
+                variant.every((l, index) => l == input.peek(pos + index))
+            );
+            if (pgVariant === -1) return context;
+
+            return new Context('pg', context, stack.pos, {
+                tag: endPGPrefix.concat(pgVariants[pgVariant]),
+                interpolating: false
+            });
         } else if (
             (context.type !== 'quote' || input.next != context.endDelimiter) &&
             term !== InterpolatedStringContent
@@ -310,7 +355,8 @@ export const contextTracker = new ContextTracker<Context>({
                 (context.type === 'regex' && term === regexEnd) ||
                 (context.type === 'quoteLike&regex' && term === regexEnd) ||
                 (context.type === 'heredoc' && term === HeredocEndIdentifier) ||
-                (context.type === 'iooperator' && term === IOOperatorEnd))
+                (context.type === 'iooperator' && term === IOOperatorEnd) ||
+                (context.type === 'pg' && term === EndPG))
         ) {
             return context.parent;
         }
@@ -823,3 +869,47 @@ export const endData = new ExternalTokenizer((input, stack) => {
         input.acceptToken(endDataBlock);
     }
 });
+
+export const pgml = new ExternalTokenizer(
+    (input, stack) => {
+        if (stack.canShift(BeginPG)) {
+            let ch = input.peek(-1);
+            if (ch != 10) return;
+            let pos = 0;
+            ch = input.next;
+            while (isHWhitespace(ch)) ch = input.peek(++pos);
+
+            if (!beginPGPrefix.every((l, index) => l == input.peek(pos + index))) return;
+            pos += beginPGPrefix.length;
+
+            const pgVariant = pgVariants.findIndex((variant) =>
+                variant.every((l, index) => l == input.peek(pos + index))
+            );
+            if (pgVariant === -1) return;
+            pos += pgVariants[pgVariant].length;
+            ch = input.peek(pos);
+
+            while (isHWhitespace(ch) || ch == 59 /* ; */) ch = input.peek(++pos);
+            if (ch == 10 || ch < 0) input.acceptToken(BeginPG, pos);
+        }
+
+        if (!(stack.context instanceof Context)) return;
+
+        if ((stack.canShift(PGMLContent) || stack.canShift(PGTextContent)) && stack.context.tag) {
+            while (input.next >= 0) {
+                if (input.next != 10) {
+                    input.advance();
+                    continue;
+                }
+                input.advance();
+                if (stack.context.atEnd(input)) break;
+            }
+            if (stack.context.tag[4] == 80) input.acceptToken(PGMLContent);
+            else input.acceptToken(PGTextContent);
+        } else if (stack.canShift(EndPG)) {
+            const endPos = stack.context.atEnd(input);
+            if (endPos) input.acceptToken(EndPG, endPos);
+        }
+    },
+    { contextual: true }
+);

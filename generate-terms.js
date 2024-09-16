@@ -29,7 +29,7 @@ const srcDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), 'src')
 
 const cleanDir = (dir) => {
     for (const file of fs.readdirSync(dir, { withFileTypes: true })) {
-        if (file.name === 'parser.js' || file.name === 'parser.terms.js') {
+        if (file.name === 'pg.parser.js' || file.name === 'pg.grammar.terms.js') {
             const fullPath = path.resolve(dir, file.name);
             console.log(`\x1b[34mRemoving ${fullPath}.\x1b[0m`);
             fs.unlinkSync(fullPath);
@@ -49,8 +49,8 @@ const processFile = async (file) => {
         try {
             // Only the terms are needed for the build. The parser is not.
             const { /* parser, */ terms } = buildParserFile(source, { fileName: file });
-            //fs.writeFileSync(path.resolve(srcDir, 'parser.js'), parser);
-            fs.writeFileSync(path.resolve(srcDir, 'parser.terms.js'), terms);
+            //fs.writeFileSync(path.resolve(srcDir, 'pg.parser.js'), parser);
+            fs.writeFileSync(path.resolve(srcDir, 'pg.grammar.terms.js'), terms);
         } catch (e) {
             console.log(`ERROR: ${e.message}`);
         }
@@ -73,7 +73,7 @@ if (argv.clean) process.exit();
 // Set up the watcher.
 if (argv.watchFiles) console.log('\x1b[32mEstablishing watches and performing initial generation.\x1b[0m');
 chokidar
-    .watch([path.resolve(srcDir, 'perl.grammar')], {
+    .watch([path.resolve(srcDir, 'pg.grammar')], {
         cwd: srcDir, // Make paths be given relative to the src directory.
         awaitWriteFinish: { stabilityThreshold: 500 },
         persistent: argv.watchFiles ? true : false

@@ -10,5 +10,4 @@ show-tree.js
 .prettierrc
 eslint.config.mjs
 generate-parser.js
-vim-*-project
 .mocharc.cjs
