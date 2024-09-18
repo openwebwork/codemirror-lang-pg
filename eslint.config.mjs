@@ -58,6 +58,8 @@ export default [
             //'@stylistic/space-in-parens': ['error', 'never'],
             '@stylistic/space-infix-ops': ['error'],
 
+            '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+
             'no-void': 'off',
             'one-var': 'off',
 

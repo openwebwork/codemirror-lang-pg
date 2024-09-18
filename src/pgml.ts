@@ -1,31 +1,19 @@
-import {
-    Tree,
-    TreeBuffer,
-    NodeType,
-    NodeProp,
-    TreeFragment,
-    NodeSet,
-    TreeCursor,
-    Input,
-    Parser,
-    PartialParse,
-    SyntaxNode
-} from '@lezer/common';
+import type { Input, TreeFragment, TreeCursor, PartialParse } from '@lezer/common';
+import { Tree, TreeBuffer, NodeType, NodeProp, NodeSet, Parser } from '@lezer/common';
 import { styleTags, tags as t } from '@lezer/highlight';
 import { parser as pgPerlParser } from './pg.grammar';
+import { Parse, Item, Text } from './pgml-parse';
 
 class CompositeBlock {
-    static create(type: number, value: number, from: number, parentHash: number, end: number) {
-        const hash = (parentHash + (parentHash << 8) + type + (value << 4)) | 0;
-        return new CompositeBlock(type, value, from, hash, end, [], []);
+    static create(type: number, from: number, parentHash: number, end: number) {
+        const hash = (parentHash + (parentHash << 8) + type) | 0;
+        return new CompositeBlock(type, from, hash, end, [], []);
     }
 
     hashProp: [NodeProp<unknown>, unknown][];
 
     constructor(
         readonly type: number,
-        // Used for indentation in list items, markup character in lists
-        readonly value: number,
         readonly from: number,
         readonly hash: number,
         public end: number,
@@ -55,198 +43,44 @@ class CompositeBlock {
 enum Type {
     PGMLContent = 1,
 
-    ATXHeading1,
-    ATXHeading2,
-    ATXHeading3,
-    ATXHeading4,
-    ATXHeading5,
-    ATXHeading6,
     Paragraph,
 
-    // Inline
-    Variable,
-    PerlCommand,
+    AnswerRule,
+    Comment,
     MathMode,
-
-    // Smaller tokens
-    HeaderMark,
-    VariableMark,
+    MathModeMark,
+    Option,
+    OptionMark,
+    PerlCommand,
     PerlCommandMark,
     StarOption,
-    MathModeMark,
-    Comment
+    Variable,
+    VariableMark
 }
-
-// Data structure used to accumulate a block's content during [leaf block parsing](#BlockParser.leaf).
-class LeafBlock {
-    marks: Element[] = [];
-    // The block parsers active for this block.
-    parsers: LeafBlockParser[] = [];
-
-    constructor(
-        // The start position of the block.
-        readonly start: number,
-        // The block's text content.
-        public content: string
-    ) {}
-}
-
-// Data structure used during block-level per-line parsing.
-class Line {
-    // The line's full text.
-    text = '';
-    // The base indent provided by the composite contexts (that have been handled so far).
-    baseIndent = 0;
-    // The string position corresponding to the base indent.
-    basePos = 0;
-    // The number of contexts handled
-    depth = 0;
-    // Any markers (i.e. block quote markers) parsed for the contexts.
-    markers: Element[] = [];
-    // The position of the next non-whitespace character beyond any list, blockquote, or other composite block markers.
-    pos = 0;
-    // The column of the next non-whitespace character.
-    indent = 0;
-    // The character code of the character after `pos`.
-    next = -1;
-
-    forward() {
-        if (this.basePos > this.pos) this.forwardInner();
-    }
-
-    forwardInner() {
-        const newPos = this.skipSpace(this.basePos);
-        this.indent = this.countIndent(newPos, this.pos, this.indent);
-        this.pos = newPos;
-        this.next = newPos == this.text.length ? -1 : this.text.charCodeAt(newPos);
-    }
-
-    // Skip whitespace after the given position, return the position of the next non-space character or the end of the
-    // line if there's only space after `from`.
-    skipSpace(from: number) {
-        return skipSpace(this.text, from);
-    }
-
-    reset(text: string) {
-        this.text = text;
-        this.baseIndent = this.basePos = this.pos = this.indent = 0;
-        this.forwardInner();
-        this.depth = 1;
-        while (this.markers.length) this.markers.pop();
-    }
-
-    // Move the line's base position forward to the given position.  This should only be called by composite
-    // [block parsers](#BlockParser.parse).
-    moveBase(to: number) {
-        this.basePos = to;
-        this.baseIndent = this.countIndent(to, this.pos, this.indent);
-    }
-
-    // Move the line's base position forward to the given _column_.
-    moveBaseColumn(indent: number) {
-        this.baseIndent = indent;
-        this.basePos = this.findColumn(indent);
-    }
-
-    // Find the column position at `to`, optionally starting at a given
-    // position and column.
-    countIndent(to: number, from = 0, indent = 0) {
-        for (let i = from; i < to; ++i) indent += this.text.charCodeAt(i) == 9 ? 4 - (indent % 4) : 1;
-        return indent;
-    }
-
-    // Find the position corresponding to the given column.
-    findColumn(goal: number) {
-        let i = 0;
-        for (let indent = 0; i < this.text.length && indent < goal; ++i)
-            indent += this.text.charCodeAt(i) == 9 ? 4 - (indent % 4) : 1;
-        return i;
-    }
-
-    scrub() {
-        if (!this.baseIndent) return this.text;
-        let result = '';
-        for (let i = 0; i < this.basePos; ++i) result += ' ';
-        return result + this.text.slice(this.basePos);
-    }
-}
-
-const space = (ch: number) => {
-    return ch == 32 || ch == 9 || ch == 10 || ch == 13;
-};
-
-const skipSpace = (line: string, i = 0) => {
-    while (i < line.length && space(line.charCodeAt(i))) ++i;
-    return i;
-};
-
-const skipSpaceBack = (line: string, i: number, to: number) => {
-    while (i > to && space(line.charCodeAt(i - 1))) --i;
-    return i;
-};
-
-const isAtxHeading = (line: Line) => {
-    if (line.next != 35 /* '#' */) return -1;
-    let pos = line.pos + 1;
-    while (pos < line.text.length && line.text.charCodeAt(pos) == 35) ++pos;
-    if (pos < line.text.length && line.text.charCodeAt(pos) != 32) return -1;
-    const size = pos - line.pos;
-    return size > 6 ? -1 : size;
-};
-
-// Return type for block parsing functions. Can be either:
-// - false to indicate that nothing was matched and lower-precedence parsers should run.
-// - true to indicate that a leaf block was parsed and the stream was advanced past its content.
-// - null to indicate that a context was opened and block parsing should continue on this line.
-type BlockResult = boolean | null;
-
-// Rules for parsing blocks. A return value of false means the rule doesn't apply here, true means it does. When true is
-// returned and `p.line` has been updated, the rule is assumed to have consumed a leaf block. Otherwise, it is assumed
-// to have opened a context.
-const BlockParsers: ((cx: BlockContext, line: Line) => BlockResult)[] = [
-    // ATX heading
-    (cx, line) => {
-        const size = isAtxHeading(line);
-        if (size < 0) return false;
-        const off = line.pos,
-            from = cx.lineStart + off;
-        const endOfSpace = skipSpaceBack(line.text, line.text.length, off);
-        let after = endOfSpace;
-        while (after > off && line.text.charCodeAt(after - 1) == line.next) --after;
-        if (after == endOfSpace || after == off || !space(line.text.charCodeAt(after - 1))) after = line.text.length;
-        const buf = cx.buffer
-            .write(Type.HeaderMark, 0, size)
-            .writeElements(cx.parser.parseInline(line.text.slice(off + size + 1, after), from + size + 1), -from);
-        if (after < line.text.length) buf.write(Type.HeaderMark, after - off, endOfSpace - off);
-        const node = buf.finish(Type.ATXHeading1 - 1 + size, line.text.length - off);
-        cx.nextLine();
-        cx.addNode(node, from);
-        return true;
-    }
-];
-
-const scanLineResult = { text: '', end: 0 };
 
 // Block-level parsing functions get access to this context object.
 class BlockContext implements PartialParse {
     block: CompositeBlock;
-    stack: CompositeBlock[];
-    private line = new Line();
     private atEnd = false;
     private fragments: FragmentCursor | null;
     private to: number;
-    // For reused nodes on gaps, we can't directly put the original node into the tree, since that may be better than
-    // its parent.  When this happens, we create a dummy tree that is replaced by the proper node in `injectGaps`
     reusePlaceholders = new Map<Tree, Tree>();
     stoppedAt: number | null = null;
 
-    // The start of the current line.
-    lineStart: number;
-    // The absolute (non-gap-adjusted) position of the line
-    absoluteLineStart: number;
-    // The range index that absoluteLineStart points into
-    rangeI = 0;
-    absoluteLineEnd: number;
+    from: number;
+    pos: number; // The currently parsed position.
+
+    content = ''; // The current range content.
+
+    // The start and end of the current range content.
+    contentStart: number;
+    contentEnd: number;
+
+    // The current parsed postion in the content relative to contentStart,
+    // i.e., the position in the current content string.
+    contentPos = 0;
+
+    rangeI = 0; // The range index that contentStart points into
 
     constructor(
         // The parser configuration used.
@@ -255,63 +89,41 @@ class BlockContext implements PartialParse {
         fragments: readonly TreeFragment[],
         readonly ranges: readonly { from: number; to: number }[]
     ) {
+        this.from = this.pos = ranges[0].from;
         this.to = ranges[ranges.length - 1].to;
-        this.lineStart = this.absoluteLineStart = this.absoluteLineEnd = ranges[0].from;
-        this.block = CompositeBlock.create(Type.PGMLContent, 0, this.lineStart, 0, 0);
-        this.stack = [this.block];
+        this.contentStart = this.contentEnd = ranges[0].from;
+        this.block = CompositeBlock.create(Type.PGMLContent, this.pos, 0, 0);
         this.fragments = fragments.length ? new FragmentCursor(fragments, input) : null;
-        this.readLine();
+        this.readContent();
     }
 
     get parsedPos() {
-        return this.absoluteLineStart;
+        return this.pos;
     }
 
     advance() {
-        if (this.stoppedAt != null && this.absoluteLineStart > this.stoppedAt) return this.finish();
+        if (this.stoppedAt != null && this.contentStart > this.stoppedAt) return this.finish();
 
-        const { line } = this;
         for (;;) {
-            for (let markI = 0; ; ) {
-                const next = line.depth < this.stack.length ? this.stack[this.stack.length - 1] : null;
-                while (markI < line.markers.length && (!next || line.markers[markI].from < next.end)) {
-                    const mark = line.markers[markI++];
-                    this.addNode(mark.type, mark.from, mark.to);
-                }
-                if (!next) break;
-                this.finishContext();
-            }
-            if (line.pos < line.text.length) break;
-            // Empty line
-            if (!this.nextLine()) return this.finish();
+            if (this.contentPos < this.content.length) break;
+            if (!this.nextRangeContent()) return this.finish();
         }
 
-        if (this.fragments && this.reuseFragment(line.basePos)) return null;
+        // FIXME: This is disabled for now. Make it work.
+        //if (this.fragments && this.reuseFragment(this.contentPos)) return null;
 
-        start: for (;;) {
-            for (const type of BlockParsers) {
-                const result = type(this, line);
-                if (result != false) {
-                    if (result == true) return null;
-                    line.forward();
-                    continue start;
+        const parser = new Parse(this.content);
+        if (parser.root) {
+            for (const item of parser.root.stack ?? []) {
+                if (!(item instanceof Item)) continue;
+                for (const elt of pgmlFormat(item, this.from)) {
+                    this.addNode(elt.toTree(this.parser.nodeSet), elt.from, elt.to);
                 }
             }
-            break;
         }
+        this.contentPos += this.content.length;
+        this.pos += this.content.length;
 
-        const leaf = new LeafBlock(this.lineStart + line.pos, line.text.slice(line.pos));
-
-        while (this.nextLine()) {
-            if (line.pos == line.text.length) break;
-            for (const parser of leaf.parsers) {
-                if (parser.nextLine(this, line, leaf)) return null;
-            }
-            leaf.content += '\n' + line.scrub();
-            for (const m of line.markers) leaf.marks.push(m);
-        }
-
-        this.finishLeaf(leaf);
         return null;
     }
 
@@ -322,79 +134,62 @@ class BlockContext implements PartialParse {
 
     private reuseFragment(start: number) {
         if (
-            !this.fragments?.moveTo(this.absoluteLineStart + start, this.absoluteLineStart) ||
+            !this.fragments?.moveTo(this.contentStart + start, this.contentStart) ||
             !this.fragments.matches(this.block.hash)
         )
             return false;
         const taken = this.fragments.takeNodes(this);
         if (!taken) return false;
-        this.absoluteLineStart += taken;
-        this.lineStart = toRelative(this.absoluteLineStart, this.ranges);
+        this.contentStart += taken;
         this.moveRangeI();
-        if (this.absoluteLineStart < this.to) {
-            ++this.lineStart;
-            ++this.absoluteLineStart;
-            this.readLine();
+        if (this.contentStart < this.to) {
+            ++this.contentStart;
+            this.readContent();
         } else {
             this.atEnd = true;
-            this.readLine();
+            this.readContent();
         }
         return true;
     }
 
-    // The number of parent blocks surrounding the current block.
-    get depth() {
-        return this.stack.length;
-    }
-
-    // Get the type of the parent block at the given depth. When no
-    // depth is passed, return the type of the innermost parent.
-    parentType(depth = this.depth - 1) {
-        return this.parser.nodeSet.types[this.stack[depth].type];
-    }
-
-    // Move to the next input line. This should only be called by (non-composite) [block parsers](#BlockParser.parse)
-    // that consume the line directly, or leaf block parser [`nextLine`](#LeafBlockParser.nextLine) methods when they
-    // consume the current line (and return true).
-    nextLine() {
-        this.lineStart += this.line.text.length;
-        if (this.absoluteLineEnd >= this.to) {
-            this.absoluteLineStart = this.absoluteLineEnd;
+    // Move to the next input range content.
+    nextRangeContent() {
+        this.contentStart += this.content.length;
+        if (this.contentEnd >= this.to) {
+            this.contentStart = this.contentEnd;
             this.atEnd = true;
-            this.readLine();
+            this.readContent();
             return false;
         } else {
-            ++this.lineStart;
-            this.absoluteLineStart = this.absoluteLineEnd + 1;
+            this.contentStart = this.contentEnd + 1;
             this.moveRangeI();
-            this.readLine();
+            this.readContent();
             return true;
         }
     }
 
     private moveRangeI() {
-        while (this.rangeI < this.ranges.length - 1 && this.absoluteLineStart >= this.ranges[this.rangeI].to) {
+        while (this.rangeI < this.ranges.length - 1 && this.contentStart >= this.ranges[this.rangeI].to) {
             ++this.rangeI;
-            this.absoluteLineStart = Math.max(this.absoluteLineStart, this.ranges[this.rangeI].from);
+            this.contentStart = Math.max(this.contentStart, this.ranges[this.rangeI].from);
         }
     }
 
-    scanLine(start: number) {
-        const r = scanLineResult;
-        r.end = start;
-        if (start >= this.to) {
+    scanContent() {
+        const r = { text: '', end: 0 };
+        r.end = this.contentStart;
+        if (this.contentStart >= this.to) {
             r.text = '';
         } else {
-            r.text = this.lineChunkAt(start);
+            r.text = this.contentInRange(this.contentStart, this.ranges[this.rangeI].to);
             r.end += r.text.length;
             if (this.ranges.length > 1) {
-                let textOffset = this.absoluteLineStart,
+                let textOffset = this.contentStart,
                     rangeI = this.rangeI;
                 while (this.ranges[rangeI].to < r.end) {
                     ++rangeI;
-                    const nextFrom = this.ranges[rangeI].from;
-                    const after = this.lineChunkAt(nextFrom);
-                    r.end = nextFrom + after.length;
+                    const after = this.contentInRange(this.ranges[rangeI].from, this.ranges[rangeI].to);
+                    r.end = this.ranges[rangeI].from + after.length;
                     r.text = r.text.slice(0, this.ranges[rangeI - 1].to - textOffset) + after;
                     textOffset = r.end - r.text.length;
                 }
@@ -403,97 +198,31 @@ class BlockContext implements PartialParse {
         return r;
     }
 
-    readLine() {
-        const { line } = this,
-            { text, end } = this.scanLine(this.absoluteLineStart);
-        this.absoluteLineEnd = end;
-        line.reset(text);
-        for (; line.depth < this.stack.length; ++line.depth) {
-            line.forward();
-        }
+    readContent() {
+        const { text, end } = this.scanContent();
+        this.contentEnd = end;
+        this.content = text;
+        this.contentPos = 0;
     }
 
-    private lineChunkAt(pos: number) {
-        const next = this.input.chunk(pos);
-        let text;
-        if (!this.input.lineChunks) {
-            const eol = next.indexOf('\n');
-            text = eol < 0 ? next : next.slice(0, eol);
-        } else {
-            text = next == '\n' ? '' : next;
-        }
-        return pos + text.length > this.to ? text.slice(0, this.to - pos) : text;
+    private contentInRange(start: number, end: number) {
+        const text = this.input.read(start, end);
+        return start + text.length > this.to ? text.slice(0, this.to - start) : text;
     }
 
     // The end position of the previous line.
-    prevLineEnd() {
-        return this.atEnd ? this.lineStart : this.lineStart - 1;
-    }
-
-    startContext(type: Type, start: number, value = 0) {
-        this.block = CompositeBlock.create(
-            type,
-            value,
-            this.lineStart + start,
-            this.block.hash,
-            this.lineStart + this.line.text.length
-        );
-        this.stack.push(this.block);
-    }
-
-    // Start a composite block. Should only be called from [block parser functions](#BlockParser.parse)
-    // that return null.
-    startComposite(type: string, start: number, value = 0) {
-        this.startContext(this.parser.getNodeType(type), start, value);
+    prevContentEnd() {
+        return this.atEnd ? this.contentStart : this.contentStart - 1;
     }
 
     addNode(block: Type | Tree, from: number, to?: number) {
         if (typeof block == 'number')
-            block = new Tree(this.parser.nodeSet.types[block], [], [], (to ?? this.prevLineEnd()) - from);
+            block = new Tree(this.parser.nodeSet.types[block], [], [], (to ?? this.prevContentEnd()) - from);
         this.block.addChild(block, from - this.block.from);
     }
 
-    // Add a block element. Can be called by [block parsers](#BlockParser.parse).
-    addElement(elt: Element) {
-        this.block.addChild(elt.toTree(this.parser.nodeSet), elt.from - this.block.from);
-    }
-
-    // Add a block element from a [leaf parser](#LeafBlockParser). This makes sure any extra composite block markup
-    // (such as blockquote markers) inside the block are also added to the syntax tree.
-    addLeafElement(leaf: LeafBlock, elt: Element) {
-        this.addNode(
-            this.buffer
-                .writeElements(injectMarks(elt.children, leaf.marks), -elt.from)
-                .finish(elt.type, elt.to - elt.from),
-            elt.from
-        );
-    }
-
-    finishContext() {
-        const cx = this.stack.pop();
-        const top = this.stack[this.stack.length - 1];
-        if (cx) top.addChild(cx.toTree(this.parser.nodeSet), cx.from - top.from);
-        this.block = top;
-    }
-
     private finish() {
-        while (this.stack.length > 1) this.finishContext();
-        return this.addGaps(this.block.toTree(this.parser.nodeSet, this.lineStart));
-    }
-
-    private addGaps(tree: Tree) {
-        return this.ranges.length > 1
-            ? injectGaps(this.ranges, 0, tree.topNode, this.ranges[0].from, this.reusePlaceholders)
-            : tree;
-    }
-
-    finishLeaf(leaf: LeafBlock) {
-        for (const parser of leaf.parsers) if (parser.finish(this, leaf)) return;
-        const inline = injectMarks(this.parser.parseInline(leaf.content, leaf.start), leaf.marks);
-        this.addNode(
-            this.buffer.writeElements(inline, -leaf.start).finish(Type.Paragraph, leaf.content.length),
-            leaf.start
-        );
+        return this.block.toTree(this.parser.nodeSet, this.contentStart);
     }
 
     // Create an [`Element`](#Element) object to represent some syntax node.
@@ -503,70 +232,94 @@ class BlockContext implements PartialParse {
         if (typeof type == 'string') return elt(this.parser.getNodeType(type), from, to ?? 0, children);
         return new TreeElement(type, from);
     }
-
-    get buffer() {
-        return new Buffer(this.parser.nodeSet);
-    }
 }
 
-const injectGaps = (
-    ranges: readonly { from: number; to: number }[],
-    rangeI: number,
-    tree: SyntaxNode,
-    offset: number,
-    dummies: Map<Tree, Tree>
-): Tree => {
-    let rangeEnd = ranges[rangeI].to;
-    const children = [],
-        positions = [],
-        start = tree.from + offset;
-    const movePastNext = (upto: number, inclusive: boolean) => {
-        while (inclusive ? upto >= rangeEnd : upto > rangeEnd) {
-            const size = ranges[rangeI + 1].from - rangeEnd;
-            offset += size;
-            upto += size;
-            ++rangeI;
-            rangeEnd = ranges[rangeI].to;
+const pgmlFormat = (block: Item, offset: number): Element[] => {
+    if (block.type === 'indent') {
+        const paragraphs: Element[] = [];
+        const children: Element[] = [];
+        let lastEnd = block.from;
+        for (const child of block.stack ?? []) {
+            if (!(child instanceof Item)) continue;
+            if (child.type === 'par') {
+                paragraphs.push(elt(Type.Paragraph, lastEnd + offset, child.to + offset, children));
+                lastEnd = child.to;
+                children.length = 0;
+            } else {
+                children.push(...pgmlFormat(child, offset));
+            }
         }
-    };
-    for (let ch = tree.firstChild; ch; ch = ch.nextSibling) {
-        movePastNext(ch.from + offset, true);
-        const from = ch.from + offset;
-        let node;
-        const reuse = ch.tree ? dummies.get(ch.tree) : null;
-        if (reuse) {
-            node = reuse;
-        } else if (ch.to + offset > rangeEnd) {
-            node = injectGaps(ranges, rangeI, ch, offset, dummies);
-            movePastNext(ch.to + offset, false);
-        } else {
-            node = ch.toTree();
-        }
-        children.push(node);
-        positions.push(from - start);
+        if (children.length) paragraphs.push(elt(Type.Paragraph, lastEnd + offset, block.to + offset, children));
+        return paragraphs;
     }
-    movePastNext(tree.to + offset, false);
-    return new Tree(
-        tree.type,
-        children,
-        positions,
-        tree.to + offset - start,
-        tree.tree ? tree.tree.propValues : undefined
-    );
+
+    if (block.type === 'text') return [];
+
+    const children: Element[] = [];
+    for (const item of block.stack ?? block.children ?? []) {
+        if (!(item instanceof Item) || item.type === 'text') continue;
+        children.push(...pgmlFormat(item, offset));
+    }
+
+    if (block.type === 'math') {
+        children.unshift(elt(Type.MathModeMark, block.from + offset, block.from + (block.token?.length ?? 0) + offset));
+        children.push(
+            elt(
+                Type.MathModeMark,
+                block.to -
+                    (block.terminator as string).length -
+                    (block.hasStar ? block.hasStar : block.hasDblStar ? 2 : 0) +
+                    offset,
+                block.to + offset
+            )
+        );
+        return [elt(Type.MathMode, block.from + offset, block.to + offset, children)];
+    } else if (block.type === 'variable') {
+        children.unshift(elt(Type.VariableMark, block.from + offset, block.from + 1 + offset));
+        children.push(new TreeElement(pgPerlParser.parse(`$${block.text ?? ''}`), block.from + 1 + offset));
+        children.push(elt(Type.VariableMark, block.to - 1 + offset, block.to + offset));
+        return [
+            elt(
+                Type.Variable,
+                block.from - (block.hasStar ? block.hasStar : block.hasDblStar ? 2 : 0) + offset,
+                block.to + offset,
+                children
+            )
+        ];
+    } else if (block.type === 'command') {
+        children.unshift(elt(Type.PerlCommandMark, block.from + offset, block.from + 2 + offset));
+        children.push(new TreeElement(pgPerlParser.parse(block.text ?? ''), block.from + 2 + offset));
+        children.push(
+            elt(
+                Type.PerlCommandMark,
+                block.to - (block.hasStar ? block.hasStar : block.hasDblStar ? 2 : 0) - 2 + offset,
+                block.to + offset
+            )
+        );
+        return [elt(Type.PerlCommand, block.from + offset, block.to + offset, children)];
+    } else if (block.type === 'comment') {
+        return [elt(Type.Comment, block.from + offset, block.to + offset)];
+    } else if (block.type === 'answer') {
+        return [elt(Type.AnswerRule, block.from + offset, block.to + offset), ...children];
+    } else if (block.type === 'options') {
+        children.unshift(elt(Type.OptionMark, block.from + offset, block.from + 1 + offset));
+        children.push(
+            new TreeElement(
+                pgPerlParser.parse(
+                    block.stack
+                        ?.filter((t) => t instanceof Text)
+                        .reduce((v: string, t) => v + (t.stack?.join('') ?? ''), '') ?? ''
+                ),
+                block.from + 1 + offset
+            )
+        );
+        children.push(elt(Type.OptionMark, block.to - 1 + offset, block.to + offset));
+        return [elt(Type.Option, block.from + offset, block.to + offset, children)];
+    }
+
+    console.log(`unhandled ${block.type}`);
+    return children;
 };
-
-// Objects that are used to [override](#BlockParser.leaf) paragraph-style blocks should conform to this interface.
-interface LeafBlockParser {
-    // Update the parser's state for the next line, and optionally finish the block. This is not called for the first
-    // line (the object is contructed at that line), but for any further lines.  When it returns `true`, the block is
-    // finished. It is okay for the function to [consume](#BlockContext.nextLine) the current line or any subsequent
-    // lines when returning true.
-    nextLine(cx: BlockContext, line: Line, leaf: LeafBlock): boolean;
-    // Called when the block is finished by external circumstances (such as a blank line or the
-    // [start](#BlockParser.endLeaf) of another construct). If this parser can handle the block up to its current
-    // position, it should [finish](#BlockContext.addLeafElement) the block and return true.
-    finish(cx: BlockContext, leaf: LeafBlock): boolean;
-}
 
 // A PGML parser configuration.
 export class PGMLParser extends Parser {
@@ -588,24 +341,6 @@ export class PGMLParser extends Parser {
 
     getNodeType(name: string) {
         return this.nodeTypes[name];
-    }
-
-    // Parse the given piece of inline text at the given offset, returning an array of [`Element`](#Element) objects
-    // representing the inline content.
-    parseInline(text: string, offset: number) {
-        const cx = new InlineContext(this, text, offset);
-        outer: for (let pos = offset; pos < cx.end; ) {
-            const next = cx.char(pos);
-            for (const token of InlineParsers) {
-                const result = token(cx, next, pos);
-                if (result >= 0) {
-                    pos = result;
-                    continue outer;
-                }
-            }
-            ++pos;
-        }
-        return cx.resolveMarkers(0);
     }
 }
 
@@ -649,16 +384,20 @@ class Buffer {
 
 // Elements are used to compose syntax nodes during parsing.
 class Element {
+    children: (Element | TreeElement)[] = [];
+
     constructor(
         // The node's [id](https://lezer.codemirror.net/docs/ref/#common.NodeType.id).
         readonly type: number,
         // The start of the node, as an offset from the start of the document.
         readonly from: number,
         // The end of the node.
-        public to: number,
+        readonly to: number,
         // The node's child nodes
-        readonly children: readonly (Element | TreeElement)[] = []
-    ) {}
+        children: readonly (Element | TreeElement)[] = []
+    ) {
+        this.children.push(...children);
+    }
 
     writeTo(buf: Buffer, offset: number) {
         const startOff = buf.content.length;
@@ -703,287 +442,6 @@ const elt = (type: Type, from: number, to: number, children?: readonly (Element 
     return new Element(type, from, to, children);
 };
 
-const enum Mark {
-    None = 0,
-    Open = 1,
-    Close = 2
-}
-
-// Delimiters are used during inline parsing to store the positions of things that _might_ be delimiters, if another
-// matching delimiter is found. They are identified by objects with these properties.
-interface DelimiterType {
-    // If this is given, the delimiter should be matched automatically when a piece of inline content is finished. Such
-    // delimiters will be matched with delimiters of the same type according to their [open and
-    // close](#InlineContext.addDelimiter) properties. When a match is found, the content between the delimiters is
-    // wrapped in a node whose name is given by the value of this property.
-    //
-    // When this isn't given, you need to match the delimiter eagerly using the
-    // [`findOpeningDelimiter`](#InlineContext.findOpeningDelimiter) and [`takeContent`](#InlineContext.takeContent)
-    // methods.
-    resolve?: string;
-    // If the delimiter itself should, when matched, create a syntax node, set this to the name of the syntax node.
-    mark?: string;
-}
-
-const MathModeStart: DelimiterType = {};
-
-class InlineDelimiter {
-    constructor(
-        readonly type: DelimiterType,
-        readonly from: number,
-        readonly to: number,
-        public side: Mark
-    ) {}
-}
-
-const InlineParsers: ((cx: InlineContext, next: number, pos: number) => number)[] = [
-    // Variable
-    (cx, next, start) => {
-        if (next != 91 /* [ */ || cx.char(start + 1) != 36 /* $ */) return -1;
-        let nestLevel = 0;
-        let pos = start + 1;
-        for (; pos < cx.end; ++pos) {
-            if (cx.char(pos) == 91) ++nestLevel;
-            if (cx.char(pos) == 93 /* ] */)
-                if (nestLevel) --nestLevel;
-                else break;
-        }
-        const children = [
-            elt(Type.VariableMark, start, start + 1),
-            new TreeElement(pgPerlParser.parse(cx.slice(start + 1, pos)), start + 1),
-            elt(Type.VariableMark, pos, pos + 1)
-        ];
-        let numStars = 0;
-        for (let i = 1; i < 4; ++i) {
-            if (cx.char(pos + 1 + i) == 42 /* * */) {
-                children.push(elt(Type.StarOption, pos + i + 1, pos + i + 2));
-                ++numStars;
-            }
-        }
-        return cx.append(elt(Type.Variable, start, pos + numStars + 1, children));
-    },
-
-    // Perl command
-    (cx, next, start) => {
-        if (next != 91 /* [ */ || cx.char(start + 1) != 64 /* @ */) return -1;
-        let pos = start + 2;
-        for (; pos < cx.end && (cx.char(pos) != 64 /* @ */ || cx.char(pos + 1) != 93) /* ] */; ++pos);
-        const children = [
-            elt(Type.PerlCommandMark, start, start + 2),
-            new TreeElement(pgPerlParser.parse(cx.slice(start + 2, pos)), start + 2),
-            elt(Type.PerlCommandMark, pos, pos + 2)
-        ];
-        let numStars = 0;
-        for (let i = 1; i <= 3; ++i) {
-            if (cx.char(pos + 1 + i) == 42 /* * */) {
-                children.push(elt(Type.StarOption, pos + i + 1, pos + i + 2));
-                ++numStars;
-            }
-        }
-        return cx.append(elt(Type.PerlCommand, start, pos + numStars + 2, children));
-    },
-
-    // Math mode
-    (cx, next, start) => {
-        if (next != 91 /* [ */ || cx.char(start + 1) != 96 /* ` */) return -1;
-        let numBackticks = 1;
-        for (; numBackticks <= 3 && cx.char(start + 1 + numBackticks) == 96; ++numBackticks);
-        return cx.append(new InlineDelimiter(MathModeStart, start, start + 1 + numBackticks, Mark.Open));
-    },
-
-    // Inline math mode end
-    (cx, next, start) => {
-        if (next != 96 /* ` */ || cx.char(start + 1) != 93 /* ] */) return -1;
-        // Scan back to the last math mode start marker.
-        for (let i = cx.parts.length - 1; i >= 0; --i) {
-            const part = cx.parts[i];
-            if (part instanceof InlineDelimiter && part.type == MathModeStart) {
-                let numBackticks = 1;
-                while (cx.char(start - numBackticks) == 96) ++numBackticks;
-
-                // If this math mode has been set invalid (because it would produce a nested math mode)
-                // or there isn't a valid math mode, then ignore both parts.
-                if (!part.side || part.to >= start - numBackticks + 1 || numBackticks !== part.to - part.from - 1) {
-                    cx.parts[i] = null;
-                    return -1;
-                }
-
-                // Finish the content and replace the entire range in this.parts with the inline math mode node.
-                const content = cx.takeContent(i);
-                content.unshift(elt(Type.MathModeMark, part.from, part.to));
-                content.push(elt(Type.MathModeMark, start - numBackticks + 1, start + 2));
-                const mathMode = (cx.parts[i] = elt(Type.MathMode, part.from, start + 2, content));
-
-                // Set any open math mode markers before this one to invalid.
-                if (part.type == MathModeStart) {
-                    for (let j = 0; j < i; j++) {
-                        const p = cx.parts[j];
-                        if (p instanceof InlineDelimiter && p.type == MathModeStart) p.side = Mark.None;
-                    }
-                }
-
-                return mathMode.to;
-            }
-        }
-        return -1;
-    },
-
-    // Comment
-    (cx, next, start) => {
-        if (next != 91 /* [ */ || cx.char(start + 1) != 37 /* % */) return -1;
-        for (let pos = start + 2; pos < cx.end; ++pos) {
-            if (cx.char(pos - 1) == 37 /* % */ && cx.char(pos) == 93 /* ] */)
-                return cx.append(elt(Type.Comment, start, pos + 1));
-        }
-        return -1;
-    }
-];
-
-// Inline parsing functions get access to this context, and use it to read the content and emit syntax nodes.
-class InlineContext {
-    parts: (Element | InlineDelimiter | null)[] = [];
-
-    constructor(
-        // The parser that is being used.
-        readonly parser: PGMLParser,
-        // The text of this inline section.
-        readonly text: string,
-        // The starting offset of the section in the document.
-        readonly offset: number
-    ) {}
-
-    // Get the character code at the given (document-relative) position.
-    char(pos: number) {
-        return pos >= this.end ? -1 : this.text.charCodeAt(pos - this.offset);
-    }
-
-    // The position of the end of this inline section.
-    get end() {
-        return this.offset + this.text.length;
-    }
-
-    // Get a substring of this inline section. Again uses document-relative positions.
-    slice(from: number, to: number) {
-        return this.text.slice(from - this.offset, to - this.offset);
-    }
-
-    append(elt: Element | InlineDelimiter) {
-        this.parts.push(elt);
-        return elt.to;
-    }
-
-    // Add a [delimiter](#DelimiterType) at this given position. `open` and `close` indicate whether this delimiter is
-    // opening, closing, or both. Returns the end of the delimiter, for convenient returning from [parse
-    // functions](#InlineParser.parse).
-    addDelimiter(type: DelimiterType, from: number, to: number, open: boolean, close: boolean) {
-        return this.append(
-            new InlineDelimiter(type, from, to, (open ? Mark.Open : Mark.None) | (close ? Mark.Close : Mark.None))
-        );
-    }
-
-    // Add an inline element. Returns the end of the element.
-    addElement(elt: Element) {
-        return this.append(elt);
-    }
-
-    // Resolve markers between this.parts.length and from, wrapping matched markers in the
-    // appropriate node and updating the content of this.parts.
-    resolveMarkers(from: number) {
-        // Scan forward, looking for closing tokens
-        for (let i = from; i < this.parts.length; ++i) {
-            const close = this.parts[i];
-            if (!(close instanceof InlineDelimiter && close.type.resolve && close.side & Mark.Close)) continue;
-
-            let open: InlineDelimiter | undefined,
-                j = i - 1;
-            // Continue scanning for a matching opening token
-            for (; j >= from; --j) {
-                const part = this.parts[j];
-                if (part instanceof InlineDelimiter && part.side & Mark.Open && part.type == close.type) {
-                    open = part;
-                    break;
-                }
-            }
-            if (!open) continue;
-
-            const type = close.type.resolve,
-                content = [];
-            const start = open.from,
-                end = close.to;
-            // Move the covered region into content, optionally adding marker nodes
-            if (open.type.mark) content.push(this.elt(open.type.mark, start, open.to));
-            for (let k = j + 1; k < i; ++k) {
-                if (this.parts[k] instanceof Element) content.push(this.parts[k] as Element);
-                this.parts[k] = null;
-            }
-            if (close.type.mark) content.push(this.elt(close.type.mark, close.from, end));
-            const element = this.elt(type, start, end, content);
-            // Clear the close marker.
-            this.parts[j] = null;
-            // Insert the new element in this.parts
-            this.parts[i] = element;
-        }
-
-        // Collect the elements remaining in this.parts into an array.
-        const result = [];
-        for (let i = from; i < this.parts.length; ++i) {
-            const part = this.parts[i];
-            if (part instanceof Element) result.push(part);
-        }
-        return result;
-    }
-
-    // Find an opening delimiter of the given type. Returns `null` if no delimiter is found, or an index that can be
-    // passed to [`takeContent`](#InlineContext.takeContent) otherwise.
-    findOpeningDelimiter(type: DelimiterType) {
-        for (let i = this.parts.length - 1; i >= 0; --i) {
-            const part = this.parts[i];
-            if (part instanceof InlineDelimiter && part.type == type) return i;
-        }
-        return null;
-    }
-
-    // Remove all inline elements and delimiters starting from the given index (which you should get from
-    // [`findOpeningDelimiter`](#InlineContext.findOpeningDelimiter), resolve delimiters inside of them, and return them
-    // as an array of elements.
-    takeContent(startIndex: number) {
-        const content = this.resolveMarkers(startIndex);
-        this.parts.length = startIndex;
-        return content;
-    }
-
-    // Skip space after the given (document) position, returning either the position of the next non-space character or
-    // the end of the section.
-    skipSpace(from: number) {
-        return skipSpace(this.text, from - this.offset) + this.offset;
-    }
-
-    // Create an [`Element`](#Element) for a syntax node.
-    elt(type: string, from: number, to: number, children?: readonly Element[]): Element;
-    elt(tree: Tree, at: number): Element;
-    elt(type: string | Tree, from: number, to?: number, children?: readonly Element[]): Element {
-        if (typeof type == 'string') return elt(this.parser.getNodeType(type), from, to ?? 0, children);
-        return new TreeElement(type, from);
-    }
-}
-
-const injectMarks = (elements: readonly (Element | TreeElement)[], marks: Element[]) => {
-    if (!marks.length) return elements;
-    if (!elements.length) return marks;
-    const elts = elements.slice();
-    let eI = 0;
-    for (const mark of marks) {
-        while (eI < elts.length && elts[eI].to < mark.to) ++eI;
-        if (eI < elts.length && elts[eI].from < mark.from) {
-            const e = elts[eI];
-            if (e instanceof Element) elts[eI] = new Element(e.type, e.from, e.to, injectMarks(e.children, [mark]));
-        } else {
-            elts.splice(eI++, 0, mark);
-        }
-    }
-    return elts;
-};
-
 class FragmentCursor {
     // Index into fragment array
     i = 0;
@@ -1006,9 +464,9 @@ class FragmentCursor {
         this.fragmentEnd = -1;
     }
 
-    moveTo(pos: number, lineStart: number) {
+    moveTo(pos: number, contentStart: number) {
         while (this.fragment && this.fragment.to <= pos) this.nextFragment();
-        if (!this.fragment || this.fragment.from > (pos ? pos - 1 : 0)) return false;
+        if (!this.fragment || this.fragment.from > pos) return false;
         if (this.fragmentEnd < 0) {
             let end = this.fragment.to;
             while (end > 0 && this.input.read(end - 1, end) != '\n') --end;
@@ -1024,14 +482,13 @@ class FragmentCursor {
         const rPos = pos + this.fragment.offset;
         while (c.to <= rPos) if (!c.parent()) return false;
         for (;;) {
-            if (c.from >= rPos) return this.fragment.from <= lineStart;
+            if (c.from >= rPos) return this.fragment.from <= contentStart;
             if (!c.childAfter(rPos)) return false;
         }
     }
 
     matches(hash: number) {
-        const tree = this.cursor?.tree;
-        return tree && tree.prop(NodeProp.contextHash) == hash;
+        return this.cursor?.tree?.prop(NodeProp.contextHash) === hash;
     }
 
     takeNodes(cx: BlockContext) {
@@ -1039,7 +496,7 @@ class FragmentCursor {
             off = this.fragment?.offset,
             fragEnd = this.fragmentEnd - (this.fragment?.openEnd ? 1 : 0);
         if (!cur || !off) return 0;
-        const start = cx.absoluteLineStart;
+        const start = cx.contentStart;
         let end = start,
             blockI = cx.block.children.length;
         for (;;) {
@@ -1047,7 +504,7 @@ class FragmentCursor {
                 if (cur.type.isAnonymous && cur.firstChild()) continue;
                 break;
             }
-            const pos = toRelative(cur.from - off, cx.ranges);
+            const pos = cur.from - off;
             if (cur.to - off <= cx.ranges[cx.rangeI].to) {
                 // Fits in current range
                 if (cur.tree) cx.addNode(cur.tree, pos);
@@ -1072,27 +529,10 @@ class FragmentCursor {
     }
 }
 
-// Convert an input-stream-relative position to a pgml document relative position by subtracting the size of all
-// input gaps before `abs`.
-const toRelative = (abs: number, ranges: readonly { from: number; to: number }[]) => {
-    let pos = abs;
-    for (let i = 1; i < ranges.length; ++i) {
-        const gapFrom = ranges[i - 1].to,
-            gapTo = ranges[i].from;
-        if (gapFrom < abs) pos -= gapTo - gapFrom;
-    }
-    return pos;
-};
-
 const pgmlHighlighting = styleTags({
     Paragraph: t.content,
-    'ATXHeading1/...': t.heading1,
-    'ATXHeading2/...': t.heading2,
-    'ATXHeading3/...': t.heading3,
-    'ATXHeading4/...': t.heading4,
-    'ATXHeading5/...': t.heading5,
-    'ATXHeading6/...': t.heading6,
-    'HeaderMark MathModeMark VariableMark PerlCommandMark': t.processingInstruction,
+    'MathModeMark VariableMark PerlCommandMark OptionMark': t.processingInstruction,
+    AnswerRule: t.atom,
     Comment: t.lineComment,
     StarOption: t.controlOperator
 });

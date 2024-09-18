@@ -1,5 +1,3 @@
-import { parser } from './pg.grammar';
-import { parser as PGMLParser } from './pgml';
 import {
     LRLanguage,
     Language,
@@ -13,6 +11,9 @@ import {
 } from '@codemirror/language';
 import { parseMixed } from '@lezer/common';
 import { completeFromList } from '@codemirror/autocomplete';
+import { parser } from './pg.grammar';
+import { parser as PGMLParser } from './pgml';
+export { PGMLShow } from './pgml-parse';
 
 export const pgmlLanguage = new Language(defineLanguageFacet(), PGMLParser, [], 'pgml');
 
