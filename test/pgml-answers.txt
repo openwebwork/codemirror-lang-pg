@@ -1,0 +1,225 @@
+# answer rules
+
+BEGIN_PGML
+[_]
+
+[_]{$a}{15}
+
+[_]*{$matrix}{10}
+
+[_]{ answer => $pi, name => NEW_ANS_NAME(), width => 10, cmp_options => { tolerance => 0.00001 } }
+
+[_]{$pi}{10}{ cmp_options => { tolerance => 0.00001 } }
+END_PGML
+
+==>
+
+Program(
+    PGMLBlock(
+        BeginPG,
+        PGMLContent(
+            Paragraph(AnswerRule),
+            Paragraph(
+                AnswerRule,
+                Option(OptionMark, Program(ExpressionStatement(ScalarVariable)), OptionMark),
+                Option(OptionMark, Program(ExpressionStatement(Integer)), OptionMark)
+            ),
+            Paragraph(
+                AnswerRule,
+                Option(OptionMark, Program(ExpressionStatement(ScalarVariable)), OptionMark),
+                Option(OptionMark, Program(ExpressionStatement(Integer)), OptionMark)
+            ),
+            Paragraph(
+                AnswerRule,
+                Option(
+                    OptionMark,
+                    Program(
+                        ExpressionStatement(
+                            Pair(Identifier, FatComma, ScalarVariable),
+                            Comma,
+                            Pair(
+                                Identifier,
+                                FatComma,
+                                CallExpression(FunctionName(Identifier), ParenthesizedArguments("(", ")"))
+                            ),
+                            Comma,
+                            Pair(Identifier, FatComma, Integer),
+                            Comma,
+                            Pair(Identifier, FatComma, HashRef("{", Pair(Identifier, FatComma, Float), "}"))
+                        )
+                    ),
+                    OptionMark
+                )
+            ),
+            Paragraph(
+                AnswerRule,
+                Option(OptionMark, Program(ExpressionStatement(ScalarVariable)), OptionMark),
+                Option(OptionMark, Program(ExpressionStatement(Integer)), OptionMark),
+                Option(
+                    OptionMark,
+                    Program(
+                        ExpressionStatement(
+                            Pair(Identifier, FatComma, HashRef("{", Pair(Identifier, FatComma, Float), "}"))
+                        )
+                    ),
+                    OptionMark
+                )
+            )
+        ),
+        EndPG
+    )
+)
+
+==>
+
+from: '0'
+parseAll: 'true'
+to: '192'
+type: 'root'
+stack: [
+  [ # 0
+    combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
+    from: '0'
+    indent: '0'
+    to: '192'
+    type: 'indent'
+    stack: [
+      [ # 0
+        from: '0'
+        options: ['answer', 'width', 'name', 'cmp_options']
+        to: '3'
+        token: '[_]'
+        type: 'answer'
+      ]
+      [ # 1
+        from: '3'
+        noIndent: '1'
+        to: '5'
+        token: '\n\n'
+        type: 'par'
+      ]
+      [ # 2
+        from: '5'
+        optionStack: [
+          {
+            from: '8'
+            terminator: '}'
+            text: '$a'
+            to: '12'
+            token: '{'
+            type: 'options'
+          },
+          {
+            from: '12'
+            terminator: '}'
+            text: '15'
+            to: '16'
+            token: '{'
+            type: 'options'
+          }
+        ]
+        options: ['answer', 'width', 'name', 'cmp_options']
+        to: '16'
+        token: '[_]'
+        type: 'answer'
+      ]
+      [ # 3
+        from: '16'
+        noIndent: '1'
+        to: '18'
+        token: '\n\n'
+        type: 'par'
+      ]
+      [ # 4
+        from: '18'
+        hasStar: '1'
+        optionStack: [
+          {
+            from: '22'
+            terminator: '}'
+            text: '$matrix'
+            to: '31'
+            token: '{'
+            type: 'options'
+          },
+          {
+            from: '31'
+            terminator: '}'
+            text: '10'
+            to: '35'
+            token: '{'
+            type: 'options'
+          }
+        ]
+        options: ['answer', 'width', 'name', 'cmp_options']
+        to: '35'
+        token: '[_]*'
+        type: 'answer'
+      ]
+      [ # 5
+        from: '35'
+        noIndent: '1'
+        to: '37'
+        token: '\n\n'
+        type: 'par'
+      ]
+      [ # 6
+        from: '37'
+        optionStack: [
+          {
+            from: '40'
+            terminator: '}'
+            text: ' answer => $pi, name => NEW_ANS_NAME(), width => 10, cmp_options => { tolerance => 0.00001 } '
+            to: '135'
+            token: '{'
+            type: 'options'
+          }
+        ]
+        options: ['answer', 'width', 'name', 'cmp_options']
+        to: '135'
+        token: '[_]'
+        type: 'answer'
+      ]
+      [ # 7
+        from: '135'
+        noIndent: '1'
+        to: '137'
+        token: '\n\n'
+        type: 'par'
+      ]
+      [ # 8
+        from: '137'
+        optionStack: [
+          {
+            from: '140'
+            terminator: '}'
+            text: '$pi'
+            to: '145'
+            token: '{'
+            type: 'options'
+          },
+          {
+            from: '145'
+            terminator: '}'
+            text: '10'
+            to: '149'
+            token: '{'
+            type: 'options'
+          },
+          {
+            from: '149'
+            terminator: '}'
+            text: ' cmp_options => { tolerance => 0.00001 } '
+            to: '192'
+            token: '{'
+            type: 'options'
+          }
+        ]
+        options: ['answer', 'width', 'name', 'cmp_options']
+        to: '192'
+        token: '[_]'
+        type: 'answer'
+      ]
+    ]
+  ]
+]

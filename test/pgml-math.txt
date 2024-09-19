@@ -1,0 +1,602 @@
+# inline math
+
+BEGIN_PGML
+[`\frac{[$a]\pi}{3}`]
+END_PGML
+
+==>
+
+Program(
+    PGMLBlock(
+        BeginPG,
+        PGMLContent(
+            Paragraph(
+                MathMode(
+                    MathModeMark,
+                    Variable(VariableMark, Program(ExpressionStatement(ScalarVariable)), VariableMark),
+                    MathModeMark
+                )
+            )
+        ),
+        EndPG
+    )
+)
+
+==>
+
+from: '0'
+parseAll: 'true'
+to: '21'
+type: 'root'
+stack: [
+  [ # 0
+    combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
+    from: '0'
+    indent: '0'
+    to: '21'
+    type: 'indent'
+    stack: [
+      [ # 0
+        children: [
+          {
+            combine: { text: 'type' }
+            from: '2'
+            to: '8'
+            type: 'text'
+            stack: ['\frac{']
+          },
+          {
+            allowDblStar: 'true'
+            allowStar: 'true'
+            allowTriStar: 'true'
+            from: '8'
+            terminator: ']'
+            text: 'a'
+            to: '12'
+            token: '[$'
+            type: 'variable'
+          },
+          {
+            combine: { text: 'type' }
+            from: '12'
+            to: '19'
+            type: 'text'
+            stack: ['\pi}{3}']
+          }
+        ]
+        from: '0'
+        terminator: '`]'
+        to: '21'
+        token: '[`'
+        type: 'math'
+      ]
+    ]
+  ]
+]
+
+# display style math
+
+BEGIN_PGML
+[``\frac{4[$a]\pi}{3}``]
+END_PGML
+
+==>
+
+Program(
+    PGMLBlock(
+        BeginPG,
+        PGMLContent(
+            Paragraph(
+                MathMode(
+                    MathModeMark,
+                    Variable(VariableMark, Program(ExpressionStatement(ScalarVariable)), VariableMark),
+                    MathModeMark
+                )
+            )
+        ),
+        EndPG
+    )
+)
+
+==>
+
+from: '0'
+parseAll: 'true'
+to: '24'
+type: 'root'
+stack: [
+  [ # 0
+    combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
+    from: '0'
+    indent: '0'
+    to: '24'
+    type: 'indent'
+    stack: [
+      [ # 0
+        children: [
+          {
+            combine: { text: 'type' }
+            from: '3'
+            to: '10'
+            type: 'text'
+            stack: ['\frac{4']
+          },
+          {
+            allowDblStar: 'true'
+            allowStar: 'true'
+            allowTriStar: 'true'
+            from: '10'
+            terminator: ']'
+            text: 'a'
+            to: '14'
+            token: '[$'
+            type: 'variable'
+          },
+          {
+            combine: { text: 'type' }
+            from: '14'
+            to: '21'
+            type: 'text'
+            stack: ['\pi}{3}']
+          }
+        ]
+        displaystyle: 'true'
+        from: '0'
+        terminator: '``]'
+        to: '24'
+        token: '[``'
+        type: 'math'
+      ]
+    ]
+  ]
+]
+
+# display math
+
+BEGIN_PGML
+[```\frac{[$a + 3]\pi}{3}```]
+END_PGML
+
+==>
+
+Program(
+    PGMLBlock(
+        BeginPG,
+        PGMLContent(
+            Paragraph(
+                MathMode(
+                    MathModeMark,
+                    Variable(
+                        VariableMark,
+                        Program(ExpressionStatement(BinaryExpression(ScalarVariable, ArithOp, Integer))),
+                        VariableMark
+                    ),
+                    MathModeMark
+                )
+            )
+        ),
+        EndPG
+    )
+)
+
+==>
+
+from: '0'
+parseAll: 'true'
+to: '29'
+type: 'root'
+stack: [
+  [ # 0
+    combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
+    from: '0'
+    indent: '0'
+    to: '29'
+    type: 'indent'
+    stack: [
+      [ # 0
+        children: [
+          {
+            combine: { text: 'type' }
+            from: '4'
+            to: '10'
+            type: 'text'
+            stack: ['\frac{']
+          },
+          {
+            allowDblStar: 'true'
+            allowStar: 'true'
+            allowTriStar: 'true'
+            from: '10'
+            terminator: ']'
+            text: 'a + 3'
+            to: '18'
+            token: '[$'
+            type: 'variable'
+          },
+          {
+            combine: { text: 'type' }
+            from: '18'
+            to: '25'
+            type: 'text'
+            stack: ['\pi}{3}']
+          }
+        ]
+        display: 'true'
+        from: '0'
+        terminator: '```]'
+        to: '29'
+        token: '[```'
+        type: 'math'
+      ]
+    ]
+  ]
+]
+
+# inline parsed math
+
+BEGIN_PGML
+[:x^2 + 6x:]
+END_PGML
+
+==>
+
+Program(PGMLBlock(BeginPG, PGMLContent(Paragraph(MathMode(MathModeMark, MathModeMark))), EndPG))
+
+==>
+
+from: '0'
+parseAll: 'true'
+to: '12'
+type: 'root'
+stack: [
+  [ # 0
+    combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
+    from: '0'
+    indent: '0'
+    to: '12'
+    type: 'indent'
+    stack: [
+      [ # 0
+        allowDblStar: 'true'
+        allowStar: 'true'
+        allowTriStar: 'true'
+        children: [
+          {
+            combine: { text: 'type' }
+            from: '2'
+            to: '10'
+            type: 'text'
+            stack: ['x^2 + 6x']
+          }
+        ]
+        from: '0'
+        options: ['context', 'reduced']
+        parsed: 'true'
+        terminator: ':]'
+        to: '12'
+        token: '[:'
+        type: 'math'
+      ]
+    ]
+  ]
+]
+
+# inline parsed math in the active context
+
+BEGIN_PGML
+[:x^2 + 3 * 2 x:]*
+END_PGML
+
+==>
+
+Program(PGMLBlock(BeginPG, PGMLContent(Paragraph(MathMode(MathModeMark, MathModeMark))), EndPG))
+
+==>
+
+from: '0'
+parseAll: 'true'
+to: '18'
+type: 'root'
+stack: [
+  [ # 0
+    combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
+    from: '0'
+    indent: '0'
+    to: '18'
+    type: 'indent'
+    stack: [
+      [ # 0
+        allowDblStar: 'true'
+        allowStar: 'true'
+        allowTriStar: 'true'
+        children: [
+          {
+            combine: { text: 'type' }
+            from: '2'
+            to: '15'
+            type: 'text'
+            stack: ['x^2 + 3 * 2 x']
+          }
+        ]
+        from: '0'
+        hasStar: '1'
+        options: ['context', 'reduced']
+        parsed: 'true'
+        terminator: ':]'
+        to: '18'
+        token: '[:'
+        type: 'math'
+      ]
+    ]
+  ]
+]
+
+# inline parsed math with reductions
+
+BEGIN_PGML
+[:x^2 + 3 * 2 x:]**
+END_PGML
+
+==>
+
+Program(PGMLBlock(BeginPG, PGMLContent(Paragraph(MathMode(MathModeMark, MathModeMark))), EndPG))
+
+==>
+
+from: '0'
+parseAll: 'true'
+to: '19'
+type: 'root'
+stack: [
+  [ # 0
+    combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
+    from: '0'
+    indent: '0'
+    to: '19'
+    type: 'indent'
+    stack: [
+      [ # 0
+        allowDblStar: 'true'
+        allowStar: 'true'
+        allowTriStar: 'true'
+        children: [
+          {
+            combine: { text: 'type' }
+            from: '2'
+            to: '15'
+            type: 'text'
+            stack: ['x^2 + 3 * 2 x']
+          }
+        ]
+        from: '0'
+        hasDblStar: 'true'
+        options: ['context', 'reduced']
+        parsed: 'true'
+        terminator: ':]'
+        to: '19'
+        token: '[:'
+        type: 'math'
+      ]
+    ]
+  ]
+]
+
+# inline parsed math in the active context with reductions
+
+BEGIN_PGML
+[:x^2 + 3 * 2 x:]***
+END_PGML
+
+==>
+
+Program(PGMLBlock(BeginPG, PGMLContent(Paragraph(MathMode(MathModeMark, MathModeMark))), EndPG))
+
+==>
+
+from: '0'
+parseAll: 'true'
+to: '20'
+type: 'root'
+stack: [
+  [ # 0
+    combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
+    from: '0'
+    indent: '0'
+    to: '20'
+    type: 'indent'
+    stack: [
+      [ # 0
+        allowDblStar: 'true'
+        allowStar: 'true'
+        allowTriStar: 'true'
+        children: [
+          {
+            combine: { text: 'type' }
+            from: '2'
+            to: '15'
+            type: 'text'
+            stack: ['x^2 + 3 * 2 x']
+          }
+        ]
+        from: '0'
+        hasStar: '3'
+        options: ['context', 'reduced']
+        parsed: 'true'
+        terminator: ':]'
+        to: '20'
+        token: '[:'
+        type: 'math'
+      ]
+    ]
+  ]
+]
+
+# display style parsed math
+
+BEGIN_PGML
+[::x^2 + 6x::]
+END_PGML
+
+==>
+
+Program(PGMLBlock(BeginPG, PGMLContent(Paragraph(MathMode(MathModeMark, MathModeMark))), EndPG))
+
+==>
+
+from: '0'
+parseAll: 'true'
+to: '14'
+type: 'root'
+stack: [
+  [ # 0
+    combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
+    from: '0'
+    indent: '0'
+    to: '14'
+    type: 'indent'
+    stack: [
+      [ # 0
+        allowDblStar: 'true'
+        allowStar: 'true'
+        allowTriStar: 'true'
+        children: [
+          {
+            combine: { text: 'type' }
+            from: '3'
+            to: '11'
+            type: 'text'
+            stack: ['x^2 + 6x']
+          }
+        ]
+        displaystyle: 'true'
+        from: '0'
+        options: ['context', 'reduced']
+        parsed: 'true'
+        terminator: '::]'
+        to: '14'
+        token: '[::'
+        type: 'math'
+      ]
+    ]
+  ]
+]
+
+# display parsed math
+
+BEGIN_PGML
+[:::x^2 + 6x:::]
+END_PGML
+
+==>
+
+Program(PGMLBlock(BeginPG, PGMLContent(Paragraph(MathMode(MathModeMark, MathModeMark))), EndPG))
+
+==>
+
+from: '0'
+parseAll: 'true'
+to: '16'
+type: 'root'
+stack: [
+  [ # 0
+    combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
+    from: '0'
+    indent: '0'
+    to: '16'
+    type: 'indent'
+    stack: [
+      [ # 0
+        allowDblStar: 'true'
+        allowStar: 'true'
+        allowTriStar: 'true'
+        children: [
+          {
+            combine: { text: 'type' }
+            from: '4'
+            to: '12'
+            type: 'text'
+            stack: ['x^2 + 6x']
+          }
+        ]
+        display: 'true'
+        from: '0'
+        options: ['context', 'reduced']
+        parsed: 'true'
+        terminator: ':::]'
+        to: '16'
+        token: '[:::'
+        type: 'math'
+      ]
+    ]
+  ]
+]
+
+# inline parsed math with context object
+
+BEGIN_PGML
+[:<1,2x>:]{$context}
+END_PGML
+
+==>
+
+Program(
+    PGMLBlock(
+        BeginPG,
+        PGMLContent(
+            Paragraph(
+                MathMode(MathModeMark, MathModeMark),
+                Option(OptionMark, Program(ExpressionStatement(ScalarVariable)), OptionMark)
+            )
+        ),
+        EndPG
+    )
+)
+
+==>
+
+from: '0'
+parseAll: 'true'
+to: '20'
+type: 'root'
+stack: [
+  [ # 0
+    combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
+    from: '0'
+    indent: '0'
+    to: '20'
+    type: 'indent'
+    stack: [
+      [ # 0
+        allowDblStar: 'true'
+        allowStar: 'true'
+        allowTriStar: 'true'
+        children: [
+          {
+            combine: { text: 'type' }
+            from: '2'
+            to: '8'
+            type: 'text'
+            stack: ['<1,2x>']
+          }
+        ]
+        from: '0'
+        optionStack: [
+          {
+            from: '10'
+            terminator: '}'
+            text: '$context'
+            to: '20'
+            token: '{'
+            type: 'options'
+          }
+        ]
+        options: ['context', 'reduced']
+        parsed: 'true'
+        terminator: ':]'
+        to: '20'
+        token: '[:'
+        type: 'math'
+      ]
+    ]
+  ]
+]

@@ -26,7 +26,7 @@ export default [
         ...tseslint.configs.disableTypeChecked
     },
     {
-        files: ['test/test.ts'],
+        files: ['test/tree-test.ts'],
         rules: { '@typescript-eslint/unbound-method': 'off' }
     },
     eslintConfigPrettier,

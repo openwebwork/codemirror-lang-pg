@@ -9,5 +9,5 @@ trim_trailing_whitespace = true
 indent_size = 4
 indent_style = space
 
-[test/**.txt]
+[**.{txt,pg}]
 trim_trailing_whitespace = false

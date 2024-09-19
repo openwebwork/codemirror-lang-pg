@@ -2,7 +2,7 @@ import type { Input, TreeFragment, TreeCursor, PartialParse } from '@lezer/commo
 import { Tree, TreeBuffer, NodeType, NodeProp, NodeSet, Parser } from '@lezer/common';
 import { styleTags, tags as t } from '@lezer/highlight';
 import { parser as pgPerlParser } from './pg.grammar';
-import { Parse, Item, Text } from './pgml-parse';
+import { Parse, Item } from './pgml-parse';
 
 class CompositeBlock {
     static create(type: number, from: number, parentHash: number, end: number) {
@@ -47,6 +47,11 @@ enum Type {
 
     AnswerRule,
     Comment,
+    Emphasis,
+    EmphasisMark,
+    HorizontalRule,
+    Image,
+    ImageMark,
     MathMode,
     MathModeMark,
     Option,
@@ -54,6 +59,9 @@ enum Type {
     PerlCommand,
     PerlCommandMark,
     StarOption,
+    StrongEmphasis,
+    Tag,
+    TagMark,
     Variable,
     VariableMark
 }
@@ -253,7 +261,7 @@ const pgmlFormat = (block: Item, offset: number): Element[] => {
         return paragraphs;
     }
 
-    if (block.type === 'text') return [];
+    if (block.type === 'text' || block.type === 'par') return [];
 
     const children: Element[] = [];
     for (const item of block.stack ?? block.children ?? []) {
@@ -261,20 +269,12 @@ const pgmlFormat = (block: Item, offset: number): Element[] => {
         children.push(...pgmlFormat(item, offset));
     }
 
-    if (block.type === 'math') {
-        children.unshift(elt(Type.MathModeMark, block.from + offset, block.from + (block.token?.length ?? 0) + offset));
-        children.push(
-            elt(
-                Type.MathModeMark,
-                block.to -
-                    (block.terminator as string).length -
-                    (block.hasStar ? block.hasStar : block.hasDblStar ? 2 : 0) +
-                    offset,
-                block.to + offset
-            )
-        );
-        return [elt(Type.MathMode, block.from + offset, block.to + offset, children)];
-    } else if (block.type === 'variable') {
+    const options: Element[] = [];
+    for (const item of block.optionStack ?? []) {
+        options.push(...pgmlFormat(item, offset));
+    }
+
+    if (block.type === 'variable') {
         children.unshift(elt(Type.VariableMark, block.from + offset, block.from + 1 + offset));
         children.push(new TreeElement(pgPerlParser.parse(`$${block.text ?? ''}`), block.from + 1 + offset));
         children.push(elt(Type.VariableMark, block.to - 1 + offset, block.to + offset));
@@ -300,21 +300,57 @@ const pgmlFormat = (block: Item, offset: number): Element[] => {
     } else if (block.type === 'comment') {
         return [elt(Type.Comment, block.from + offset, block.to + offset)];
     } else if (block.type === 'answer') {
-        return [elt(Type.AnswerRule, block.from + offset, block.to + offset), ...children];
-    } else if (block.type === 'options') {
-        children.unshift(elt(Type.OptionMark, block.from + offset, block.from + 1 + offset));
+        const firstOptionBlock = options.at(0);
+        return [
+            elt(Type.AnswerRule, block.from + offset, firstOptionBlock ? firstOptionBlock.from : block.to + offset),
+            ...options
+        ];
+    } else if (block.type === 'rule') {
+        const firstOptionBlock = options.at(0);
+        return [
+            elt(Type.HorizontalRule, block.from + offset, firstOptionBlock ? firstOptionBlock.from : block.to + offset),
+            ...options
+        ];
+    } else if (block.type === 'math') {
+        const firstOptionBlock = options.at(0);
+        const to = firstOptionBlock ? firstOptionBlock.from : block.to + offset;
+        children.unshift(elt(Type.MathModeMark, block.from + offset, block.from + (block.token?.length ?? 0) + offset));
         children.push(
-            new TreeElement(
-                pgPerlParser.parse(
-                    block.stack
-                        ?.filter((t) => t instanceof Text)
-                        .reduce((v: string, t) => v + (t.stack?.join('') ?? ''), '') ?? ''
-                ),
-                block.from + 1 + offset
+            elt(
+                Type.MathModeMark,
+                to - (block.terminator as string).length - (block.hasStar ? block.hasStar : block.hasDblStar ? 2 : 0),
+                to
             )
         );
+        return [elt(Type.MathMode, block.from + offset, to, children), ...options];
+    } else if (block.type === 'image') {
+        const firstOptionBlock = options.at(0);
+        const to = firstOptionBlock ? firstOptionBlock.from : block.to + offset;
+        children.unshift(elt(Type.ImageMark, block.from + offset, block.from + 2 + offset));
+        children.push(elt(Type.ImageMark, to - 2, to));
+        return [elt(Type.Image, block.from + offset, to, children), ...options];
+    } else if (block.type === 'tag') {
+        const firstOptionBlock = options.at(0);
+        const to = firstOptionBlock ? firstOptionBlock.from : block.to + offset;
+        children.unshift(elt(Type.TagMark, block.from + offset, block.from + 2 + offset));
+        children.push(elt(Type.TagMark, to - 2, to));
+        return [elt(Type.Tag, block.from + offset, to, children), ...options];
+    } else if (block.type === 'options') {
+        children.unshift(elt(Type.OptionMark, block.from + offset, block.from + 1 + offset));
+        if (block.text) children.push(new TreeElement(pgPerlParser.parse(block.text), block.from + 1 + offset));
         children.push(elt(Type.OptionMark, block.to - 1 + offset, block.to + offset));
         return [elt(Type.Option, block.from + offset, block.to + offset, children)];
+    } else if (block.type === 'bold' || block.type === 'italic') {
+        children.unshift(elt(Type.EmphasisMark, block.from + offset, block.from + 1 + offset));
+        children.push(elt(Type.EmphasisMark, block.to - 1 + offset, block.to + offset));
+        return [
+            elt(
+                block.type === 'bold' ? Type.StrongEmphasis : Type.Emphasis,
+                block.from + offset,
+                block.to + offset,
+                children
+            )
+        ];
     }
 
     console.log(`unhandled ${block.type}`);
@@ -529,11 +565,14 @@ class FragmentCursor {
     }
 }
 
-const pgmlHighlighting = styleTags({
+export const pgmlHighlighting = styleTags({
     Paragraph: t.content,
-    'MathModeMark VariableMark PerlCommandMark OptionMark': t.processingInstruction,
-    AnswerRule: t.atom,
+    'EmphasisMark ImageMark MathModeMark OptionMark PerlCommandMark TagMark VariableMark': t.processingInstruction,
+    HorizontalRule: t.contentSeparator,
+    'AnswerRule Image MathMode': t.atom,
     Comment: t.lineComment,
+    'Emphasis/...': t.emphasis,
+    'StrongEmphasis/...': t.strong,
     StarOption: t.controlOperator
 });
 

@@ -1,0 +1,164 @@
+# bold text
+
+BEGIN_PGML
+*bold text with math [`x + 3`]*
+END_PGML
+
+==>
+
+Program(
+    PGMLBlock(
+        BeginPG,
+        PGMLContent(Paragraph(StrongEmphasis(EmphasisMark, MathMode(MathModeMark, MathModeMark), EmphasisMark))),
+        EndPG
+    )
+)
+
+==>
+
+from: '0'
+parseAll: 'true'
+to: '31'
+type: 'root'
+stack: [
+  [ # 0
+    combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
+    from: '0'
+    indent: '0'
+    to: '31'
+    type: 'indent'
+    stack: [
+      [ # 0
+        from: '0'
+        to: '31'
+        token: '*'
+        type: 'bold'
+        stack: [
+          [ # 0
+            combine: { text: 'type' }
+            from: '1'
+            to: '21'
+            type: 'text'
+            stack: ['bold text with math ']
+          ]
+          [ # 1
+            children: [
+              {
+                combine: { text: 'type' }
+                from: '23'
+                to: '28'
+                type: 'text'
+                stack: ['x + 3']
+              }
+            ]
+            from: '21'
+            terminator: '`]'
+            to: '30'
+            token: '[`'
+            type: 'math'
+          ]
+        ]
+      ]
+    ]
+  ]
+]
+
+# italic text
+
+BEGIN_PGML
+_italic text_
+END_PGML
+
+==>
+
+Program(PGMLBlock(BeginPG, PGMLContent(Paragraph(Emphasis(EmphasisMark, EmphasisMark))), EndPG))
+
+==>
+
+from: '0'
+parseAll: 'true'
+to: '13'
+type: 'root'
+stack: [
+  [ # 0
+    combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
+    from: '0'
+    indent: '0'
+    to: '13'
+    type: 'indent'
+    stack: [
+      [ # 0
+        from: '0'
+        to: '13'
+        token: '_'
+        type: 'italic'
+        stack: [
+          [ # 0
+            combine: { text: 'type' }
+            from: '1'
+            to: '12'
+            type: 'text'
+            stack: ['italic text']
+          ]
+        ]
+      ]
+    ]
+  ]
+]
+
+# bold italic text
+
+BEGIN_PGML
+*_bold italic text_*
+END_PGML
+
+==>
+
+Program(
+    PGMLBlock(
+        BeginPG,
+        PGMLContent(Paragraph(StrongEmphasis(EmphasisMark, Emphasis(EmphasisMark, EmphasisMark), EmphasisMark))),
+        EndPG
+    )
+)
+
+==>
+
+from: '0'
+parseAll: 'true'
+to: '20'
+type: 'root'
+stack: [
+  [ # 0
+    combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
+    from: '0'
+    indent: '0'
+    to: '20'
+    type: 'indent'
+    stack: [
+      [ # 0
+        from: '0'
+        to: '20'
+        token: '*'
+        type: 'bold'
+        stack: [
+          [ # 0
+            from: '1'
+            to: '19'
+            token: '_'
+            type: 'italic'
+            stack: [
+              [ # 0
+                combine: { text: 'type' }
+                from: '2'
+                to: '18'
+                type: 'text'
+                stack: ['bold italic text']
+              ]
+            ]
+          ]
+        ]
+      ]
+    ]
+  ]
+]

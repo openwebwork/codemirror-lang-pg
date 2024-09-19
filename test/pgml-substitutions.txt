@@ -1,0 +1,361 @@
+# perl command
+
+BEGIN_PGML
+[@ image('webwork_logo.png', width => 300) @]*
+[@ q{q quoted string @]} @]**
+[@ '<div>hello</div>' @]***
+END_PGML
+
+==>
+
+Program(
+    PGMLBlock(
+        BeginPG,
+        PGMLContent(
+            Paragraph(
+                PerlCommand(
+                    PerlCommandMark,
+                    Program(
+                        ExpressionStatement(
+                            CallExpression(
+                                FunctionName(Identifier),
+                                ParenthesizedArguments(
+                                    "(",
+                                    StringSingleQuoted,
+                                    Comma,
+                                    Pair(Identifier, FatComma, Integer),
+                                    ")"
+                                )
+                            )
+                        )
+                    ),
+                    PerlCommandMark
+                ),
+                PerlCommand(
+                    PerlCommandMark,
+                    Program(
+                        ExpressionStatement(
+                            StringQQuoted(q, QuoteLikeStartDelimiter, StringContent, QuoteLikeEndDelimiter)
+                        )
+                    ),
+                    PerlCommandMark
+                ),
+                PerlCommand(PerlCommandMark, Program(ExpressionStatement(StringSingleQuoted)), PerlCommandMark)
+            )
+        ),
+        EndPG
+    )
+)
+
+==>
+
+from: '0'
+parseAll: 'true'
+to: '104'
+type: 'root'
+stack: [
+  [ # 0
+    combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
+    from: '0'
+    indent: '0'
+    to: '104'
+    type: 'indent'
+    stack: [
+      [ # 0
+        allowDblStar: 'true'
+        allowStar: 'true'
+        allowTriStar: 'true'
+        from: '0'
+        hasStar: '1'
+        parseQuoted: 'true'
+        terminator: '@]'
+        text: ' image('webwork_logo.png', width => 300) '
+        to: '46'
+        token: '[@'
+        type: 'command'
+      ]
+      [ # 1
+        combine: { text: 'type' }
+        from: '46'
+        to: '47'
+        type: 'text'
+        stack: ['\n']
+      ]
+      [ # 2
+        allowDblStar: 'true'
+        allowStar: 'true'
+        allowTriStar: 'true'
+        from: '47'
+        hasDblStar: 'true'
+        parseQuoted: 'true'
+        terminator: '@]'
+        text: ' q{q quoted string @]} '
+        to: '76'
+        token: '[@'
+        type: 'command'
+      ]
+      [ # 3
+        combine: { text: 'type' }
+        from: '76'
+        to: '77'
+        type: 'text'
+        stack: ['\n']
+      ]
+      [ # 4
+        allowDblStar: 'true'
+        allowStar: 'true'
+        allowTriStar: 'true'
+        from: '77'
+        hasStar: '3'
+        parseQuoted: 'true'
+        terminator: '@]'
+        text: ' '<div>hello</div>' '
+        to: '104'
+        token: '[@'
+        type: 'command'
+      ]
+    ]
+  ]
+]
+
+# comments
+
+BEGIN_PGML
+[% Single line comment %]
+
+[%
+    This is a comment.
+    It has multiple lines.
+%]
+END_PGML
+
+==>
+
+Program(PGMLBlock(BeginPG, PGMLContent(Paragraph(Comment), Paragraph(Comment)), EndPG))
+
+==>
+
+from: '0'
+parseAll: 'true'
+to: '82'
+type: 'root'
+stack: [
+  [ # 0
+    combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
+    from: '0'
+    indent: '0'
+    to: '82'
+    type: 'indent'
+    stack: [
+      [ # 0
+        allowPar: 'true'
+        from: '0'
+        terminator: '%]'
+        to: '25'
+        token: '[%'
+        type: 'comment'
+        stack: [
+          [ # 0
+            combine: { text: 'type' }
+            from: '2'
+            to: '23'
+            type: 'text'
+            stack: [' Single line comment ']
+          ]
+        ]
+      ]
+      [ # 1
+        from: '25'
+        noIndent: '1'
+        to: '27'
+        token: '\n\n'
+        type: 'par'
+      ]
+      [ # 2
+        allowPar: 'true'
+        from: '27'
+        terminator: '%]'
+        to: '82'
+        token: '[%'
+        type: 'comment'
+        stack: [
+          [ # 0
+            combine: { text: 'type' }
+            from: '30'
+            to: '80'
+            type: 'text'
+            stack: ['    ', 'This is a comment.', '\n', '    ', 'It has multiple lines.', '\n']
+          ]
+        ]
+      ]
+    ]
+  ]
+]
+
+# images
+
+BEGIN_PGML
+[!some image!]{'image.png'}{300}{200}{{ tex_size => 1000 }}
+[![$altText]!]{'image.png'}{500}{ image_options => { tex_size => 600 } }
+END_PGML
+
+==>
+
+Program(
+    PGMLBlock(
+        BeginPG,
+        PGMLContent(
+            Paragraph(
+                Image(ImageMark, ImageMark),
+                Option(OptionMark, Program(ExpressionStatement(StringSingleQuoted)), OptionMark),
+                Option(OptionMark, Program(ExpressionStatement(Integer)), OptionMark),
+                Option(OptionMark, Program(ExpressionStatement(Integer)), OptionMark),
+                Option(
+                    OptionMark,
+                    Program(StandaloneBlock(Block("{", ExpressionStatement(Pair(Identifier, FatComma, Integer)), "}"))),
+                    OptionMark
+                ),
+                Image(
+                    ImageMark,
+                    Variable(VariableMark, Program(ExpressionStatement(ScalarVariable)), VariableMark),
+                    ImageMark
+                ),
+                Option(OptionMark, Program(ExpressionStatement(StringSingleQuoted)), OptionMark),
+                Option(OptionMark, Program(ExpressionStatement(Integer)), OptionMark),
+                Option(
+                    OptionMark,
+                    Program(
+                        ExpressionStatement(
+                            Pair(Identifier, FatComma, HashRef("{", Pair(Identifier, FatComma, Integer), "}"))
+                        )
+                    ),
+                    OptionMark
+                )
+            )
+        ),
+        EndPG
+    )
+)
+
+==>
+
+from: '0'
+parseAll: 'true'
+to: '132'
+type: 'root'
+stack: [
+  [ # 0
+    combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
+    from: '0'
+    indent: '0'
+    to: '132'
+    type: 'indent'
+    stack: [
+      [ # 0
+        children: [
+          {
+            combine: { text: 'type' }
+            from: '2'
+            to: '12'
+            type: 'text'
+            stack: ['some image']
+          }
+        ]
+        from: '0'
+        optionStack: [
+          {
+            from: '14'
+            terminator: '}'
+            text: ''image.png''
+            to: '27'
+            token: '{'
+            type: 'options'
+          },
+          {
+            from: '27'
+            terminator: '}'
+            text: '300'
+            to: '32'
+            token: '{'
+            type: 'options'
+          },
+          {
+            from: '32'
+            terminator: '}'
+            text: '200'
+            to: '37'
+            token: '{'
+            type: 'options'
+          },
+          {
+            from: '37'
+            terminator: '}'
+            text: '{ tex_size => 1000 }'
+            to: '59'
+            token: '{'
+            type: 'options'
+          }
+        ]
+        options: ['source', 'width', 'height', 'image_options']
+        terminator: '!]'
+        to: '59'
+        token: '[!'
+        type: 'image'
+      ]
+      [ # 1
+        combine: { text: 'type' }
+        from: '59'
+        to: '60'
+        type: 'text'
+        stack: ['\n']
+      ]
+      [ # 2
+        children: [
+          {
+            allowDblStar: 'true'
+            allowStar: 'true'
+            allowTriStar: 'true'
+            from: '62'
+            terminator: ']'
+            text: 'altText'
+            to: '72'
+            token: '[$'
+            type: 'variable'
+          }
+        ]
+        from: '60'
+        optionStack: [
+          {
+            from: '74'
+            terminator: '}'
+            text: ''image.png''
+            to: '87'
+            token: '{'
+            type: 'options'
+          },
+          {
+            from: '87'
+            terminator: '}'
+            text: '500'
+            to: '92'
+            token: '{'
+            type: 'options'
+          },
+          {
+            from: '92'
+            terminator: '}'
+            text: ' image_options => { tex_size => 600 } '
+            to: '132'
+            token: '{'
+            type: 'options'
+          }
+        ]
+        options: ['source', 'width', 'height', 'image_options']
+        terminator: '!]'
+        to: '132'
+        token: '[!'
+        type: 'image'
+      ]
+    ]
+  ]
+]

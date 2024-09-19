@@ -46,7 +46,11 @@ const toLineContext = (file, index) => {
 
 const fileTests = (file) => {
     const source = readFileSync(join(caseDir, file), 'utf8');
-    const caseExpr = /\s*#[ \t]*(.*)(?:\r\n|\r|\n)([^]*?)==+>([^]*?)(?:$|(?:\r\n|\r|\n)+(?=#))/gy;
+    const caseExpr = RegExp(
+        /\s*#[ \t]*(.*)(?:\r\n|\r|\n)([^]*?)/.source +
+            /==+>(?:[^]*?)(?:(?:\r\n|\r|\n)+)==+>([^]*?)(?:$|(?:\r\n|\r|\n)+(?=#))/.source,
+        'gy'
+    );
     const tests = [];
     let lastIndex = 0;
     for (;;) {
@@ -79,8 +83,11 @@ try {
 }
 
 for (const { name, text } of sources) {
+    const source = /BEGIN_PGML/.test(text)
+        ? text.replace(/^[\s\S]*?BEGIN_PGML\n([\s\S]*?)\nEND_PGML[\s\S]*$/y, '$1')
+        : text;
     console.log(`Test: \x1b[1m\x1b[34m${name}\x1b[0m\n`);
-    console.log(text);
+    console.log(source);
     console.log('\n\x1b[1m\x1b[32m==>\x1b[0m\n');
-    console.log(PGMLShow(text));
+    console.log(PGMLShow(source));
 }

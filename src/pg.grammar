@@ -137,8 +137,8 @@ statement[@isGroup=Statement] {
     EmptyStatement { ~block ";" } |
     PodStatement |
     EndDataStatement[@dynamicPrecedence=4] { (kw<"__END__"> | kw<"__DATA__">) endDataBlock } |
-    PGMLStatement |
-    PGTextStatement
+    PGMLBlock |
+    PGTextBlock
 }
 
 expression[@isGroup=Expression] {
@@ -506,8 +506,8 @@ semicolon { ";" | automaticSemicolon }
 
     PodStatement { PodDirective PodContent PodCut }
 
-    PGMLStatement { BeginPG PGMLContent EndPG }
-    PGTextStatement { BeginPG PGTextContent EndPG }
+    PGMLBlock { BeginPG PGMLContent EndPG }
+    PGTextBlock { BeginPG PGTextContent EndPG }
 }
 
 @skip { Comment | whitespace | UninterpolatedHeredocBody | InterpolatedHeredocBody }

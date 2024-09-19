@@ -240,9 +240,8 @@ export class Parse {
             }
         }
 
-        this.root.to = this.pos;
-
         this.End('END_PGML');
+        this.root.to = this.pos;
         delete this.root.parser;
     }
 
@@ -363,14 +362,18 @@ export class Parse {
     Terminate(token?: string) {
         const block = this.block;
         if (!block) return;
-        //console.log(`terminating ${block.type}, previous is ${block.prev?.type ?? 'none'}`);
         const prev = block.prev;
         if (typeof token === 'string') {
             block.terminator = token;
             block.to += block.terminator.length;
-            if (prev) prev.to = block.to;
             if (block.terminateMethod) this[block.terminateMethod](token);
         }
+        if (prev) prev.to = block.to;
+        //console.log(
+        //    `terminating ${block.type} from ${block.from.toString()} to ${block.to.toString()}, previous is ${
+        //        prev?.type ?? 'none'
+        //    } from ${prev?.from.toString() ?? '0'} to ${prev?.to.toString() ?? '0'}`
+        //);
         delete block.prev;
         delete block.parseComments;
         delete block.parseSubstitutions;
@@ -456,10 +459,10 @@ export class Parse {
     }
 
     Indent(token: string) {
+        if (this.block && (this.block.ignoreIndent || this.atLineStart)) this.block.to += token.length;
         if (this.block?.ignoreIndent) return;
         if (this.atLineStart) {
-            let tabs = token;
-            tabs = tabs.replace(/ {4}/g, '\t'); // turn spaces into tabs
+            const tabs = token.replace(/ {4}/g, '\t'); // turn spaces into tabs
             const indent = (this.actualIndent = tabs.length);
             if (indent !== this.indent) {
                 this.End('indentation change');
@@ -500,13 +503,15 @@ export class Parse {
     Emphasis(token: string) {
         const type = BlockDefs[token.substring(0, 1)]?.type;
         let block = this.block;
-        if (block?.type === type) {
+        if (block && block.type === type) {
+            block.to += 1;
             this.Terminate();
             return;
         }
         while (block?.type !== 'root') {
-            if (block?.prev?.type === type) {
+            if (block && block.prev?.type === type) {
                 this.End(`end of ${type ?? ''}`, block);
+                block.to += 1;
                 this.Terminate();
                 return;
             }
@@ -678,7 +683,7 @@ export class Parse {
     terminateGetString(_token: string) {
         const block = this.block;
         if (!block) return;
-        if (block.type === 'math') {
+        if (block.type === 'math' || block.type === 'image') {
             for (const child of block.stack ?? []) {
                 if (child instanceof Text) {
                     const lastChild = block.children?.at(-1);
@@ -750,7 +755,10 @@ export class Parse {
         const optionBlock = this.block?.popItem();
         const block = this.block?.topItem();
         if (!(block instanceof Item) || !(optionBlock instanceof Item)) return;
-        block.pushChild(optionBlock);
+        optionBlock.text = this.stackText(optionBlock.stack);
+        delete optionBlock.stack;
+        block.pushOption(optionBlock);
+        block.to = optionBlock.to;
     }
 
     StarOption(token: string) {
@@ -759,16 +767,19 @@ export class Parse {
         if (token === '*' && top.allowStar) {
             top.hasStar = 1;
             top.to += 1;
+            if (this.block) this.block.to = top.to;
             return true;
         }
         if (token === '**' && top.allowDblStar) {
             top.hasDblStar = true;
             top.to += 2;
+            if (this.block) this.block.to = top.to;
             return true;
         }
         if (token === '***' && top.allowTriStar) {
             top.hasStar = 3;
             top.to += 3;
+            if (this.block) this.block.to = top.to;
             return true;
         }
         return false;
@@ -833,6 +844,7 @@ export class Item implements BlockDefinition {
     token?: string;
     stack?: (Item | string)[];
     children?: Item[];
+    optionStack?: Item[];
     text?: string;
     hasWarning?: boolean;
     bullet?: string;
@@ -884,6 +896,11 @@ export class Item implements BlockDefinition {
         this.children.push(child);
     }
 
+    pushOption(child: Item) {
+        if (!(this.optionStack instanceof Array)) this.optionStack = [];
+        this.optionStack.push(child);
+    }
+
     quote(input: string) {
         input = input.replace(/\n/g, '\\n').replace(/\t/g, '\\t');
         return input;
@@ -915,11 +932,11 @@ export class Item implements BlockDefinition {
             if (id === 'stack' || !Object.hasOwn(this, id)) continue;
             const value = this[id as keyof Item];
             if (typeof value === 'undefined') continue;
-            if (value instanceof Array && id === 'children') {
+            if (value instanceof Array && (id === 'children' || id === 'optionStack')) {
                 strings.push(
-                    `${indent}${id}: [\n${indent}{\n${value
-                        .map((e) => (e as Item).show(`${indent}  `))
-                        .join(`\n${indent}},\n${indent}{\n`)}\n${indent}}`
+                    `${indent}${id}: [\n${indent}  {\n${value
+                        .map((e) => (e as Item).show(`${indent}    `))
+                        .join(`\n${indent}  },\n${indent}  {\n`)}\n${indent}  }\n${indent}]`
                 );
             } else if (value instanceof Array) {
                 // eslint-disable-next-line @typescript-eslint/no-base-to-string
@@ -1091,12 +1108,13 @@ class Root extends Block {
     }
 
     pushItem(...items: Item[]) {
+        const parser = this.parser;
+        if (!parser) return;
+
         let item;
         while ((item = items.pop())) {
-            const parser = this.parser;
-            if (!parser) return;
             if (!item.noIndent || (parser.indent && item.noIndent < 0)) {
-                parser.block = new Block('indent', parser.pos, {
+                parser.block = new Block('indent', item.from, {
                     prev: this,
                     indent: parser.indent,
                     parseAll: true,
@@ -1133,7 +1151,7 @@ export class Text extends Item {
     constructor(from: number, ...texts: string[]) {
         super('text', from, { stack: [...texts], combine: { text: 'type' } });
         this.to += texts.join('').length;
-        //console.log(`new item "text" ${texts.join('')} from ${this.from.toString()} to ${this.to.toString()}`);
+        //console.log(`new item "text": "${texts.join('')}" from ${this.from.toString()} to ${this.to.toString()}`);
     }
 
     pushText(...texts: string[]) {

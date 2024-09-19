@@ -874,7 +874,7 @@ export const pgml = new ExternalTokenizer(
     (input, stack) => {
         if (stack.canShift(BeginPG)) {
             let ch = input.peek(-1);
-            if (ch != 10) return;
+            if (ch >= 0 && ch != 10) return;
             let pos = 0;
             ch = input.next;
             while (isHWhitespace(ch)) ch = input.peek(++pos);

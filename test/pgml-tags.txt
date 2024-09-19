@@ -1,0 +1,431 @@
+# tags
+
+BEGIN_PGML
+[< basic div [`x + 3`] >]
+
+[<span with equation [`x + y = 3`].>]{ [ 'span', style => 'color:darkBlue' ] }{ ['\color{blue}'] }
+
+[<
+    div with equation [`x^2 + y^2 = 3`].
+
+    [! default icon !]{'defaulticon.png'}{100}
+
+    contents are indented
+>]{ [ 'div', style => 'color:darkBlue', data_testing => 'my test data' ] }{ ['\color{blue}'] }
+
+[<
+     [_]*{$matrix} [``\begin{bmatrix} a \\ b \end{bmatrix} = \begin{bmatrix} 0 \\ 0 \end{bmatrix}``]
+>]{ [ class => 'ww-feedback-container ww-fb-align-middle' ] }
+END_PGML
+
+==>
+
+Program(
+    PGMLBlock(
+        BeginPG,
+        PGMLContent(
+            Paragraph(Tag(TagMark, MathMode(MathModeMark, MathModeMark), TagMark)),
+            Paragraph(
+                Tag(TagMark, MathMode(MathModeMark, MathModeMark), TagMark),
+                Option(
+                    OptionMark,
+                    Program(
+                        ExpressionStatement(
+                            ArrayRef(
+                                "[",
+                                StringSingleQuoted,
+                                Comma,
+                                Pair(Identifier, FatComma, StringSingleQuoted),
+                                "]"
+                            )
+                        )
+                    ),
+                    OptionMark
+                ),
+                Option(OptionMark, Program(ExpressionStatement(ArrayRef("[", StringSingleQuoted, "]"))), OptionMark)
+            ),
+            Paragraph(
+                Tag(
+                    TagMark,
+                    MathMode(MathModeMark, MathModeMark),
+                    Image(ImageMark, ImageMark),
+                    Option(OptionMark, Program(ExpressionStatement(StringSingleQuoted)), OptionMark),
+                    Option(OptionMark, Program(ExpressionStatement(Integer)), OptionMark),
+                    TagMark
+                ),
+                Option(
+                    OptionMark,
+                    Program(
+                        ExpressionStatement(
+                            ArrayRef(
+                                "[",
+                                StringSingleQuoted,
+                                Comma,
+                                Pair(Identifier, FatComma, StringSingleQuoted),
+                                Comma,
+                                Pair(Identifier, FatComma, StringSingleQuoted),
+                                "]"
+                            )
+                        )
+                    ),
+                    OptionMark
+                ),
+                Option(OptionMark, Program(ExpressionStatement(ArrayRef("[", StringSingleQuoted, "]"))), OptionMark)
+            ),
+            Paragraph(
+                Tag(
+                    TagMark,
+                    AnswerRule,
+                    Option(OptionMark, Program(ExpressionStatement(ScalarVariable)), OptionMark),
+                    MathMode(MathModeMark, MathModeMark),
+                    TagMark
+                ),
+                Option(
+                    OptionMark,
+                    Program(ExpressionStatement(ArrayRef("[", Pair(Identifier, FatComma, StringSingleQuoted), "]"))),
+                    OptionMark
+                )
+            )
+        ),
+        EndPG
+    )
+)
+
+==>
+
+from: '0'
+parseAll: 'true'
+to: '507'
+type: 'root'
+stack: [
+  [ # 0
+    combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
+    from: '0'
+    indent: '0'
+    to: '507'
+    type: 'indent'
+    stack: [
+      [ # 0
+        from: '0'
+        isContainer: 'true'
+        options: ['html', 'tex', 'ptx']
+        terminator: '>]'
+        to: '25'
+        token: '[<'
+        type: 'tag'
+        stack: [
+          [ # 0
+            combine: { text: 'type' }
+            from: '2'
+            to: '13'
+            type: 'text'
+            stack: [' basic div ']
+          ]
+          [ # 1
+            children: [
+              {
+                combine: { text: 'type' }
+                from: '15'
+                to: '20'
+                type: 'text'
+                stack: ['x + 3']
+              }
+            ]
+            containerEnd: '/>\]/'
+            from: '13'
+            terminator: '`]'
+            to: '22'
+            token: '[`'
+            type: 'math'
+          ]
+          [ # 2
+            combine: { text: 'type' }
+            from: '22'
+            to: '23'
+            type: 'text'
+            stack: [' ']
+          ]
+        ]
+      ]
+      [ # 1
+        from: '25'
+        noIndent: '1'
+        to: '27'
+        token: '\n\n'
+        type: 'par'
+      ]
+      [ # 2
+        from: '27'
+        isContainer: 'true'
+        optionStack: [
+          {
+            from: '64'
+            terminator: '}'
+            text: ' [ 'span', style => 'color:darkBlue' ] '
+            to: '105'
+            token: '{'
+            type: 'options'
+          },
+          {
+            from: '105'
+            terminator: '}'
+            text: ' ['\color{blue}'] '
+            to: '125'
+            token: '{'
+            type: 'options'
+          }
+        ]
+        options: ['html', 'tex', 'ptx']
+        terminator: '>]'
+        to: '125'
+        token: '[<'
+        type: 'tag'
+        stack: [
+          [ # 0
+            combine: { text: 'type' }
+            from: '29'
+            to: '48'
+            type: 'text'
+            stack: ['span with equation ']
+          ]
+          [ # 1
+            children: [
+              {
+                combine: { text: 'type' }
+                from: '50'
+                to: '59'
+                type: 'text'
+                stack: ['x + y = 3']
+              }
+            ]
+            containerEnd: '/>\]/'
+            from: '48'
+            terminator: '`]'
+            to: '61'
+            token: '[`'
+            type: 'math'
+          ]
+          [ # 2
+            combine: { text: 'type' }
+            from: '61'
+            to: '62'
+            type: 'text'
+            stack: ['.']
+          ]
+        ]
+      ]
+      [ # 3
+        from: '125'
+        noIndent: '1'
+        to: '127'
+        token: '\n\n'
+        type: 'par'
+      ]
+      [ # 4
+        from: '127'
+        isContainer: 'true'
+        optionStack: [
+          {
+            from: '248'
+            terminator: '}'
+            text: ' [ 'div', style => 'color:darkBlue', data_testing => 'my test data' ] '
+            to: '320'
+            token: '{'
+            type: 'options'
+          },
+          {
+            from: '320'
+            terminator: '}'
+            text: ' ['\color{blue}'] '
+            to: '340'
+            token: '{'
+            type: 'options'
+          }
+        ]
+        options: ['html', 'tex', 'ptx']
+        terminator: '>]'
+        to: '340'
+        token: '[<'
+        type: 'tag'
+        stack: [
+          [ # 0
+            combine: { text: 'type' }
+            from: '134'
+            to: '152'
+            type: 'text'
+            stack: ['div with equation ']
+          ]
+          [ # 1
+            children: [
+              {
+                combine: { text: 'type' }
+                from: '154'
+                to: '167'
+                type: 'text'
+                stack: ['x^2 + y^2 = 3']
+              }
+            ]
+            containerEnd: '/>\]/'
+            from: '152'
+            terminator: '`]'
+            to: '169'
+            token: '[`'
+            type: 'math'
+          ]
+          [ # 2
+            combine: { text: 'type' }
+            from: '169'
+            to: '170'
+            type: 'text'
+            stack: ['.']
+          ]
+          [ # 3
+            from: '170'
+            noIndent: '1'
+            to: '172'
+            token: '\n\n'
+            type: 'par'
+          ]
+          [ # 4
+            children: [
+              {
+                combine: { text: 'type' }
+                from: '178'
+                to: '192'
+                type: 'text'
+                stack: [' default icon ']
+              }
+            ]
+            containerEnd: '/>\]/'
+            from: '176'
+            optionStack: [
+              {
+                containerEnd: '/>\]/'
+                from: '194'
+                terminator: '}'
+                text: ''defaulticon.png''
+                to: '213'
+                token: '{'
+                type: 'options'
+              },
+              {
+                containerEnd: '/>\]/'
+                from: '213'
+                terminator: '}'
+                text: '100'
+                to: '218'
+                token: '{'
+                type: 'options'
+              }
+            ]
+            options: ['source', 'width', 'height', 'image_options']
+            terminator: '!]'
+            to: '218'
+            token: '[!'
+            type: 'image'
+          ]
+          [ # 5
+            from: '218'
+            noIndent: '1'
+            to: '220'
+            token: '\n\n'
+            type: 'par'
+          ]
+          [ # 6
+            combine: { text: 'type' }
+            from: '220'
+            to: '242'
+            type: 'text'
+            stack: ['contents are indented', '\n']
+          ]
+        ]
+      ]
+      [ # 5
+        from: '340'
+        noIndent: '1'
+        to: '342'
+        token: '\n\n'
+        type: 'par'
+      ]
+      [ # 6
+        from: '342'
+        isContainer: 'true'
+        optionStack: [
+          {
+            from: '448'
+            terminator: '}'
+            text: ' [ class => 'ww-feedback-container ww-fb-align-middle' ] '
+            to: '507'
+            token: '{'
+            type: 'options'
+          }
+        ]
+        options: ['html', 'tex', 'ptx']
+        terminator: '>]'
+        to: '507'
+        token: '[<'
+        type: 'tag'
+        stack: [
+          [ # 0
+            combine: { text: 'type' }
+            from: '349'
+            to: '350'
+            type: 'text'
+            stack: [' ']
+          ]
+          [ # 1
+            from: '350'
+            hasStar: '1'
+            optionStack: [
+              {
+                containerEnd: '/>\]/'
+                from: '354'
+                terminator: '}'
+                text: '$matrix'
+                to: '363'
+                token: '{'
+                type: 'options'
+              }
+            ]
+            options: ['answer', 'width', 'name', 'cmp_options']
+            to: '363'
+            token: '[_]*'
+            type: 'answer'
+          ]
+          [ # 2
+            combine: { text: 'type' }
+            from: '363'
+            to: '364'
+            type: 'text'
+            stack: [' ']
+          ]
+          [ # 3
+            children: [
+              {
+                combine: { text: 'type' }
+                from: '367'
+                to: '442'
+                type: 'text'
+                stack: ['\begin{bmatrix} a \\ b \end{bmatrix} = \begin{bmatrix} 0 \\ 0 \end{bmatrix}']
+              }
+            ]
+            containerEnd: '/>\]/'
+            displaystyle: 'true'
+            from: '364'
+            terminator: '``]'
+            to: '445'
+            token: '[``'
+            type: 'math'
+          ]
+          [ # 4
+            combine: { text: 'type' }
+            from: '445'
+            to: '446'
+            type: 'text'
+            stack: ['\n']
+          ]
+        ]
+      ]
+    ]
+  ]
+]
