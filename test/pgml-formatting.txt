@@ -367,9 +367,9 @@ Program(
         BeginPG,
         PGMLContent(
             Align(AlignMark, MathMode(MathModeMark, MathModeMark)),
+            Align(AlignMark, MathMode(MathModeMark, MathModeMark), AlignMark),
             Align(
                 AlignMark,
-                MathMode(MathModeMark, MathModeMark),
                 HorizontalRule,
                 Option(OptionMark, Program(ExpressionStatement(Integer)), OptionMark),
                 AlignMark
@@ -390,7 +390,6 @@ stack: [
   [ # 0
     align: 'right'
     breakInside: 'true'
-    combine: { align: 'align', par: 'true' }
     from: '0'
     to: '39'
     token: '>> '
@@ -431,10 +430,9 @@ stack: [
   [ # 1
     align: 'center'
     breakInside: 'true'
-    combine: { align: 'align', par: 'true' }
     from: '39'
     terminator: ' <<'
-    to: '81'
+    to: '66'
     token: '>> '
     type: 'align'
     stack: [
@@ -468,7 +466,18 @@ stack: [
         type: 'text'
         stack: ['\n']
       ]
-      [ # 3
+    ]
+  ]
+  [ # 2
+    align: 'center'
+    breakInside: 'true'
+    from: '69'
+    terminator: ' <<'
+    to: '81'
+    token: '>> '
+    type: 'align'
+    stack: [
+      [ # 0
         from: '72'
         optionStack: [
           {
@@ -485,7 +494,7 @@ stack: [
         token: '---'
         type: 'rule'
       ]
-      [ # 4
+      [ # 1
         combine: { text: 'type' }
         from: '80'
         to: '81'
@@ -494,10 +503,9 @@ stack: [
       ]
     ]
   ]
-  [ # 2
+  [ # 3
     align: 'right'
     breakInside: 'true'
-    combine: { align: 'align', par: 'true' }
     from: '84'
     to: '96'
     token: '>> '

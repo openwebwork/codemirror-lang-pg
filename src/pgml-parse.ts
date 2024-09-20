@@ -1393,7 +1393,6 @@ const BlockDefs: Record<string, OriginalBlockDefinition | undefined> = {
         parseAll: true,
         align: 'right',
         breakInside: true,
-        combine: { align: 'align', par: true },
         noIndent: -1
     },
     '#': { type: 'heading', parseAll: true, breakInside: true, combine: { heading: 'n' } },
