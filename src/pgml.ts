@@ -45,6 +45,8 @@ enum Type {
 
     Paragraph,
 
+    Align,
+    AlignMark,
     AnswerRule,
     Comment,
     Emphasis,
@@ -351,6 +353,11 @@ const pgmlFormat = (block: Item, offset: number): Element[] => {
                 children
             )
         ];
+    } else if (block.type === 'align') {
+        children.unshift(elt(Type.AlignMark, block.from + offset, block.from + (block.token?.length ?? 2) + offset));
+        if (typeof block.terminator === 'string')
+            children.push(elt(Type.AlignMark, block.to - block.terminator.length + offset, block.to + offset));
+        return [elt(Type.Align, block.from + offset, block.to + offset, children)];
     }
 
     console.log(`unhandled ${block.type}`);
@@ -567,7 +574,8 @@ class FragmentCursor {
 
 export const pgmlHighlighting = styleTags({
     Paragraph: t.content,
-    'EmphasisMark ImageMark MathModeMark OptionMark PerlCommandMark TagMark VariableMark': t.processingInstruction,
+    'EmphasisMark ImageMark MathModeMark OptionMark PerlCommandMark TagMark VariableMark AlignMark':
+        t.processingInstruction,
     HorizontalRule: t.contentSeparator,
     'AnswerRule Image MathMode': t.atom,
     Comment: t.lineComment,

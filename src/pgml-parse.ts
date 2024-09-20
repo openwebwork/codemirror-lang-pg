@@ -603,6 +603,7 @@ export class Parse {
             if (block) {
                 block.align = 'center';
                 block.terminator = token;
+                block.to += token.length;
             }
             this.End('end of centering', block);
         } else {

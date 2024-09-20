@@ -350,3 +350,176 @@ stack: [
     ]
   ]
 ]
+
+# alignment
+
+BEGIN_PGML
+>> right justified text [`y = 2x + 3`]
+>> centered text [`x = 4`] <<
+>> ---{100} <<
+>> ----{100}
+END_PGML
+
+==>
+
+Program(
+    PGMLBlock(
+        BeginPG,
+        PGMLContent(
+            Align(AlignMark, MathMode(MathModeMark, MathModeMark)),
+            Align(
+                AlignMark,
+                MathMode(MathModeMark, MathModeMark),
+                HorizontalRule,
+                Option(OptionMark, Program(ExpressionStatement(Integer)), OptionMark),
+                AlignMark
+            ),
+            Align(AlignMark, HorizontalRule, Option(OptionMark, Program(ExpressionStatement(Integer)), OptionMark))
+        ),
+        EndPG
+    )
+)
+
+==>
+
+from: '0'
+parseAll: 'true'
+to: '96'
+type: 'root'
+stack: [
+  [ # 0
+    align: 'right'
+    breakInside: 'true'
+    combine: { align: 'align', par: 'true' }
+    from: '0'
+    to: '39'
+    token: '>> '
+    type: 'align'
+    stack: [
+      [ # 0
+        combine: { text: 'type' }
+        from: '3'
+        to: '24'
+        type: 'text'
+        stack: ['right justified text ']
+      ]
+      [ # 1
+        children: [
+          {
+            combine: { text: 'type' }
+            from: '26'
+            to: '36'
+            type: 'text'
+            stack: ['y = 2x + 3']
+          }
+        ]
+        from: '24'
+        terminator: '`]'
+        to: '38'
+        token: '[`'
+        type: 'math'
+      ]
+      [ # 2
+        combine: { text: 'type' }
+        from: '38'
+        to: '39'
+        type: 'text'
+        stack: ['\n']
+      ]
+    ]
+  ]
+  [ # 1
+    align: 'center'
+    breakInside: 'true'
+    combine: { align: 'align', par: 'true' }
+    from: '39'
+    terminator: ' <<'
+    to: '81'
+    token: '>> '
+    type: 'align'
+    stack: [
+      [ # 0
+        combine: { text: 'type' }
+        from: '42'
+        to: '56'
+        type: 'text'
+        stack: ['centered text ']
+      ]
+      [ # 1
+        children: [
+          {
+            combine: { text: 'type' }
+            from: '58'
+            to: '63'
+            type: 'text'
+            stack: ['x = 4']
+          }
+        ]
+        from: '56'
+        terminator: '`]'
+        to: '65'
+        token: '[`'
+        type: 'math'
+      ]
+      [ # 2
+        combine: { text: 'type' }
+        from: '65'
+        to: '66'
+        type: 'text'
+        stack: ['\n']
+      ]
+      [ # 3
+        from: '72'
+        optionStack: [
+          {
+            from: '75'
+            terminator: '}'
+            text: '100'
+            to: '80'
+            token: '{'
+            type: 'options'
+          }
+        ]
+        options: ['width', 'height', 'size']
+        to: '80'
+        token: '---'
+        type: 'rule'
+      ]
+      [ # 4
+        combine: { text: 'type' }
+        from: '80'
+        to: '81'
+        type: 'text'
+        stack: ['\n']
+      ]
+    ]
+  ]
+  [ # 2
+    align: 'right'
+    breakInside: 'true'
+    combine: { align: 'align', par: 'true' }
+    from: '84'
+    to: '96'
+    token: '>> '
+    type: 'align'
+    stack: [
+      [ # 0
+        from: '87'
+        optionStack: [
+          {
+            from: '91'
+            terminator: '}'
+            text: '100'
+            to: '96'
+            token: '{'
+            type: 'options'
+          }
+        ]
+        options: ['width', 'height', 'size']
+        to: '96'
+        token: '----'
+        type: 'rule'
+      ]
+    ]
+  ]
+]
