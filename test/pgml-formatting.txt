@@ -162,3 +162,191 @@ stack: [
     ]
   ]
 ]
+
+# horizontal rules
+
+BEGIN_PGML
+first
+---
+second
+===
+third
+----{200}
+===={'50%'}
+----{'3in'}{5}
+===={ height => 5 }
+END_PGML
+
+==>
+
+Program(
+    PGMLBlock(
+        BeginPG,
+        PGMLContent(
+            Paragraph(
+                HorizontalRule,
+                HorizontalRule,
+                HorizontalRule,
+                Option(OptionMark, Program(ExpressionStatement(Integer)), OptionMark),
+                HorizontalRule,
+                Option(OptionMark, Program(ExpressionStatement(StringSingleQuoted)), OptionMark),
+                HorizontalRule,
+                Option(OptionMark, Program(ExpressionStatement(StringSingleQuoted)), OptionMark),
+                Option(OptionMark, Program(ExpressionStatement(Integer)), OptionMark),
+                HorizontalRule,
+                Option(OptionMark, Program(ExpressionStatement(Pair(Identifier, FatComma, Integer))), OptionMark)
+            )
+        ),
+        EndPG
+    )
+)
+
+==>
+
+from: '0'
+parseAll: 'true'
+to: '83'
+type: 'root'
+stack: [
+  [ # 0
+    combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
+    from: '0'
+    indent: '0'
+    to: '83'
+    type: 'indent'
+    stack: [
+      [ # 0
+        combine: { text: 'type' }
+        from: '0'
+        to: '6'
+        type: 'text'
+        stack: ['first', '\n']
+      ]
+      [ # 1
+        from: '6'
+        options: ['width', 'height', 'size']
+        to: '10'
+        token: '---'
+        type: 'rule'
+      ]
+      [ # 2
+        combine: { text: 'type' }
+        from: '10'
+        to: '17'
+        type: 'text'
+        stack: ['second', '\n']
+      ]
+      [ # 3
+        from: '17'
+        options: ['width', 'height', 'size']
+        to: '21'
+        token: '==='
+        type: 'rule'
+      ]
+      [ # 4
+        combine: { text: 'type' }
+        from: '21'
+        to: '27'
+        type: 'text'
+        stack: ['third', '\n']
+      ]
+      [ # 5
+        from: '27'
+        optionStack: [
+          {
+            from: '31'
+            terminator: '}'
+            text: '200'
+            to: '36'
+            token: '{'
+            type: 'options'
+          }
+        ]
+        options: ['width', 'height', 'size']
+        to: '36'
+        token: '----'
+        type: 'rule'
+      ]
+      [ # 6
+        combine: { text: 'type' }
+        from: '36'
+        to: '37'
+        type: 'text'
+        stack: ['\n']
+      ]
+      [ # 7
+        from: '37'
+        optionStack: [
+          {
+            from: '41'
+            terminator: '}'
+            text: ''50%''
+            to: '48'
+            token: '{'
+            type: 'options'
+          }
+        ]
+        options: ['width', 'height', 'size']
+        to: '48'
+        token: '===='
+        type: 'rule'
+      ]
+      [ # 8
+        combine: { text: 'type' }
+        from: '48'
+        to: '49'
+        type: 'text'
+        stack: ['\n']
+      ]
+      [ # 9
+        from: '49'
+        optionStack: [
+          {
+            from: '53'
+            terminator: '}'
+            text: ''3in''
+            to: '60'
+            token: '{'
+            type: 'options'
+          },
+          {
+            from: '60'
+            terminator: '}'
+            text: '5'
+            to: '63'
+            token: '{'
+            type: 'options'
+          }
+        ]
+        options: ['width', 'height', 'size']
+        to: '63'
+        token: '----'
+        type: 'rule'
+      ]
+      [ # 10
+        combine: { text: 'type' }
+        from: '63'
+        to: '64'
+        type: 'text'
+        stack: ['\n']
+      ]
+      [ # 11
+        from: '64'
+        optionStack: [
+          {
+            from: '68'
+            terminator: '}'
+            text: ' height => 5 '
+            to: '83'
+            token: '{'
+            type: 'options'
+          }
+        ]
+        options: ['width', 'height', 'size']
+        to: '83'
+        token: '===='
+        type: 'rule'
+      ]
+    ]
+  ]
+]

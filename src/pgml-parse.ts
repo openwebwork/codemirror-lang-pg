@@ -21,7 +21,7 @@ const splitPatternParts = [
     '#+', // heading
     '(?:---+|===+)', // rule
     '(?:^|(?<=[\\t ]))(?:[-+o*]|(?:\\d+|[ivxl]+|[IVXL]+|[a-zA-Z])[.)]) +', // list
-    '>> *| *<<', // aliign
+    '>> *| *<<', // align
     '```', // code
     ': {3}', // pre
     '[$@%]q[qr]?|\\bq[qr]?\\s+(?:#.*?(?:\\n\\s*)+)?(?!=>)(?=.)|\\bq[qr]?(?!=>)(?=\\W)', // quoted
@@ -420,6 +420,8 @@ export class Parse {
     Break(token: string) {
         if (this.ignoreNL) {
             if (this.block) this.block.to += 1;
+            const top = this.block?.topItem();
+            if (top instanceof Item) top.to += 1;
             this.ignoreNL = 0;
         } else {
             while (this.block?.cancelNL) this.blockError('block not closed before line break');

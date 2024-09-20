@@ -261,7 +261,7 @@ const pgmlFormat = (block: Item, offset: number): Element[] => {
         return paragraphs;
     }
 
-    if (block.type === 'text' || block.type === 'par') return [];
+    if (block.type === 'text' || block.type === 'par' || block.type === 'break') return [];
 
     const children: Element[] = [];
     for (const item of block.stack ?? block.children ?? []) {
