@@ -41,7 +41,6 @@ const balanceAll = RegExp('[{\\[\'"]');
 interface CombineOptions {
     list?: string | { indent: number };
     par?: boolean;
-    pre?: string;
     text?: string;
     indent?: string;
 }
@@ -366,7 +365,7 @@ export class Parse {
             block.to += block.terminator.length;
             if (block.terminateMethod) this[block.terminateMethod](token);
         }
-        if (prev) prev.to = block.to;
+        if (prev && (block.type !== 'pre' || prev.to < block.to)) prev.to = block.to;
         //console.log(
         //    `terminating ${block.type} from ${block.from.toString()} to ${block.to.toString()}, previous is ${
         //        prev?.type ?? 'none'
@@ -464,6 +463,8 @@ export class Parse {
         if (this.atLineStart) {
             const tabs = token.replace(/ {4}/g, '\t'); // turn spaces into tabs
             const indent = (this.actualIndent = tabs.length);
+            const top = this.block?.topItem();
+            if (top && top instanceof Text) top.to += token.length;
             if (indent !== this.indent) {
                 this.End('indentation change');
                 this.indent = indent;
@@ -474,7 +475,7 @@ export class Parse {
     }
 
     Slash(token: string) {
-        this.Text(token.substring(1));
+        this.Text(token);
     }
 
     Brace(token: string) {
@@ -742,6 +743,7 @@ export class Parse {
 
     terminatePre(token: string) {
         if (this.block) this.block.terminator = ''; // the ending token is added to the text below
+        if (this.block) this.block.to -= token.length;
         if (token.includes('\n\n')) {
             this.Par(token, this.block);
             this.block = this.block?.prev;
@@ -969,9 +971,9 @@ export class Block extends Item {
         const top = this.topItem();
         if (top instanceof Text) {
             top.pushText(text);
-            this.to = top.to;
+            this.to += text.length;
         } else {
-            this.pushItem(new Text(top instanceof Item ? top.to : (this.token?.length ?? this.from), text));
+            this.pushItem(new Text(this.to, text));
         }
     }
 
@@ -1124,6 +1126,7 @@ class Root extends Block {
                 items.length = 0;
                 item = parser.block;
             }
+            this.to = item.to;
             this.stack?.push(item);
         }
     }
@@ -1151,7 +1154,7 @@ export class Text extends Item {
     constructor(from: number, ...texts: string[]) {
         super('text', from, { stack: [...texts], combine: { text: 'type' } });
         this.to += texts.join('').length;
-        //console.log(`new item "text": "${texts.join('')}" from ${this.from.toString()} to ${this.to.toString()}`);
+        //console.log(`new text: "${texts.join('')}" from ${this.from.toString()} to ${this.to.toString()}`);
     }
 
     pushText(...texts: string[]) {
@@ -1382,7 +1385,6 @@ const BlockDefs: Record<string, OriginalBlockDefinition | undefined> = {
         parseAll: true,
         terminator: RegExp('\\n+'),
         terminateMethod: 'terminatePre',
-        combine: { pre: 'type' },
         noIndent: -1
     },
     '>>': {

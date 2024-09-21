@@ -67,6 +67,8 @@ enum Type {
     OptionMark,
     PerlCommand,
     PerlCommandMark,
+    Pre,
+    PreMark,
     StarOption,
     StrongEmphasis,
     Tag,
@@ -296,6 +298,9 @@ const pgmlFormat = (block: Item, offset: number): Element[] => {
             )
         );
         return [elt(Type.Variable, block.from + offset, block.to + offset, children)];
+    } else if (block.type === 'pre') {
+        children.unshift(elt(Type.PreMark, block.from + offset, block.from + (block.token?.length ?? 1) + offset));
+        return [elt(Type.Pre, block.from + offset, block.to + offset, children)];
     } else if (block.type === 'verbatim') {
         children.unshift(elt(Type.VerbatimMark, block.from + offset, block.from + (block.token?.length ?? 2) + offset));
         children.push(
@@ -604,8 +609,9 @@ class FragmentCursor {
 
 export const pgmlHighlighting = styleTags({
     Paragraph: t.content,
-    'AlignMark EmphasisMark HeaderMark ImageMark MathModeMark OptionMark PerlCommandMark': t.processingInstruction,
-    'TagMark VariableMark VerbatimMark': t.processingInstruction,
+    'AlignMark EmphasisMark HeaderMark ImageMark MathModeMark OptionMark PreMark': t.processingInstruction,
+    'PerlCommandMark TagMark VariableMark VerbatimMark': t.processingInstruction,
+    'Pre Verbatim': t.monospace,
     HorizontalRule: t.contentSeparator,
     'AnswerRule Image MathMode': t.atom,
     'Heading1/...': t.heading1,

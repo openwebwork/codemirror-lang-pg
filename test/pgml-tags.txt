@@ -333,8 +333,8 @@ stack: [
           ]
           [ # 6
             combine: { text: 'type' }
-            from: '220'
-            to: '242'
+            from: '224'
+            to: '246'
             type: 'text'
             stack: ['contents are indented', '\n']
           ]

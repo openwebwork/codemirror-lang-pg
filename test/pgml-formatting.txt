@@ -629,3 +629,270 @@ stack: [
     ]
   ]
 ]
+
+# pre
+
+BEGIN_PGML
+:   This is preformatted,
+:       and can include any text, e.g., <, >, $, etc.,
+:       but [@ "commands" @], [$s], and other *markup* are performed normally.
+:   Use verbatim mode like [|[@ "commands" @]|] if you want to include commands/substitutions literally,
+:   or use a slash to escape them: \[$s].
+
+    Here is some indenting
+    :   with preformatting
+    :   on several lines.
+    Now back to normal, but indented.
+END_PGML
+
+==>
+
+Program(
+    PGMLBlock(
+        BeginPG,
+        PGMLContent(
+            Pre(PreMark),
+            Pre(PreMark),
+            Pre(
+                PreMark,
+                PerlCommand(
+                    PerlCommandMark,
+                    Program(ExpressionStatement(StringDoubleQuoted(InterpolatedStringContent))),
+                    PerlCommandMark
+                ),
+                Variable(VariableMark, Program(ExpressionStatement(ScalarVariable)), VariableMark),
+                StrongEmphasis(EmphasisMark, EmphasisMark)
+            ),
+            Pre(PreMark, Verbatim(VerbatimMark, VerbatimMark)),
+            Pre(PreMark),
+            Paragraph(Pre(PreMark), Pre(PreMark))
+        ),
+        EndPG
+    )
+)
+
+==>
+
+from: '0'
+parseAll: 'true'
+to: '425'
+type: 'root'
+stack: [
+  [ # 0
+    from: '0'
+    terminator: ''
+    to: '26'
+    token: ':   '
+    type: 'pre'
+    stack: [
+      [ # 0
+        combine: { text: 'type' }
+        from: '4'
+        to: '26'
+        type: 'text'
+        stack: ['This is preformatted,', '\n']
+      ]
+    ]
+  ]
+  [ # 1
+    from: '26'
+    terminator: ''
+    to: '81'
+    token: ':   '
+    type: 'pre'
+    stack: [
+      [ # 0
+        combine: { text: 'type' }
+        from: '30'
+        to: '81'
+        type: 'text'
+        stack: ['    and can include any text, e.g., <, >, $, etc.,', '\n']
+      ]
+    ]
+  ]
+  [ # 2
+    from: '81'
+    terminator: ''
+    to: '160'
+    token: ':   '
+    type: 'pre'
+    stack: [
+      [ # 0
+        combine: { text: 'type' }
+        from: '85'
+        to: '93'
+        type: 'text'
+        stack: ['    but ']
+      ]
+      [ # 1
+        allowDblStar: 'true'
+        allowStar: 'true'
+        allowTriStar: 'true'
+        from: '93'
+        parseQuoted: 'true'
+        terminator: '@]'
+        text: ' "commands" '
+        to: '109'
+        token: '[@'
+        type: 'command'
+      ]
+      [ # 2
+        combine: { text: 'type' }
+        from: '109'
+        to: '111'
+        type: 'text'
+        stack: [', ']
+      ]
+      [ # 3
+        allowDblStar: 'true'
+        allowStar: 'true'
+        allowTriStar: 'true'
+        from: '111'
+        terminator: ']'
+        text: 's'
+        to: '115'
+        token: '[$'
+        type: 'variable'
+      ]
+      [ # 4
+        combine: { text: 'type' }
+        from: '115'
+        to: '127'
+        type: 'text'
+        stack: [', and other ']
+      ]
+      [ # 5
+        from: '127'
+        to: '135'
+        token: '*'
+        type: 'bold'
+        stack: [
+          [ # 0
+            combine: { text: 'type' }
+            from: '128'
+            to: '134'
+            type: 'text'
+            stack: ['markup']
+          ]
+        ]
+      ]
+      [ # 6
+        combine: { text: 'type' }
+        from: '135'
+        to: '160'
+        type: 'text'
+        stack: [' are performed normally.', '\n']
+      ]
+    ]
+  ]
+  [ # 3
+    from: '160'
+    terminator: ''
+    to: '265'
+    token: ':   '
+    type: 'pre'
+    stack: [
+      [ # 0
+        combine: { text: 'type' }
+        from: '164'
+        to: '187'
+        type: 'text'
+        stack: ['Use verbatim mode like ']
+      ]
+      [ # 1
+        allowStar: 'true'
+        from: '187'
+        terminator: '|]'
+        text: '[@ "commands" @]'
+        to: '207'
+        token: '[|'
+        type: 'verbatim'
+      ]
+      [ # 2
+        combine: { text: 'type' }
+        from: '207'
+        to: '265'
+        type: 'text'
+        stack: [' if you want to include commands/substitutions literally,', '\n']
+      ]
+    ]
+  ]
+  [ # 4
+    from: '265'
+    terminator: ''
+    to: '306'
+    token: ':   '
+    type: 'pre'
+    stack: [
+      [ # 0
+        combine: { text: 'type' }
+        from: '269'
+        to: '306'
+        type: 'text'
+        stack: ['or use a slash to escape them: ', '\[', '$s', ']', '.']
+      ]
+    ]
+  ]
+  [ # 5
+    from: '306'
+    noIndent: '1'
+    to: '308'
+    token: '\n\n'
+    type: 'par'
+  ]
+  [ # 6
+    combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
+    from: '312'
+    indent: '1'
+    to: '425'
+    type: 'indent'
+    stack: [
+      [ # 0
+        combine: { text: 'type' }
+        from: '312'
+        to: '339'
+        type: 'text'
+        stack: ['Here is some indenting', '\n']
+      ]
+      [ # 1
+        from: '339'
+        terminator: ''
+        to: '362'
+        token: ':   '
+        type: 'pre'
+        stack: [
+          [ # 0
+            combine: { text: 'type' }
+            from: '343'
+            to: '362'
+            type: 'text'
+            stack: ['with preformatting', '\n']
+          ]
+        ]
+      ]
+      [ # 2
+        from: '366'
+        terminator: ''
+        to: '388'
+        token: ':   '
+        type: 'pre'
+        stack: [
+          [ # 0
+            combine: { text: 'type' }
+            from: '370'
+            to: '388'
+            type: 'text'
+            stack: ['on several lines.', '\n']
+          ]
+        ]
+      ]
+      [ # 3
+        combine: { text: 'type' }
+        from: '392'
+        to: '425'
+        type: 'text'
+        stack: ['Now back to normal, but indented.']
+      ]
+    ]
+  ]
+]
