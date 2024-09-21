@@ -1,108 +1,25 @@
-# tags
+# default div tag
 
 BEGIN_PGML
 [< basic div [`x + 3`] >]
-
-[<span with equation [`x + y = 3`].>]{ [ 'span', style => 'color:darkBlue' ] }{ ['\color{blue}'] }
-
-[<
-    div with equation [`x^2 + y^2 = 3`].
-
-    [! default icon !]{'defaulticon.png'}{100}
-
-    contents are indented
->]{ [ 'div', style => 'color:darkBlue', data_testing => 'my test data' ] }{ ['\color{blue}'] }
-
-[<
-     [_]*{$matrix} [``\begin{bmatrix} a \\ b \end{bmatrix} = \begin{bmatrix} 0 \\ 0 \end{bmatrix}``]
->]{ [ class => 'ww-feedback-container ww-fb-align-middle' ] }
 END_PGML
 
 ==>
 
-Program(
-    PGMLBlock(
-        BeginPG,
-        PGMLContent(
-            Paragraph(Tag(TagMark, MathMode(MathModeMark, MathModeMark), TagMark)),
-            Paragraph(
-                Tag(TagMark, MathMode(MathModeMark, MathModeMark), TagMark),
-                Option(
-                    OptionMark,
-                    Program(
-                        ExpressionStatement(
-                            ArrayRef(
-                                "[",
-                                StringSingleQuoted,
-                                Comma,
-                                Pair(Identifier, FatComma, StringSingleQuoted),
-                                "]"
-                            )
-                        )
-                    ),
-                    OptionMark
-                ),
-                Option(OptionMark, Program(ExpressionStatement(ArrayRef("[", StringSingleQuoted, "]"))), OptionMark)
-            ),
-            Paragraph(
-                Tag(
-                    TagMark,
-                    MathMode(MathModeMark, MathModeMark),
-                    Image(ImageMark, ImageMark),
-                    Option(OptionMark, Program(ExpressionStatement(StringSingleQuoted)), OptionMark),
-                    Option(OptionMark, Program(ExpressionStatement(Integer)), OptionMark),
-                    TagMark
-                ),
-                Option(
-                    OptionMark,
-                    Program(
-                        ExpressionStatement(
-                            ArrayRef(
-                                "[",
-                                StringSingleQuoted,
-                                Comma,
-                                Pair(Identifier, FatComma, StringSingleQuoted),
-                                Comma,
-                                Pair(Identifier, FatComma, StringSingleQuoted),
-                                "]"
-                            )
-                        )
-                    ),
-                    OptionMark
-                ),
-                Option(OptionMark, Program(ExpressionStatement(ArrayRef("[", StringSingleQuoted, "]"))), OptionMark)
-            ),
-            Paragraph(
-                Tag(
-                    TagMark,
-                    AnswerRule,
-                    Option(OptionMark, Program(ExpressionStatement(ScalarVariable)), OptionMark),
-                    MathMode(MathModeMark, MathModeMark),
-                    TagMark
-                ),
-                Option(
-                    OptionMark,
-                    Program(ExpressionStatement(ArrayRef("[", Pair(Identifier, FatComma, StringSingleQuoted), "]"))),
-                    OptionMark
-                )
-            )
-        ),
-        EndPG
-    )
-)
+Program(PGMLBlock(BeginPG, PGMLContent(Paragraph(Tag(TagMark, MathMode(MathModeMark, MathModeMark), TagMark))), EndPG))
 
 ==>
 
 from: '0'
 parseAll: 'true'
-to: '507'
+to: '25'
 type: 'root'
 stack: [
   [ # 0
     combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
     from: '0'
     indent: '0'
-    to: '507'
+    to: '25'
     type: 'indent'
     stack: [
       [ # 0
@@ -147,44 +64,91 @@ stack: [
           ]
         ]
       ]
-      [ # 1
-        from: '25'
-        noIndent: '1'
-        to: '27'
-        token: '\n\n'
-        type: 'par'
-      ]
-      [ # 2
-        from: '27'
+    ]
+  ]
+]
+
+# span tag with attributes and tex alternative
+
+BEGIN_PGML
+[<span with equation [`x + y = 3`].>]{ [ 'span', style => 'color:darkBlue' ] }{ ['\color{blue}'] }
+END_PGML
+
+==>
+
+Program(
+    PGMLBlock(
+        BeginPG,
+        PGMLContent(
+            Paragraph(
+                Tag(TagMark, MathMode(MathModeMark, MathModeMark), TagMark),
+                Option(
+                    OptionMark,
+                    Program(
+                        ExpressionStatement(
+                            ArrayRef(
+                                "[",
+                                StringSingleQuoted,
+                                Comma,
+                                Pair(Identifier, FatComma, StringSingleQuoted),
+                                "]"
+                            )
+                        )
+                    ),
+                    OptionMark
+                ),
+                Option(OptionMark, Program(ExpressionStatement(ArrayRef("[", StringSingleQuoted, "]"))), OptionMark)
+            )
+        ),
+        EndPG
+    )
+)
+
+==>
+
+from: '0'
+parseAll: 'true'
+to: '98'
+type: 'root'
+stack: [
+  [ # 0
+    combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
+    from: '0'
+    indent: '0'
+    to: '98'
+    type: 'indent'
+    stack: [
+      [ # 0
+        from: '0'
         isContainer: 'true'
         optionStack: [
           {
-            from: '64'
+            from: '37'
             terminator: '}'
             text: ' [ 'span', style => 'color:darkBlue' ] '
-            to: '105'
+            to: '78'
             token: '{'
             type: 'options'
           },
           {
-            from: '105'
+            from: '78'
             terminator: '}'
             text: ' ['\color{blue}'] '
-            to: '125'
+            to: '98'
             token: '{'
             type: 'options'
           }
         ]
         options: ['html', 'tex', 'ptx']
         terminator: '>]'
-        to: '125'
+        to: '98'
         token: '[<'
         type: 'tag'
         stack: [
           [ # 0
             combine: { text: 'type' }
-            from: '29'
-            to: '48'
+            from: '2'
+            to: '21'
             type: 'text'
             stack: ['span with equation ']
           ]
@@ -192,97 +156,159 @@ stack: [
             children: [
               {
                 combine: { text: 'type' }
-                from: '50'
-                to: '59'
+                from: '23'
+                to: '32'
                 type: 'text'
                 stack: ['x + y = 3']
               }
             ]
             containerEnd: '/>\]/'
-            from: '48'
+            from: '21'
             terminator: '`]'
-            to: '61'
+            to: '34'
             token: '[`'
             type: 'math'
           ]
           [ # 2
             combine: { text: 'type' }
-            from: '61'
-            to: '62'
+            from: '34'
+            to: '35'
             type: 'text'
             stack: ['.']
           ]
         ]
       ]
-      [ # 3
-        from: '125'
-        noIndent: '1'
-        to: '127'
-        token: '\n\n'
-        type: 'par'
-      ]
-      [ # 4
-        from: '127'
+    ]
+  ]
+]
+
+# div tag with multiline content
+
+BEGIN_PGML
+[<
+    div with equation [`x^2 + y^2 = 3`].
+
+    [! default icon !]{'defaulticon.png'}{100}
+
+    contents are indented
+>]{ [ 'div', style => 'color:darkBlue', data_testing => 'my test data' ] }{ ['\color{blue}'] }
+END_PGML
+
+==>
+
+Program(
+    PGMLBlock(
+        BeginPG,
+        PGMLContent(
+            Paragraph(
+                Tag(
+                    TagMark,
+                    MathMode(MathModeMark, MathModeMark),
+                    Image(ImageMark, ImageMark),
+                    Option(OptionMark, Program(ExpressionStatement(StringSingleQuoted)), OptionMark),
+                    Option(OptionMark, Program(ExpressionStatement(Integer)), OptionMark),
+                    TagMark
+                ),
+                Option(
+                    OptionMark,
+                    Program(
+                        ExpressionStatement(
+                            ArrayRef(
+                                "[",
+                                StringSingleQuoted,
+                                Comma,
+                                Pair(Identifier, FatComma, StringSingleQuoted),
+                                Comma,
+                                Pair(Identifier, FatComma, StringSingleQuoted),
+                                "]"
+                            )
+                        )
+                    ),
+                    OptionMark
+                ),
+                Option(OptionMark, Program(ExpressionStatement(ArrayRef("[", StringSingleQuoted, "]"))), OptionMark)
+            )
+        ),
+        EndPG
+    )
+)
+
+==>
+
+from: '0'
+parseAll: 'true'
+to: '213'
+type: 'root'
+stack: [
+  [ # 0
+    combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
+    from: '0'
+    indent: '0'
+    to: '213'
+    type: 'indent'
+    stack: [
+      [ # 0
+        from: '0'
         isContainer: 'true'
         optionStack: [
           {
-            from: '248'
+            from: '121'
             terminator: '}'
             text: ' [ 'div', style => 'color:darkBlue', data_testing => 'my test data' ] '
-            to: '320'
+            to: '193'
             token: '{'
             type: 'options'
           },
           {
-            from: '320'
+            from: '193'
             terminator: '}'
             text: ' ['\color{blue}'] '
-            to: '340'
+            to: '213'
             token: '{'
             type: 'options'
           }
         ]
         options: ['html', 'tex', 'ptx']
         terminator: '>]'
-        to: '340'
+        to: '213'
         token: '[<'
         type: 'tag'
         stack: [
           [ # 0
             combine: { text: 'type' }
-            from: '134'
-            to: '152'
+            from: '2'
+            to: '25'
             type: 'text'
-            stack: ['div with equation ']
+            stack: ['\n', 'div with equation ']
           ]
           [ # 1
             children: [
               {
                 combine: { text: 'type' }
-                from: '154'
-                to: '167'
+                from: '27'
+                to: '40'
                 type: 'text'
                 stack: ['x^2 + y^2 = 3']
               }
             ]
             containerEnd: '/>\]/'
-            from: '152'
+            from: '25'
             terminator: '`]'
-            to: '169'
+            to: '42'
             token: '[`'
             type: 'math'
           ]
           [ # 2
             combine: { text: 'type' }
-            from: '169'
-            to: '170'
+            from: '42'
+            to: '43'
             type: 'text'
             stack: ['.']
           ]
           [ # 3
-            from: '170'
+            from: '43'
             noIndent: '1'
-            to: '172'
+            to: '45'
             token: '\n\n'
             type: 'par'
           ]
@@ -290,112 +316,156 @@ stack: [
             children: [
               {
                 combine: { text: 'type' }
-                from: '178'
-                to: '192'
+                from: '51'
+                to: '65'
                 type: 'text'
                 stack: [' default icon ']
               }
             ]
             containerEnd: '/>\]/'
-            from: '176'
+            from: '49'
             optionStack: [
               {
                 containerEnd: '/>\]/'
-                from: '194'
+                from: '67'
                 terminator: '}'
                 text: ''defaulticon.png''
-                to: '213'
+                to: '86'
                 token: '{'
                 type: 'options'
               },
               {
                 containerEnd: '/>\]/'
-                from: '213'
+                from: '86'
                 terminator: '}'
                 text: '100'
-                to: '218'
+                to: '91'
                 token: '{'
                 type: 'options'
               }
             ]
             options: ['source', 'width', 'height', 'image_options']
             terminator: '!]'
-            to: '218'
+            to: '91'
             token: '[!'
             type: 'image'
           ]
           [ # 5
-            from: '218'
+            from: '91'
             noIndent: '1'
-            to: '220'
+            to: '93'
             token: '\n\n'
             type: 'par'
           ]
           [ # 6
             combine: { text: 'type' }
-            from: '224'
-            to: '246'
+            from: '97'
+            to: '119'
             type: 'text'
             stack: ['contents are indented', '\n']
           ]
         ]
       ]
-      [ # 5
-        from: '340'
-        noIndent: '1'
-        to: '342'
-        token: '\n\n'
-        type: 'par'
-      ]
-      [ # 6
-        from: '342'
+    ]
+  ]
+]
+
+# div tag with answer rule and math content
+
+BEGIN_PGML
+[<
+    [_]*{$matrix} [``\begin{bmatrix} a \\ b \end{bmatrix} = \begin{bmatrix} 0 \\ 0 \end{bmatrix}``]
+>]{ [ class => 'ww-feedback-container ww-fb-align-middle' ] }
+END_PGML
+
+==>
+
+Program(
+    PGMLBlock(
+        BeginPG,
+        PGMLContent(
+            Paragraph(
+                Tag(
+                    TagMark,
+                    AnswerRule,
+                    Option(OptionMark, Program(ExpressionStatement(ScalarVariable)), OptionMark),
+                    MathMode(MathModeMark, MathModeMark),
+                    TagMark
+                ),
+                Option(
+                    OptionMark,
+                    Program(ExpressionStatement(ArrayRef("[", Pair(Identifier, FatComma, StringSingleQuoted), "]"))),
+                    OptionMark
+                )
+            )
+        ),
+        EndPG
+    )
+)
+
+==>
+
+from: '0'
+parseAll: 'true'
+to: '164'
+type: 'root'
+stack: [
+  [ # 0
+    combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
+    from: '0'
+    indent: '0'
+    to: '164'
+    type: 'indent'
+    stack: [
+      [ # 0
+        from: '0'
         isContainer: 'true'
         optionStack: [
           {
-            from: '448'
+            from: '105'
             terminator: '}'
             text: ' [ class => 'ww-feedback-container ww-fb-align-middle' ] '
-            to: '507'
+            to: '164'
             token: '{'
             type: 'options'
           }
         ]
         options: ['html', 'tex', 'ptx']
         terminator: '>]'
-        to: '507'
+        to: '164'
         token: '[<'
         type: 'tag'
         stack: [
           [ # 0
             combine: { text: 'type' }
-            from: '349'
-            to: '350'
+            from: '2'
+            to: '7'
             type: 'text'
-            stack: [' ']
+            stack: ['\n']
           ]
           [ # 1
-            from: '350'
+            from: '7'
             hasStar: '1'
             optionStack: [
               {
                 containerEnd: '/>\]/'
-                from: '354'
+                from: '11'
                 terminator: '}'
                 text: '$matrix'
-                to: '363'
+                to: '20'
                 token: '{'
                 type: 'options'
               }
             ]
             options: ['answer', 'width', 'name', 'cmp_options']
-            to: '363'
+            to: '20'
             token: '[_]*'
             type: 'answer'
           ]
           [ # 2
             combine: { text: 'type' }
-            from: '363'
-            to: '364'
+            from: '20'
+            to: '21'
             type: 'text'
             stack: [' ']
           ]
@@ -403,24 +473,24 @@ stack: [
             children: [
               {
                 combine: { text: 'type' }
-                from: '367'
-                to: '442'
+                from: '24'
+                to: '99'
                 type: 'text'
                 stack: ['\begin{bmatrix} a \\ b \end{bmatrix} = \begin{bmatrix} 0 \\ 0 \end{bmatrix}']
               }
             ]
             containerEnd: '/>\]/'
             displaystyle: 'true'
-            from: '364'
+            from: '21'
             terminator: '``]'
-            to: '445'
+            to: '102'
             token: '[``'
             type: 'math'
           ]
           [ # 4
             combine: { text: 'type' }
-            from: '445'
-            to: '446'
+            from: '102'
+            to: '103'
             type: 'text'
             stack: ['\n']
           ]
