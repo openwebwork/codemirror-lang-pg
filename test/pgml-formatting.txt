@@ -546,27 +546,12 @@ stack: [
   ]
 ]
 
-# headings
+# verbatim
 
 BEGIN_PGML
-# Heading level 1 #
-## Heading level 2 ##
-### Heading level 3 ###
-#### Heading level 4 ####
-##### Heading level 5 #####
-###### Heading level 6 ######
-### Two separate lines ###
-### are combined ###
-
-### A whole paragraph
-can be a heading ###
-
-### End with two spaces ###  
-### for two lines separately ###
-
-### The trailing hashes are optional.
->> ## centered heading ## <<
->> ## right-justified ##
+[|This math markup [:x+1:] is not processed.|]
+[||This is [|verbatim|].||]
+[|verbatim content with pre|]*
 END_PGML
 
 ==>
@@ -576,20 +561,10 @@ Program(
         BeginPG,
         PGMLContent(
             Paragraph(
-                Heading1(HeaderMark, HeaderMark),
-                Heading2(HeaderMark, HeaderMark),
-                Heading3(HeaderMark, HeaderMark),
-                Heading4(HeaderMark, HeaderMark),
-                Heading5(HeaderMark, HeaderMark),
-                Heading6(HeaderMark, HeaderMark),
-                Heading3(HeaderMark, HeaderMark),
-                Heading3(HeaderMark, HeaderMark)
-            ),
-            Paragraph(Heading3(HeaderMark, HeaderMark)),
-            Paragraph(Heading3(HeaderMark, HeaderMark), Heading3(HeaderMark, HeaderMark)),
-            Paragraph(Heading3(HeaderMark)),
-            Align(AlignMark, Heading2(HeaderMark, HeaderMark), AlignMark),
-            Align(AlignMark, Heading2(HeaderMark, HeaderMark))
+                Verbatim(VerbatimMark, VerbatimMark),
+                Verbatim(VerbatimMark, VerbatimMark),
+                Verbatim(VerbatimMark, VerbatimMark)
+            )
         ),
         EndPG
     )
@@ -599,364 +574,57 @@ Program(
 
 from: '0'
 parseAll: 'true'
-to: '398'
+to: '105'
 type: 'root'
 stack: [
   [ # 0
     combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
     from: '0'
     indent: '0'
-    to: '345'
+    to: '105'
     type: 'indent'
     stack: [
       [ # 0
+        allowStar: 'true'
         from: '0'
-        n: '1'
-        terminator: '#'
-        to: '19'
-        token: '#'
-        type: 'heading'
-        stack: [
-          [ # 0
-            combine: { text: 'type' }
-            from: '1'
-            to: '18'
-            type: 'text'
-            stack: [' Heading level 1 ']
-          ]
-        ]
+        terminator: '|]'
+        text: 'This math markup [:x+1:] is not processed.'
+        to: '46'
+        token: '[|'
+        type: 'verbatim'
       ]
       [ # 1
         combine: { text: 'type' }
-        from: '19'
-        to: '20'
+        from: '46'
+        to: '47'
         type: 'text'
         stack: ['\n']
       ]
       [ # 2
-        from: '20'
-        n: '2'
-        terminator: '##'
-        to: '41'
-        token: '##'
-        type: 'heading'
-        stack: [
-          [ # 0
-            combine: { text: 'type' }
-            from: '22'
-            to: '39'
-            type: 'text'
-            stack: [' Heading level 2 ']
-          ]
-        ]
+        allowStar: 'true'
+        from: '47'
+        terminator: '||]'
+        text: 'This is [|verbatim|].'
+        to: '74'
+        token: '[||'
+        type: 'verbatim'
       ]
       [ # 3
         combine: { text: 'type' }
-        from: '41'
-        to: '42'
+        from: '74'
+        to: '75'
         type: 'text'
         stack: ['\n']
       ]
       [ # 4
-        from: '42'
-        n: '3'
-        terminator: '###'
-        to: '65'
-        token: '###'
-        type: 'heading'
-        stack: [
-          [ # 0
-            combine: { text: 'type' }
-            from: '45'
-            to: '62'
-            type: 'text'
-            stack: [' Heading level 3 ']
-          ]
-        ]
-      ]
-      [ # 5
-        combine: { text: 'type' }
-        from: '65'
-        to: '66'
-        type: 'text'
-        stack: ['\n']
-      ]
-      [ # 6
-        from: '66'
-        n: '4'
-        terminator: '####'
-        to: '91'
-        token: '####'
-        type: 'heading'
-        stack: [
-          [ # 0
-            combine: { text: 'type' }
-            from: '70'
-            to: '87'
-            type: 'text'
-            stack: [' Heading level 4 ']
-          ]
-        ]
-      ]
-      [ # 7
-        combine: { text: 'type' }
-        from: '91'
-        to: '92'
-        type: 'text'
-        stack: ['\n']
-      ]
-      [ # 8
-        from: '92'
-        n: '5'
-        terminator: '#####'
-        to: '119'
-        token: '#####'
-        type: 'heading'
-        stack: [
-          [ # 0
-            combine: { text: 'type' }
-            from: '97'
-            to: '114'
-            type: 'text'
-            stack: [' Heading level 5 ']
-          ]
-        ]
-      ]
-      [ # 9
-        combine: { text: 'type' }
-        from: '119'
-        to: '120'
-        type: 'text'
-        stack: ['\n']
-      ]
-      [ # 10
-        from: '120'
-        n: '6'
-        terminator: '######'
-        to: '149'
-        token: '######'
-        type: 'heading'
-        stack: [
-          [ # 0
-            combine: { text: 'type' }
-            from: '126'
-            to: '143'
-            type: 'text'
-            stack: [' Heading level 6 ']
-          ]
-        ]
-      ]
-      [ # 11
-        combine: { text: 'type' }
-        from: '149'
-        to: '150'
-        type: 'text'
-        stack: ['\n']
-      ]
-      [ # 12
-        from: '150'
-        n: '3'
-        terminator: '###'
-        to: '176'
-        token: '###'
-        type: 'heading'
-        stack: [
-          [ # 0
-            combine: { text: 'type' }
-            from: '153'
-            to: '173'
-            type: 'text'
-            stack: [' Two separate lines ']
-          ]
-        ]
-      ]
-      [ # 13
-        combine: { text: 'type' }
-        from: '176'
-        to: '177'
-        type: 'text'
-        stack: ['\n']
-      ]
-      [ # 14
-        from: '177'
-        n: '3'
-        terminator: '###'
-        to: '197'
-        token: '###'
-        type: 'heading'
-        stack: [
-          [ # 0
-            combine: { text: 'type' }
-            from: '180'
-            to: '194'
-            type: 'text'
-            stack: [' are combined ']
-          ]
-        ]
-      ]
-      [ # 15
-        from: '197'
-        noIndent: '1'
-        to: '199'
-        token: '\n\n'
-        type: 'par'
-      ]
-      [ # 16
-        from: '199'
-        n: '3'
-        terminator: '###'
-        to: '241'
-        token: '###'
-        type: 'heading'
-        stack: [
-          [ # 0
-            combine: { text: 'type' }
-            from: '202'
-            to: '238'
-            type: 'text'
-            stack: [' A whole paragraph', '\n', 'can be a heading ']
-          ]
-        ]
-      ]
-      [ # 17
-        from: '241'
-        noIndent: '1'
-        to: '243'
-        token: '\n\n'
-        type: 'par'
-      ]
-      [ # 18
-        from: '243'
-        n: '3'
-        terminator: '###'
-        to: '270'
-        token: '###'
-        type: 'heading'
-        stack: [
-          [ # 0
-            combine: { text: 'type' }
-            from: '246'
-            to: '267'
-            type: 'text'
-            stack: [' End with two spaces ']
-          ]
-        ]
-      ]
-      [ # 19
-        from: '270'
-        noIndent: '1'
-        to: '273'
-        token: '  '
-        type: 'break'
-      ]
-      [ # 20
-        from: '273'
-        n: '3'
-        terminator: '###'
-        to: '305'
-        token: '###'
-        type: 'heading'
-        stack: [
-          [ # 0
-            combine: { text: 'type' }
-            from: '276'
-            to: '302'
-            type: 'text'
-            stack: [' for two lines separately ']
-          ]
-        ]
-      ]
-      [ # 21
-        from: '305'
-        noIndent: '1'
-        to: '307'
-        token: '\n\n'
-        type: 'par'
-      ]
-      [ # 22
-        from: '307'
-        n: '3'
-        to: '345'
-        token: '###'
-        type: 'heading'
-        stack: [
-          [ # 0
-            combine: { text: 'type' }
-            from: '310'
-            to: '345'
-            type: 'text'
-            stack: [' The trailing hashes are optional.', '\n']
-          ]
-        ]
-      ]
-    ]
-  ]
-  [ # 1
-    align: 'center'
-    from: '345'
-    terminator: ' <<'
-    to: '373'
-    token: '>> '
-    type: 'align'
-    stack: [
-      [ # 0
-        from: '348'
-        n: '2'
-        terminator: '##'
-        to: '370'
-        token: '##'
-        type: 'heading'
-        stack: [
-          [ # 0
-            combine: { text: 'type' }
-            from: '350'
-            to: '368'
-            type: 'text'
-            stack: [' centered heading ']
-          ]
-        ]
-      ]
-    ]
-  ]
-  [ # 2
-    combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
-    from: '373'
-    indent: '0'
-    to: '374'
-    type: 'indent'
-    stack: [
-      [ # 0
-        combine: { text: 'type' }
-        from: '373'
-        to: '374'
-        type: 'text'
-        stack: ['\n']
-      ]
-    ]
-  ]
-  [ # 3
-    align: 'right'
-    from: '374'
-    to: '398'
-    token: '>> '
-    type: 'align'
-    stack: [
-      [ # 0
-        from: '377'
-        n: '2'
-        terminator: '##'
-        to: '398'
-        token: '##'
-        type: 'heading'
-        stack: [
-          [ # 0
-            combine: { text: 'type' }
-            from: '379'
-            to: '396'
-            type: 'text'
-            stack: [' right-justified ']
-          ]
-        ]
+        allowStar: 'true'
+        from: '75'
+        hasStar: '1'
+        terminator: '|]'
+        text: 'verbatim content with pre'
+        to: '105'
+        token: '[|'
+        type: 'verbatim'
       ]
     ]
   ]

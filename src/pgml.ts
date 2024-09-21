@@ -51,13 +51,13 @@ enum Type {
     Comment,
     Emphasis,
     EmphasisMark,
+    HeaderMark,
     Heading1,
     Heading2,
     Heading3,
     Heading4,
     Heading5,
     Heading6,
-    HeaderMark,
     HorizontalRule,
     Image,
     ImageMark,
@@ -72,7 +72,9 @@ enum Type {
     Tag,
     TagMark,
     Variable,
-    VariableMark
+    VariableMark,
+    Verbatim,
+    VerbatimMark
 }
 
 // Block-level parsing functions get access to this context object.
@@ -286,15 +288,24 @@ const pgmlFormat = (block: Item, offset: number): Element[] => {
     if (block.type === 'variable') {
         children.unshift(elt(Type.VariableMark, block.from + offset, block.from + 1 + offset));
         children.push(new TreeElement(pgPerlParser.parse(`$${block.text ?? ''}`), block.from + 1 + offset));
-        children.push(elt(Type.VariableMark, block.to - 1 + offset, block.to + offset));
-        return [
+        children.push(
             elt(
-                Type.Variable,
-                block.from - (block.hasStar ? block.hasStar : block.hasDblStar ? 2 : 0) + offset,
-                block.to + offset,
-                children
+                Type.VariableMark,
+                block.to - 1 - (block.hasStar ? block.hasStar : block.hasDblStar ? 2 : 0) + offset,
+                block.to + offset
             )
-        ];
+        );
+        return [elt(Type.Variable, block.from + offset, block.to + offset, children)];
+    } else if (block.type === 'verbatim') {
+        children.unshift(elt(Type.VerbatimMark, block.from + offset, block.from + (block.token?.length ?? 2) + offset));
+        children.push(
+            elt(
+                Type.VerbatimMark,
+                block.to - (block.terminator as string).length - (block.hasStar ?? 0) + offset,
+                block.to + offset
+            )
+        );
+        return [elt(Type.Verbatim, block.from + offset, block.to + offset, children)];
     } else if (block.type === 'command') {
         children.unshift(elt(Type.PerlCommandMark, block.from + offset, block.from + 2 + offset));
         children.push(new TreeElement(pgPerlParser.parse(block.text ?? ''), block.from + 2 + offset));
@@ -593,8 +604,8 @@ class FragmentCursor {
 
 export const pgmlHighlighting = styleTags({
     Paragraph: t.content,
-    'AlignMark EmphasisMark HeaderMark ImageMark MathModeMark OptionMark PerlCommandMark TagMark VariableMark':
-        t.processingInstruction,
+    'AlignMark EmphasisMark HeaderMark ImageMark MathModeMark OptionMark PerlCommandMark': t.processingInstruction,
+    'TagMark VariableMark VerbatimMark': t.processingInstruction,
     HorizontalRule: t.contentSeparator,
     'AnswerRule Image MathMode': t.atom,
     'Heading1/...': t.heading1,

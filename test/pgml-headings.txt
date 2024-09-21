@@ -1,0 +1,484 @@
+# heading levels
+
+BEGIN_PGML
+# Heading level 1 #
+## Heading level 2 ##
+### Heading level 3 ###
+#### Heading level 4 ####
+##### Heading level 5 #####
+###### Heading level 6 ######
+END_PGML
+
+==>
+
+Program(
+    PGMLBlock(
+        BeginPG,
+        PGMLContent(
+            Paragraph(
+                Heading1(HeaderMark, HeaderMark),
+                Heading2(HeaderMark, HeaderMark),
+                Heading3(HeaderMark, HeaderMark),
+                Heading4(HeaderMark, HeaderMark),
+                Heading5(HeaderMark, HeaderMark),
+                Heading6(HeaderMark, HeaderMark)
+            )
+        ),
+        EndPG
+    )
+)
+
+==>
+
+from: '0'
+parseAll: 'true'
+to: '149'
+type: 'root'
+stack: [
+  [ # 0
+    combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
+    from: '0'
+    indent: '0'
+    to: '149'
+    type: 'indent'
+    stack: [
+      [ # 0
+        from: '0'
+        n: '1'
+        terminator: '#'
+        to: '19'
+        token: '#'
+        type: 'heading'
+        stack: [
+          [ # 0
+            combine: { text: 'type' }
+            from: '1'
+            to: '18'
+            type: 'text'
+            stack: [' Heading level 1 ']
+          ]
+        ]
+      ]
+      [ # 1
+        combine: { text: 'type' }
+        from: '19'
+        to: '20'
+        type: 'text'
+        stack: ['\n']
+      ]
+      [ # 2
+        from: '20'
+        n: '2'
+        terminator: '##'
+        to: '41'
+        token: '##'
+        type: 'heading'
+        stack: [
+          [ # 0
+            combine: { text: 'type' }
+            from: '22'
+            to: '39'
+            type: 'text'
+            stack: [' Heading level 2 ']
+          ]
+        ]
+      ]
+      [ # 3
+        combine: { text: 'type' }
+        from: '41'
+        to: '42'
+        type: 'text'
+        stack: ['\n']
+      ]
+      [ # 4
+        from: '42'
+        n: '3'
+        terminator: '###'
+        to: '65'
+        token: '###'
+        type: 'heading'
+        stack: [
+          [ # 0
+            combine: { text: 'type' }
+            from: '45'
+            to: '62'
+            type: 'text'
+            stack: [' Heading level 3 ']
+          ]
+        ]
+      ]
+      [ # 5
+        combine: { text: 'type' }
+        from: '65'
+        to: '66'
+        type: 'text'
+        stack: ['\n']
+      ]
+      [ # 6
+        from: '66'
+        n: '4'
+        terminator: '####'
+        to: '91'
+        token: '####'
+        type: 'heading'
+        stack: [
+          [ # 0
+            combine: { text: 'type' }
+            from: '70'
+            to: '87'
+            type: 'text'
+            stack: [' Heading level 4 ']
+          ]
+        ]
+      ]
+      [ # 7
+        combine: { text: 'type' }
+        from: '91'
+        to: '92'
+        type: 'text'
+        stack: ['\n']
+      ]
+      [ # 8
+        from: '92'
+        n: '5'
+        terminator: '#####'
+        to: '119'
+        token: '#####'
+        type: 'heading'
+        stack: [
+          [ # 0
+            combine: { text: 'type' }
+            from: '97'
+            to: '114'
+            type: 'text'
+            stack: [' Heading level 5 ']
+          ]
+        ]
+      ]
+      [ # 9
+        combine: { text: 'type' }
+        from: '119'
+        to: '120'
+        type: 'text'
+        stack: ['\n']
+      ]
+      [ # 10
+        from: '120'
+        n: '6'
+        terminator: '######'
+        to: '149'
+        token: '######'
+        type: 'heading'
+        stack: [
+          [ # 0
+            combine: { text: 'type' }
+            from: '126'
+            to: '143'
+            type: 'text'
+            stack: [' Heading level 6 ']
+          ]
+        ]
+      ]
+    ]
+  ]
+]
+
+# adjacent heading lines
+
+BEGIN_PGML
+### Two separate lines ###
+### are combined ###
+
+### A whole paragraph
+can be a heading ###
+
+### End with two spaces ###  
+### for two lines separately ###
+END_PGML
+
+==>
+
+Program(
+    PGMLBlock(
+        BeginPG,
+        PGMLContent(
+            Paragraph(Heading3(HeaderMark, HeaderMark), Heading3(HeaderMark, HeaderMark)),
+            Paragraph(Heading3(HeaderMark, HeaderMark)),
+            Paragraph(Heading3(HeaderMark, HeaderMark), Heading3(HeaderMark, HeaderMark))
+        ),
+        EndPG
+    )
+)
+
+==>
+
+from: '0'
+parseAll: 'true'
+to: '155'
+type: 'root'
+stack: [
+  [ # 0
+    combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
+    from: '0'
+    indent: '0'
+    to: '155'
+    type: 'indent'
+    stack: [
+      [ # 0
+        from: '0'
+        n: '3'
+        terminator: '###'
+        to: '26'
+        token: '###'
+        type: 'heading'
+        stack: [
+          [ # 0
+            combine: { text: 'type' }
+            from: '3'
+            to: '23'
+            type: 'text'
+            stack: [' Two separate lines ']
+          ]
+        ]
+      ]
+      [ # 1
+        combine: { text: 'type' }
+        from: '26'
+        to: '27'
+        type: 'text'
+        stack: ['\n']
+      ]
+      [ # 2
+        from: '27'
+        n: '3'
+        terminator: '###'
+        to: '47'
+        token: '###'
+        type: 'heading'
+        stack: [
+          [ # 0
+            combine: { text: 'type' }
+            from: '30'
+            to: '44'
+            type: 'text'
+            stack: [' are combined ']
+          ]
+        ]
+      ]
+      [ # 3
+        from: '47'
+        noIndent: '1'
+        to: '49'
+        token: '\n\n'
+        type: 'par'
+      ]
+      [ # 4
+        from: '49'
+        n: '3'
+        terminator: '###'
+        to: '91'
+        token: '###'
+        type: 'heading'
+        stack: [
+          [ # 0
+            combine: { text: 'type' }
+            from: '52'
+            to: '88'
+            type: 'text'
+            stack: [' A whole paragraph', '\n', 'can be a heading ']
+          ]
+        ]
+      ]
+      [ # 5
+        from: '91'
+        noIndent: '1'
+        to: '93'
+        token: '\n\n'
+        type: 'par'
+      ]
+      [ # 6
+        from: '93'
+        n: '3'
+        terminator: '###'
+        to: '120'
+        token: '###'
+        type: 'heading'
+        stack: [
+          [ # 0
+            combine: { text: 'type' }
+            from: '96'
+            to: '117'
+            type: 'text'
+            stack: [' End with two spaces ']
+          ]
+        ]
+      ]
+      [ # 7
+        from: '120'
+        noIndent: '1'
+        to: '123'
+        token: '  '
+        type: 'break'
+      ]
+      [ # 8
+        from: '123'
+        n: '3'
+        terminator: '###'
+        to: '155'
+        token: '###'
+        type: 'heading'
+        stack: [
+          [ # 0
+            combine: { text: 'type' }
+            from: '126'
+            to: '152'
+            type: 'text'
+            stack: [' for two lines separately ']
+          ]
+        ]
+      ]
+    ]
+  ]
+]
+
+# trailing hashes omitted
+
+BEGIN_PGML
+### The trailing hashes are optional.
+END_PGML
+
+==>
+
+Program(PGMLBlock(BeginPG, PGMLContent(Paragraph(Heading3(HeaderMark))), EndPG))
+
+==>
+
+from: '0'
+parseAll: 'true'
+to: '37'
+type: 'root'
+stack: [
+  [ # 0
+    combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
+    from: '0'
+    indent: '0'
+    to: '37'
+    type: 'indent'
+    stack: [
+      [ # 0
+        from: '0'
+        n: '3'
+        to: '37'
+        token: '###'
+        type: 'heading'
+        stack: [
+          [ # 0
+            combine: { text: 'type' }
+            from: '3'
+            to: '37'
+            type: 'text'
+            stack: [' The trailing hashes are optional.']
+          ]
+        ]
+      ]
+    ]
+  ]
+]
+
+# with alignment
+
+BEGIN_PGML
+>> ## centered heading ## <<
+>> ## right-justified ##
+END_PGML
+
+==>
+
+Program(
+    PGMLBlock(
+        BeginPG,
+        PGMLContent(
+            Align(AlignMark, Heading2(HeaderMark, HeaderMark), AlignMark),
+            Align(AlignMark, Heading2(HeaderMark, HeaderMark))
+        ),
+        EndPG
+    )
+)
+
+==>
+
+from: '0'
+parseAll: 'true'
+to: '53'
+type: 'root'
+stack: [
+  [ # 0
+    align: 'center'
+    from: '0'
+    terminator: ' <<'
+    to: '28'
+    token: '>> '
+    type: 'align'
+    stack: [
+      [ # 0
+        from: '3'
+        n: '2'
+        terminator: '##'
+        to: '25'
+        token: '##'
+        type: 'heading'
+        stack: [
+          [ # 0
+            combine: { text: 'type' }
+            from: '5'
+            to: '23'
+            type: 'text'
+            stack: [' centered heading ']
+          ]
+        ]
+      ]
+    ]
+  ]
+  [ # 1
+    combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
+    from: '28'
+    indent: '0'
+    to: '29'
+    type: 'indent'
+    stack: [
+      [ # 0
+        combine: { text: 'type' }
+        from: '28'
+        to: '29'
+        type: 'text'
+        stack: ['\n']
+      ]
+    ]
+  ]
+  [ # 2
+    align: 'right'
+    from: '29'
+    to: '53'
+    token: '>> '
+    type: 'align'
+    stack: [
+      [ # 0
+        from: '32'
+        n: '2'
+        terminator: '##'
+        to: '53'
+        token: '##'
+        type: 'heading'
+        stack: [
+          [ # 0
+            combine: { text: 'type' }
+            from: '34'
+            to: '51'
+            type: 'text'
+            stack: [' right-justified ']
+          ]
+        ]
+      ]
+    ]
+  ]
+]
