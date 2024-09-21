@@ -51,6 +51,13 @@ enum Type {
     Comment,
     Emphasis,
     EmphasisMark,
+    Heading1,
+    Heading2,
+    Heading3,
+    Heading4,
+    Heading5,
+    Heading6,
+    HeaderMark,
     HorizontalRule,
     Image,
     ImageMark,
@@ -358,6 +365,18 @@ const pgmlFormat = (block: Item, offset: number): Element[] => {
         if (typeof block.terminator === 'string')
             children.push(elt(Type.AlignMark, block.to - block.terminator.length + offset, block.to + offset));
         return [elt(Type.Align, block.from + offset, block.to + offset, children)];
+    } else if (block.type === 'heading') {
+        children.unshift(elt(Type.HeaderMark, block.from + offset, block.from + (block.token?.length ?? 1) + offset));
+        if (typeof block.terminator === 'string')
+            children.push(elt(Type.HeaderMark, block.to - block.terminator.length + offset, block.to + offset));
+        return [
+            elt(
+                (Type.Heading1.valueOf() - 1 + (block.n ?? 1)) as Type,
+                block.from + offset,
+                block.to + offset,
+                children
+            )
+        ];
     }
 
     console.log(`unhandled ${block.type}`);
@@ -574,10 +593,16 @@ class FragmentCursor {
 
 export const pgmlHighlighting = styleTags({
     Paragraph: t.content,
-    'EmphasisMark ImageMark MathModeMark OptionMark PerlCommandMark TagMark VariableMark AlignMark':
+    'AlignMark EmphasisMark HeaderMark ImageMark MathModeMark OptionMark PerlCommandMark TagMark VariableMark':
         t.processingInstruction,
     HorizontalRule: t.contentSeparator,
     'AnswerRule Image MathMode': t.atom,
+    'Heading1/...': t.heading1,
+    'Heading2/...': t.heading2,
+    'Heading3/...': t.heading3,
+    'Heading4/...': t.heading4,
+    'Heading5/...': t.heading5,
+    'Heading6/...': t.heading6,
     Comment: t.lineComment,
     'Emphasis/...': t.emphasis,
     'StrongEmphasis/...': t.strong,

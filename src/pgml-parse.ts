@@ -39,8 +39,6 @@ type CallableKeyOf<S> = keyof {
 const balanceAll = RegExp('[{\\[\'"]');
 
 interface CombineOptions {
-    align?: string;
-    heading?: string;
     list?: string | { indent: number };
     par?: boolean;
     pre?: string;
@@ -139,7 +137,7 @@ export class Parse {
             const token = this.split[i++] ?? '';
             if (/^\n+$/.test(token)) break;
             if (/^ {2,3}$/.test(token)) continue;
-            if (!/^ +$/.test(token) || !block?.align) return false;
+            if (!/^ +<<$/.test(token) || !block?.align) return false;
             block = block.prev;
         }
         return true;
@@ -581,6 +579,7 @@ export class Parse {
                 block = block.prev;
             }
             if (this.isLineEnd(block)) {
+                if (block) block.to += token.length;
                 this.End('end of heading', block);
                 if (block) block.terminator = token;
                 this.indent = 0;
@@ -854,6 +853,7 @@ export class Item implements BlockDefinition {
     hasDblStar?: boolean;
     hasStar?: number;
     indent?: number;
+    n?: number;
 
     align?: string;
     allowDblStar?: boolean;
@@ -956,15 +956,12 @@ export class Item implements BlockDefinition {
 
 export class Block extends Item {
     prev?: Block;
-    n?: number;
     containerEnd?: string | RegExp;
 
     constructor(type: string, from: number, fields: Fields = {}) {
         super(type, from, { ...fields, stack: [] });
         //console.log(`new block "${this.type}" from ${this.from.toString()} to ${this.to.toString()}`);
         if ('prev' in fields) this.prev = fields.prev;
-        if ('indent' in fields) this.indent = fields.indent;
-        if ('n' in fields) this.n = fields.n;
     }
 
     pushText(text: string, force?: boolean) {
@@ -1392,10 +1389,9 @@ const BlockDefs: Record<string, OriginalBlockDefinition | undefined> = {
         type: 'align',
         parseAll: true,
         align: 'right',
-        breakInside: true,
         noIndent: -1
     },
-    '#': { type: 'heading', parseAll: true, breakInside: true, combine: { heading: 'n' } },
+    '#': { type: 'heading', parseAll: true },
     '*': { type: 'bold', parseAll: true, cancelPar: true },
     _: { type: 'italic', parseAll: true, cancelPar: true },
     bullet: { type: 'bullet', parseAll: true },
