@@ -1,0 +1,955 @@
+# enumerated lists
+
+BEGIN_PGML
+1. This is the first item.
+2. This is the second item.
+
+a) This is the first item.
+b) This is the second item.
+
+A) This is the first item.
+A) This is the second item.
+
+i. This is the first item.
+i. This is the second item.
+
+I) This is the first item.
+II) This is the second item.
+END_PGML
+
+==>
+
+Program(
+    PGMLBlock(
+        BeginPG,
+        PGMLContent(
+            OrderedList(ListItem(ListMark, Paragraph), ListItem(ListMark, Paragraph)),
+            OrderedList(ListItem(ListMark, Paragraph), ListItem(ListMark, Paragraph)),
+            OrderedList(ListItem(ListMark, Paragraph), ListItem(ListMark, Paragraph)),
+            OrderedList(ListItem(ListMark, Paragraph), ListItem(ListMark, Paragraph)),
+            OrderedList(ListItem(ListMark, Paragraph), ListItem(ListMark, Paragraph))
+        ),
+        EndPG
+    )
+)
+
+==>
+
+from: '0'
+parseAll: 'true'
+to: '279'
+type: 'root'
+stack: [
+  [ # 0
+    bullet: 'numeric'
+    combine: { list: 'bullet', par: 'true' }
+    from: '0'
+    to: '54'
+    token: ''
+    type: 'list'
+    stack: [
+      [ # 0
+        from: '0'
+        to: '27'
+        token: '1. '
+        type: 'bullet'
+        stack: [
+          [ # 0
+            combine: { text: 'type' }
+            from: '3'
+            to: '27'
+            type: 'text'
+            stack: ['This is the first item.', '\n']
+          ]
+        ]
+      ]
+      [ # 1
+        from: '27'
+        to: '54'
+        token: '2. '
+        type: 'bullet'
+        stack: [
+          [ # 0
+            combine: { text: 'type' }
+            from: '30'
+            to: '54'
+            type: 'text'
+            stack: ['This is the second item.']
+          ]
+        ]
+      ]
+    ]
+  ]
+  [ # 1
+    from: '54'
+    noIndent: '1'
+    to: '56'
+    token: '\n\n'
+    type: 'par'
+  ]
+  [ # 2
+    bullet: 'alpha'
+    combine: { list: 'bullet', par: 'true' }
+    from: '56'
+    to: '110'
+    token: ''
+    type: 'list'
+    stack: [
+      [ # 0
+        from: '56'
+        to: '83'
+        token: 'a) '
+        type: 'bullet'
+        stack: [
+          [ # 0
+            combine: { text: 'type' }
+            from: '59'
+            to: '83'
+            type: 'text'
+            stack: ['This is the first item.', '\n']
+          ]
+        ]
+      ]
+      [ # 1
+        from: '83'
+        to: '110'
+        token: 'b) '
+        type: 'bullet'
+        stack: [
+          [ # 0
+            combine: { text: 'type' }
+            from: '86'
+            to: '110'
+            type: 'text'
+            stack: ['This is the second item.']
+          ]
+        ]
+      ]
+    ]
+  ]
+  [ # 3
+    from: '110'
+    noIndent: '1'
+    to: '112'
+    token: '\n\n'
+    type: 'par'
+  ]
+  [ # 4
+    bullet: 'Alpha'
+    combine: { list: 'bullet', par: 'true' }
+    from: '112'
+    to: '166'
+    token: ''
+    type: 'list'
+    stack: [
+      [ # 0
+        from: '112'
+        to: '139'
+        token: 'A) '
+        type: 'bullet'
+        stack: [
+          [ # 0
+            combine: { text: 'type' }
+            from: '115'
+            to: '139'
+            type: 'text'
+            stack: ['This is the first item.', '\n']
+          ]
+        ]
+      ]
+      [ # 1
+        from: '139'
+        to: '166'
+        token: 'A) '
+        type: 'bullet'
+        stack: [
+          [ # 0
+            combine: { text: 'type' }
+            from: '142'
+            to: '166'
+            type: 'text'
+            stack: ['This is the second item.']
+          ]
+        ]
+      ]
+    ]
+  ]
+  [ # 5
+    from: '166'
+    noIndent: '1'
+    to: '168'
+    token: '\n\n'
+    type: 'par'
+  ]
+  [ # 6
+    bullet: 'roman'
+    combine: { list: 'bullet', par: 'true' }
+    from: '168'
+    to: '222'
+    token: ''
+    type: 'list'
+    stack: [
+      [ # 0
+        from: '168'
+        to: '195'
+        token: 'i. '
+        type: 'bullet'
+        stack: [
+          [ # 0
+            combine: { text: 'type' }
+            from: '171'
+            to: '195'
+            type: 'text'
+            stack: ['This is the first item.', '\n']
+          ]
+        ]
+      ]
+      [ # 1
+        from: '195'
+        to: '222'
+        token: 'i. '
+        type: 'bullet'
+        stack: [
+          [ # 0
+            combine: { text: 'type' }
+            from: '198'
+            to: '222'
+            type: 'text'
+            stack: ['This is the second item.']
+          ]
+        ]
+      ]
+    ]
+  ]
+  [ # 7
+    from: '222'
+    noIndent: '1'
+    to: '224'
+    token: '\n\n'
+    type: 'par'
+  ]
+  [ # 8
+    bullet: 'Roman'
+    combine: { list: 'bullet', par: 'true' }
+    from: '224'
+    to: '279'
+    token: ''
+    type: 'list'
+    stack: [
+      [ # 0
+        from: '224'
+        to: '251'
+        token: 'I) '
+        type: 'bullet'
+        stack: [
+          [ # 0
+            combine: { text: 'type' }
+            from: '227'
+            to: '251'
+            type: 'text'
+            stack: ['This is the first item.', '\n']
+          ]
+        ]
+      ]
+      [ # 1
+        from: '251'
+        to: '279'
+        token: 'II) '
+        type: 'bullet'
+        stack: [
+          [ # 0
+            combine: { text: 'type' }
+            from: '255'
+            to: '279'
+            type: 'text'
+            stack: ['This is the second item.']
+          ]
+        ]
+      ]
+    ]
+  ]
+]
+
+# bullet lists
+
+BEGIN_PGML
+* Apple
+* Banana
+
++ Apple
++ Banana
+
+o Apple
+o Banana
+
+- Apple
+- Banana
+END_PGML
+
+==>
+
+Program(
+    PGMLBlock(
+        BeginPG,
+        PGMLContent(
+            BulletList(ListItem(ListMark, Paragraph), ListItem(ListMark, Paragraph)),
+            BulletList(ListItem(ListMark, Paragraph), ListItem(ListMark, Paragraph)),
+            BulletList(ListItem(ListMark, Paragraph), ListItem(ListMark, Paragraph)),
+            BulletList(ListItem(ListMark, Paragraph), ListItem(ListMark, Paragraph))
+        ),
+        EndPG
+    )
+)
+
+==>
+
+from: '0'
+parseAll: 'true'
+to: '70'
+type: 'root'
+stack: [
+  [ # 0
+    bullet: 'disc'
+    combine: { list: 'bullet', par: 'true' }
+    from: '0'
+    to: '16'
+    token: ''
+    type: 'list'
+    stack: [
+      [ # 0
+        from: '0'
+        to: '8'
+        token: '* '
+        type: 'bullet'
+        stack: [
+          [ # 0
+            combine: { text: 'type' }
+            from: '2'
+            to: '8'
+            type: 'text'
+            stack: ['Apple', '\n']
+          ]
+        ]
+      ]
+      [ # 1
+        from: '8'
+        to: '16'
+        token: '* '
+        type: 'bullet'
+        stack: [
+          [ # 0
+            combine: { text: 'type' }
+            from: '10'
+            to: '16'
+            type: 'text'
+            stack: ['Banana']
+          ]
+        ]
+      ]
+    ]
+  ]
+  [ # 1
+    from: '16'
+    noIndent: '1'
+    to: '18'
+    token: '\n\n'
+    type: 'par'
+  ]
+  [ # 2
+    bullet: 'square'
+    combine: { list: 'bullet', par: 'true' }
+    from: '18'
+    to: '34'
+    token: ''
+    type: 'list'
+    stack: [
+      [ # 0
+        from: '18'
+        to: '26'
+        token: '+ '
+        type: 'bullet'
+        stack: [
+          [ # 0
+            combine: { text: 'type' }
+            from: '20'
+            to: '26'
+            type: 'text'
+            stack: ['Apple', '\n']
+          ]
+        ]
+      ]
+      [ # 1
+        from: '26'
+        to: '34'
+        token: '+ '
+        type: 'bullet'
+        stack: [
+          [ # 0
+            combine: { text: 'type' }
+            from: '28'
+            to: '34'
+            type: 'text'
+            stack: ['Banana']
+          ]
+        ]
+      ]
+    ]
+  ]
+  [ # 3
+    from: '34'
+    noIndent: '1'
+    to: '36'
+    token: '\n\n'
+    type: 'par'
+  ]
+  [ # 4
+    bullet: 'circle'
+    combine: { list: 'bullet', par: 'true' }
+    from: '36'
+    to: '52'
+    token: ''
+    type: 'list'
+    stack: [
+      [ # 0
+        from: '36'
+        to: '44'
+        token: 'o '
+        type: 'bullet'
+        stack: [
+          [ # 0
+            combine: { text: 'type' }
+            from: '38'
+            to: '44'
+            type: 'text'
+            stack: ['Apple', '\n']
+          ]
+        ]
+      ]
+      [ # 1
+        from: '44'
+        to: '52'
+        token: 'o '
+        type: 'bullet'
+        stack: [
+          [ # 0
+            combine: { text: 'type' }
+            from: '46'
+            to: '52'
+            type: 'text'
+            stack: ['Banana']
+          ]
+        ]
+      ]
+    ]
+  ]
+  [ # 5
+    from: '52'
+    noIndent: '1'
+    to: '54'
+    token: '\n\n'
+    type: 'par'
+  ]
+  [ # 6
+    bullet: 'bullet'
+    combine: { list: 'bullet', par: 'true' }
+    from: '54'
+    to: '70'
+    token: ''
+    type: 'list'
+    stack: [
+      [ # 0
+        from: '54'
+        to: '62'
+        token: '- '
+        type: 'bullet'
+        stack: [
+          [ # 0
+            combine: { text: 'type' }
+            from: '56'
+            to: '62'
+            type: 'text'
+            stack: ['Apple', '\n']
+          ]
+        ]
+      ]
+      [ # 1
+        from: '62'
+        to: '70'
+        token: '- '
+        type: 'bullet'
+        stack: [
+          [ # 0
+            combine: { text: 'type' }
+            from: '64'
+            to: '70'
+            type: 'text'
+            stack: ['Banana']
+          ]
+        ]
+      ]
+    ]
+  ]
+]
+
+# nested lists
+
+BEGIN_PGML
+1. A list
+    a. with a sublist
+    a. of three items
+        i. deep
+        i. nesting
+    a. (indent sublist items with four spaces)
+2. Back to the main list
+    * it works with
+    * bullets too
+END_PGML
+
+==>
+
+Program(
+    PGMLBlock(
+        BeginPG,
+        PGMLContent(
+            OrderedList(
+                ListItem(
+                    ListMark,
+                    Paragraph(
+                        OrderedList(
+                            ListItem(ListMark, Paragraph),
+                            ListItem(
+                                ListMark,
+                                Paragraph(OrderedList(ListItem(ListMark, Paragraph), ListItem(ListMark, Paragraph)))
+                            ),
+                            ListItem(ListMark, Paragraph)
+                        )
+                    )
+                ),
+                ListItem(ListMark, Paragraph(BulletList(ListItem(ListMark, Paragraph), ListItem(ListMark, Paragraph))))
+            )
+        ),
+        EndPG
+    )
+)
+
+==>
+
+from: '0'
+parseAll: 'true'
+to: '198'
+type: 'root'
+stack: [
+  [ # 0
+    bullet: 'numeric'
+    combine: { list: 'bullet', par: 'true' }
+    from: '0'
+    to: '165'
+    token: ''
+    type: 'list'
+    stack: [
+      [ # 0
+        from: '0'
+        to: '136'
+        token: '1. '
+        type: 'bullet'
+        stack: [
+          [ # 0
+            combine: { text: 'type' }
+            from: '3'
+            to: '14'
+            type: 'text'
+            stack: ['A list', '\n']
+          ]
+          [ # 1
+            bullet: 'alpha'
+            combine: { list: 'bullet', par: 'true' }
+            from: '14'
+            to: '136'
+            token: ''
+            type: 'list'
+            stack: [
+              [ # 0
+                from: '14'
+                to: '36'
+                token: 'a. '
+                type: 'bullet'
+                stack: [
+                  [ # 0
+                    combine: { text: 'type' }
+                    from: '17'
+                    to: '36'
+                    type: 'text'
+                    stack: ['with a sublist', '\n']
+                  ]
+                ]
+              ]
+              [ # 1
+                from: '36'
+                to: '93'
+                token: 'a. '
+                type: 'bullet'
+                stack: [
+                  [ # 0
+                    combine: { text: 'type' }
+                    from: '39'
+                    to: '62'
+                    type: 'text'
+                    stack: ['of three items', '\n']
+                  ]
+                  [ # 1
+                    bullet: 'roman'
+                    combine: { list: 'bullet', par: 'true' }
+                    from: '62'
+                    to: '93'
+                    token: ''
+                    type: 'list'
+                    stack: [
+                      [ # 0
+                        from: '62'
+                        to: '78'
+                        token: 'i. '
+                        type: 'bullet'
+                        stack: [
+                          [ # 0
+                            combine: { text: 'type' }
+                            from: '65'
+                            to: '78'
+                            type: 'text'
+                            stack: ['deep', '\n']
+                          ]
+                        ]
+                      ]
+                      [ # 1
+                        from: '78'
+                        to: '93'
+                        token: 'i. '
+                        type: 'bullet'
+                        stack: [
+                          [ # 0
+                            combine: { text: 'type' }
+                            from: '81'
+                            to: '93'
+                            type: 'text'
+                            stack: ['nesting', '\n']
+                          ]
+                        ]
+                      ]
+                    ]
+                  ]
+                ]
+              ]
+              [ # 2
+                from: '93'
+                to: '136'
+                token: 'a. '
+                type: 'bullet'
+                stack: [
+                  [ # 0
+                    combine: { text: 'type' }
+                    from: '96'
+                    to: '136'
+                    type: 'text'
+                    stack: ['(', 'indent sublist items with four spaces', ')', '\n']
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ]
+      [ # 1
+        from: '136'
+        to: '198'
+        token: '2. '
+        type: 'bullet'
+        stack: [
+          [ # 0
+            combine: { text: 'type' }
+            from: '139'
+            to: '165'
+            type: 'text'
+            stack: ['Back to the main list', '\n']
+          ]
+          [ # 1
+            bullet: 'disc'
+            combine: { list: 'bullet', par: 'true' }
+            from: '165'
+            to: '198'
+            token: ''
+            type: 'list'
+            stack: [
+              [ # 0
+                from: '165'
+                to: '185'
+                token: '* '
+                type: 'bullet'
+                stack: [
+                  [ # 0
+                    combine: { text: 'type' }
+                    from: '167'
+                    to: '185'
+                    type: 'text'
+                    stack: ['it works with', '\n']
+                  ]
+                ]
+              ]
+              [ # 1
+                from: '185'
+                to: '198'
+                token: '* '
+                type: 'bullet'
+                stack: [
+                  [ # 0
+                    combine: { text: 'type' }
+                    from: '187'
+                    to: '198'
+                    type: 'text'
+                    stack: ['bullets too']
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ]
+    ]
+  ]
+]
+
+# list continuation
+
+BEGIN_PGML
+1. A list item can continue
+onto a new line of markup,
+    even with indentation,
+1. but it's still the same line of output.
+
+A new paragraph ends the enumeration...
+1. And if another item comes, it starts a new list.
+1. However if you indent that next paragraph,
+
+    then it is part of the previous list item
+1. and the next item continues the enumeration.
+1. If you end a line with three spaces as this line   
+1. that ends the enumeration so any more items start over
+END_PGML
+
+==>
+
+Program(
+    PGMLBlock(
+        BeginPG,
+        PGMLContent(
+            OrderedList(ListItem(ListMark, Paragraph), ListItem(ListMark, Paragraph)),
+            OrderedList(
+                ListItem(ListMark, Paragraph),
+                ListItem(ListMark, Paragraph),
+                ListItem(ListMark, Paragraph),
+                ListItem(ListMark, Paragraph)
+            ),
+            OrderedList(ListItem(ListMark, Paragraph))
+        ),
+        EndPG
+    )
+)
+
+==>
+
+from: '0'
+parseAll: 'true'
+to: '471'
+type: 'root'
+stack: [
+  [ # 0
+    bullet: 'numeric'
+    combine: { list: 'bullet', par: 'true' }
+    from: '0'
+    to: '124'
+    token: ''
+    type: 'list'
+    stack: [
+      [ # 0
+        from: '0'
+        to: '82'
+        token: '1. '
+        type: 'bullet'
+        stack: [
+          [ # 0
+            combine: { text: 'type' }
+            from: '3'
+            to: '82'
+            type: 'text'
+            stack: ['A list item can continue', '\n', 'onto a new line of markup,', '\n', 'even with indentation,', '\n']
+          ]
+        ]
+      ]
+      [ # 1
+        from: '82'
+        to: '124'
+        token: '1. '
+        type: 'bullet'
+        stack: [
+          [ # 0
+            combine: { text: 'type' }
+            from: '85'
+            to: '91'
+            type: 'text'
+            stack: ['but it']
+          ]
+          [ # 1
+            from: '91'
+            to: '92'
+            token: '''
+            type: 'quote'
+          ]
+          [ # 2
+            combine: { text: 'type' }
+            from: '92'
+            to: '124'
+            type: 'text'
+            stack: ['s still the same line of output.']
+          ]
+        ]
+      ]
+    ]
+  ]
+  [ # 1
+    from: '124'
+    noIndent: '1'
+    to: '126'
+    token: '\n\n'
+    type: 'par'
+  ]
+  [ # 2
+    combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
+    from: '126'
+    indent: '0'
+    to: '166'
+    type: 'indent'
+    stack: [
+      [ # 0
+        combine: { text: 'type' }
+        from: '126'
+        to: '166'
+        type: 'text'
+        stack: ['A new paragraph ends the enumeration...', '\n']
+      ]
+    ]
+  ]
+  [ # 3
+    bullet: 'numeric'
+    combine: { list: 'bullet', par: 'true' }
+    from: '166'
+    to: '410'
+    token: ''
+    type: 'list'
+    stack: [
+      [ # 0
+        from: '166'
+        to: '218'
+        token: '1. '
+        type: 'bullet'
+        stack: [
+          [ # 0
+            combine: { text: 'type' }
+            from: '169'
+            to: '218'
+            type: 'text'
+            stack: ['And if another item comes, it starts a new list.', '\n']
+          ]
+        ]
+      ]
+      [ # 1
+        from: '218'
+        to: '311'
+        token: '1. '
+        type: 'bullet'
+        stack: [
+          [ # 0
+            combine: { text: 'type' }
+            from: '221'
+            to: '263'
+            type: 'text'
+            stack: ['However if you indent that next paragraph,']
+          ]
+          [ # 1
+            from: '263'
+            noIndent: '1'
+            to: '265'
+            token: '\n\n'
+            type: 'par'
+          ]
+          [ # 2
+            combine: { text: 'type' }
+            from: '269'
+            to: '311'
+            type: 'text'
+            stack: ['then it is part of the previous list item', '\n']
+          ]
+        ]
+      ]
+      [ # 2
+        from: '311'
+        to: '359'
+        token: '1. '
+        type: 'bullet'
+        stack: [
+          [ # 0
+            combine: { text: 'type' }
+            from: '314'
+            to: '359'
+            type: 'text'
+            stack: ['and the next item continues the enumeration.', '\n']
+          ]
+        ]
+      ]
+      [ # 3
+        from: '359'
+        to: '410'
+        token: '1. '
+        type: 'bullet'
+        stack: [
+          [ # 0
+            combine: { text: 'type' }
+            from: '362'
+            to: '410'
+            type: 'text'
+            stack: ['If you end a line with three spaces as this line']
+          ]
+        ]
+      ]
+    ]
+  ]
+  [ # 4
+    from: '410'
+    noIndent: '1'
+    to: '414'
+    token: '   '
+    type: 'forced'
+  ]
+  [ # 5
+    bullet: 'numeric'
+    combine: { list: 'bullet', par: 'true' }
+    from: '414'
+    to: '471'
+    token: ''
+    type: 'list'
+    stack: [
+      [ # 0
+        from: '414'
+        to: '471'
+        token: '1. '
+        type: 'bullet'
+        stack: [
+          [ # 0
+            combine: { text: 'type' }
+            from: '417'
+            to: '471'
+            type: 'text'
+            stack: ['that ends the enumeration so any more items start over']
+          ]
+        ]
+      ]
+    ]
+  ]
+]

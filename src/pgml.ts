@@ -48,6 +48,7 @@ enum Type {
     Align,
     AlignMark,
     AnswerRule,
+    BulletList,
     Comment,
     Emphasis,
     EmphasisMark,
@@ -61,10 +62,13 @@ enum Type {
     HorizontalRule,
     Image,
     ImageMark,
+    ListItem,
+    ListMark,
     MathMode,
     MathModeMark,
     Option,
     OptionMark,
+    OrderedList,
     PerlCommand,
     PerlCommandMark,
     Pre,
@@ -274,7 +278,7 @@ const pgmlFormat = (block: Item, offset: number): Element[] => {
         return paragraphs;
     }
 
-    if (block.type === 'text' || block.type === 'par' || block.type === 'break') return [];
+    if (['text', 'par', 'break', 'quote', 'forced'].includes(block.type)) return [];
 
     const children: Element[] = [];
     for (const item of block.stack ?? block.children ?? []) {
@@ -392,6 +396,24 @@ const pgmlFormat = (block: Item, offset: number): Element[] => {
                 block.to + offset,
                 children
             )
+        ];
+    } else if (block.type === 'list') {
+        return [
+            elt(
+                block.bullet && ['disc', 'square', 'circle', 'bullet'].includes(block.bullet)
+                    ? Type.BulletList
+                    : Type.OrderedList,
+                block.from + offset,
+                block.to + offset,
+                children
+            )
+        ];
+    } else if (block.type === 'bullet') {
+        return [
+            elt(Type.ListItem, block.from + offset, block.to + offset, [
+                elt(Type.ListMark, block.from + offset, block.from + (block.token?.length ?? 1) + offset),
+                elt(Type.Paragraph, block.from + (block.token?.length ?? 1) + offset, block.to + offset, children)
+            ])
         ];
     }
 
@@ -609,7 +631,7 @@ class FragmentCursor {
 
 export const pgmlHighlighting = styleTags({
     Paragraph: t.content,
-    'AlignMark EmphasisMark HeaderMark ImageMark MathModeMark OptionMark PreMark': t.processingInstruction,
+    'AlignMark EmphasisMark HeaderMark ImageMark ListMark MathModeMark OptionMark PreMark': t.processingInstruction,
     'PerlCommandMark TagMark VariableMark VerbatimMark': t.processingInstruction,
     'Pre Verbatim': t.monospace,
     HorizontalRule: t.contentSeparator,
@@ -620,6 +642,7 @@ export const pgmlHighlighting = styleTags({
     'Heading4/...': t.heading4,
     'Heading5/...': t.heading5,
     'Heading6/...': t.heading6,
+    'OrderedList/... BulletList/...': t.list,
     Comment: t.lineComment,
     'Emphasis/...': t.emphasis,
     'StrongEmphasis/...': t.strong,
