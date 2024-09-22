@@ -392,7 +392,7 @@ export class Parse {
     }
 
     Slash(token: string) {
-        this.Text(token);
+        this.Item('slash', token);
     }
 
     Brace(token: string) {

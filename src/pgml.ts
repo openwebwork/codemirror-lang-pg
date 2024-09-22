@@ -56,6 +56,7 @@ enum Type {
     Comment,
     Emphasis,
     EmphasisMark,
+    EscapeSequence,
     HeaderMark,
     Heading1,
     Heading2,
@@ -455,6 +456,8 @@ const pgmlFormat = (block: Item, offset: number): Element[] => {
                 elt(Type.CodeMark, block.to - (block.terminator as string).length + offset, block.to + offset)
             ])
         ];
+    } else if (block.type === 'slash') {
+        return [elt(Type.EscapeSequence, block.from + offset, block.to + offset)];
     }
 
     console.log(`unhandled ${block.type}`);
@@ -676,6 +679,7 @@ export const pgmlHighlighting = styleTags({
     CodeText: t.monospace,
     CodeInfo: t.labelName,
     HorizontalRule: t.contentSeparator,
+    EscapeSequence: t.escape,
     'AnswerRule Image MathMode': t.atom,
     'Heading1/...': t.heading1,
     'Heading2/...': t.heading2,

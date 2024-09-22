@@ -664,7 +664,7 @@ Program(
                 StrongEmphasis(EmphasisMark, EmphasisMark)
             ),
             Pre(PreMark, Verbatim(VerbatimMark, VerbatimMark)),
-            Pre(PreMark),
+            Pre(PreMark, EscapeSequence),
             Paragraph(Pre(PreMark), Pre(PreMark))
         ),
         EndPG
@@ -827,9 +827,22 @@ stack: [
       [ # 0
         combine: { text: 'type' }
         from: '269'
+        to: '300'
+        type: 'text'
+        stack: ['or use a slash to escape them: ']
+      ]
+      [ # 1
+        from: '300'
+        to: '302'
+        token: '\['
+        type: 'slash'
+      ]
+      [ # 2
+        combine: { text: 'type' }
+        from: '302'
         to: '306'
         type: 'text'
-        stack: ['or use a slash to escape them: ', '\[', '$s', ']', '.']
+        stack: ['$s', ']', '.']
       ]
     ]
   ]
@@ -892,6 +905,74 @@ stack: [
         to: '425'
         type: 'text'
         stack: ['Now back to normal, but indented.']
+      ]
+    ]
+  ]
+]
+
+# escape sequences
+
+BEGIN_PGML
+\"dumb quotes\"
+\[$not variable]
+END_PGML
+
+==>
+
+Program(PGMLBlock(BeginPG, PGMLContent(Paragraph(EscapeSequence, EscapeSequence, EscapeSequence)), EndPG))
+
+==>
+
+from: '0'
+parseAll: 'true'
+to: '32'
+type: 'root'
+stack: [
+  [ # 0
+    combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
+    from: '0'
+    indent: '0'
+    to: '32'
+    type: 'indent'
+    stack: [
+      [ # 0
+        from: '0'
+        to: '2'
+        token: '\"'
+        type: 'slash'
+      ]
+      [ # 1
+        combine: { text: 'type' }
+        from: '2'
+        to: '13'
+        type: 'text'
+        stack: ['dumb quotes']
+      ]
+      [ # 2
+        from: '13'
+        to: '15'
+        token: '\"'
+        type: 'slash'
+      ]
+      [ # 3
+        combine: { text: 'type' }
+        from: '15'
+        to: '16'
+        type: 'text'
+        stack: ['\n']
+      ]
+      [ # 4
+        from: '16'
+        to: '18'
+        token: '\['
+        type: 'slash'
+      ]
+      [ # 5
+        combine: { text: 'type' }
+        from: '18'
+        to: '32'
+        type: 'text'
+        stack: ['$not variable', ']']
       ]
     ]
   ]
