@@ -336,8 +336,6 @@ export class Parse {
     Break(token: string) {
         if (this.ignoreNL) {
             if (this.block) this.block.to += 1;
-            const top = this.block?.topItem();
-            if (top instanceof Item) top.to += 1;
             this.ignoreNL = 0;
         } else {
             while (this.block?.cancelNL) this.blockError('block not closed before line break');
@@ -1059,11 +1057,10 @@ export class Table extends Block {
         while ((item = items.pop())) {
             if (item.type === 'text') {
                 const text = item.stack?.join('') ?? '';
+                this.to += text.length;
                 if (!/^\s*$/.test(text)) Warning('Table text must be in cells');
-            } else if (item.type === 'table-cell' || item.type === 'options') {
+            } else if (item.type === 'table-cell' || item.type === 'options' || item.type === 'comment') {
                 super.pushItem(item);
-            } else if (item.type === 'comment') {
-                // ignore
             } else {
                 Warning('Tables can contain only table cells');
             }

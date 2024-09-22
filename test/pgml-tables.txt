@@ -1,0 +1,927 @@
+# data table
+
+BEGIN_PGML
+[#
+    [. [`x`] .]
+    [% comment in table %]
+    [. [`x^2`] .]*
+    [. [`2`] .]
+    [. [_]{4} .]
+#]
+END_PGML
+
+==>
+
+Program(
+    PGMLBlock(
+        BeginPG,
+        PGMLContent(
+            Paragraph(
+                Table(
+                    TableMark,
+                    TableCell(TableCellMark, MathMode(MathModeMark, MathModeMark), TableCellMark),
+                    Comment,
+                    TableCell(TableCellMark, MathMode(MathModeMark, MathModeMark), TableCellMark),
+                    TableCell(TableCellMark, MathMode(MathModeMark, MathModeMark), TableCellMark),
+                    TableCell(
+                        TableCellMark,
+                        AnswerRule,
+                        Option(OptionMark, Program(ExpressionStatement(Integer)), OptionMark),
+                        TableCellMark
+                    ),
+                    TableMark
+                )
+            )
+        ),
+        EndPG
+    )
+)
+
+==>
+
+from: '0'
+parseAll: 'true'
+to: '100'
+type: 'root'
+stack: [
+  [ # 0
+    combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
+    from: '0'
+    indent: '0'
+    to: '100'
+    type: 'indent'
+    stack: [
+      [ # 0
+        allowPar: 'true'
+        allowStar: 'true'
+        from: '0'
+        options: ['center', 'caption', 'horizontalrules', 'texalignment', 'align', 'Xratio', 'encase', 'rowheaders', 'headerrules', 'valign', 'padding', 'tablecss', 'captioncss', 'columnscss', 'datacss', 'headercss', 'allcellcss', 'booktabs']
+        terminator: '#]'
+        to: '100'
+        token: '[#'
+        type: 'table'
+        stack: [
+          [ # 0
+            allowStar: 'true'
+            container: 'table'
+            from: '7'
+            isContainer: 'true'
+            options: ['halign', 'header', 'color', 'bgcolor', 'b', 'i', 'm', 'noencase', 'colspan', 'top', 'bottom', 'cellcss', 'texpre', 'texpost', 'texencase', 'rowcolor', 'rowcss', 'headerrow', 'rowtop', 'rowbottom', 'valign', 'rows']
+            terminator: '.]'
+            to: '18'
+            token: '[.'
+            type: 'table-cell'
+            stack: [
+              [ # 0
+                combine: { text: 'type' }
+                from: '9'
+                to: '10'
+                type: 'text'
+                stack: [' ']
+              ]
+              [ # 1
+                children: [
+                  {
+                    combine: { text: 'type' }
+                    from: '12'
+                    to: '13'
+                    type: 'text'
+                    stack: ['x']
+                  }
+                ]
+                containerEnd: '/\.\]/'
+                from: '10'
+                terminator: '`]'
+                to: '15'
+                token: '[`'
+                type: 'math'
+              ]
+              [ # 2
+                combine: { text: 'type' }
+                from: '15'
+                to: '16'
+                type: 'text'
+                stack: [' ']
+              ]
+            ]
+          ]
+          [ # 1
+            allowPar: 'true'
+            from: '23'
+            terminator: '%]'
+            to: '45'
+            token: '[%'
+            type: 'comment'
+            stack: [
+              [ # 0
+                combine: { text: 'type' }
+                from: '25'
+                to: '43'
+                type: 'text'
+                stack: [' comment in table ']
+              ]
+            ]
+          ]
+          [ # 2
+            allowStar: 'true'
+            container: 'table'
+            from: '50'
+            hasStar: '1'
+            isContainer: 'true'
+            options: ['halign', 'header', 'color', 'bgcolor', 'b', 'i', 'm', 'noencase', 'colspan', 'top', 'bottom', 'cellcss', 'texpre', 'texpost', 'texencase', 'rowcolor', 'rowcss', 'headerrow', 'rowtop', 'rowbottom', 'valign', 'rows']
+            terminator: '.]'
+            to: '64'
+            token: '[.'
+            type: 'table-cell'
+            stack: [
+              [ # 0
+                combine: { text: 'type' }
+                from: '52'
+                to: '53'
+                type: 'text'
+                stack: [' ']
+              ]
+              [ # 1
+                children: [
+                  {
+                    combine: { text: 'type' }
+                    from: '55'
+                    to: '58'
+                    type: 'text'
+                    stack: ['x^2']
+                  }
+                ]
+                containerEnd: '/\.\]/'
+                from: '53'
+                terminator: '`]'
+                to: '60'
+                token: '[`'
+                type: 'math'
+              ]
+              [ # 2
+                combine: { text: 'type' }
+                from: '60'
+                to: '61'
+                type: 'text'
+                stack: [' ']
+              ]
+            ]
+          ]
+          [ # 3
+            allowStar: 'true'
+            container: 'table'
+            from: '69'
+            isContainer: 'true'
+            options: ['halign', 'header', 'color', 'bgcolor', 'b', 'i', 'm', 'noencase', 'colspan', 'top', 'bottom', 'cellcss', 'texpre', 'texpost', 'texencase', 'rowcolor', 'rowcss', 'headerrow', 'rowtop', 'rowbottom', 'valign', 'rows']
+            terminator: '.]'
+            to: '80'
+            token: '[.'
+            type: 'table-cell'
+            stack: [
+              [ # 0
+                combine: { text: 'type' }
+                from: '71'
+                to: '72'
+                type: 'text'
+                stack: [' ']
+              ]
+              [ # 1
+                children: [
+                  {
+                    combine: { text: 'type' }
+                    from: '74'
+                    to: '75'
+                    type: 'text'
+                    stack: ['2']
+                  }
+                ]
+                containerEnd: '/\.\]/'
+                from: '72'
+                terminator: '`]'
+                to: '77'
+                token: '[`'
+                type: 'math'
+              ]
+              [ # 2
+                combine: { text: 'type' }
+                from: '77'
+                to: '78'
+                type: 'text'
+                stack: [' ']
+              ]
+            ]
+          ]
+          [ # 4
+            allowStar: 'true'
+            container: 'table'
+            from: '85'
+            isContainer: 'true'
+            options: ['halign', 'header', 'color', 'bgcolor', 'b', 'i', 'm', 'noencase', 'colspan', 'top', 'bottom', 'cellcss', 'texpre', 'texpost', 'texencase', 'rowcolor', 'rowcss', 'headerrow', 'rowtop', 'rowbottom', 'valign', 'rows']
+            terminator: '.]'
+            to: '97'
+            token: '[.'
+            type: 'table-cell'
+            stack: [
+              [ # 0
+                combine: { text: 'type' }
+                from: '87'
+                to: '88'
+                type: 'text'
+                stack: [' ']
+              ]
+              [ # 1
+                from: '88'
+                optionStack: [
+                  {
+                    containerEnd: '/\.\]/'
+                    from: '91'
+                    terminator: '}'
+                    text: '4'
+                    to: '94'
+                    token: '{'
+                    type: 'options'
+                  }
+                ]
+                options: ['answer', 'width', 'name', 'cmp_options']
+                to: '94'
+                token: '[_]'
+                type: 'answer'
+              ]
+              [ # 2
+                combine: { text: 'type' }
+                from: '94'
+                to: '95'
+                type: 'text'
+                stack: [' ']
+              ]
+            ]
+          ]
+        ]
+      ]
+    ]
+  ]
+]
+
+# layout table
+
+BEGIN_PGML
+[#
+	[. Some text .]
+	[. [!The WeBWorK logo!]{'webwork_logo.png'} .]*
+
+	[.
+		[#
+			[. [`x`] .]
+			[. [`x^2`] .]*{ headerrow => 1 }
+			[. [`2`] .]
+			[. [_]{4} .]
+		#]
+	.]
+#]*
+END_PGML
+
+==>
+
+Program(
+    PGMLBlock(
+        BeginPG,
+        PGMLContent(
+            Paragraph(
+                Table(
+                    TableMark,
+                    TableCell(TableCellMark, TableCellMark),
+                    TableCell(
+                        TableCellMark,
+                        Image(ImageMark, ImageMark),
+                        Option(OptionMark, Program(ExpressionStatement(StringSingleQuoted)), OptionMark),
+                        TableCellMark
+                    ),
+                    TableCell(
+                        TableCellMark,
+                        Table(
+                            TableMark,
+                            TableCell(TableCellMark, MathMode(MathModeMark, MathModeMark), TableCellMark),
+                            TableCell(TableCellMark, MathMode(MathModeMark, MathModeMark), TableCellMark),
+                            Option(
+                                OptionMark,
+                                Program(ExpressionStatement(Pair(Identifier, FatComma, Integer))),
+                                OptionMark
+                            ),
+                            TableCell(TableCellMark, MathMode(MathModeMark, MathModeMark), TableCellMark),
+                            TableCell(
+                                TableCellMark,
+                                AnswerRule,
+                                Option(OptionMark, Program(ExpressionStatement(Integer)), OptionMark),
+                                TableCellMark
+                            ),
+                            TableMark
+                        ),
+                        TableCellMark
+                    ),
+                    TableMark
+                )
+            )
+        ),
+        EndPG
+    )
+)
+
+==>
+
+from: '0'
+parseAll: 'true'
+to: '173'
+type: 'root'
+stack: [
+  [ # 0
+    combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
+    from: '0'
+    indent: '0'
+    to: '173'
+    type: 'indent'
+    stack: [
+      [ # 0
+        allowPar: 'true'
+        allowStar: 'true'
+        from: '0'
+        hasStar: '1'
+        options: ['center', 'caption', 'horizontalrules', 'texalignment', 'align', 'Xratio', 'encase', 'rowheaders', 'headerrules', 'valign', 'padding', 'tablecss', 'captioncss', 'columnscss', 'datacss', 'headercss', 'allcellcss', 'booktabs']
+        terminator: '#]'
+        to: '173'
+        token: '[#'
+        type: 'table'
+        stack: [
+          [ # 0
+            allowStar: 'true'
+            container: 'table'
+            from: '4'
+            isContainer: 'true'
+            options: ['halign', 'header', 'color', 'bgcolor', 'b', 'i', 'm', 'noencase', 'colspan', 'top', 'bottom', 'cellcss', 'texpre', 'texpost', 'texencase', 'rowcolor', 'rowcss', 'headerrow', 'rowtop', 'rowbottom', 'valign', 'rows']
+            terminator: '.]'
+            to: '19'
+            token: '[.'
+            type: 'table-cell'
+            stack: [
+              [ # 0
+                combine: { text: 'type' }
+                from: '6'
+                to: '17'
+                type: 'text'
+                stack: [' Some text ']
+              ]
+            ]
+          ]
+          [ # 1
+            allowStar: 'true'
+            container: 'table'
+            from: '21'
+            hasStar: '1'
+            isContainer: 'true'
+            options: ['halign', 'header', 'color', 'bgcolor', 'b', 'i', 'm', 'noencase', 'colspan', 'top', 'bottom', 'cellcss', 'texpre', 'texpost', 'texencase', 'rowcolor', 'rowcss', 'headerrow', 'rowtop', 'rowbottom', 'valign', 'rows']
+            terminator: '.]'
+            to: '68'
+            token: '[.'
+            type: 'table-cell'
+            stack: [
+              [ # 0
+                combine: { text: 'type' }
+                from: '23'
+                to: '24'
+                type: 'text'
+                stack: [' ']
+              ]
+              [ # 1
+                children: [
+                  {
+                    combine: { text: 'type' }
+                    from: '26'
+                    to: '42'
+                    type: 'text'
+                    stack: ['The WeBWorK logo']
+                  }
+                ]
+                containerEnd: '/\.\]/'
+                from: '24'
+                optionStack: [
+                  {
+                    containerEnd: '/\.\]/'
+                    from: '44'
+                    terminator: '}'
+                    text: ''webwork_logo.png''
+                    to: '64'
+                    token: '{'
+                    type: 'options'
+                  }
+                ]
+                options: ['source', 'width', 'height', 'image_options']
+                terminator: '!]'
+                to: '64'
+                token: '[!'
+                type: 'image'
+              ]
+              [ # 2
+                combine: { text: 'type' }
+                from: '64'
+                to: '65'
+                type: 'text'
+                stack: [' ']
+              ]
+            ]
+          ]
+          [ # 2
+            allowStar: 'true'
+            container: 'table'
+            from: '71'
+            isContainer: 'true'
+            options: ['halign', 'header', 'color', 'bgcolor', 'b', 'i', 'm', 'noencase', 'colspan', 'top', 'bottom', 'cellcss', 'texpre', 'texpost', 'texencase', 'rowcolor', 'rowcss', 'headerrow', 'rowtop', 'rowbottom', 'valign', 'rows']
+            terminator: '.]'
+            to: '169'
+            token: '[.'
+            type: 'table-cell'
+            stack: [
+              [ # 0
+                combine: { text: 'type' }
+                from: '73'
+                to: '76'
+                type: 'text'
+                stack: ['\n']
+              ]
+              [ # 1
+                allowPar: 'true'
+                allowStar: 'true'
+                containerEnd: '/\.\]/'
+                from: '76'
+                options: ['center', 'caption', 'horizontalrules', 'texalignment', 'align', 'Xratio', 'encase', 'rowheaders', 'headerrules', 'valign', 'padding', 'tablecss', 'captioncss', 'columnscss', 'datacss', 'headercss', 'allcellcss', 'booktabs']
+                terminator: '#]'
+                to: '165'
+                token: '[#'
+                type: 'table'
+                stack: [
+                  [ # 0
+                    allowStar: 'true'
+                    container: 'table'
+                    containerEnd: '/\.\]/'
+                    from: '82'
+                    isContainer: 'true'
+                    options: ['halign', 'header', 'color', 'bgcolor', 'b', 'i', 'm', 'noencase', 'colspan', 'top', 'bottom', 'cellcss', 'texpre', 'texpost', 'texencase', 'rowcolor', 'rowcss', 'headerrow', 'rowtop', 'rowbottom', 'valign', 'rows']
+                    terminator: '.]'
+                    to: '93'
+                    token: '[.'
+                    type: 'table-cell'
+                    stack: [
+                      [ # 0
+                        combine: { text: 'type' }
+                        from: '84'
+                        to: '85'
+                        type: 'text'
+                        stack: [' ']
+                      ]
+                      [ # 1
+                        children: [
+                          {
+                            combine: { text: 'type' }
+                            from: '87'
+                            to: '88'
+                            type: 'text'
+                            stack: ['x']
+                          }
+                        ]
+                        containerEnd: '/\.\]/'
+                        from: '85'
+                        terminator: '`]'
+                        to: '90'
+                        token: '[`'
+                        type: 'math'
+                      ]
+                      [ # 2
+                        combine: { text: 'type' }
+                        from: '90'
+                        to: '91'
+                        type: 'text'
+                        stack: [' ']
+                      ]
+                    ]
+                  ]
+                  [ # 1
+                    allowStar: 'true'
+                    container: 'table'
+                    containerEnd: '/\.\]/'
+                    from: '97'
+                    hasStar: '1'
+                    isContainer: 'true'
+                    optionStack: [
+                      {
+                        containerEnd: '/\.\]/'
+                        from: '111'
+                        terminator: '}'
+                        text: ' headerrow => 1 '
+                        to: '129'
+                        token: '{'
+                        type: 'options'
+                      }
+                    ]
+                    options: ['halign', 'header', 'color', 'bgcolor', 'b', 'i', 'm', 'noencase', 'colspan', 'top', 'bottom', 'cellcss', 'texpre', 'texpost', 'texencase', 'rowcolor', 'rowcss', 'headerrow', 'rowtop', 'rowbottom', 'valign', 'rows']
+                    terminator: '.]'
+                    to: '129'
+                    token: '[.'
+                    type: 'table-cell'
+                    stack: [
+                      [ # 0
+                        combine: { text: 'type' }
+                        from: '99'
+                        to: '100'
+                        type: 'text'
+                        stack: [' ']
+                      ]
+                      [ # 1
+                        children: [
+                          {
+                            combine: { text: 'type' }
+                            from: '102'
+                            to: '105'
+                            type: 'text'
+                            stack: ['x^2']
+                          }
+                        ]
+                        containerEnd: '/\.\]/'
+                        from: '100'
+                        terminator: '`]'
+                        to: '107'
+                        token: '[`'
+                        type: 'math'
+                      ]
+                      [ # 2
+                        combine: { text: 'type' }
+                        from: '107'
+                        to: '108'
+                        type: 'text'
+                        stack: [' ']
+                      ]
+                    ]
+                  ]
+                  [ # 2
+                    allowStar: 'true'
+                    container: 'table'
+                    containerEnd: '/\.\]/'
+                    from: '133'
+                    isContainer: 'true'
+                    options: ['halign', 'header', 'color', 'bgcolor', 'b', 'i', 'm', 'noencase', 'colspan', 'top', 'bottom', 'cellcss', 'texpre', 'texpost', 'texencase', 'rowcolor', 'rowcss', 'headerrow', 'rowtop', 'rowbottom', 'valign', 'rows']
+                    terminator: '.]'
+                    to: '144'
+                    token: '[.'
+                    type: 'table-cell'
+                    stack: [
+                      [ # 0
+                        combine: { text: 'type' }
+                        from: '135'
+                        to: '136'
+                        type: 'text'
+                        stack: [' ']
+                      ]
+                      [ # 1
+                        children: [
+                          {
+                            combine: { text: 'type' }
+                            from: '138'
+                            to: '139'
+                            type: 'text'
+                            stack: ['2']
+                          }
+                        ]
+                        containerEnd: '/\.\]/'
+                        from: '136'
+                        terminator: '`]'
+                        to: '141'
+                        token: '[`'
+                        type: 'math'
+                      ]
+                      [ # 2
+                        combine: { text: 'type' }
+                        from: '141'
+                        to: '142'
+                        type: 'text'
+                        stack: [' ']
+                      ]
+                    ]
+                  ]
+                  [ # 3
+                    allowStar: 'true'
+                    container: 'table'
+                    containerEnd: '/\.\]/'
+                    from: '148'
+                    isContainer: 'true'
+                    options: ['halign', 'header', 'color', 'bgcolor', 'b', 'i', 'm', 'noencase', 'colspan', 'top', 'bottom', 'cellcss', 'texpre', 'texpost', 'texencase', 'rowcolor', 'rowcss', 'headerrow', 'rowtop', 'rowbottom', 'valign', 'rows']
+                    terminator: '.]'
+                    to: '160'
+                    token: '[.'
+                    type: 'table-cell'
+                    stack: [
+                      [ # 0
+                        combine: { text: 'type' }
+                        from: '150'
+                        to: '151'
+                        type: 'text'
+                        stack: [' ']
+                      ]
+                      [ # 1
+                        from: '151'
+                        optionStack: [
+                          {
+                            containerEnd: '/\.\]/'
+                            from: '154'
+                            terminator: '}'
+                            text: '4'
+                            to: '157'
+                            token: '{'
+                            type: 'options'
+                          }
+                        ]
+                        options: ['answer', 'width', 'name', 'cmp_options']
+                        to: '157'
+                        token: '[_]'
+                        type: 'answer'
+                      ]
+                      [ # 2
+                        combine: { text: 'type' }
+                        from: '157'
+                        to: '158'
+                        type: 'text'
+                        stack: [' ']
+                      ]
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ]
+    ]
+  ]
+]
+
+# data table with options
+
+BEGIN_PGML
+[#
+	[. [`x`] .] [. [`x^2`] .]*
+	[. [`1`] .] [. [_]{1} .]
+#]{ center => 0, align => '|c|c|', horizontalrules => 1 }
+END_PGML
+
+==>
+
+Program(
+    PGMLBlock(
+        BeginPG,
+        PGMLContent(
+            Paragraph(
+                Table(
+                    TableMark,
+                    TableCell(TableCellMark, MathMode(MathModeMark, MathModeMark), TableCellMark),
+                    TableCell(TableCellMark, MathMode(MathModeMark, MathModeMark), TableCellMark),
+                    TableCell(TableCellMark, MathMode(MathModeMark, MathModeMark), TableCellMark),
+                    TableCell(
+                        TableCellMark,
+                        AnswerRule,
+                        Option(OptionMark, Program(ExpressionStatement(Integer)), OptionMark),
+                        TableCellMark
+                    ),
+                    TableMark
+                ),
+                Option(
+                    OptionMark,
+                    Program(
+                        ExpressionStatement(
+                            Pair(Identifier, FatComma, Integer),
+                            Comma,
+                            Pair(Identifier, FatComma, StringSingleQuoted),
+                            Comma,
+                            Pair(Identifier, FatComma, Integer)
+                        )
+                    ),
+                    OptionMark
+                )
+            )
+        ),
+        EndPG
+    )
+)
+
+==>
+
+from: '0'
+parseAll: 'true'
+to: '114'
+type: 'root'
+stack: [
+  [ # 0
+    combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
+    from: '0'
+    indent: '0'
+    to: '114'
+    type: 'indent'
+    stack: [
+      [ # 0
+        allowPar: 'true'
+        allowStar: 'true'
+        from: '0'
+        optionStack: [
+          {
+            from: '59'
+            terminator: '}'
+            text: ' center => 0, align => '|c|c|', horizontalrules => 1 '
+            to: '114'
+            token: '{'
+            type: 'options'
+          }
+        ]
+        options: ['center', 'caption', 'horizontalrules', 'texalignment', 'align', 'Xratio', 'encase', 'rowheaders', 'headerrules', 'valign', 'padding', 'tablecss', 'captioncss', 'columnscss', 'datacss', 'headercss', 'allcellcss', 'booktabs']
+        terminator: '#]'
+        to: '114'
+        token: '[#'
+        type: 'table'
+        stack: [
+          [ # 0
+            allowStar: 'true'
+            container: 'table'
+            from: '4'
+            isContainer: 'true'
+            options: ['halign', 'header', 'color', 'bgcolor', 'b', 'i', 'm', 'noencase', 'colspan', 'top', 'bottom', 'cellcss', 'texpre', 'texpost', 'texencase', 'rowcolor', 'rowcss', 'headerrow', 'rowtop', 'rowbottom', 'valign', 'rows']
+            terminator: '.]'
+            to: '15'
+            token: '[.'
+            type: 'table-cell'
+            stack: [
+              [ # 0
+                combine: { text: 'type' }
+                from: '6'
+                to: '7'
+                type: 'text'
+                stack: [' ']
+              ]
+              [ # 1
+                children: [
+                  {
+                    combine: { text: 'type' }
+                    from: '9'
+                    to: '10'
+                    type: 'text'
+                    stack: ['x']
+                  }
+                ]
+                containerEnd: '/\.\]/'
+                from: '7'
+                terminator: '`]'
+                to: '12'
+                token: '[`'
+                type: 'math'
+              ]
+              [ # 2
+                combine: { text: 'type' }
+                from: '12'
+                to: '13'
+                type: 'text'
+                stack: [' ']
+              ]
+            ]
+          ]
+          [ # 1
+            allowStar: 'true'
+            container: 'table'
+            from: '16'
+            hasStar: '1'
+            isContainer: 'true'
+            options: ['halign', 'header', 'color', 'bgcolor', 'b', 'i', 'm', 'noencase', 'colspan', 'top', 'bottom', 'cellcss', 'texpre', 'texpost', 'texencase', 'rowcolor', 'rowcss', 'headerrow', 'rowtop', 'rowbottom', 'valign', 'rows']
+            terminator: '.]'
+            to: '30'
+            token: '[.'
+            type: 'table-cell'
+            stack: [
+              [ # 0
+                combine: { text: 'type' }
+                from: '18'
+                to: '19'
+                type: 'text'
+                stack: [' ']
+              ]
+              [ # 1
+                children: [
+                  {
+                    combine: { text: 'type' }
+                    from: '21'
+                    to: '24'
+                    type: 'text'
+                    stack: ['x^2']
+                  }
+                ]
+                containerEnd: '/\.\]/'
+                from: '19'
+                terminator: '`]'
+                to: '26'
+                token: '[`'
+                type: 'math'
+              ]
+              [ # 2
+                combine: { text: 'type' }
+                from: '26'
+                to: '27'
+                type: 'text'
+                stack: [' ']
+              ]
+            ]
+          ]
+          [ # 2
+            allowStar: 'true'
+            container: 'table'
+            from: '32'
+            isContainer: 'true'
+            options: ['halign', 'header', 'color', 'bgcolor', 'b', 'i', 'm', 'noencase', 'colspan', 'top', 'bottom', 'cellcss', 'texpre', 'texpost', 'texencase', 'rowcolor', 'rowcss', 'headerrow', 'rowtop', 'rowbottom', 'valign', 'rows']
+            terminator: '.]'
+            to: '43'
+            token: '[.'
+            type: 'table-cell'
+            stack: [
+              [ # 0
+                combine: { text: 'type' }
+                from: '34'
+                to: '35'
+                type: 'text'
+                stack: [' ']
+              ]
+              [ # 1
+                children: [
+                  {
+                    combine: { text: 'type' }
+                    from: '37'
+                    to: '38'
+                    type: 'text'
+                    stack: ['1']
+                  }
+                ]
+                containerEnd: '/\.\]/'
+                from: '35'
+                terminator: '`]'
+                to: '40'
+                token: '[`'
+                type: 'math'
+              ]
+              [ # 2
+                combine: { text: 'type' }
+                from: '40'
+                to: '41'
+                type: 'text'
+                stack: [' ']
+              ]
+            ]
+          ]
+          [ # 3
+            allowStar: 'true'
+            container: 'table'
+            from: '44'
+            isContainer: 'true'
+            options: ['halign', 'header', 'color', 'bgcolor', 'b', 'i', 'm', 'noencase', 'colspan', 'top', 'bottom', 'cellcss', 'texpre', 'texpost', 'texencase', 'rowcolor', 'rowcss', 'headerrow', 'rowtop', 'rowbottom', 'valign', 'rows']
+            terminator: '.]'
+            to: '56'
+            token: '[.'
+            type: 'table-cell'
+            stack: [
+              [ # 0
+                combine: { text: 'type' }
+                from: '46'
+                to: '47'
+                type: 'text'
+                stack: [' ']
+              ]
+              [ # 1
+                from: '47'
+                optionStack: [
+                  {
+                    containerEnd: '/\.\]/'
+                    from: '50'
+                    terminator: '}'
+                    text: '1'
+                    to: '53'
+                    token: '{'
+                    type: 'options'
+                  }
+                ]
+                options: ['answer', 'width', 'name', 'cmp_options']
+                to: '53'
+                token: '[_]'
+                type: 'answer'
+              ]
+              [ # 2
+                combine: { text: 'type' }
+                from: '53'
+                to: '54'
+                type: 'text'
+                stack: [' ']
+              ]
+            ]
+          ]
+        ]
+      ]
+    ]
+  ]
+]

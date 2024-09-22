@@ -79,6 +79,10 @@ enum Type {
     PreMark,
     StarOption,
     StrongEmphasis,
+    Table,
+    TableCell,
+    TableCellMark,
+    TableMark,
     Tag,
     TagMark,
     Variable,
@@ -356,6 +360,20 @@ const pgmlFormat = (block: Item, offset: number): Element[] => {
             )
         );
         return [elt(Type.MathMode, block.from + offset, to, children), ...options];
+    } else if (block.type === 'table') {
+        const firstOptionBlock = options.at(0);
+        const to = firstOptionBlock ? firstOptionBlock.from : block.to + offset;
+        children.unshift(elt(Type.TableMark, block.from + offset, block.from + (block.token?.length ?? 0) + offset));
+        children.push(elt(Type.TableMark, to - (block.terminator as string).length - (block.hasStar ?? 0), to));
+        return [elt(Type.Table, block.from + offset, to + offset, children), ...options];
+    } else if (block.type === 'table-cell') {
+        const firstOptionBlock = options.at(0);
+        const to = firstOptionBlock ? firstOptionBlock.from : block.to + offset;
+        children.unshift(
+            elt(Type.TableCellMark, block.from + offset, block.from + (block.token?.length ?? 0) + offset)
+        );
+        children.push(elt(Type.TableCellMark, to - (block.terminator as string).length - (block.hasStar ?? 0), to));
+        return [elt(Type.TableCell, block.from + offset, to + offset, children), ...options];
     } else if (block.type === 'image') {
         const firstOptionBlock = options.at(0);
         const to = firstOptionBlock ? firstOptionBlock.from : block.to + offset;
@@ -654,7 +672,7 @@ class FragmentCursor {
 export const pgmlHighlighting = styleTags({
     Paragraph: t.content,
     'AlignMark CodeMark EmphasisMark HeaderMark ImageMark ListMark MathModeMark OptionMark': t.processingInstruction,
-    'PreMark PerlCommandMark TagMark VariableMark VerbatimMark': t.processingInstruction,
+    'PreMark PerlCommandMark TableMark TableCellMark TagMark VariableMark VerbatimMark': t.processingInstruction,
     CodeText: t.monospace,
     CodeInfo: t.labelName,
     HorizontalRule: t.contentSeparator,

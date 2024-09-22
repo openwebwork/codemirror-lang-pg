@@ -225,7 +225,7 @@ stack: [
       [ # 1
         from: '6'
         options: ['width', 'height', 'size']
-        to: '10'
+        to: '9'
         token: '---'
         type: 'rule'
       ]
@@ -239,7 +239,7 @@ stack: [
       [ # 3
         from: '17'
         options: ['width', 'height', 'size']
-        to: '21'
+        to: '20'
         token: '==='
         type: 'rule'
       ]
