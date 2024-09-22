@@ -90,4 +90,5 @@ for (const { name, text } of sources) {
     console.log(source);
     console.log('\n\x1b[1m\x1b[32m==>\x1b[0m\n');
     console.log(PGMLShow(source));
+    console.log();
 }

@@ -42,7 +42,7 @@ export const pgHighlighting = styleTags({
     'StringSingleQuoted StringDoubleQuoted q qq qx */StringContent */InterpolatedStringContent': t.string,
     '*/QuoteLikeStartDelimiter QuoteLikeSeparatorDelimiter */QuoteLikeEndDelimiter': t.string,
     'qw QWListContent/... Pair/Identifier HashAccessVariable/Identifier Version': t.string,
-    'HeredocInitializer/... HeredocEndIdentifier Glob': t.string,
+    'HeredocInitializer/... HeredocEndIdentifier Glob LaTeXImageCodeStart': t.string,
     'm qr s tr y RegexOptions': t.special(t.string),
     'PodStatement EndDataStatement/...': t.blockComment,
     EscapeSequence: t.escape,

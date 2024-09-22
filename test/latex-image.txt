@@ -1,0 +1,69 @@
+# tikz image
+
+$drawing = createTikZImage();
+$drawing->BEGIN_TIKZ
+\draw (-4,0) -- (4,0);
+\draw (0,-2) -- (0,2);
+\draw (0,0) circle[radius=1.5];
+END_TIKZ
+
+==>
+
+Program(
+    ExpressionStatement(
+        Assignment(ScalarVariable, "=", CallExpression(FunctionName(Identifier), ParenthesizedArguments("(", ")"))),
+        ";"
+    ),
+    LaTeXImageCode(
+        ScalarVariable,
+        ArrowOperator,
+        LaTeXImageCodeStart,
+        InterpolatedHeredocBody(
+            EscapeSequence,
+            InterpolatedStringContent,
+            EscapeSequence,
+            InterpolatedStringContent,
+            EscapeSequence,
+            InterpolatedStringContent,
+            HeredocEndIdentifier
+        )
+    )
+)
+
+# latex image
+
+$latexImage = createLaTeXImage();
+$latexImage->BEGIN_LATEX_IMAGE
+\begin{tikzpicture}
+\draw (-4,0) -- (4,0);
+\draw (0,-2) -- (0,2);
+\draw (0,0) circle[radius=1.5];
+\end{tikzpicture}
+END_LATEX_IMAGE
+
+==>
+
+Program(
+    ExpressionStatement(
+        Assignment(ScalarVariable, "=", CallExpression(FunctionName(Identifier), ParenthesizedArguments("(", ")"))),
+        ";"
+    ),
+    LaTeXImageCode(
+        ScalarVariable,
+        ArrowOperator,
+        LaTeXImageCodeStart,
+        InterpolatedHeredocBody(
+            EscapeSequence,
+            InterpolatedStringContent,
+            EscapeSequence,
+            InterpolatedStringContent,
+            EscapeSequence,
+            InterpolatedStringContent,
+            EscapeSequence,
+            InterpolatedStringContent,
+            EscapeSequence,
+            InterpolatedStringContent,
+            HeredocEndIdentifier
+        )
+    )
+)

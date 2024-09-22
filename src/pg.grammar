@@ -137,6 +137,13 @@ statement[@isGroup=Statement] {
     EmptyStatement { ~block ";" } |
     PodStatement |
     EndDataStatement[@dynamicPrecedence=4] { (kw<"__END__"> | kw<"__DATA__">) endDataBlock } |
+    LaTeXImageCode {
+        (ScalarVariable | expression)
+        ArrowOperator
+        !arrowOperator
+        LaTeXImageCodeStart
+        endOfLine[@dynamicPrecedence=1] { ~block semicolon? }
+    } |
     PGMLBlock |
     PGTextBlock
 }
@@ -449,7 +456,11 @@ semicolon { ";" | automaticSemicolon }
 
     quoteLikeMiddle { QuoteLikeSeparatorDelimiter | QuoteLikeEndDelimiter injectedComments? QuoteLikeStartDelimiter }
 
-    injectedComments { whitespace+ Comment (whitespace* Comment)* }
+    injectedComments {
+        (horizontalWhitespace | verticalWhitespace)+
+        Comment
+        ((horizontalWhitespace | verticalWhitespace)* Comment)*
+    }
 
     // The uninterpolatedHeredocStart and interpolatedHeredocStart tokens invisible markers used to signal
     // (via canShift) where the UninterpolatedHeredocBody and InterpolatedHeredocBody start which
@@ -510,7 +521,7 @@ semicolon { ";" | automaticSemicolon }
     PGTextBlock { BeginPG PGTextContent EndPG }
 }
 
-@skip { Comment | whitespace | UninterpolatedHeredocBody | InterpolatedHeredocBody }
+@skip { Comment | horizontalWhitespace | verticalWhitespace | UninterpolatedHeredocBody | InterpolatedHeredocBody }
 
 kw[@dynamicPrecedence=1]<term> { @extend[@name={term}]<Identifier, term> ~identifier }
 Eval[@dynamicPrecedence=1] { @extend<Identifier, "eval"> ~identifier }
@@ -535,6 +546,7 @@ maybeParens<content> { !noParens content | "(" !parens content ")" }
 }
 @external tokens heredoc from "./tokens" {
     HeredocStartIdentifier,
+    LaTeXImageCodeStart,
     uninterpolatedHeredocStart,
     interpolatedHeredocStart,
     HeredocEndIdentifier
@@ -556,10 +568,11 @@ maybeParens<content> { !noParens content | "(" !parens content ")" }
 @external tokens regex from "./tokens" { patternMatchStart, RegexOptions, regexEnd }
 @external tokens pod from "./tokens" { PodDirective, PodContent, PodCut }
 @external tokens endData from "./tokens" { endDataBlock }
-@external tokens pgml from "./tokens" { BeginPG[closedBy=EndPG], PGMLContent, PGTextContent, EndPG[openedBy=BeginPG] }
+@external tokens pgText from "./tokens" { BeginPG[closedBy=EndPG], PGMLContent, PGTextContent, EndPG[openedBy=BeginPG] }
 
 @tokens {
-    whitespace { $[ \t\n\r] }
+    horizontalWhitespace { $[ \t] }
+    verticalWhitespace { $[\n\r] }
 
     hex { $[0-9A-Fa-f] }
     oct { $[0-7] }

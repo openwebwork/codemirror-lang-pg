@@ -13,6 +13,7 @@ import {
     NamedUnaryOperator,
     ListOperator,
     HeredocStartIdentifier,
+    LaTeXImageCodeStart,
     uninterpolatedHeredocStart,
     interpolatedHeredocStart,
     HeredocEndIdentifier,
@@ -141,7 +142,9 @@ const pgVariants = [
     [72, 73, 78, 84], // HINT
     [83, 79, 76, 85, 84, 73, 79, 78] // SOLUTION
 ];
-const endPGPrefix = [69, 78, 68, 95];
+const endPGPrefix = [69, 78, 68, 95]; // END_
+const tikz = [84, 73, 75, 90]; // TIKZ
+const latexImage = [76, 65, 84, 69, 88, 95, 73, 77, 65, 71, 69]; // LATEX_IMAGE
 
 type ContextType = 'root' | 'quote' | 'quoteLike' | 'regex' | 'quoteLike&regex' | 'heredoc' | 'iooperator' | 'pg';
 
@@ -277,6 +280,23 @@ export const contextTracker = new ContextTracker<Context>({
                         tag,
                         interpolating: (!quote || quote == 34 || quote == 96) && !backslashedTag,
                         indented,
+                        newlinePos: input.pos + pos
+                    })
+                );
+            }
+            return context;
+        } else if (term === LaTeXImageCodeStart) {
+            let pos = 0;
+            while (isHWhitespace(input.peek(pos))) ++pos;
+            const isLatexImage = beginPGPrefix.concat(latexImage).every((l, index) => l == input.peek(pos + index));
+            if (!isLatexImage && !beginPGPrefix.concat(tikz).every((l, index) => l == input.peek(pos + index)))
+                return context;
+            if (heredocQueue.at(-1)?.stackPos !== stack.pos) {
+                while (input.peek(pos) != 10 /* \n */ && input.peek(pos) >= 0) ++pos;
+                heredocQueue.unshift(
+                    new Context('heredoc', context, stack.pos, {
+                        tag: endPGPrefix.concat(isLatexImage ? latexImage : tikz),
+                        interpolating: true,
                         newlinePos: input.pos + pos
                     })
                 );
@@ -517,6 +537,20 @@ export const heredoc = new ExternalTokenizer(
             }
             input.acceptToken(HeredocStartIdentifier);
             return;
+        }
+
+        if (stack.canShift(LaTeXImageCodeStart)) {
+            if (input.peek(-2) != 45 /* - */ || input.peek(-1) != 62 /* > */) return;
+            while (isHWhitespace(input.next)) input.advance();
+            const isLatexImage = beginPGPrefix.concat(latexImage).every((l, index) => l == input.peek(index));
+            if (isLatexImage || beginPGPrefix.concat(tikz).every((l, index) => l == input.peek(index))) {
+                const tokenLength = beginPGPrefix.length + (isLatexImage ? latexImage.length : tikz.length);
+                // Verify that only horizontal whitespace and semicolons are on the remainder of the line.
+                let pos = tokenLength;
+                let ch = input.peek(pos);
+                while (ch >= 0 && (isHWhitespace(ch) || ch == 59) /* ; */) ch = input.peek(++pos);
+                if (ch <= 0 || ch == 10 /* \n */) input.acceptToken(LaTeXImageCodeStart, tokenLength);
+            }
         }
 
         if (!(stack.context instanceof Context)) return;
@@ -870,7 +904,7 @@ export const endData = new ExternalTokenizer((input, stack) => {
     }
 });
 
-export const pgml = new ExternalTokenizer(
+export const pgText = new ExternalTokenizer(
     (input, stack) => {
         if (stack.canShift(BeginPG)) {
             let ch = input.peek(-1);
