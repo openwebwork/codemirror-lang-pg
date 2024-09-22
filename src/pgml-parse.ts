@@ -166,7 +166,6 @@ export class Parse {
         while (this.i < this.split.length) {
             block = this.block;
 
-            //console.log(`text: '${this.split[this.i] ?? ''}', token: '${this.split[this.i + 1] ?? ''}'`);
             this.pos += this.split[this.i]?.length ?? 0;
             this.Text(this.split[this.i++] ?? '');
 
@@ -177,54 +176,29 @@ export class Parse {
                 RegExp(`^${block.terminator instanceof RegExp ? block.terminator.source : block.terminator}$`).test(
                     token
                 )
-            ) {
-                //console.log('terminator');
+            )
                 this.Terminate(token);
-            } else if (
+            else if (
                 block.containerEnd &&
                 RegExp(
                     `^${block.containerEnd instanceof RegExp ? block.containerEnd.source : block.containerEnd}$`
                 ).test(token)
-            ) {
-                //console.log('containerEnd');
+            )
                 this.EndContainer(token);
-            } else if (/^\[[@$]/.test(token) && (block.parseAll || block.parseSubstitutions)) {
-                //console.log('substitution');
-                this.Begin(token);
-            } else if (token.startsWith('[%') && (block.parseAll || block.parseComments)) {
-                //console.log('comment');
-                this.Begin(token);
-            } else if (/^\\./.test(token) && (block.parseAll || block.parseSlashes)) {
-                //console.log('slash');
-                this.Slash(token);
-            } else if (/^\n$/.test(token)) {
-                //console.log('break');
-                this.Break(token);
-            } else if (/^\n\n+$/.test(token)) {
-                //console.log('par');
-                this.Par(token);
-            } else if (/^\*\*?$/.test(token) && !block.parseAll && block.parseSubstitutions) {
-                //console.log('star');
-                this.Star(token);
-            } else if (block.parseQuoted && token.startsWith('q')) {
-                //console.log('quoted');
-                this.Quoted(token);
-            } else if (block.balance && RegExp(`^${block.balance.source}`).test(token)) {
-                //console.log('balance begin');
+            else if (/^\[[@$]/.test(token) && (block.parseAll || block.parseSubstitutions)) this.Begin(token);
+            else if (token.startsWith('[%') && (block.parseAll || block.parseComments)) this.Begin(token);
+            else if (/^\\./.test(token) && (block.parseAll || block.parseSlashes)) this.Slash(token);
+            else if (/^\n$/.test(token)) this.Break(token);
+            else if (/^\n\n+$/.test(token)) this.Par(token);
+            else if (/^\*\*?$/.test(token) && !block.parseAll && block.parseSubstitutions) this.Star(token);
+            else if (block.parseQuoted && token.startsWith('q')) this.Quoted(token);
+            else if (block.balance && RegExp(`^${block.balance.source}`).test(token))
                 this.Begin(token, token.substring(0, 1));
-            } else if (block.balance && RegExp(`${block.balance.source}$`).test(token)) {
-                //console.log('balance end');
+            else if (block.balance && RegExp(`${block.balance.source}$`).test(token))
                 this.Begin(token, token.substring(token.length - 1));
-            } else if (block.parseAll) {
-                //console.log('all');
-                this.All(token);
-            } else if (/^[}\]]$/.test(token)) {
-                //console.log('unbalanced');
-                this.Unbalanced(token);
-            } else {
-                //console.log('text');
-                this.Text(token);
-            }
+            else if (block.parseAll) this.All(token);
+            else if (/^[}\]]$/.test(token)) this.Unbalanced(token);
+            else this.Text(token);
 
             if (token.includes('\n\n')) {
                 for (let i = 0; i < token.length; ++i) {
@@ -243,79 +217,30 @@ export class Parse {
     }
 
     All(token: string) {
-        if (token.startsWith('[') && BlockDefs[token]) {
-            //console.log('begin block');
-            this.Begin(token);
-        } else if (/^(?:\t| {4})/.test(token)) {
-            //console.log('indent');
-            this.Indent(token);
-        } else if (/\d+[.)] /.test(token)) {
-            //console.log('bullet numeric');
-            this.Bullet(token, 'numeric');
-        } else if (/[ivxl]+[.)] /.test(token)) {
-            //console.log('bullet roman');
-            this.Bullet(token, 'roman');
-        } else if (/[a-z][.)] /.test(token)) {
-            //console.log('bullet alpha');
-            this.Bullet(token, 'alpha');
-        } else if (/[IVXL]+[.)] /.test(token)) {
-            //console.log('bullet Roman');
-            this.Bullet(token, 'Roman');
-        } else if (/[A-Z][.)] /.test(token)) {
-            //console.log('bullet Alpha');
-            this.Bullet(token, 'Alpha');
-        } else if (/[-+o*] /.test(token)) {
-            //console.log('bullet bullet');
-            this.Bullet(token, 'bullet');
-        } else if (token.includes('{')) {
-            //console.log('brace');
-            this.Brace(token);
-        } else if (token.includes('[]')) {
-            //console.log('noop');
-            this.NOOP(token);
-        } else if (token.includes('[|')) {
-            //console.log('verbatim');
-            this.Verbatim(token);
-        } else if (token.includes('[!')) {
-            //console.log('image');
-            this.Image(token);
-        } else if (/\[./.test(token)) {
-            //console.log('answer');
-            this.Answer(token);
-        } else if (token.includes('_')) {
-            //console.log('emphasis');
-            this.Emphasis(token);
-        } else if (token.includes('*')) {
-            //console.log('star');
-            this.Star(token);
-        } else if (/["']/.test(token)) {
-            //console.log('quote');
-            this.Quote(token);
-        } else if (/^ {2,3}$/.test(token)) {
-            //console.log('forceBreak');
-            this.ForceBreak(token);
-        } else if (token.includes('#')) {
-            //console.log('heading');
-            this.Heading(token);
-        } else if (/-|=/.test(token)) {
-            //console.log('rule');
-            this.Rule(token);
-        } else if (token.includes('<<')) {
-            //console.log('center');
-            this.Center(token);
-        } else if (token.includes('>>')) {
-            //console.log('align');
-            this.Align(token);
-        } else if (token.includes('```')) {
-            //console.log('code');
-            this.Code(token);
-        } else if (token.includes(':   ')) {
-            //console.log('preformatted');
-            this.Preformatted(token);
-        } else {
-            //console.log('text');
-            this.Text(token);
-        }
+        if (token.startsWith('[') && BlockDefs[token]) this.Begin(token);
+        else if (/^(?:\t| {4})/.test(token)) this.Indent(token);
+        else if (/\d+[.)] /.test(token)) this.Bullet(token, 'numeric');
+        else if (/[ivxl]+[.)] /.test(token)) this.Bullet(token, 'roman');
+        else if (/[a-z][.)] /.test(token)) this.Bullet(token, 'alpha');
+        else if (/[IVXL]+[.)] /.test(token)) this.Bullet(token, 'Roman');
+        else if (/[A-Z][.)] /.test(token)) this.Bullet(token, 'Alpha');
+        else if (/[-+o*] /.test(token)) this.Bullet(token, 'bullet');
+        else if (token.includes('{')) this.Brace(token);
+        else if (token.includes('[]')) this.NOOP(token);
+        else if (token.includes('[|')) this.Verbatim(token);
+        else if (token.includes('[!')) this.Image(token);
+        else if (/\[./.test(token)) this.Answer(token);
+        else if (token.includes('_')) this.Emphasis(token);
+        else if (token.includes('*')) this.Star(token);
+        else if (/["']/.test(token)) this.Quote(token);
+        else if (/^ {2,3}$/.test(token)) this.ForceBreak(token);
+        else if (token.includes('#')) this.Heading(token);
+        else if (/-|=/.test(token)) this.Rule(token);
+        else if (token.includes('<<')) this.Center(token);
+        else if (token.includes('>>')) this.Align(token);
+        else if (token.includes('```')) this.Code(token);
+        else if (token.includes(':   ')) this.Preformatted(token);
+        else this.Text(token);
     }
 
     Begin(token: string, id: string = token, options: { terminator?: RegExp; bullet?: string; n?: number } = {}) {
@@ -336,7 +261,6 @@ export class Parse {
         this.block?.pushItem(block);
         block.prev = this.block;
         this.block = block;
-        //console.log(`beggining new block ${block.type}, previous was ${block.prev?.type ?? 'none'}`);
         this.atLineStart = 0;
         this.atBlockStart = 1;
     }
@@ -366,11 +290,6 @@ export class Parse {
             if (block.terminateMethod) this[block.terminateMethod](token);
         }
         if (prev && (block.type !== 'pre' || prev.to < block.to)) prev.to = block.to;
-        //console.log(
-        //    `terminating ${block.type} from ${block.from.toString()} to ${block.to.toString()}, previous is ${
-        //        prev?.type ?? 'none'
-        //    } from ${prev?.from.toString() ?? '0'} to ${prev?.to.toString() ?? '0'}`
-        //);
         delete block.prev;
         delete block.parseComments;
         delete block.parseSubstitutions;
@@ -897,8 +816,6 @@ export class Item implements BlockDefinition {
     ) {
         Object.assign(this, fields);
         this.to = this.from + (this.token?.length ?? 0);
-        //if (!(this instanceof Text) && !(this instanceof Block))
-        //    console.log(`new item "${this.type}" from ${this.from.toString()} to ${this.to.toString()}`);
     }
 
     pushChild(child: Item) {
@@ -967,7 +884,6 @@ export class Block extends Item {
 
     constructor(type: string, from: number, fields: Fields = {}) {
         super(type, from, { ...fields, stack: [] });
-        //console.log(`new block "${this.type}" from ${this.from.toString()} to ${this.to.toString()}`);
         if ('prev' in fields) this.prev = fields.prev;
     }
 
@@ -1159,7 +1075,6 @@ export class Text extends Item {
     constructor(from: number, ...texts: string[]) {
         super('text', from, { stack: [...texts], combine: { text: 'type' } });
         this.to += texts.join('').length;
-        //console.log(`new text: "${texts.join('')}" from ${this.from.toString()} to ${this.to.toString()}`);
     }
 
     pushText(...texts: string[]) {
