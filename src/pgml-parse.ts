@@ -731,12 +731,17 @@ export class Parse {
         if (!this.block) return;
         const top = this.block.topItem();
         if (top instanceof Text && top.type === 'text') {
+            const topText = top.stack?.at(0);
+            const pentUltimateText = top.stack?.at(1);
             if (
-                /^ *[a-z0-9]+$/.test((top.stack?.[0] as string) || '') &&
-                /^\n+$/.test((top.stack?.[1] as string) || '')
+                typeof topText === 'string' &&
+                /^ *[a-z0-9]+$/.test(topText) &&
+                typeof pentUltimateText === 'string' &&
+                /^\n+$/.test(pentUltimateText)
             ) {
-                this.block.class = (top.stack?.[0] as string).replace(/^ +/, '');
+                this.block.class = topText.replace(/^ +/, '');
                 top.stack?.shift();
+                top.from += topText.length;
             }
         }
     }

@@ -49,6 +49,10 @@ enum Type {
     AlignMark,
     AnswerRule,
     BulletList,
+    Code,
+    CodeClass,
+    CodeMark,
+    CodeText,
     Comment,
     Emphasis,
     EmphasisMark,
@@ -415,6 +419,24 @@ const pgmlFormat = (block: Item, offset: number): Element[] => {
                 elt(Type.Paragraph, block.from + (block.token?.length ?? 1) + offset, block.to + offset, children)
             ])
         ];
+    } else if (block.type === 'code') {
+        const codeText = block.stack?.[0];
+        return [
+            elt(Type.Code, block.from + offset, block.to + offset, [
+                elt(Type.CodeMark, block.from + offset, block.from + (block.token?.length ?? 1) + offset),
+                ...(block.class
+                    ? [
+                          elt(
+                              Type.CodeClass,
+                              block.from + (block.token?.length ?? 1) + offset,
+                              block.from + (block.token?.length ?? 1) + block.class.length + offset
+                          )
+                      ]
+                    : []),
+                ...(codeText instanceof Item ? [elt(Type.CodeText, codeText.from + offset, codeText.to + offset)] : []),
+                elt(Type.CodeMark, block.to - (block.terminator as string).length + offset, block.to + offset)
+            ])
+        ];
     }
 
     console.log(`unhandled ${block.type}`);
@@ -631,9 +653,10 @@ class FragmentCursor {
 
 export const pgmlHighlighting = styleTags({
     Paragraph: t.content,
-    'AlignMark EmphasisMark HeaderMark ImageMark ListMark MathModeMark OptionMark PreMark': t.processingInstruction,
-    'PerlCommandMark TagMark VariableMark VerbatimMark': t.processingInstruction,
-    'Pre Verbatim': t.monospace,
+    'AlignMark CodeMark EmphasisMark HeaderMark ImageMark ListMark MathModeMark OptionMark': t.processingInstruction,
+    'PreMark PerlCommandMark TagMark VariableMark VerbatimMark': t.processingInstruction,
+    CodeText: t.monospace,
+    CodeInfo: t.labelName,
     HorizontalRule: t.contentSeparator,
     'AnswerRule Image MathMode': t.atom,
     'Heading1/...': t.heading1,
