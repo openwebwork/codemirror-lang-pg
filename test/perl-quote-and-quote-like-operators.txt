@@ -6,7 +6,7 @@
 "hash access: $var{b}";
 "deref hash access: $var->{b} $var2->{a}{b} $var3->{a}->{b}";
 "mixed deref hash and array access: $var1->{a}[1] $var2->{a}->[1] $var3->[1]{a} $var4->[1]->{a}";
-"dereferenced scalar reference ${\($a + 2)}";
+"dereferenced scalar reference ${~~($a + 2)}";
 "dereferenced arary reference @{['a' . 'b']}";
 "interpolated package variable $Foo::Package::var";
 
@@ -143,7 +143,7 @@ Program(
 `echo "deref array access: $a->[-1]"`;
 `echo "hash access: $var{b}"`;
 `echo "deref hash access: $var->{b}"`;
-`echo "dereferenced scalar reference ${\($a + 2)}"`;
+`echo "dereferenced scalar reference ${~~($a + 2)}"`;
 `echo "dereferenced array reference @{['a' . 'b']}"`;
 
 ==>
@@ -216,7 +216,7 @@ q/abc/;
 q!a b c!;
 q abcda;
 q(ab(cd(ef)));
-q/a b\/c d/;
+q/a b~~/c d/;
 q # this is a comment
     # this is another comment
     (abc);
@@ -242,7 +242,7 @@ qq{array access: $a[1]};
 qq!deref array access: $a->[-1]!;
 qq/hash access: $var{b}/;
 qq[deref hash access: $var->{b};];
-qq<dereferenced scalar reference ${\($a + 2)}>;
+qq<dereferenced scalar reference ${~~($a + 2)}>;
 qq(dereferenced array reference @{['a' . 'b']});
 qq[ab[c]d];
 qq # Comment
@@ -352,7 +352,7 @@ qw/a b c/;
 qw!a b c!;
 qw a b c d a;
 qw(a b(c d (e f)));
-qw/a b\/c d/;
+qw/a b~~/c d/;
 qw  # this is a comment
     # this is another comment
     (a b c);
@@ -409,7 +409,7 @@ qx{echo "array access: $a[1]"};
 qx!echo "deref array access: $a->[-1]"!;
 qx/echo "hash access: $var{b}"/;
 qx[echo "deref hash access: $var->{b}"];
-qx<echo "dereferenced scalar reference ${\($a + 2)}">;
+qx<echo "dereferenced scalar reference ${~~($a + 2)}">;
 qx(echo "dereferenced array reference @{['a' . 'b']}");
 qx'echo "uninterpolated contents $var"';
 qx # Comment
@@ -514,14 +514,14 @@ Program(
 
 # pattern matching regular expressions
 
-m/([+-]?\d+)/g;
-m'([+-]?\d+)'g;
+m/([+-]?~~d+)/g;
+m'([+-]?~~d+)'g;
 m # comment
-    '([+-]?\d+)'g;
-$var =~ /([+-]?\d+)/;
+    '([+-]?~~d+)'g;
+$var =~ /([+-]?~~d+)/;
 $var =~ /foo/gi;
-$var =~ /\//g;
-m/\//g;
+$var =~ /~~//g;
+m/~~//g;
 /^${var}a$/;
 
 ==>
@@ -596,7 +596,7 @@ Program(
 
 # substitution regular expressions
 
-s/foo$var\n/frog\n/;
+s/foo$var~~n/frog~~n/;
 s#hello#bye#r;
 s'foo$var'frog';
 s{a{b}}{ab}r;

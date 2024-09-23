@@ -125,7 +125,7 @@ statement[@isGroup=Statement] {
     ForStatement2 {
         Label?
         (kw<"for"> | kw<"foreach">)
-        (scope? ScalarVariable | "\\" scope? HashVariable)?
+        (scope? ScalarVariable | "~~" scope? HashVariable)?
         ParenthesizedArguments
         Block
         Continue?
@@ -211,7 +211,8 @@ expression[@isGroup=Expression] {
             !compare (CompareOp<"<" | ">" | "<=" | ">="> | kw<"lt"> | kw<"gt"> | kw<"le"> | kw<"ge">) expression
         )+ |
         expression (!equal (CompareOp<"==" | "!="> | kw<"eq"> | kw<"ne">) expression)+ |
-        expression !equal (CompareOp<"<=>" | "~~"> | kw<"cmp">) expression |
+        // Note that the ~~ smart match operator has been removed since ~~ is the escape sequence.
+        expression !equal (CompareOp<"<=>"> | kw<"cmp">) expression |
         expression !isa kw<"isa"> expression |
         expression !binAnd BitOp { "&" } expression |
         expression !binOr BitOp<"|" | "^"> expression |
@@ -377,7 +378,7 @@ ScalarDereference { "$" (ScalarDereference | ScalarVariable | "{" expression "}"
 ArrayDereference { "@" (ScalarDereference | ScalarVariable | "{" expression "}") }
 HashDereference { "%" (ScalarDereference | ScalarVariable | "{" expression "}") }
 
-toReference { RefOp<"\\"> !unary expression }
+toReference { RefOp<"~~"> !unary expression }
 
 AnonymousFunction {
     kw<"sub">
@@ -616,7 +617,7 @@ maybeParens<content> { !noParens content | "(" !parens content ")" }
 
     ModuleName { "'" ![\n]* ".pm" "'" | "\"" ![\n]* ".pm" "\"" }
 
-    StringSingleQuoted[isolate] { ("'" (![\\'] | "\\" _)* "'"?) }
+    StringSingleQuoted[isolate] { ("'" (!['] | "~~'")* "'"?) }
 
     letter { $[_a-zA-Z] }
     Identifier { letter (letter | @digit)* }
@@ -637,7 +638,7 @@ maybeParens<content> { !noParens content | "(" !parens content ")" }
 
     Comment[isolate] { "#" ![\n]* }
 
-    "{" "}" "[" "]" "(" ")" "$" "@" "%" "&" "*" "<<" "$#" ";" ":" "::" "\\" "=" "/"
+    "{" "}" "[" "]" "(" ")" "$" "@" "%" "&" "*" "<<" "$#" ";" ":" "::" "~~" "=" "/"
 
     @precedence {
         ModuleName,
@@ -645,7 +646,7 @@ maybeParens<content> { !noParens content | "(" !parens content ")" }
         Version,
         Float,
         Integer,
-        RefOp<"\\">,
+        RefOp<"~~">,
         Identifier,
         Option,
         ScalarVariable,

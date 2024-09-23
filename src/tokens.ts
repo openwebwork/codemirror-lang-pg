@@ -251,7 +251,7 @@ export const contextTracker = new ContextTracker<Context>({
             return new Context('iooperator', context);
         } else if (term === HeredocStartIdentifier) {
             let pos = 0;
-            const indented = input.next == 126; /* ~ */
+            const indented = input.next == 126 && input.peek(1) != 126; /* ~ follows but not ~~ */
             if (indented) ++pos;
             let haveWhitespace = false;
             while (isWhitespace(input.peek(pos))) {
@@ -264,8 +264,9 @@ export const contextTracker = new ContextTracker<Context>({
                     : undefined;
             if (!quote && haveWhitespace) return context;
             if (quote) ++pos;
-            const backslashedTag = !quote && input.peek(pos) == 92; /* \\ */
-            if (backslashedTag && (haveWhitespace || isWhitespace(input.peek(++pos)))) return context;
+            const escapedTag = !quote && input.peek(pos) == 126 && input.peek(pos + 1) == 126; /* ~ */
+            if (escapedTag) pos += 2;
+            if (escapedTag && (haveWhitespace || isWhitespace(input.peek(pos)))) return context;
             if (!isIdentifierChar(input.peek(pos))) return context;
             const tag = [input.peek(pos++)];
             for (;;) {
@@ -278,7 +279,7 @@ export const contextTracker = new ContextTracker<Context>({
                 heredocQueue.unshift(
                     new Context('heredoc', context, stack.pos, {
                         tag,
-                        interpolating: (!quote || quote == 34 || quote == 96) && !backslashedTag,
+                        interpolating: (!quote || quote == 34 || quote == 96) && !escapedTag,
                         indented,
                         newlinePos: input.pos + pos
                     })
@@ -516,7 +517,7 @@ export const fileIO = new ExternalTokenizer(
 export const heredoc = new ExternalTokenizer(
     (input, stack) => {
         if (stack.canShift(HeredocStartIdentifier)) {
-            const indented = input.next == 126; /* ~ */
+            const indented = input.next == 126 && input.peek(1) != 126; /* ~ follows but not ~~ */
             if (indented) input.advance();
             gobbleWhitespace(input);
             const quote =
@@ -525,7 +526,9 @@ export const heredoc = new ExternalTokenizer(
                     : undefined;
             if (!quote && isWhitespace(input.peek(-1))) return;
             if (quote) input.advance();
-            if (input.next == 92 /* \\ */ && (isWhitespace(input.peek(-1)) || isWhitespace(input.advance()))) return;
+            const escapedTag = !quote && input.next == 126 && input.peek(1) == 126; /* ~ */
+            if (escapedTag && (isWhitespace(input.peek(-1)) || isWhitespace(input.peek(2)))) return;
+            if (escapedTag) input.advance(2);
             if (!isIdentifierChar(input.next)) return;
             for (;;) {
                 input.advance();
@@ -607,23 +610,23 @@ export const heredoc = new ExternalTokenizer(
 );
 
 const scanEscape = (input: InputStream) => {
-    const after = input.peek(1);
+    const after = input.peek(2);
 
     // Restricted range octal character
     if (after >= 48 && after <= 55 /* 0-7 */) {
-        let size = 2,
+        let size = 3,
             next;
-        while (size < 5 && (next = input.peek(size)) >= 48 && next <= 55) ++size;
+        while (size < 6 && (next = input.peek(size)) >= 48 && next <= 55) ++size;
         return size;
     }
 
     // Restricted range hexidecimal character
-    if (after == 120 /* x */ && isHex(input.peek(2))) return isHex(input.peek(3)) ? 4 : 3;
+    if (after == 120 /* x */ && isHex(input.peek(3))) return isHex(input.peek(4)) ? 5 : 4;
 
     // Hexidecimal character
-    if (after == 120 /* x */ && input.peek(2) == 123 /* { */) {
+    if (after == 120 /* x */ && input.peek(3) == 123 /* { */) {
         // FIXME: There could be optional blanks at the beginning and end inside the braces.
-        for (let size = 3; ; ++size) {
+        for (let size = 4; ; ++size) {
             const next = input.peek(size);
             if (next == 125 /* } */) return size + 1;
             if (!isHex(next)) break;
@@ -631,8 +634,8 @@ const scanEscape = (input: InputStream) => {
     }
 
     // This could be any named unicode character or character sequence.
-    if (after == 78 /* N */ && input.peek(2) == 123 /* { */) {
-        for (let size = 3; ; ++size) {
+    if (after == 78 /* N */ && input.peek(3) == 123 /* { */) {
+        for (let size = 4; ; ++size) {
             const next = input.peek(size);
             if (next == 125 /* } */) return size + 1;
             if (next < 0) break;
@@ -640,15 +643,15 @@ const scanEscape = (input: InputStream) => {
     }
 
     // Octal character
-    if (after == 111 /* o */ && input.peek(2) == 123 /* { */) {
-        for (let size = 3; ; ++size) {
+    if (after == 111 /* o */ && input.peek(3) == 123 /* { */) {
+        for (let size = 4; ; ++size) {
             const next = input.peek(size);
             if (next == 125 /* } */) return size + 1;
             if (next < 48 || next > 55 /* not 0-7 */) break;
         }
     }
 
-    return 2;
+    return 3;
 };
 
 export const interpolated = new ExternalTokenizer(
@@ -686,7 +689,7 @@ export const interpolated = new ExternalTokenizer(
                 ++stack.context.nestLevel;
             } else if (stack.context.nestLevel > 0 && input.next === stack.context.endDelimiter) {
                 --stack.context.nestLevel;
-            } else if (input.next == 92 /* \\ */) {
+            } else if (input.next == 126 /* ~ */ && input.peek(1) == 126) {
                 const escaped = scanEscape(input);
                 if (escaped) {
                     if (content) break;
@@ -790,7 +793,7 @@ export const quoteLikeOperator = new ExternalTokenizer(
                     input.next >= 0 &&
                     (stack.context.nestLevel > 0 ||
                         input.next !== stack.context.endDelimiter ||
-                        (input.next === stack.context.endDelimiter && input.peek(-1) == 92))
+                        (input.next === stack.context.endDelimiter && input.peek(-2) == 126 && input.peek(-1) == 126))
                 ) {
                     if (stack.context.startDelimiter !== stack.context.endDelimiter) {
                         if (input.next === stack.context.startDelimiter) ++stack.context.nestLevel;
@@ -806,7 +809,7 @@ export const quoteLikeOperator = new ExternalTokenizer(
                     !isWhitespace(input.next) &&
                     (stack.context.nestLevel > 0 ||
                         input.next !== stack.context.endDelimiter ||
-                        (input.next === stack.context.endDelimiter && input.peek(-1) == 92))
+                        (input.next === stack.context.endDelimiter && input.peek(-1) == 126 && input.peek(-1) == 126))
                 ) {
                     if (stack.context.startDelimiter !== stack.context.endDelimiter) {
                         if (input.next === stack.context.startDelimiter) ++stack.context.nestLevel;

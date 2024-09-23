@@ -89,12 +89,12 @@ Program(
 
 # print and say
 
-print "output\n";
-print 'a', 'b', "\n";
-print('a', 'b', "\n"), exit;
-print STDOUT "output\n";
-print(STDOUT "output\n");
-print { $files[$i] } "stuff\n";
+print "output~~n";
+print 'a', 'b', "~~n";
+print('a', 'b', "~~n"), exit;
+print STDOUT "output~~n";
+print(STDOUT "output~~n");
+print { $files[$i] } "stuff~~n";
 print for @array;
 print STDERR for @error;
 say 'output';

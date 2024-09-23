@@ -18,15 +18,7 @@ Program(
         ScalarVariable,
         ArrowOperator,
         LaTeXImageCodeStart,
-        InterpolatedHeredocBody(
-            EscapeSequence,
-            InterpolatedStringContent,
-            EscapeSequence,
-            InterpolatedStringContent,
-            EscapeSequence,
-            InterpolatedStringContent,
-            HeredocEndIdentifier
-        )
+        InterpolatedHeredocBody(InterpolatedStringContent, HeredocEndIdentifier)
     )
 )
 
@@ -52,18 +44,6 @@ Program(
         ScalarVariable,
         ArrowOperator,
         LaTeXImageCodeStart,
-        InterpolatedHeredocBody(
-            EscapeSequence,
-            InterpolatedStringContent,
-            EscapeSequence,
-            InterpolatedStringContent,
-            EscapeSequence,
-            InterpolatedStringContent,
-            EscapeSequence,
-            InterpolatedStringContent,
-            EscapeSequence,
-            InterpolatedStringContent,
-            HeredocEndIdentifier
-        )
+        InterpolatedHeredocBody(InterpolatedStringContent, HeredocEndIdentifier)
     )
 )
