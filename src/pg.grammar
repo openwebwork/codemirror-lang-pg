@@ -626,8 +626,8 @@ maybeParens<content> { !noParens content | "(" !parens content ")" }
     maybeBraces<content> { content | "{" content "}" }
 
     ScalarVariable { "$" maybeBraces<Identifier> }
-    ArrayVariable { "@" $[+-_!] | "@\\^" $[A-Z] | "@" $[a-zA-Z0-9_]+ }
-    HashVariable { "%" $[!+-] | "%\\^" $[A-Z] | "%" $[a-zA-Z0-9_]+ }
+    ArrayVariable { "@" $[+-_!] | "@" maybeBraces<Identifier> }
+    HashVariable { "%" $[!+-] | "%" maybeBraces<Identifier> }
     TypeGlob { "*" maybeBraces<Identifier> ("::" maybeBraces<Identifier>)* }
 
     ArrowOperator { "->" }
