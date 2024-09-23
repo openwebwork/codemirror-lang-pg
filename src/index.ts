@@ -5,6 +5,7 @@ import {
     continuedIndent,
     defineLanguageFacet,
     delimitedIndent,
+    flatIndent,
     foldInside,
     foldNodeProp,
     indentNodeProp
@@ -31,7 +32,8 @@ export const pgLanguage = LRLanguage.define({
                 IfStatement: continuedIndent({ except: /^\s*({|else\b|elsif\b)/ }),
                 Block: delimitedIndent({ closing: '}' }),
                 String: () => null,
-                Statement: continuedIndent()
+                Statement: continuedIndent(),
+                'PGMLBlock PGTextBlock': flatIndent
             }),
             foldNodeProp.add({
                 'Block Array ArrayRef HashRef PGMLBlock PGTextBlock': foldInside,
@@ -50,9 +52,7 @@ export const pgLanguage = LRLanguage.define({
                 }
             })
         ],
-        wrap: parseMixed((node) => {
-            return node.name === 'PGMLContent' ? { parser: PGMLParser } : null;
-        })
+        wrap: parseMixed((node) => (node.name === 'PGMLContent' ? { parser: PGMLParser } : null))
     }),
     languageData: { commentTokens: { line: '#' } }
 });

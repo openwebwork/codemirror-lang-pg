@@ -492,9 +492,10 @@ for (let i = 1, name; (name = Type[i]); ++i) {
     nodeTypes[i] = NodeType.define({
         id: i,
         name,
-        props: [
-            [NodeProp.group, i === Type.PGMLContent.valueOf() ? ['Block', 'BlockContext'] : ['Block', 'LeafBlock']]
-        ],
+        props:
+            i >= Type.Paragraph.valueOf()
+                ? []
+                : [[NodeProp.group, i === Type.PGMLContent.valueOf() ? ['Block', 'BlockContext'] : ['Block']]],
         top: name == 'PGMLContent'
     });
 }
