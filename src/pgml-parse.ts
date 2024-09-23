@@ -207,7 +207,7 @@ export class Parse {
                     while (this.input[this.pos] === ' ' || this.input[this.pos] === '\t') ++this.pos;
                 }
             } else {
-                this.pos += token.length;
+                this.pos += this.split[this.i - 1]?.length ?? 0;
             }
         }
 
@@ -560,13 +560,15 @@ export class Parse {
     }
 
     Quoted(token: string) {
-        const next = this.split[this.i] ?? this.split[++this.i] ?? '';
+        if (!this.split[this.i]) this.pos += this.split[this.i + 1]?.length ?? 0;
+        const next = (this.split[this.i] ? this.split[this.i] : this.split[++this.i]) ?? '';
         const quote = next.substring(0, 1);
+        this.pos += 1;
         this.split[this.i] = next.substring(1);
         let pcount = 0;
         const open = /[({[<]/.test(quote) ? quote : '';
-        const close = open || quote;
-        close.replaceAll(/\(\{\[</g, (match) =>
+        let close = open || quote;
+        close = close.replace(/[({[<]/, (match) =>
             match === '(' ? ')' : match === '{' ? '}' : match === '[' ? ']' : match === '<' ? '>' : ''
         );
         const qclose = `\\${close}`;
@@ -582,12 +584,17 @@ export class Parse {
                 const i = text.indexOf(close);
                 if (i > -1) {
                     this.Text(text.substring(0, i + 1));
+                    this.pos += i + 1;
                     this.split[this.i] = text.substring(i + 1);
-                    if (this.i % 2) this.Text(this.split[++this.i] ?? '');
+                    if (this.i % 2) {
+                        this.pos += this.split[this.i]?.length ?? 0;
+                        this.Text(this.split[this.i++] ?? '');
+                    }
                     return;
                 }
             }
             this.Text(text);
+            this.pos += this.split[this.i]?.length ?? 0;
             ++this.i;
         }
     }

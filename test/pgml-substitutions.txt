@@ -1,9 +1,11 @@
-# perl command
+# perl commands
 
 BEGIN_PGML
 [@ image('webwork_logo.png', width => 300) @]*
 [@ q{q quoted string @]} @]**
 [@ '<div>hello</div>' @]***
+[@ %f = (q => 4); $f{q} @]
+[@ q}asdf} @]
 END_PGML
 
 ==>
@@ -40,7 +42,27 @@ Program(
                     ),
                     PerlCommandMark
                 ),
-                PerlCommand(PerlCommandMark, Program(ExpressionStatement(StringSingleQuoted)), PerlCommandMark)
+                PerlCommand(PerlCommandMark, Program(ExpressionStatement(StringSingleQuoted)), PerlCommandMark),
+                PerlCommand(
+                    PerlCommandMark,
+                    Program(
+                        ExpressionStatement(
+                            Assignment(HashVariable, "=", List("(", Pair(Identifier, FatComma, Integer), ")")),
+                            ";"
+                        ),
+                        ExpressionStatement(HashAccessVariable(ScalarVariable, "{", Identifier, "}"))
+                    ),
+                    PerlCommandMark
+                ),
+                PerlCommand(
+                    PerlCommandMark,
+                    Program(
+                        ExpressionStatement(
+                            StringQQuoted(q, QuoteLikeStartDelimiter, StringContent, QuoteLikeEndDelimiter)
+                        )
+                    ),
+                    PerlCommandMark
+                )
             )
         ),
         EndPG
@@ -51,14 +73,14 @@ Program(
 
 from: '0'
 parseAll: 'true'
-to: '104'
+to: '145'
 type: 'root'
 stack: [
   [ # 0
     combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
     from: '0'
     indent: '0'
-    to: '104'
+    to: '145'
     type: 'indent'
     stack: [
       [ # 0
@@ -111,6 +133,44 @@ stack: [
         terminator: '@]'
         text: ' '<div>hello</div>' '
         to: '104'
+        token: '[@'
+        type: 'command'
+      ]
+      [ # 5
+        combine: { text: 'type' }
+        from: '104'
+        to: '105'
+        type: 'text'
+        stack: ['\n']
+      ]
+      [ # 6
+        allowDblStar: 'true'
+        allowStar: 'true'
+        allowTriStar: 'true'
+        from: '105'
+        parseQuoted: 'true'
+        terminator: '@]'
+        text: ' %f = (q => 4); $f{q} '
+        to: '131'
+        token: '[@'
+        type: 'command'
+      ]
+      [ # 7
+        combine: { text: 'type' }
+        from: '131'
+        to: '132'
+        type: 'text'
+        stack: ['\n']
+      ]
+      [ # 8
+        allowDblStar: 'true'
+        allowStar: 'true'
+        allowTriStar: 'true'
+        from: '132'
+        parseQuoted: 'true'
+        terminator: '@]'
+        text: ' q}asdf} '
+        to: '145'
         token: '[@'
         type: 'command'
       ]
