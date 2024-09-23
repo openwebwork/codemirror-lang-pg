@@ -5,7 +5,6 @@
         "module": "esnext",
         "moduleResolution": "node",
         "noImplicitReturns": true,
-        "allowImportingTsExtensions": true,
         "noUnusedLocals": true,
         "strict": true,
         "newLine": "lf"

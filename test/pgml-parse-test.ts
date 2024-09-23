@@ -3,7 +3,7 @@ import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 import * as assert from 'assert';
 import { PGMLShow } from '../dist/index.js';
-import { toLineContext } from './test-util.ts';
+import { toLineContext } from './test-util.js';
 
 const caseDir = dirname(fileURLToPath(import.meta.url));
 
