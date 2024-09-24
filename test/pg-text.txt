@@ -1,0 +1,92 @@
+# perl command
+
+BEGIN_TEXT
+\{ $ans->ans_rule(10) \}
+END_TEXT
+
+==>
+
+Program(
+    PGTextBlock(
+        BeginPG,
+        PGTextContent(
+            PerlCommand(
+                PerlCommandMark,
+                Program(
+                    ExpressionStatement(
+                        MethodInvocation(
+                            ScalarVariable,
+                            ArrowOperator,
+                            FunctionName(Identifier),
+                            ParenthesizedArguments("(", Integer, ")")
+                        )
+                    )
+                ),
+                PerlCommandMark
+            )
+        ),
+        EndPG
+    )
+)
+
+# variable substitution
+
+BEGIN_TEXT
+Line one
+$PAR
+Variable $a
+END_TEXT
+
+==>
+
+Program(PGTextBlock(BeginPG, PGTextContent(Variable, Variable), EndPG))
+
+# math mode
+
+BEGIN_TEXT
+\(x + $a\)
+\[\frac{x}{3}\]
+\[\(error nested math mode\)\]
+END_TEXT
+
+==>
+
+Program(
+    PGTextBlock(
+        BeginPG,
+        PGTextContent(
+            InlineMathMode(MathModeMark, Variable, MathModeMark),
+            DisplayMathMode(MathModeMark, MathModeMark),
+            DisplayMathMode(MathModeMark, PGTextError, MathModeMark)
+        ),
+        EndPG
+    )
+)
+
+# parsed math mode
+
+BEGIN_TEXT
+`x / 3`
+``x / 3``
+`x / 3`*
+``x / 3``*
+```error to many start delimiters``
+`error to many end delimiters``
+END_TEXT
+
+==>
+
+Program(
+    PGTextBlock(
+        BeginPG,
+        PGTextContent(
+            ParsedMathMode(ParsedMathModeMark, ParsedMathModeMark),
+            ParsedMathMode(ParsedMathModeMark, ParsedMathModeMark),
+            ParsedMathMode(ParsedMathModeMark, ParsedMathModeMark),
+            ParsedMathMode(ParsedMathModeMark, ParsedMathModeMark),
+            PGTextError,
+            PGTextError,
+        ),
+        EndPG
+    )
+)

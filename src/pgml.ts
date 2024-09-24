@@ -493,7 +493,7 @@ for (let i = 1, name; (name = Type[i]); ++i) {
         id: i,
         name,
         props:
-            i >= Type.Paragraph.valueOf()
+            i > Type.Paragraph.valueOf()
                 ? []
                 : [[NodeProp.group, i === Type.PGMLContent.valueOf() ? ['Block', 'BlockContext'] : ['Block']]],
         top: name == 'PGMLContent'
