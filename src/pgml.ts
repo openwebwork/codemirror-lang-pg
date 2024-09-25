@@ -258,35 +258,9 @@ class BlockContext implements PartialParse {
     private finish() {
         return this.block.toTree(this.parser.nodeSet, this.contentStart);
     }
-
-    // Create an [`Element`](#Element) object to represent some syntax node.
-    elt(type: string, from: number, to: number, children?: readonly Element[]): Element;
-    elt(tree: Tree, at: number): Element;
-    elt(type: string | Tree, from: number, to?: number, children?: readonly Element[]): Element {
-        if (typeof type == 'string') return elt(this.parser.getNodeType(type), from, to ?? 0, children);
-        return new TreeElement(type, from);
-    }
 }
 
 const pgmlFormat = (block: Item, offset: number): Element[] => {
-    if (block.type === 'indent') {
-        const paragraphs: Element[] = [];
-        const children: Element[] = [];
-        let lastEnd = block.from;
-        for (const child of block.stack ?? []) {
-            if (!(child instanceof Item)) continue;
-            if (child.type === 'par') {
-                paragraphs.push(elt(Type.Paragraph, lastEnd + offset, child.to + offset, children));
-                lastEnd = child.to;
-                children.length = 0;
-            } else {
-                children.push(...pgmlFormat(child, offset));
-            }
-        }
-        if (children.length) paragraphs.push(elt(Type.Paragraph, lastEnd + offset, block.to + offset, children));
-        return paragraphs;
-    }
-
     if (['text', 'par', 'break', 'quote', 'forced', 'balance'].includes(block.type)) return [];
 
     const children: Element[] = [];
@@ -300,7 +274,9 @@ const pgmlFormat = (block: Item, offset: number): Element[] => {
         options.push(...pgmlFormat(item, offset));
     }
 
-    if (block.type === 'variable') {
+    if (block.type === 'indent') {
+        return children.length ? [elt(Type.Paragraph, block.from + offset, block.to + offset, children)] : [];
+    } else if (block.type === 'variable') {
         children.unshift(elt(Type.VariableMark, block.from + offset, block.from + 1 + offset));
         children.push(new TreeElement(pgPerlParser.parse(`$${block.text ?? ''}`), block.from + 1 + offset));
         children.push(

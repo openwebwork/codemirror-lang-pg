@@ -935,6 +935,9 @@ export class Block extends Item {
             prev = this.topItem(j) as Block;
         }
 
+        // Don't combine indents at the top level so that they can be easily separated into paragraphs.
+        if (this instanceof Root && top.type === 'indent' && par && prev.type === 'indent') return;
+
         let id = top.combine?.[prev.type as keyof CombineOptions];
         let value: number;
         let inside = false;
@@ -975,7 +978,7 @@ export class Block extends Item {
                 }
                 i = -(top.stack?.length ?? 0);
                 prev.pushItem(...(top.stack ?? []));
-                if (prev.type !== 'text' && (prev.topItem(i) as Block).combine) prev.combineTopItems(i);
+                if (prev instanceof Block && (prev.topItem(i) as Block).combine) prev.combineTopItems(i);
                 return;
             } else if (
                 top.type === 'indent' &&

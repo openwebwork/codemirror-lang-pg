@@ -221,7 +221,7 @@ stack: [
     combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
     from: '0'
     indent: '0'
-    to: '155'
+    to: '47'
     type: 'indent'
     stack: [
       [ # 0
@@ -265,14 +265,23 @@ stack: [
           ]
         ]
       ]
-      [ # 3
-        from: '47'
-        noIndent: '1'
-        to: '49'
-        token: '\n\n'
-        type: 'par'
-      ]
-      [ # 4
+    ]
+  ]
+  [ # 1
+    from: '47'
+    noIndent: '1'
+    to: '49'
+    token: '\n\n'
+    type: 'par'
+  ]
+  [ # 2
+    combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
+    from: '49'
+    indent: '0'
+    to: '91'
+    type: 'indent'
+    stack: [
+      [ # 0
         from: '49'
         n: '3'
         terminator: '###'
@@ -289,14 +298,23 @@ stack: [
           ]
         ]
       ]
-      [ # 5
-        from: '91'
-        noIndent: '1'
-        to: '93'
-        token: '\n\n'
-        type: 'par'
-      ]
-      [ # 6
+    ]
+  ]
+  [ # 3
+    from: '91'
+    noIndent: '1'
+    to: '93'
+    token: '\n\n'
+    type: 'par'
+  ]
+  [ # 4
+    combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
+    from: '93'
+    indent: '0'
+    to: '155'
+    type: 'indent'
+    stack: [
+      [ # 0
         from: '93'
         n: '3'
         terminator: '###'
@@ -313,14 +331,14 @@ stack: [
           ]
         ]
       ]
-      [ # 7
+      [ # 1
         from: '120'
         noIndent: '1'
         to: '122'
         token: '  '
         type: 'break'
       ]
-      [ # 8
+      [ # 2
         from: '123'
         n: '3'
         terminator: '###'
