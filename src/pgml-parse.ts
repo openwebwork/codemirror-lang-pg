@@ -633,6 +633,8 @@ export class Parse {
                 }
             }
         } else {
+            const firstItem = block.stack?.at(0);
+            block.textFrom = firstItem instanceof Item ? firstItem.from : block.to;
             block.text = this.stackString();
             delete block.stack;
         }
@@ -781,6 +783,7 @@ export class Item implements BlockDefinition {
     children?: Item[];
     optionStack?: Item[];
     text?: string;
+    textFrom?: number;
     hasWarning?: boolean;
     bullet?: string;
     hasDblStar?: boolean;

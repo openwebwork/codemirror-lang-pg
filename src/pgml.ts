@@ -326,7 +326,9 @@ const pgmlFormat = (block: Item, offset: number): Element[] => {
         return [elt(Type.Verbatim, block.from + offset, block.to + offset, children)];
     } else if (block.type === 'command') {
         children.unshift(elt(Type.PerlCommandMark, block.from + offset, block.from + 2 + offset));
-        children.push(new TreeElement(pgPerlParser.parse(block.text ?? ''), block.from + 2 + offset));
+        children.push(
+            new TreeElement(pgPerlParser.parse(block.text ?? ''), (block.textFrom ?? block.from + 2) + offset)
+        );
         children.push(
             elt(
                 Type.PerlCommandMark,
