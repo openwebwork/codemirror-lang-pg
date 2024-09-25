@@ -504,10 +504,15 @@ const InlineParsers: ((cx: InlineContext, next: number, pos: number) => number)[
     },
 
     // Variable
+    // FIXME: This does not catch interpolation like $b[1] where @b is an array, or $b{a} where %b is a hash, or more
+    // complicated constructs like ${~~(...)} (which does work in a BEGIN_TEXT block).  Those things are rarely done
+    // anyway, so this is not a high priority.  Furthermore, authors should be using PGML anyway.
     (cx, next, start) => {
-        if (next != 36 /* $ */ || !isVariableStartChar(cx.char(start + 1))) return -1;
+        if (next != 36 /* $ */ || (!isVariableStartChar(cx.char(start + 1)) && cx.char(start + 1) != 123) /* { */)
+            return -1;
         let pos = start + 2;
         for (; pos < cx.end && isIdentifierChar(cx.char(pos)); ++pos);
+        if (cx.char(start + 1) == 123 && cx.char(pos) == 125 /* } */) ++pos;
         return cx.append(elt(Type.Variable, start, pos));
     },
 

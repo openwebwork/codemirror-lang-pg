@@ -1,7 +1,8 @@
 const warnings: string[] = [];
-const warningsFatal = false;
+//const warningsFatal = false;
 
-const Warning = (...messages: string[]) => {
+const Warning = (..._messages: string[]) => {
+    /*
     const warning = messages.join('');
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (warningsFatal) {
@@ -9,6 +10,7 @@ const Warning = (...messages: string[]) => {
         process.exit(1);
     }
     warnings.push(warning);
+    */
 };
 
 const splitPatternParts = [
