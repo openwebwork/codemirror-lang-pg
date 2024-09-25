@@ -2,7 +2,7 @@ import type { Input, PartialParse, TreeBuffer, TreeCursor, TreeFragment } from '
 import { NodeProp, NodeSet, NodeType, Parser, Tree } from '@lezer/common';
 import { styleTags, tags as t } from '@lezer/highlight';
 import { parser as pgPerlParser } from './pg.grammar';
-import { isWhitespace, skipSpace, isIdentifierChar, isVariableStartChar } from './text-utils';
+import { skipSpace, isIdentifierChar, isVariableStartChar } from './text-utils';
 
 class CompositeBlock {
     static create(type: number, from: number, parentHash: number, end: number) {
@@ -58,56 +58,10 @@ enum Type {
     PGTextError
 }
 
-// Data structure used during block-level per-line parsing.
-class Line {
-    // The line's full text.
-    text = '';
-    // The string position corresponding to the base indent.
-    basePos = 0;
-    // The number of contexts handled
-    depth = 0;
-    // Any markers (i.e. block quote markers) parsed for the contexts.
-    markers: Element[] = [];
-    // The position of the next non-whitespace character beyond any list, blockquote, or other composite block markers.
-    pos = 0;
-    // The column of the next non-whitespace character.
-    indent = 0;
-    // The character code of the character after `pos`.
-    next = -1;
-
-    forward() {
-        if (this.basePos > this.pos) this.forwardInner();
-    }
-
-    forwardInner() {
-        const newPos = this.skipSpace(this.basePos);
-        this.indent = newPos;
-        this.pos = newPos;
-        this.next = newPos == this.text.length ? -1 : this.text.charCodeAt(newPos);
-    }
-
-    // Skip whitespace after the given position, return the position of the next non-space character or the end of the
-    // line if there's only space after `from`.
-    skipSpace(from: number) {
-        return skipSpace(this.text, from);
-    }
-
-    reset(text: string) {
-        this.text = text;
-        this.basePos = this.pos = this.indent = 0;
-        this.forwardInner();
-        this.depth = 1;
-        while (this.markers.length) this.markers.pop();
-    }
-}
-
-const scanLineResult = { text: '', end: 0 };
-
 // Block-level parsing functions get access to this context object.
 class BlockContext implements PartialParse {
     block: CompositeBlock;
-    stack: CompositeBlock[];
-    line = new Line();
+    line = '';
     private atEnd = false;
     private fragments: FragmentCursor | null;
     private to: number;
@@ -134,7 +88,6 @@ class BlockContext implements PartialParse {
         this.to = ranges[ranges.length - 1].to;
         this.lineStart = this.absoluteLineStart = this.absoluteLineEnd = ranges[0].from;
         this.block = CompositeBlock.create(Type.PGTextContent, this.lineStart, 0, 0);
-        this.stack = [this.block];
         this.fragments = fragments.length ? new FragmentCursor(fragments, input) : null;
         this.readLine();
     }
@@ -144,17 +97,12 @@ class BlockContext implements PartialParse {
     }
 
     advance() {
-        if (this.stoppedAt != null && this.absoluteLineStart > this.stoppedAt) return this.finish();
+        if ((this.stoppedAt != null && this.absoluteLineStart > this.stoppedAt) || !this.nextLine())
+            return this.finish();
+        if (this.fragments && this.reuseFragment(0)) return null;
 
-        for (;;) {
-            if (this.line.pos < this.line.text.length) break;
-            if (!this.nextLine()) return this.finish();
-        }
-
-        if (this.fragments && this.reuseFragment(this.line.basePos)) return null;
-
-        const start = this.lineStart + this.line.pos;
-        const content = this.line.text.slice(this.line.pos);
+        const start = this.lineStart;
+        const content = this.line;
 
         const cx = new InlineContext(this, content, start);
         outer: for (let pos = start; pos < cx.end; ) {
@@ -171,10 +119,9 @@ class BlockContext implements PartialParse {
             if (!cx.delimitersResolved() && pos >= cx.end) cx.nextLine();
         }
         for (const elt of cx.takeContent()) {
-            this.addNode(elt.toTree(this.parser.nodeSet), elt.from, elt.to);
+            this.addNode(elt.toTree(this.parser.nodeSet), elt.from);
         }
 
-        this.nextLine();
         return null;
     }
 
@@ -205,20 +152,9 @@ class BlockContext implements PartialParse {
         return true;
     }
 
-    // The number of parent blocks surrounding the current block.
-    get depth() {
-        return this.stack.length;
-    }
-
-    // Get the type of the parent block at the given depth. When no
-    // depth is passed, return the type of the innermost parent.
-    parentType(depth = this.depth - 1) {
-        return this.parser.nodeSet.types[this.stack[depth].type];
-    }
-
     // Move to the next input line.
     nextLine() {
-        this.lineStart += this.line.text.length;
+        this.lineStart += this.line.length;
         if (this.absoluteLineEnd >= this.to) {
             this.absoluteLineStart = this.absoluteLineEnd;
             this.atEnd = true;
@@ -241,7 +177,7 @@ class BlockContext implements PartialParse {
     }
 
     scanLine(start: number) {
-        const r = scanLineResult;
+        const r = { text: '', end: 0 };
         r.end = start;
         if (start >= this.to) {
             r.text = '';
@@ -265,13 +201,9 @@ class BlockContext implements PartialParse {
     }
 
     readLine() {
-        const { line } = this,
-            { text, end } = this.scanLine(this.absoluteLineStart);
+        const { text, end } = this.scanLine(this.absoluteLineStart);
         this.absoluteLineEnd = end;
-        line.reset(text);
-        for (; line.depth < this.stack.length; ++line.depth) {
-            line.forward();
-        }
+        this.line = text;
     }
 
     private lineChunkAt(pos: number) {
@@ -291,54 +223,12 @@ class BlockContext implements PartialParse {
         return this.atEnd ? this.lineStart : this.lineStart - 1;
     }
 
-    startContext(type: Type, start: number) {
-        this.block = CompositeBlock.create(
-            type,
-            this.lineStart + start,
-            this.block.hash,
-            this.lineStart + this.line.text.length
-        );
-        this.stack.push(this.block);
-    }
-
-    // Start a composite block. Should only be called from block parser functions that return null.
-    startComposite(type: string, start: number) {
-        this.startContext(this.parser.getNodeType(type), start);
-    }
-
-    addNode(block: Type | Tree, from: number, to?: number) {
-        if (typeof block == 'number')
-            block = new Tree(this.parser.nodeSet.types[block], [], [], (to ?? this.prevLineEnd()) - from);
+    addNode(block: Tree, from: number) {
         this.block.addChild(block, from - this.block.from);
     }
 
-    // Add a block element. Can be called by block parsers.
-    addElement(elt: Element) {
-        this.block.addChild(elt.toTree(this.parser.nodeSet), elt.from - this.block.from);
-    }
-
-    finishContext() {
-        const cx = this.stack.pop();
-        const top = this.stack[this.stack.length - 1];
-        if (cx) top.addChild(cx.toTree(this.parser.nodeSet), cx.from - top.from);
-        this.block = top;
-    }
-
     private finish() {
-        while (this.stack.length > 1) this.finishContext();
         return this.block.toTree(this.parser.nodeSet, this.lineStart);
-    }
-
-    // Create an Element object to represent some syntax node.
-    elt(type: string, from: number, to: number, children?: readonly Element[]): Element;
-    elt(tree: Tree, at: number): Element;
-    elt(type: string | Tree, from: number, to?: number, children?: readonly Element[]): Element {
-        if (typeof type == 'string') return elt(this.parser.getNodeType(type), from, to ?? 0, children);
-        return new TreeElement(type, from);
-    }
-
-    get buffer() {
-        return new Buffer(this.parser.nodeSet);
     }
 }
 
@@ -479,11 +369,7 @@ const InlineParsers: ((cx: InlineContext, next: number, pos: number) => number)[
     (cx, next, start) => {
         if (next != 92 /* \\ */ || cx.char(start + 1) != 123 /* { */) return -1;
         let pos = start + 2;
-        for (
-            ;
-            (pos < cx.end || cx.nextLine()) && (cx.char(pos) != 92 /* \ */ || cx.char(pos + 1) != 125) /* } */;
-            ++pos
-        );
+        for (; !cx.atEnd(pos) && (cx.char(pos) != 92 /* \ */ || cx.char(pos + 1) != 125) /* } */; ++pos);
         const end = pos + 2 < cx.end ? pos + 2 : cx.end;
         return cx.append(
             elt(Type.PerlCommand, start, end, [
@@ -502,7 +388,7 @@ const InlineParsers: ((cx: InlineContext, next: number, pos: number) => number)[
         const haveBrace = cx.char(pos) == 123; /* { */
         if (haveBrace) {
             ++pos;
-            while (isWhitespace(cx.char(pos))) ++pos;
+            pos = cx.skipSpace(pos);
         }
 
         /* BBOLD */
@@ -515,7 +401,7 @@ const InlineParsers: ((cx: InlineContext, next: number, pos: number) => number)[
         else return -1;
 
         if (haveBrace) {
-            while (isWhitespace(cx.char(pos))) ++pos;
+            pos = cx.skipSpace(pos);
             if (cx.char(pos) != 125 /* } */) return -1;
             ++pos;
         } else if (isIdentifierChar(cx.char(pos))) return -1;
@@ -531,7 +417,7 @@ const InlineParsers: ((cx: InlineContext, next: number, pos: number) => number)[
         const haveBrace = cx.char(pos) == 123; /* { */
         if (haveBrace) {
             ++pos;
-            while (isWhitespace(cx.char(pos))) ++pos;
+            pos = cx.skipSpace(pos);
         }
 
         /* EBOLD */
@@ -544,7 +430,7 @@ const InlineParsers: ((cx: InlineContext, next: number, pos: number) => number)[
         else return -1;
 
         if (haveBrace) {
-            while (isWhitespace(cx.char(pos))) ++pos;
+            pos = cx.skipSpace(pos);
             if (cx.char(pos) != 125 /* } */) return -1;
             ++pos;
         } else if (isIdentifierChar(cx.char(pos))) return -1;
@@ -581,12 +467,10 @@ const InlineParsers: ((cx: InlineContext, next: number, pos: number) => number)[
         const haveBrace = cx.char(start + 1) == 123;
         if (next != 36 /* $ */ || (!isVariableStartChar(cx.char(start + 1)) && !haveBrace) /* { */) return -1;
         let pos = start + 2;
-        if (haveBrace) {
-            while (isWhitespace(cx.char(pos))) ++pos;
-        }
+        if (haveBrace) pos = cx.skipSpace(pos);
         for (; pos < cx.end && isIdentifierChar(cx.char(pos)); ++pos);
         if (haveBrace) {
-            while (isWhitespace(cx.char(pos))) ++pos;
+            pos = cx.skipSpace(pos);
             if (cx.char(pos) != 125 /* } */) return cx.append(elt(Type.PGTextError, start, pos));
             if (cx.char(pos) == 125 /* } */) ++pos;
         }
@@ -650,7 +534,7 @@ const InlineParsers: ((cx: InlineContext, next: number, pos: number) => number)[
         const size = pos - start;
         if (size > 2) return cx.append(elt(Type.PGTextError, start, start + size));
         let curSize = 0;
-        for (; pos < cx.end || cx.nextLine(); ++pos) {
+        for (; !cx.atEnd(pos); ++pos) {
             if (cx.char(pos) == 96) {
                 ++curSize;
                 if (curSize == size && cx.char(pos + 1) != 96) {
@@ -696,9 +580,13 @@ class InlineContext {
         return this.offset + this.text.length;
     }
 
+    atEnd(pos: number) {
+        return pos >= this.end && !this.nextLine();
+    }
+
     nextLine() {
         const nextLineExists = this.blockContext.nextLine();
-        if (nextLineExists) this.text += '\n' + this.blockContext.line.text;
+        if (nextLineExists) this.text += '\n' + this.blockContext.line;
         return nextLineExists;
     }
 
@@ -716,11 +604,6 @@ class InlineContext {
     // or both. Returns the end of the delimiter, for convenient returning from parse functions.
     addDelimiter(type: DelimiterType, from: number, to: number) {
         return this.append(new InlineDelimiter(type, from, to));
-    }
-
-    // Add an inline element. Returns the end of the element.
-    addElement(elt: Element) {
-        return this.append(elt);
     }
 
     delimitersResolved() {
@@ -746,14 +629,6 @@ class InlineContext {
     // the end of the section.
     skipSpace(from: number) {
         return skipSpace(this.text, from - this.offset) + this.offset;
-    }
-
-    // Create an Element for a syntax node.
-    elt(type: string, from: number, to: number, children?: readonly Element[]): Element;
-    elt(tree: Tree, at: number): Element;
-    elt(type: string | Tree, from: number, to?: number, children?: readonly Element[]): Element {
-        if (typeof type == 'string') return elt(this.blockContext.parser.getNodeType(type), from, to ?? 0, children);
-        return new TreeElement(type, from);
     }
 }
 
