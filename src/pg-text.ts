@@ -176,6 +176,7 @@ class BlockContext implements PartialParse {
                 const result = token(cx, next, pos);
                 if (result >= 0) {
                     pos = result;
+                    if (!cx.delimitersResolved() && pos >= cx.end) cx.nextLine();
                     continue outer;
                 }
             }
@@ -617,7 +618,7 @@ const InlineParsers: ((cx: InlineContext, next: number, pos: number) => number)[
     // Math mode end
     (cx, next, start) => {
         if (next != 92 /* \\ */ || (cx.char(start + 1) != 41 /* ) */ && cx.char(start + 1) != 93) /* ] */) return -1;
-        // Scan back to the last inline math mode start marker.
+        // Scan back to the last math mode start marker.
         for (let i = cx.parts.length - 1; i >= 0; --i) {
             const part = cx.parts[i];
             if (
@@ -638,7 +639,7 @@ const InlineParsers: ((cx: InlineContext, next: number, pos: number) => number)[
                     return errorNode.to;
                 }
 
-                // Finish the content and replace the entire range in cx.parts with the inline math mode node.
+                // Finish the content and replace the entire range in cx.parts with the math mode node.
                 content.unshift(elt(Type.MathModeMark, part.from, part.to));
                 content.push(elt(Type.MathModeMark, start, start + 2));
                 const mathMode = (cx.parts[i] = elt(
