@@ -42,17 +42,34 @@ class CompositeBlock {
 enum Type {
     PGTextContent = 1,
 
-    InlineMathMode,
     DisplayMathMode,
+    Emphasis,
+    EmphasisMark,
+    InlineMathMode,
     MathModeMark,
     ParsedMathMode,
     ParsedMathModeMark,
     PerlCommand,
     PerlCommandMark,
+    StrongEmphasis,
     Variable,
 
     PGTextError
 }
+
+const isWhitespace = (ch: number) => ch == 32 || ch == 9 || ch == 10 || ch == 13;
+
+const skipSpace = (line: string, i = 0) => {
+    while (i < line.length && isWhitespace(line.charCodeAt(i))) ++i;
+    return i;
+};
+
+const isUpperCaseASCIILetter = (ch: number) => ch >= 65 && ch <= 90;
+const isLowerCaseASCIILetter = (ch: number) => ch >= 97 && ch <= 122;
+const isASCIILetter = (ch: number) => isLowerCaseASCIILetter(ch) || isUpperCaseASCIILetter(ch);
+const isDigit = (ch: number) => ch >= 48 && ch <= 55;
+const isIdentifierChar = (ch: number) => ch == 95 /* _ */ || isASCIILetter(ch) || isDigit(ch);
+const isVariableStartChar = (ch: number) => ch == 95 /* _ */ || isASCIILetter(ch);
 
 // Data structure used during block-level per-line parsing.
 class Line {
@@ -96,15 +113,6 @@ class Line {
         while (this.markers.length) this.markers.pop();
     }
 }
-
-const space = (ch: number) => {
-    return ch == 32 || ch == 9 || ch == 10 || ch == 13;
-};
-
-const skipSpace = (line: string, i = 0) => {
-    while (i < line.length && space(line.charCodeAt(i))) ++i;
-    return i;
-};
 
 const scanLineResult = { text: '', end: 0 };
 
@@ -465,7 +473,9 @@ const elt = (type: Type, from: number, to: number, children?: readonly (Element 
 enum DelimiterType {
     InlineMathMode = 1,
     DisplayMathMode,
-    PerlCommand
+    PerlCommand,
+    Emphasis,
+    StrongEmphasis
 }
 
 class InlineDelimiter {
@@ -475,13 +485,6 @@ class InlineDelimiter {
         readonly to: number
     ) {}
 }
-
-const isUpperCaseASCIILetter = (ch: number) => ch >= 65 && ch <= 90;
-const isLowerCaseASCIILetter = (ch: number) => ch >= 97 && ch <= 122;
-const isASCIILetter = (ch: number) => isLowerCaseASCIILetter(ch) || isUpperCaseASCIILetter(ch);
-const isDigit = (ch: number) => ch >= 48 && ch <= 55;
-const isIdentifierChar = (ch: number) => ch == 95 /* _ */ || isASCIILetter(ch) || isDigit(ch);
-const isVariableStartChar = (ch: number) => ch == 95 /* _ */ || isASCIILetter(ch);
 
 const InlineParsers: ((cx: InlineContext, next: number, pos: number) => number)[] = [
     // Perl command
@@ -503,16 +506,101 @@ const InlineParsers: ((cx: InlineContext, next: number, pos: number) => number)[
         );
     },
 
+    // Emphasis
+    (cx, next, start) => {
+        if (next != 36 /* $ */) return -1;
+
+        let pos = start + 1;
+        const haveBrace = cx.char(pos) == 123; /* { */
+        if (haveBrace) {
+            ++pos;
+            while (isWhitespace(cx.char(pos))) ++pos;
+        }
+
+        /* BBOLD */
+        const isBold = [66, 66, 79, 76, 68].every((ch, i) => cx.char(pos + i) == ch);
+        /* BITALIC */
+        const isItalic = [66, 73, 84, 65, 76, 73, 67].every((ch, i) => cx.char(pos + i) == ch);
+
+        if (isBold) pos += 5;
+        else if (isItalic) pos += 7;
+        else return -1;
+
+        if (haveBrace) {
+            while (isWhitespace(cx.char(pos))) ++pos;
+            if (cx.char(pos) != 125 /* } */) return -1;
+            ++pos;
+        } else if (isIdentifierChar(cx.char(pos))) return -1;
+
+        return cx.addDelimiter(isBold ? DelimiterType.StrongEmphasis : DelimiterType.Emphasis, start, pos);
+    },
+
+    // Emphasis end
+    (cx, next, start) => {
+        if (next != 36 /* $ */) return -1;
+
+        let pos = start + 1;
+        const haveBrace = cx.char(pos) == 123; /* { */
+        if (haveBrace) {
+            ++pos;
+            while (isWhitespace(cx.char(pos))) ++pos;
+        }
+
+        /* EBOLD */
+        const isBold = [69, 66, 79, 76, 68].every((ch, i) => cx.char(pos + i) == ch);
+        /* EITALIC */
+        const isItalic = [69, 73, 84, 65, 76, 73, 67].every((ch, i) => cx.char(pos + i) == ch);
+
+        if (isBold) pos += 5;
+        else if (isItalic) pos += 7;
+        else return -1;
+
+        if (haveBrace) {
+            while (isWhitespace(cx.char(pos))) ++pos;
+            if (cx.char(pos) != 125 /* } */) return -1;
+            ++pos;
+        } else if (isIdentifierChar(cx.char(pos))) return -1;
+
+        // Scan back to the last emphasis start marker.
+        for (let i = cx.parts.length - 1; i >= 0; --i) {
+            const part = cx.parts[i];
+            if (
+                part instanceof InlineDelimiter &&
+                (part.type === DelimiterType.Emphasis || part.type === DelimiterType.StrongEmphasis)
+            ) {
+                // Finish the content and replace the entire range in cx.parts with the emphasis node.
+                const content = cx.takeContent(i);
+                content.unshift(elt(Type.EmphasisMark, part.from, part.to));
+                content.push(elt(Type.EmphasisMark, start, pos));
+                const emphasis = (cx.parts[i] = elt(
+                    isBold ? Type.StrongEmphasis : Type.Emphasis,
+                    part.from,
+                    pos,
+                    content
+                ));
+                return emphasis.to;
+            }
+        }
+        return -1;
+    },
+
     // Variable
     // FIXME: This does not catch interpolation like $b[1] where @b is an array, or $b{a} where %b is a hash, or more
     // complicated constructs like ${~~(...)} (which does work in a BEGIN_TEXT block).  Those things are rarely done
     // anyway, so this is not a high priority.  Furthermore, authors should be using PGML anyway.
     (cx, next, start) => {
-        if (next != 36 /* $ */ || (!isVariableStartChar(cx.char(start + 1)) && cx.char(start + 1) != 123) /* { */)
-            return -1;
+        const haveBrace = cx.char(start + 1) == 123;
+        if (next != 36 /* $ */ || (!isVariableStartChar(cx.char(start + 1)) && !haveBrace) /* { */) return -1;
         let pos = start + 2;
+        if (haveBrace) {
+            while (isWhitespace(cx.char(pos))) ++pos;
+        }
         for (; pos < cx.end && isIdentifierChar(cx.char(pos)); ++pos);
-        if (cx.char(start + 1) == 123 && cx.char(pos) == 125 /* } */) ++pos;
+        if (haveBrace) {
+            while (isWhitespace(cx.char(pos))) ++pos;
+            if (cx.char(pos) != 125 /* } */) return cx.append(elt(Type.PGTextError, start, pos));
+            if (cx.char(pos) == 125 /* } */) ++pos;
+        }
         return cx.append(elt(Type.Variable, start, pos));
     },
 
@@ -550,7 +638,7 @@ const InlineParsers: ((cx: InlineContext, next: number, pos: number) => number)[
                     return errorNode.to;
                 }
 
-                // Finish the content and replace the entire range in this.parts with the inline math mode node.
+                // Finish the content and replace the entire range in cx.parts with the inline math mode node.
                 content.unshift(elt(Type.MathModeMark, part.from, part.to));
                 content.push(elt(Type.MathModeMark, start, start + 2));
                 const mathMode = (cx.parts[i] = elt(
@@ -783,7 +871,9 @@ const toRelative = (abs: number, ranges: readonly { from: number; to: number }[]
 export const pgTextHighlighting = styleTags({
     'MathModeMark ParsedMathModeMark PerlCommandMark': t.processingInstruction,
     'InlineMathMode DisplayMathMode ParsedMathMode': t.atom,
-    Variable: t.variableName,
+    'Variable EmphasisMark': t.variableName,
+    'Emphasis/...': t.emphasis,
+    'StrongEmphasis/...': t.strong,
     PGTextError: t.invalid
 });
 

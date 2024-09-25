@@ -35,11 +35,39 @@ BEGIN_TEXT
 Line one
 $PAR
 Variable $a
+${ PAR }
+End line
 END_TEXT
 
 ==>
 
-Program(PGTextBlock(BeginPG, PGTextContent(Variable, Variable), EndPG))
+Program(PGTextBlock(BeginPG, PGTextContent(Variable, Variable, Variable), EndPG))
+
+# emphasis
+
+BEGIN_TEXT
+$BBOLD bold text $EBOLD
+$PAR
+${BITALIC}italic text${EITALIC}
+$PAR
+$BBOLD$BITALIC italic bold text $EITALIC$EBOLD
+END_TEXT
+
+==>
+
+Program(
+    PGTextBlock(
+        BeginPG,
+        PGTextContent(
+            StrongEmphasis(EmphasisMark, EmphasisMark),
+            Variable,
+            Emphasis(EmphasisMark, EmphasisMark),
+            Variable,
+            StrongEmphasis(EmphasisMark, Emphasis(EmphasisMark, EmphasisMark), EmphasisMark)
+        ),
+        EndPG
+    )
+)
 
 # math mode
 
