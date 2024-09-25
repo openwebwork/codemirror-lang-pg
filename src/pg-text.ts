@@ -2,6 +2,7 @@ import type { Input, PartialParse, TreeBuffer, TreeCursor, TreeFragment } from '
 import { NodeProp, NodeSet, NodeType, Parser, Tree } from '@lezer/common';
 import { styleTags, tags as t } from '@lezer/highlight';
 import { parser as pgPerlParser } from './pg.grammar';
+import { isWhitespace, skipSpace, isIdentifierChar, isVariableStartChar } from './text-utils';
 
 class CompositeBlock {
     static create(type: number, from: number, parentHash: number, end: number) {
@@ -56,20 +57,6 @@ enum Type {
 
     PGTextError
 }
-
-const isWhitespace = (ch: number) => ch == 32 || ch == 9 || ch == 10 || ch == 13;
-
-const skipSpace = (line: string, i = 0) => {
-    while (i < line.length && isWhitespace(line.charCodeAt(i))) ++i;
-    return i;
-};
-
-const isUpperCaseASCIILetter = (ch: number) => ch >= 65 && ch <= 90;
-const isLowerCaseASCIILetter = (ch: number) => ch >= 97 && ch <= 122;
-const isASCIILetter = (ch: number) => isLowerCaseASCIILetter(ch) || isUpperCaseASCIILetter(ch);
-const isDigit = (ch: number) => ch >= 48 && ch <= 55;
-const isIdentifierChar = (ch: number) => ch == 95 /* _ */ || isASCIILetter(ch) || isDigit(ch);
-const isVariableStartChar = (ch: number) => ch == 95 /* _ */ || isASCIILetter(ch);
 
 // Data structure used during block-level per-line parsing.
 class Line {
@@ -587,8 +574,9 @@ const InlineParsers: ((cx: InlineContext, next: number, pos: number) => number)[
 
     // Variable
     // FIXME: This does not catch interpolation like $b[1] where @b is an array, or $b{a} where %b is a hash, or more
-    // complicated constructs like ${~~(...)} (which does work in a BEGIN_TEXT block).  Those things are rarely done
-    // anyway, so this is not a high priority.  Furthermore, authors should be using PGML anyway.
+    // complicated constructs like nested array or hash access or ${~~(...)} (which does work in a BEGIN_TEXT block).
+    // Those things are rarely done anyway, so this is not a high priority.  Furthermore, authors should be using PGML
+    // anyway.
     (cx, next, start) => {
         const haveBrace = cx.char(start + 1) == 123;
         if (next != 36 /* $ */ || (!isVariableStartChar(cx.char(start + 1)) && !haveBrace) /* { */) return -1;

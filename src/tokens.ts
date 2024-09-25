@@ -50,14 +50,18 @@ import {
     PGTextContent,
     EndPG
 } from './pg.grammar.terms.js';
-
-const isUpperCaseASCIILetter = (ch: number) => ch >= 65 && ch <= 90;
-const isLowerCaseASCIILetter = (ch: number) => ch >= 97 && ch <= 122;
-const isASCIILetter = (ch: number) => isLowerCaseASCIILetter(ch) || isUpperCaseASCIILetter(ch);
-const isDigit = (ch: number) => ch >= 48 && ch <= 55;
-
-const isIdentifierChar = (ch: number) => ch == 95 /* _ */ || isASCIILetter(ch) || isDigit(ch);
-const isVariableStartChar = (ch: number) => ch == 95 /* _ */ || isASCIILetter(ch);
+import {
+    isHWhitespace,
+    isWhitespace,
+    isUpperCaseASCIILetter,
+    isLowerCaseASCIILetter,
+    isASCIILetter,
+    isIdentifierChar,
+    isVariableStartChar,
+    isSpecialVariableChar,
+    isHex,
+    isFileTestOperatorChar
+} from './text-utils';
 
 const isRegexOptionChar = (ch: number, regexType: number) => {
     if (regexType === tr || regexType === y) {
@@ -86,52 +90,9 @@ const isRegexOptionChar = (ch: number, regexType: number) => {
     return false;
 };
 
-// !"$%&'()*+,-./0123456789:;<=>?@[\]`~
-const isSpecialVariableChar = (ch: number) =>
-    (ch >= 33 && ch != 35 && ch <= 64) || ch == 91 || ch == 92 || ch == 93 || ch == 96 || ch == 126;
-
-/* 0-9, a-f, A-F */
-const isHex = (ch: number) => (ch >= 48 && ch <= 55) || (ch >= 97 && ch <= 102) || (ch >= 65 && ch <= 70);
-
-// ' ', \t
-const isHWhitespace = (ch: number) => ch == 32 || ch == 9;
-
-// ' ', \t, \n, \r
-const isWhitespace = (ch: number) => isHWhitespace(ch) || ch == 10 || ch == 13;
-
 const gobbleWhitespace = (input: InputStream) => {
     while (isWhitespace(input.next)) input.advance();
 };
-
-// rwxoRWXOezsfdlpSbctugkTBMAC
-const isFileTestOperatorChar = (ch: number) =>
-    ch == 114 ||
-    ch == 119 ||
-    ch == 120 ||
-    ch == 111 ||
-    ch == 82 ||
-    ch == 87 ||
-    ch == 88 ||
-    ch == 79 ||
-    ch == 101 ||
-    ch == 122 ||
-    ch == 115 ||
-    ch == 102 ||
-    ch == 100 ||
-    ch == 108 ||
-    ch == 112 ||
-    ch == 83 ||
-    ch == 98 ||
-    ch == 99 ||
-    ch == 116 ||
-    ch == 117 ||
-    ch == 103 ||
-    ch == 107 ||
-    ch == 84 ||
-    ch == 66 ||
-    ch == 77 ||
-    ch == 65 ||
-    ch == 67;
 
 const beginPGPrefix = [66, 69, 71, 73, 78, 95]; // BEGIN_
 const pgVariants = [
