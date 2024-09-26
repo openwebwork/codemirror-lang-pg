@@ -73,14 +73,14 @@ Program(
 
 from: '0'
 parseAll: 'true'
-to: '145'
+to: '146'
 type: 'root'
 stack: [
   [ # 0
     combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
     from: '0'
     indent: '0'
-    to: '145'
+    to: '146'
     type: 'indent'
     stack: [
       [ # 0
@@ -179,6 +179,13 @@ stack: [
         token: '[@'
         type: 'command'
       ]
+      [ # 9
+        combine: { text: 'type' }
+        from: '145'
+        to: '146'
+        type: 'text'
+        stack: ['\n']
+      ]
     ]
   ]
 ]
@@ -203,7 +210,7 @@ Program(PGMLBlock(BeginPG, PGMLContent(Paragraph(Comment), Paragraph(Comment)), 
 
 from: '0'
 parseAll: 'true'
-to: '82'
+to: '83'
 type: 'root'
 stack: [
   [ # 0
@@ -243,7 +250,7 @@ stack: [
     combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
     from: '27'
     indent: '0'
-    to: '82'
+    to: '83'
     type: 'indent'
     stack: [
       [ # 0
@@ -316,14 +323,14 @@ Program(
 
 from: '0'
 parseAll: 'true'
-to: '132'
+to: '133'
 type: 'root'
 stack: [
   [ # 0
     combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
     from: '0'
     indent: '0'
-    to: '132'
+    to: '133'
     type: 'indent'
     stack: [
       [ # 0
@@ -431,6 +438,13 @@ stack: [
         to: '132'
         token: '[!'
         type: 'image'
+      ]
+      [ # 3
+        combine: { text: 'type' }
+        from: '132'
+        to: '133'
+        type: 'text'
+        stack: ['\n']
       ]
     ]
   ]

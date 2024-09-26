@@ -12,14 +12,14 @@ Program(PGMLBlock(BeginPG, PGMLContent(Paragraph(Tag(TagMark, MathMode(MathModeM
 
 from: '0'
 parseAll: 'true'
-to: '25'
+to: '26'
 type: 'root'
 stack: [
   [ # 0
     combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
     from: '0'
     indent: '0'
-    to: '25'
+    to: '26'
     type: 'indent'
     stack: [
       [ # 0
@@ -63,6 +63,13 @@ stack: [
             stack: [' ']
           ]
         ]
+      ]
+      [ # 1
+        combine: { text: 'type' }
+        from: '25'
+        to: '26'
+        type: 'text'
+        stack: ['\n']
       ]
     ]
   ]
@@ -108,14 +115,14 @@ Program(
 
 from: '0'
 parseAll: 'true'
-to: '98'
+to: '99'
 type: 'root'
 stack: [
   [ # 0
     combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
     from: '0'
     indent: '0'
-    to: '98'
+    to: '99'
     type: 'indent'
     stack: [
       [ # 0
@@ -178,6 +185,13 @@ stack: [
           ]
         ]
       ]
+      [ # 1
+        combine: { text: 'type' }
+        from: '98'
+        to: '99'
+        type: 'text'
+        stack: ['\n']
+      ]
     ]
   ]
 ]
@@ -237,14 +251,14 @@ Program(
 
 from: '0'
 parseAll: 'true'
-to: '213'
+to: '214'
 type: 'root'
 stack: [
   [ # 0
     combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
     from: '0'
     indent: '0'
-    to: '213'
+    to: '214'
     type: 'indent'
     stack: [
       [ # 0
@@ -366,6 +380,13 @@ stack: [
           ]
         ]
       ]
+      [ # 1
+        combine: { text: 'type' }
+        from: '213'
+        to: '214'
+        type: 'text'
+        stack: ['\n']
+      ]
     ]
   ]
 ]
@@ -407,14 +428,14 @@ Program(
 
 from: '0'
 parseAll: 'true'
-to: '164'
+to: '165'
 type: 'root'
 stack: [
   [ # 0
     combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
     from: '0'
     indent: '0'
-    to: '164'
+    to: '165'
     type: 'indent'
     stack: [
       [ # 0
@@ -495,6 +516,13 @@ stack: [
             stack: ['\n']
           ]
         ]
+      ]
+      [ # 1
+        combine: { text: 'type' }
+        from: '164'
+        to: '165'
+        type: 'text'
+        stack: ['\n']
       ]
     ]
   ]

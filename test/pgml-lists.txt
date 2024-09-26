@@ -37,7 +37,7 @@ Program(
 
 from: '0'
 parseAll: 'true'
-to: '279'
+to: '280'
 type: 'root'
 stack: [
   [ # 0
@@ -232,7 +232,7 @@ stack: [
     bullet: 'Roman'
     combine: { list: 'bullet', par: 'true' }
     from: '224'
-    to: '279'
+    to: '280'
     token: ''
     type: 'list'
     stack: [
@@ -253,16 +253,16 @@ stack: [
       ]
       [ # 1
         from: '251'
-        to: '279'
+        to: '280'
         token: 'II) '
         type: 'bullet'
         stack: [
           [ # 0
             combine: { text: 'type' }
             from: '255'
-            to: '279'
+            to: '280'
             type: 'text'
-            stack: ['This is the second item.']
+            stack: ['This is the second item.', '\n']
           ]
         ]
       ]
@@ -305,7 +305,7 @@ Program(
 
 from: '0'
 parseAll: 'true'
-to: '70'
+to: '71'
 type: 'root'
 stack: [
   [ # 0
@@ -453,7 +453,7 @@ stack: [
     bullet: 'bullet'
     combine: { list: 'bullet', par: 'true' }
     from: '54'
-    to: '70'
+    to: '71'
     token: ''
     type: 'list'
     stack: [
@@ -474,16 +474,16 @@ stack: [
       ]
       [ # 1
         from: '62'
-        to: '70'
+        to: '71'
         token: '- '
         type: 'bullet'
         stack: [
           [ # 0
             combine: { text: 'type' }
             from: '64'
-            to: '70'
+            to: '71'
             type: 'text'
-            stack: ['Banana']
+            stack: ['Banana', '\n']
           ]
         ]
       ]
@@ -536,7 +536,7 @@ Program(
 
 from: '0'
 parseAll: 'true'
-to: '198'
+to: '199'
 type: 'root'
 stack: [
   [ # 0
@@ -659,7 +659,7 @@ stack: [
       ]
       [ # 1
         from: '136'
-        to: '198'
+        to: '199'
         token: '2. '
         type: 'bullet'
         stack: [
@@ -674,7 +674,7 @@ stack: [
             bullet: 'disc'
             combine: { list: 'bullet', par: 'true' }
             from: '165'
-            to: '198'
+            to: '199'
             token: ''
             type: 'list'
             stack: [
@@ -695,16 +695,16 @@ stack: [
               ]
               [ # 1
                 from: '185'
-                to: '198'
+                to: '199'
                 token: '* '
                 type: 'bullet'
                 stack: [
                   [ # 0
                     combine: { text: 'type' }
                     from: '187'
-                    to: '198'
+                    to: '199'
                     type: 'text'
-                    stack: ['bullets too']
+                    stack: ['bullets too', '\n']
                   ]
                 ]
               ]
@@ -757,7 +757,7 @@ Program(
 
 from: '0'
 parseAll: 'true'
-to: '471'
+to: '472'
 type: 'root'
 stack: [
   [ # 0
@@ -931,22 +931,22 @@ stack: [
     bullet: 'numeric'
     combine: { list: 'bullet', par: 'true' }
     from: '414'
-    to: '471'
+    to: '472'
     token: ''
     type: 'list'
     stack: [
       [ # 0
         from: '414'
-        to: '471'
+        to: '472'
         token: '1. '
         type: 'bullet'
         stack: [
           [ # 0
             combine: { text: 'type' }
             from: '417'
-            to: '471'
+            to: '472'
             type: 'text'
-            stack: ['that ends the enumeration so any more items start over']
+            stack: ['that ends the enumeration so any more items start over', '\n']
           ]
         ]
       ]

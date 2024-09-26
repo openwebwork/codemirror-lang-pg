@@ -86,10 +86,10 @@ class BlockContext implements PartialParse {
         readonly ranges: readonly { from: number; to: number }[]
     ) {
         this.to = ranges[ranges.length - 1].to;
-        this.lineStart = this.absoluteLineStart = this.absoluteLineEnd = ranges[0].from;
+        this.lineStart = this.absoluteLineStart = ranges[0].from;
+        this.absoluteLineEnd = this.absoluteLineStart - 1;
         this.block = CompositeBlock.create(Type.PGTextContent, this.lineStart, 0, 0);
         this.fragments = fragments.length ? new FragmentCursor(fragments, input) : null;
-        this.readLine();
     }
 
     get parsedPos() {
@@ -101,11 +101,8 @@ class BlockContext implements PartialParse {
             return this.finish();
         if (this.fragments && this.reuseFragment(0)) return null;
 
-        const start = this.lineStart;
-        const content = this.line;
-
-        const cx = new InlineContext(this, content, start);
-        outer: for (let pos = start; pos < cx.end; ) {
+        const cx = new InlineContext(this, this.line, this.absoluteLineStart);
+        outer: for (let pos = this.absoluteLineStart; pos < cx.end; ) {
             const next = cx.char(pos);
             for (const token of InlineParsers) {
                 const result = token(cx, next, pos);

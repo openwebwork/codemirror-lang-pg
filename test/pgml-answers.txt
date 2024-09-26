@@ -12,14 +12,14 @@ Program(PGMLBlock(BeginPG, PGMLContent(Paragraph(AnswerRule)), EndPG))
 
 from: '0'
 parseAll: 'true'
-to: '3'
+to: '4'
 type: 'root'
 stack: [
   [ # 0
     combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
     from: '0'
     indent: '0'
-    to: '3'
+    to: '4'
     type: 'indent'
     stack: [
       [ # 0
@@ -28,6 +28,13 @@ stack: [
         to: '3'
         token: '[_]'
         type: 'answer'
+      ]
+      [ # 1
+        combine: { text: 'type' }
+        from: '3'
+        to: '4'
+        type: 'text'
+        stack: ['\n']
       ]
     ]
   ]
@@ -59,14 +66,14 @@ Program(
 
 from: '0'
 parseAll: 'true'
-to: '11'
+to: '12'
 type: 'root'
 stack: [
   [ # 0
     combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
     from: '0'
     indent: '0'
-    to: '11'
+    to: '12'
     type: 'indent'
     stack: [
       [ # 0
@@ -93,6 +100,13 @@ stack: [
         to: '11'
         token: '[_]'
         type: 'answer'
+      ]
+      [ # 1
+        combine: { text: 'type' }
+        from: '11'
+        to: '12'
+        type: 'text'
+        stack: ['\n']
       ]
     ]
   ]
@@ -124,14 +138,14 @@ Program(
 
 from: '0'
 parseAll: 'true'
-to: '17'
+to: '18'
 type: 'root'
 stack: [
   [ # 0
     combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
     from: '0'
     indent: '0'
-    to: '17'
+    to: '18'
     type: 'indent'
     stack: [
       [ # 0
@@ -159,6 +173,13 @@ stack: [
         to: '17'
         token: '[_]*'
         type: 'answer'
+      ]
+      [ # 1
+        combine: { text: 'type' }
+        from: '17'
+        to: '18'
+        type: 'text'
+        stack: ['\n']
       ]
     ]
   ]
@@ -207,14 +228,14 @@ Program(
 
 from: '0'
 parseAll: 'true'
-to: '98'
+to: '99'
 type: 'root'
 stack: [
   [ # 0
     combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
     from: '0'
     indent: '0'
-    to: '98'
+    to: '99'
     type: 'indent'
     stack: [
       [ # 0
@@ -233,6 +254,13 @@ stack: [
         to: '98'
         token: '[_]'
         type: 'answer'
+      ]
+      [ # 1
+        combine: { text: 'type' }
+        from: '98'
+        to: '99'
+        type: 'text'
+        stack: ['\n']
       ]
     ]
   ]
@@ -273,14 +301,14 @@ Program(
 
 from: '0'
 parseAll: 'true'
-to: '55'
+to: '56'
 type: 'root'
 stack: [
   [ # 0
     combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
     from: '0'
     indent: '0'
-    to: '55'
+    to: '56'
     type: 'indent'
     stack: [
       [ # 0
@@ -315,6 +343,13 @@ stack: [
         to: '55'
         token: '[_]'
         type: 'answer'
+      ]
+      [ # 1
+        combine: { text: 'type' }
+        from: '55'
+        to: '56'
+        type: 'text'
+        stack: ['\n']
       ]
     ]
   ]

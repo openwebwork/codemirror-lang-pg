@@ -24,7 +24,7 @@ const fileTests = (file: string) => {
             name: name.trim(),
             run(parser: (input: string) => string) {
                 assert.equal(
-                    parser(m[2].trim().replace(/^[\s\S]*?BEGIN_PGML\n([\s\S]*?)\nEND_PGML[\s\S]*$/y, '$1')),
+                    parser(m[2].trim().replace(/^[\s\S]*?BEGIN_PGML\n([\s\S]*?)END_PGML[\s\S]*$/y, '$1')),
                     m[3].trim()
                 );
             }

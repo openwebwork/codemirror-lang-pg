@@ -18,14 +18,14 @@ Program(
 
 from: '0'
 parseAll: 'true'
-to: '31'
+to: '32'
 type: 'root'
 stack: [
   [ # 0
     combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
     from: '0'
     indent: '0'
-    to: '31'
+    to: '32'
     type: 'indent'
     stack: [
       [ # 0
@@ -59,6 +59,13 @@ stack: [
           ]
         ]
       ]
+      [ # 1
+        combine: { text: 'type' }
+        from: '31'
+        to: '32'
+        type: 'text'
+        stack: ['\n']
+      ]
     ]
   ]
 ]
@@ -77,14 +84,14 @@ Program(PGMLBlock(BeginPG, PGMLContent(Paragraph(Emphasis(EmphasisMark, Emphasis
 
 from: '0'
 parseAll: 'true'
-to: '13'
+to: '14'
 type: 'root'
 stack: [
   [ # 0
     combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
     from: '0'
     indent: '0'
-    to: '13'
+    to: '14'
     type: 'indent'
     stack: [
       [ # 0
@@ -101,6 +108,13 @@ stack: [
             stack: ['italic text']
           ]
         ]
+      ]
+      [ # 1
+        combine: { text: 'type' }
+        from: '13'
+        to: '14'
+        type: 'text'
+        stack: ['\n']
       ]
     ]
   ]
@@ -126,14 +140,14 @@ Program(
 
 from: '0'
 parseAll: 'true'
-to: '20'
+to: '21'
 type: 'root'
 stack: [
   [ # 0
     combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
     from: '0'
     indent: '0'
-    to: '20'
+    to: '21'
     type: 'indent'
     stack: [
       [ # 0
@@ -158,6 +172,13 @@ stack: [
             ]
           ]
         ]
+      ]
+      [ # 1
+        combine: { text: 'type' }
+        from: '20'
+        to: '21'
+        type: 'text'
+        stack: ['\n']
       ]
     ]
   ]
@@ -205,14 +226,14 @@ Program(
 
 from: '0'
 parseAll: 'true'
-to: '83'
+to: '84'
 type: 'root'
 stack: [
   [ # 0
     combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
     from: '0'
     indent: '0'
-    to: '83'
+    to: '84'
     type: 'indent'
     stack: [
       [ # 0
@@ -347,6 +368,13 @@ stack: [
         token: '===='
         type: 'rule'
       ]
+      [ # 12
+        combine: { text: 'type' }
+        from: '83'
+        to: '84'
+        type: 'text'
+        stack: ['\n']
+      ]
     ]
   ]
 ]
@@ -384,7 +412,7 @@ Program(
 
 from: '0'
 parseAll: 'true'
-to: '96'
+to: '97'
 type: 'root'
 stack: [
   [ # 0
@@ -521,7 +549,7 @@ stack: [
   [ # 5
     align: 'right'
     from: '84'
-    to: '96'
+    to: '97'
     token: '>> '
     type: 'align'
     stack: [
@@ -541,6 +569,13 @@ stack: [
         to: '96'
         token: '----'
         type: 'rule'
+      ]
+      [ # 1
+        combine: { text: 'type' }
+        from: '96'
+        to: '97'
+        type: 'text'
+        stack: ['\n']
       ]
     ]
   ]
@@ -574,14 +609,14 @@ Program(
 
 from: '0'
 parseAll: 'true'
-to: '105'
+to: '106'
 type: 'root'
 stack: [
   [ # 0
     combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
     from: '0'
     indent: '0'
-    to: '105'
+    to: '106'
     type: 'indent'
     stack: [
       [ # 0
@@ -628,6 +663,13 @@ stack: [
         to: '105'
         token: '[|'
         type: 'verbatim'
+      ]
+      [ # 5
+        combine: { text: 'type' }
+        from: '105'
+        to: '106'
+        type: 'text'
+        stack: ['\n']
       ]
     ]
   ]
@@ -678,7 +720,7 @@ Program(
 
 from: '0'
 parseAll: 'true'
-to: '425'
+to: '426'
 type: 'root'
 stack: [
   [ # 0
@@ -863,7 +905,7 @@ stack: [
     combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
     from: '312'
     indent: '1'
-    to: '425'
+    to: '426'
     type: 'indent'
     stack: [
       [ # 0
@@ -908,9 +950,9 @@ stack: [
       [ # 3
         combine: { text: 'type' }
         from: '392'
-        to: '425'
+        to: '426'
         type: 'text'
-        stack: ['Now back to normal, but indented.']
+        stack: ['Now back to normal, but indented.', '\n']
       ]
     ]
   ]
@@ -931,14 +973,14 @@ Program(PGMLBlock(BeginPG, PGMLContent(Paragraph(EscapeSequence, EscapeSequence,
 
 from: '0'
 parseAll: 'true'
-to: '32'
+to: '33'
 type: 'root'
 stack: [
   [ # 0
     combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
     from: '0'
     indent: '0'
-    to: '32'
+    to: '33'
     type: 'indent'
     stack: [
       [ # 0
@@ -976,9 +1018,9 @@ stack: [
       [ # 5
         combine: { text: 'type' }
         from: '18'
-        to: '32'
+        to: '33'
         type: 'text'
-        stack: ['$not variable', ']']
+        stack: ['$not variable', ']', '\n']
       ]
     ]
   ]

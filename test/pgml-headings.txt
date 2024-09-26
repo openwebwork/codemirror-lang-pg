@@ -32,14 +32,14 @@ Program(
 
 from: '0'
 parseAll: 'true'
-to: '149'
+to: '150'
 type: 'root'
 stack: [
   [ # 0
     combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
     from: '0'
     indent: '0'
-    to: '149'
+    to: '150'
     type: 'indent'
     stack: [
       [ # 0
@@ -179,6 +179,13 @@ stack: [
           ]
         ]
       ]
+      [ # 11
+        combine: { text: 'type' }
+        from: '149'
+        to: '150'
+        type: 'text'
+        stack: ['\n']
+      ]
     ]
   ]
 ]
@@ -214,7 +221,7 @@ Program(
 
 from: '0'
 parseAll: 'true'
-to: '155'
+to: '156'
 type: 'root'
 stack: [
   [ # 0
@@ -311,7 +318,7 @@ stack: [
     combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
     from: '93'
     indent: '0'
-    to: '155'
+    to: '156'
     type: 'indent'
     stack: [
       [ # 0
@@ -355,6 +362,13 @@ stack: [
           ]
         ]
       ]
+      [ # 3
+        combine: { text: 'type' }
+        from: '155'
+        to: '156'
+        type: 'text'
+        stack: ['\n']
+      ]
     ]
   ]
 ]
@@ -373,29 +387,29 @@ Program(PGMLBlock(BeginPG, PGMLContent(Paragraph(Heading3(HeaderMark))), EndPG))
 
 from: '0'
 parseAll: 'true'
-to: '37'
+to: '38'
 type: 'root'
 stack: [
   [ # 0
     combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
     from: '0'
     indent: '0'
-    to: '37'
+    to: '38'
     type: 'indent'
     stack: [
       [ # 0
         from: '0'
         n: '3'
-        to: '37'
+        to: '38'
         token: '###'
         type: 'heading'
         stack: [
           [ # 0
             combine: { text: 'type' }
             from: '3'
-            to: '37'
+            to: '38'
             type: 'text'
-            stack: [' The trailing hashes are optional.']
+            stack: [' The trailing hashes are optional.', '\n']
           ]
         ]
       ]
@@ -427,7 +441,7 @@ Program(
 
 from: '0'
 parseAll: 'true'
-to: '53'
+to: '54'
 type: 'root'
 stack: [
   [ # 0
@@ -476,7 +490,7 @@ stack: [
   [ # 2
     align: 'right'
     from: '29'
-    to: '53'
+    to: '54'
     token: '>> '
     type: 'align'
     stack: [
@@ -496,6 +510,13 @@ stack: [
             stack: [' right-justified ']
           ]
         ]
+      ]
+      [ # 1
+        combine: { text: 'type' }
+        from: '53'
+        to: '54'
+        type: 'text'
+        stack: ['\n']
       ]
     ]
   ]

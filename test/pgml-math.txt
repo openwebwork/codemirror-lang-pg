@@ -26,14 +26,14 @@ Program(
 
 from: '0'
 parseAll: 'true'
-to: '21'
+to: '22'
 type: 'root'
 stack: [
   [ # 0
     combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
     from: '0'
     indent: '0'
-    to: '21'
+    to: '22'
     type: 'indent'
     stack: [
       [ # 0
@@ -71,6 +71,13 @@ stack: [
         token: '[`'
         type: 'math'
       ]
+      [ # 1
+        combine: { text: 'type' }
+        from: '21'
+        to: '22'
+        type: 'text'
+        stack: ['\n']
+      ]
     ]
   ]
 ]
@@ -103,14 +110,14 @@ Program(
 
 from: '0'
 parseAll: 'true'
-to: '24'
+to: '25'
 type: 'root'
 stack: [
   [ # 0
     combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
     from: '0'
     indent: '0'
-    to: '24'
+    to: '25'
     type: 'indent'
     stack: [
       [ # 0
@@ -149,6 +156,13 @@ stack: [
         token: '[``'
         type: 'math'
       ]
+      [ # 1
+        combine: { text: 'type' }
+        from: '24'
+        to: '25'
+        type: 'text'
+        stack: ['\n']
+      ]
     ]
   ]
 ]
@@ -185,14 +199,14 @@ Program(
 
 from: '0'
 parseAll: 'true'
-to: '29'
+to: '30'
 type: 'root'
 stack: [
   [ # 0
     combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
     from: '0'
     indent: '0'
-    to: '29'
+    to: '30'
     type: 'indent'
     stack: [
       [ # 0
@@ -231,6 +245,13 @@ stack: [
         token: '[```'
         type: 'math'
       ]
+      [ # 1
+        combine: { text: 'type' }
+        from: '29'
+        to: '30'
+        type: 'text'
+        stack: ['\n']
+      ]
     ]
   ]
 ]
@@ -249,14 +270,14 @@ Program(PGMLBlock(BeginPG, PGMLContent(Paragraph(MathMode(MathModeMark, MathMode
 
 from: '0'
 parseAll: 'true'
-to: '12'
+to: '13'
 type: 'root'
 stack: [
   [ # 0
     combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
     from: '0'
     indent: '0'
-    to: '12'
+    to: '13'
     type: 'indent'
     stack: [
       [ # 0
@@ -280,6 +301,13 @@ stack: [
         token: '[:'
         type: 'math'
       ]
+      [ # 1
+        combine: { text: 'type' }
+        from: '12'
+        to: '13'
+        type: 'text'
+        stack: ['\n']
+      ]
     ]
   ]
 ]
@@ -288,56 +316,6 @@ stack: [
 
 BEGIN_PGML
 [:x^2 + 3 * 2 x:]*
-END_PGML
-
-==>
-
-Program(PGMLBlock(BeginPG, PGMLContent(Paragraph(MathMode(MathModeMark, MathModeMark))), EndPG))
-
-==>
-
-from: '0'
-parseAll: 'true'
-to: '18'
-type: 'root'
-stack: [
-  [ # 0
-    combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
-    from: '0'
-    indent: '0'
-    to: '18'
-    type: 'indent'
-    stack: [
-      [ # 0
-        allowDblStar: 'true'
-        allowStar: 'true'
-        allowTriStar: 'true'
-        children: [
-          {
-            combine: { text: 'type' }
-            from: '2'
-            to: '15'
-            type: 'text'
-            stack: ['x^2 + 3 * 2 x']
-          }
-        ]
-        from: '0'
-        hasStar: '1'
-        options: ['context', 'reduced']
-        parsed: 'true'
-        terminator: ':]'
-        to: '18'
-        token: '[:'
-        type: 'math'
-      ]
-    ]
-  ]
-]
-
-# inline parsed math with reductions
-
-BEGIN_PGML
-[:x^2 + 3 * 2 x:]**
 END_PGML
 
 ==>
@@ -372,22 +350,29 @@ stack: [
           }
         ]
         from: '0'
-        hasDblStar: 'true'
+        hasStar: '1'
         options: ['context', 'reduced']
         parsed: 'true'
         terminator: ':]'
-        to: '19'
+        to: '18'
         token: '[:'
         type: 'math'
+      ]
+      [ # 1
+        combine: { text: 'type' }
+        from: '18'
+        to: '19'
+        type: 'text'
+        stack: ['\n']
       ]
     ]
   ]
 ]
 
-# inline parsed math in the active context with reductions
+# inline parsed math with reductions
 
 BEGIN_PGML
-[:x^2 + 3 * 2 x:]***
+[:x^2 + 3 * 2 x:]**
 END_PGML
 
 ==>
@@ -422,6 +407,63 @@ stack: [
           }
         ]
         from: '0'
+        hasDblStar: 'true'
+        options: ['context', 'reduced']
+        parsed: 'true'
+        terminator: ':]'
+        to: '19'
+        token: '[:'
+        type: 'math'
+      ]
+      [ # 1
+        combine: { text: 'type' }
+        from: '19'
+        to: '20'
+        type: 'text'
+        stack: ['\n']
+      ]
+    ]
+  ]
+]
+
+# inline parsed math in the active context with reductions
+
+BEGIN_PGML
+[:x^2 + 3 * 2 x:]***
+END_PGML
+
+==>
+
+Program(PGMLBlock(BeginPG, PGMLContent(Paragraph(MathMode(MathModeMark, MathModeMark))), EndPG))
+
+==>
+
+from: '0'
+parseAll: 'true'
+to: '21'
+type: 'root'
+stack: [
+  [ # 0
+    combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
+    from: '0'
+    indent: '0'
+    to: '21'
+    type: 'indent'
+    stack: [
+      [ # 0
+        allowDblStar: 'true'
+        allowStar: 'true'
+        allowTriStar: 'true'
+        children: [
+          {
+            combine: { text: 'type' }
+            from: '2'
+            to: '15'
+            type: 'text'
+            stack: ['x^2 + 3 * 2 x']
+          }
+        ]
+        from: '0'
         hasStar: '3'
         options: ['context', 'reduced']
         parsed: 'true'
@@ -429,6 +471,13 @@ stack: [
         to: '20'
         token: '[:'
         type: 'math'
+      ]
+      [ # 1
+        combine: { text: 'type' }
+        from: '20'
+        to: '21'
+        type: 'text'
+        stack: ['\n']
       ]
     ]
   ]
@@ -448,14 +497,14 @@ Program(PGMLBlock(BeginPG, PGMLContent(Paragraph(MathMode(MathModeMark, MathMode
 
 from: '0'
 parseAll: 'true'
-to: '14'
+to: '15'
 type: 'root'
 stack: [
   [ # 0
     combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
     from: '0'
     indent: '0'
-    to: '14'
+    to: '15'
     type: 'indent'
     stack: [
       [ # 0
@@ -480,6 +529,13 @@ stack: [
         token: '[::'
         type: 'math'
       ]
+      [ # 1
+        combine: { text: 'type' }
+        from: '14'
+        to: '15'
+        type: 'text'
+        stack: ['\n']
+      ]
     ]
   ]
 ]
@@ -498,14 +554,14 @@ Program(PGMLBlock(BeginPG, PGMLContent(Paragraph(MathMode(MathModeMark, MathMode
 
 from: '0'
 parseAll: 'true'
-to: '16'
+to: '17'
 type: 'root'
 stack: [
   [ # 0
     combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
     from: '0'
     indent: '0'
-    to: '16'
+    to: '17'
     type: 'indent'
     stack: [
       [ # 0
@@ -529,6 +585,13 @@ stack: [
         to: '16'
         token: '[:::'
         type: 'math'
+      ]
+      [ # 1
+        combine: { text: 'type' }
+        from: '16'
+        to: '17'
+        type: 'text'
+        stack: ['\n']
       ]
     ]
   ]
@@ -559,14 +622,14 @@ Program(
 
 from: '0'
 parseAll: 'true'
-to: '20'
+to: '21'
 type: 'root'
 stack: [
   [ # 0
     combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
     from: '0'
     indent: '0'
-    to: '20'
+    to: '21'
     type: 'indent'
     stack: [
       [ # 0
@@ -599,6 +662,13 @@ stack: [
         to: '20'
         token: '[:'
         type: 'math'
+      ]
+      [ # 1
+        combine: { text: 'type' }
+        from: '20'
+        to: '21'
+        type: 'text'
+        stack: ['\n']
       ]
     ]
   ]

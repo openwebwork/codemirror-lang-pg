@@ -289,7 +289,8 @@ export const contextTracker = new ContextTracker<Context>({
             });
         } else if (
             (context.type !== 'quote' || input.next != context.endDelimiter) &&
-            term !== InterpolatedStringContent
+            term !== InterpolatedStringContent &&
+            context.type !== 'pg'
         ) {
             if (input.next == 34 /* " */ || input.next == 96 /* ` */) {
                 return new Context('quote', context, stack.pos, { startDelimiter: input.next });
@@ -891,9 +892,10 @@ export const pgText = new ExternalTokenizer(
             if (ch == 10 || ch < 0) input.acceptToken(BeginPG, pos);
         }
 
-        if (!(stack.context instanceof Context)) return;
+        if (!(stack.context instanceof Context) || stack.context.type !== 'pg' || !stack.context.tag) return;
 
-        if ((stack.canShift(PGMLContent) || stack.canShift(PGTextContent)) && stack.context.tag) {
+        if (stack.canShift(PGMLContent) || stack.canShift(PGTextContent)) {
+            if (input.peek(-1) == 10) return;
             while (input.next >= 0) {
                 if (input.next != 10) {
                     input.advance();

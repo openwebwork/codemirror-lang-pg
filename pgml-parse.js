@@ -84,7 +84,7 @@ try {
 
 for (const { name, text } of sources) {
     const source = /BEGIN_PGML/.test(text)
-        ? text.replace(/^[\s\S]*?BEGIN_PGML\n([\s\S]*?)\nEND_PGML[\s\S]*$/y, '$1')
+        ? text.replace(/^[\s\S]*?BEGIN_PGML\n([\s\S]*?)END_PGML[\s\S]*$/y, '$1')
         : text;
     console.log(`Test: \x1b[1m\x1b[34m${name}\x1b[0m\n`);
     console.log(source);

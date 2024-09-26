@@ -43,6 +43,11 @@ export const pgLanguage = LRLanguage.define({
                         return { from: node.prevSibling.to, to: node.lastChild.prevSibling.to };
                     return null;
                 },
+                'PGMLBlock PGTextBlock': (node) => {
+                    if (node.firstChild?.type.name === 'BeginPG' && node.lastChild?.type.name === 'EndPG')
+                        return { from: node.firstChild.to - 1, to: node.lastChild.from };
+                    return null;
+                },
                 PodStatement(node) {
                     if (
                         node.firstChild?.type.name === 'PodDirective' &&

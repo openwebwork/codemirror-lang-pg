@@ -41,14 +41,14 @@ Program(
 
 from: '0'
 parseAll: 'true'
-to: '100'
+to: '101'
 type: 'root'
 stack: [
   [ # 0
     combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
     from: '0'
     indent: '0'
-    to: '100'
+    to: '101'
     type: 'indent'
     stack: [
       [ # 0
@@ -330,14 +330,14 @@ Program(
 
 from: '0'
 parseAll: 'true'
-to: '173'
+to: '174'
 type: 'root'
 stack: [
   [ # 0
     combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
     from: '0'
     indent: '0'
-    to: '173'
+    to: '174'
     type: 'indent'
     stack: [
       [ # 0
@@ -712,14 +712,14 @@ Program(
 
 from: '0'
 parseAll: 'true'
-to: '114'
+to: '115'
 type: 'root'
 stack: [
   [ # 0
     combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
     from: '0'
     indent: '0'
-    to: '114'
+    to: '115'
     type: 'indent'
     stack: [
       [ # 0
@@ -921,6 +921,13 @@ stack: [
             ]
           ]
         ]
+      ]
+      [ # 1
+        combine: { text: 'type' }
+        from: '114'
+        to: '115'
+        type: 'text'
+        stack: ['\n']
       ]
     ]
   ]
