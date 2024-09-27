@@ -1,44 +1,9 @@
 import type { Input, TreeFragment, PartialParse } from '@lezer/common';
-import { Tree, TreeBuffer, NodeType, NodeProp, NodeSet, Parser } from '@lezer/common';
+import { Tree, NodeType, NodeProp, NodeSet, Parser } from '@lezer/common';
 import { styleTags, tags as t } from '@lezer/highlight';
+import { CompositeBlock } from './composite-block';
 import { parser as pgPerlParser } from './pg.grammar';
 import { Parse, Item } from './pgml-parse';
-
-class CompositeBlock {
-    static create(type: number, from: number, parentHash: number, end: number) {
-        const hash = (parentHash + (parentHash << 8) + type) | 0;
-        return new CompositeBlock(type, from, hash, end, [], []);
-    }
-
-    hashProp: [NodeProp<unknown>, unknown][];
-
-    constructor(
-        readonly type: number,
-        readonly from: number,
-        readonly hash: number,
-        public end: number,
-        readonly children: (Tree | TreeBuffer)[],
-        readonly positions: number[]
-    ) {
-        this.hashProp = [[NodeProp.contextHash, hash]];
-    }
-
-    addChild(child: Tree, pos: number) {
-        if (child.prop(NodeProp.contextHash) != this.hash)
-            child = new Tree(child.type, child.children, child.positions, child.length, this.hashProp);
-        this.children.push(child);
-        this.positions.push(pos);
-    }
-
-    toTree(nodeSet: NodeSet, end = this.end) {
-        const last = this.children.length - 1;
-        if (last >= 0) end = Math.max(end, this.positions[last] + this.children[last].length + this.from);
-        return new Tree(nodeSet.types[this.type], this.children, this.positions, end - this.from).balance({
-            makeTree: (children, positions, length) =>
-                new Tree(NodeType.none, children, positions, length, this.hashProp)
-        });
-    }
-}
 
 enum Type {
     PGMLContent = 1,
@@ -95,7 +60,6 @@ enum Type {
 // Block-level parsing functions get access to this context object.
 class BlockContext implements PartialParse {
     block: CompositeBlock;
-    private atEnd = false;
     private to: number;
     reusePlaceholders = new Map<Tree, Tree>();
     stoppedAt: number | null = null;
@@ -134,19 +98,18 @@ class BlockContext implements PartialParse {
     }
 
     advance() {
-        if (this.stoppedAt != null && this.contentStart > this.stoppedAt) return this.finish();
-
-        for (;;) {
-            if (this.contentPos < this.content.length) break;
-            if (!this.nextRangeContent()) return this.finish();
-        }
+        if (
+            (this.stoppedAt != null && this.contentStart > this.stoppedAt) ||
+            (this.contentPos >= this.content.length && !this.nextRangeContent())
+        )
+            return this.finish();
 
         const parser = new Parse(this.content);
         if (parser.root) {
             for (const item of parser.root.stack ?? []) {
                 if (!(item instanceof Item)) continue;
                 for (const elt of pgmlFormat(item, this.from)) {
-                    this.addNode(elt.toTree(this.parser.nodeSet), elt.from, elt.to);
+                    this.addNode(elt.toTree(this.parser.nodeSet), elt.from);
                 }
             }
         }
@@ -166,8 +129,6 @@ class BlockContext implements PartialParse {
         this.contentStart += this.content.length;
         if (this.contentEnd >= this.to) {
             this.contentStart = this.contentEnd;
-            this.atEnd = true;
-            this.readContent();
             return false;
         } else {
             this.contentStart = this.contentEnd + 1;
@@ -184,31 +145,24 @@ class BlockContext implements PartialParse {
         }
     }
 
-    scanContent() {
-        const r = { text: '', end: 0 };
-        r.end = this.contentStart;
-        if (this.contentStart >= this.to) {
-            r.text = '';
-        } else {
-            r.text = this.contentInRange(this.contentStart, this.ranges[this.rangeI].to);
-            r.end += r.text.length;
+    readContent() {
+        let end = this.contentStart;
+        let text = '';
+        if (this.contentStart < this.to) {
+            text = this.contentInRange(this.contentStart, this.ranges[this.rangeI].to);
+            end += text.length;
             if (this.ranges.length > 1) {
                 let textOffset = this.contentStart,
                     rangeI = this.rangeI;
-                while (this.ranges[rangeI].to < r.end) {
+                while (this.ranges[rangeI].to < end) {
                     ++rangeI;
                     const after = this.contentInRange(this.ranges[rangeI].from, this.ranges[rangeI].to);
-                    r.end = this.ranges[rangeI].from + after.length;
-                    r.text = r.text.slice(0, this.ranges[rangeI - 1].to - textOffset) + after;
-                    textOffset = r.end - r.text.length;
+                    end = this.ranges[rangeI].from + after.length;
+                    text = text.slice(0, this.ranges[rangeI - 1].to - textOffset) + after;
+                    textOffset = end - text.length;
                 }
             }
         }
-        return r;
-    }
-
-    readContent() {
-        const { text, end } = this.scanContent();
         this.contentEnd = end;
         this.content = text;
         this.contentPos = 0;
@@ -219,14 +173,7 @@ class BlockContext implements PartialParse {
         return start + text.length > this.to ? text.slice(0, this.to - start) : text;
     }
 
-    // The end position of the previous line.
-    prevContentEnd() {
-        return this.atEnd ? this.contentStart : this.contentStart - 1;
-    }
-
-    addNode(block: Type | Tree, from: number, to?: number) {
-        if (typeof block == 'number')
-            block = new Tree(this.parser.nodeSet.types[block], [], [], (to ?? this.prevContentEnd()) - from);
+    addNode(block: Tree, from: number) {
         this.block.addChild(block, from - this.block.from);
     }
 
