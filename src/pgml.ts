@@ -3,7 +3,7 @@ import { Tree, NodeType, NodeProp, NodeSet, Parser } from '@lezer/common';
 import { styleTags, tags as t } from '@lezer/highlight';
 import { CompositeBlock } from './composite-block';
 import { parser as pgPerlParser } from './pg.grammar';
-import { Parse, Item } from './pgml-parse';
+import { PGMLParse, Item } from './pgml-parse';
 
 enum Type {
     PGMLContent = 1,
@@ -104,7 +104,7 @@ class BlockContext implements PartialParse {
         )
             return this.finish();
 
-        const parser = new Parse(this.content);
+        const parser = new PGMLParse(this.content);
         if (parser.root) {
             for (const item of parser.root.stack ?? []) {
                 if (!(item instanceof Item)) continue;
@@ -508,4 +508,4 @@ export const pgmlHighlighting = styleTags({
     StarOption: t.controlOperator
 });
 
-export const parser = new PGMLParser(new NodeSet(nodeTypes).extend(pgmlHighlighting));
+export const pgmlParser = new PGMLParser(new NodeSet(nodeTypes).extend(pgmlHighlighting));

@@ -13,11 +13,11 @@ import {
 import { parseMixed } from '@lezer/common';
 import { completeFromList, CompletionContext, snippetCompletion } from '@codemirror/autocomplete';
 import { parser } from './pg.grammar';
-import { parser as PGMLParser } from './pgml';
-import { parser as PGTextParser } from './pg-text';
-export { PGMLShow } from './pgml-parse';
+import { pgmlParser } from './pgml';
+import { pgTextParser } from './pg-text';
+export { pgmlShow } from './pgml-parse';
 
-export const pgmlLanguage = new Language(defineLanguageFacet(), PGMLParser, [], 'pgml');
+export const pgmlLanguage = new Language(defineLanguageFacet(), pgmlParser, [], 'pgml');
 
 // FIXME: Get autocompletion to work when wrapped by the outer pg parser, and add useful autocompletion.
 export const pgmlCompletion = pgmlLanguage.data.of({
@@ -61,9 +61,9 @@ export const pgLanguage = LRLanguage.define({
         ],
         wrap: parseMixed((node) =>
             node.name === 'PGMLContent'
-                ? { parser: PGMLParser }
+                ? { parser: pgmlParser }
                 : node.name === 'PGTextContent'
-                  ? { parser: PGTextParser }
+                  ? { parser: pgTextParser }
                   : null
         )
     }),

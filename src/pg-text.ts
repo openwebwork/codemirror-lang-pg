@@ -566,4 +566,4 @@ export const pgTextHighlighting = styleTags({
     PGTextError: t.invalid
 });
 
-export const parser = new PGTextParser(new NodeSet(nodeTypes).extend(pgTextHighlighting));
+export const pgTextParser = new PGTextParser(new NodeSet(nodeTypes).extend(pgTextHighlighting));

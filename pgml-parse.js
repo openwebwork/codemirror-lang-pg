@@ -5,7 +5,7 @@ import { hideBin } from 'yargs/helpers';
 import { readFileSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
-import { PGMLShow } from './dist/index.js';
+import { pgmlShow } from './dist/index.js';
 
 const argv = yargs(hideBin(process.argv))
     .usage('$0 <file>')
@@ -89,6 +89,6 @@ for (const { name, text } of sources) {
     console.log(`Test: \x1b[1m\x1b[34m${name}\x1b[0m\n`);
     console.log(source);
     console.log('\n\x1b[1m\x1b[32m==>\x1b[0m\n');
-    console.log(PGMLShow(source));
+    console.log(pgmlShow(source));
     console.log();
 }

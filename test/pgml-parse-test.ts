@@ -2,7 +2,7 @@ import { readdirSync, readFileSync } from 'fs';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 import * as assert from 'assert';
-import { PGMLShow } from '../dist/index.js';
+import { pgmlShow } from '../dist/index.js';
 import { toLineContext } from './test-util.js';
 
 const caseDir = dirname(fileURLToPath(import.meta.url));
@@ -47,7 +47,7 @@ for (const file of readdirSync(caseDir)) {
     describe(testName, function () {
         for (const { name, run } of tests)
             it(name, function () {
-                run(PGMLShow);
+                run(pgmlShow);
             });
     });
 }

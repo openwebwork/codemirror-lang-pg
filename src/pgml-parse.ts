@@ -75,7 +75,7 @@ interface BlockDefinition {
     parseSlashes?: boolean;
     parseSubstitutions?: boolean;
     parsed?: boolean;
-    terminateMethod?: CallableKeyOf<Parse>;
+    terminateMethod?: CallableKeyOf<PGMLParse>;
     terminator?: string | RegExp;
 }
 
@@ -83,7 +83,7 @@ interface OriginalBlockDefinition extends BlockDefinition {
     type: string;
 }
 
-export class Parse {
+export class PGMLParse {
     indent = 0;
     actualIndent = 0;
     atLineStart = 1;
@@ -765,7 +765,7 @@ export class Parse {
 }
 
 interface Fields extends BlockDefinition {
-    parser?: Parse;
+    parser?: PGMLParse;
     stack?: (Item | string)[];
     prev?: Block;
     hasStar?: number;
@@ -816,7 +816,7 @@ export class Item implements BlockDefinition {
     parseSlashes?: boolean;
     parseSubstitutions?: boolean;
     parsed?: boolean;
-    terminateMethod?: CallableKeyOf<Parse>;
+    terminateMethod?: CallableKeyOf<PGMLParse>;
     terminator?: string | RegExp;
 
     constructor(
@@ -1036,9 +1036,9 @@ export class Block extends Item {
 }
 
 class Root extends Block {
-    parser?: Parse;
+    parser?: PGMLParse;
 
-    constructor(parser: Parse) {
+    constructor(parser: PGMLParse) {
         super('root', 0, { parseAll: true, parser });
         this.parser = parser;
     }
@@ -1332,9 +1332,9 @@ const BlockDefs: Record<string, OriginalBlockDefinition | undefined> = {
     list: { type: 'list', parseAll: true, combine: { list: 'bullet', par: true }, noIndent: -1 }
 };
 
-export const PGMLShow = (input: string) => {
+export const pgmlShow = (input: string) => {
     warnings.length = 0;
-    const parser = new Parse(input);
+    const parser = new PGMLParse(input);
     if (warnings.length) console.warn('Errors parsing PGML:\n' + warnings.join('\n'));
     return parser.root?.show() ?? '';
 };
