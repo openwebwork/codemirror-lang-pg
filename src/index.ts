@@ -67,29 +67,28 @@ export const pgLanguage = LRLanguage.define({
                   : null
         )
     }),
-    languageData: { commentTokens: { line: '#' } }
-});
-
-export const pgCompletion = pgLanguage.data.of({
-    autocomplete: (context: CompletionContext) => {
-        const previous = context.matchBefore(/^[ \t]*\w*/);
-        if (previous && previous.from === previous.to && !context.explicit) return null;
-        return {
-            from:
-                (previous?.from ?? context.pos) +
-                (([...(previous?.text.matchAll(/[ \t]/g) ?? [])].pop()?.index ?? -1) + 1),
-            to: previous?.to,
-            options: [
-                ...['PGML', 'PGML_HINT', 'PGML_SOLUTION', 'TEXT', 'HINT', 'SOLUTION'].map((t, i) =>
-                    snippetCompletion(`BEGIN_${t}\n\${}\nEND_${t}`, {
-                        label: `BEGIN_${t}`,
-                        type: 'type',
-                        boost: 99 - i
-                    })
-                )
-            ]
-        };
+    languageData: {
+        commentTokens: { line: '#' },
+        autocomplete: (context: CompletionContext) => {
+            const previous = context.matchBefore(/^[ \t]*\w*/);
+            if (previous && /^\s*$/.test(previous.text) && !context.explicit) return null;
+            return {
+                from:
+                    (previous?.from ?? context.pos) +
+                    (([...(previous?.text.matchAll(/[ \t]/g) ?? [])].pop()?.index ?? -1) + 1),
+                to: previous?.to,
+                options: [
+                    ...['PGML', 'PGML_HINT', 'PGML_SOLUTION', 'TEXT', 'HINT', 'SOLUTION'].map((t, i) =>
+                        snippetCompletion(`BEGIN_${t}\n\${}\nEND_${t}`, {
+                            label: `BEGIN_${t}`,
+                            type: 'type',
+                            boost: 99 - i
+                        })
+                    )
+                ]
+            };
+        }
     }
 });
 
-export const pg = () => new LanguageSupport(pgLanguage, [pgCompletion, pgml().support]);
+export const pg = () => new LanguageSupport(pgLanguage, [pgml().support]);
