@@ -11,7 +11,7 @@ import {
     indentNodeProp
 } from '@codemirror/language';
 import { parseMixed } from '@lezer/common';
-import { completeFromList } from '@codemirror/autocomplete';
+import { completeFromList, CompletionContext, snippetCompletion } from '@codemirror/autocomplete';
 import { parser } from './pg.grammar';
 import { parser as PGMLParser } from './pgml';
 import { parser as PGTextParser } from './pg-text';
@@ -70,11 +70,25 @@ export const pgLanguage = LRLanguage.define({
 });
 
 export const pgCompletion = pgLanguage.data.of({
-    autocomplete: completeFromList([
-        { label: 'my', type: 'keyword' },
-        { label: 'use', type: 'keyword' },
-        { label: 'sub', type: 'keyword' }
-    ])
+    autocomplete: (context: CompletionContext) => {
+        const previous = context.matchBefore(/^[ \t]*\w*/);
+        if (previous && previous.from === previous.to && !context.explicit) return null;
+        return {
+            from:
+                (previous?.from ?? context.pos) +
+                (([...(previous?.text.matchAll(/[ \t]/g) ?? [])].pop()?.index ?? -1) + 1),
+            to: previous?.to,
+            options: [
+                ...['PGML', 'PGML_HINT', 'PGML_SOLUTION', 'TEXT', 'HINT', 'SOLUTION'].map((t, i) =>
+                    snippetCompletion(`BEGIN_${t}\n\${}\nEND_${t}`, {
+                        label: `BEGIN_${t}`,
+                        type: 'type',
+                        boost: 99 - i
+                    })
+                )
+            ]
+        };
+    }
 });
 
-export const pg = () => new LanguageSupport(pgLanguage, [pgCompletion]);
+export const pg = () => new LanguageSupport(pgLanguage, [pgCompletion, pgml().support]);

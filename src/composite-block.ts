@@ -1,4 +1,5 @@
-import { Tree, TreeBuffer, NodeType, NodeProp, NodeSet } from '@lezer/common';
+import type { TreeBuffer, NodeSet } from '@lezer/common';
+import { Tree, NodeType, NodeProp } from '@lezer/common';
 
 export class CompositeBlock {
     static create(type: number, from: number, parentHash: number, end: number) {
