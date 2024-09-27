@@ -1,4 +1,4 @@
-import type { Input, PartialParse, TreeBuffer, TreeCursor, TreeFragment } from '@lezer/common';
+import type { Input, PartialParse, TreeBuffer, TreeFragment } from '@lezer/common';
 import { NodeProp, NodeSet, NodeType, Parser, Tree } from '@lezer/common';
 import { styleTags, tags as t } from '@lezer/highlight';
 import { parser as pgPerlParser } from './pg.grammar';
@@ -62,7 +62,6 @@ enum Type {
 class BlockContext implements PartialParse {
     block: CompositeBlock;
     line = '';
-    private fragments: FragmentCursor | null;
     private to: number;
     stoppedAt: number | null = null;
 
@@ -76,13 +75,12 @@ class BlockContext implements PartialParse {
     constructor(
         readonly parser: PGTextParser,
         readonly input: Input,
-        fragments: readonly TreeFragment[],
+        _fragments: readonly TreeFragment[],
         readonly ranges: readonly { from: number; to: number }[]
     ) {
         this.to = ranges[ranges.length - 1].to;
         this.lineStart = this.lineEnd = ranges[0].from;
         this.block = CompositeBlock.create(Type.PGTextContent, this.lineStart, 0, 0);
-        this.fragments = fragments.length ? new FragmentCursor(fragments, input) : null;
         if (this.input.read(ranges[0].from, ranges[0].from + 1) == '\n') this.readLine();
     }
 
@@ -92,7 +90,6 @@ class BlockContext implements PartialParse {
 
     advance() {
         if ((this.stoppedAt != null && this.lineStart > this.stoppedAt) || !this.nextLine()) return this.finish();
-        if (this.fragments && this.reuseFragment()) return null;
 
         const cx = new InlineContext(this, this.line, this.lineStart);
         outer: for (let pos = this.lineStart; pos < cx.end; ) {
@@ -118,15 +115,6 @@ class BlockContext implements PartialParse {
     stopAt(pos: number) {
         if (this.stoppedAt != null && this.stoppedAt < pos) throw new RangeError("Can't move stoppedAt forward");
         this.stoppedAt = pos;
-    }
-
-    private reuseFragment() {
-        if (!this.fragments?.moveTo(this.lineStart) || !this.fragments.matches(this.block.hash)) return false;
-        const taken = this.fragments.takeNodes(this);
-        if (!taken) return false;
-        this.lineStart += taken;
-        this.lineEnd = this.lineStart;
-        return true;
     }
 
     // Move to the next input line.
@@ -592,91 +580,6 @@ class InlineContext {
         return skipSpace(this.text, from - this.offset) + this.offset;
     }
 }
-
-class FragmentCursor {
-    // Index into fragment array
-    i = 0;
-    // Active fragment
-    fragment: TreeFragment | null = null;
-    fragmentEnd = -1;
-    // Cursor into the current fragment, if any. When `moveTo` returns true, this points at the first block after `pos`.
-    cursor: TreeCursor | null = null;
-
-    constructor(
-        readonly fragments: readonly TreeFragment[],
-        readonly input: Input
-    ) {
-        if (fragments.length) this.fragment = fragments[this.i++];
-    }
-
-    nextFragment() {
-        this.fragment = this.i < this.fragments.length ? this.fragments[this.i++] : null;
-        this.cursor = null;
-        this.fragmentEnd = -1;
-    }
-
-    moveTo(pos: number) {
-        while (this.fragment && this.fragment.to <= pos) this.nextFragment();
-        if (!this.fragment || this.fragment.from > (pos ? pos - 1 : 0)) return false;
-        if (this.fragmentEnd < 0) {
-            let end = this.fragment.to;
-            while (end > 0 && this.input.read(end - 1, end) != '\n') --end;
-            this.fragmentEnd = end ? end - 1 : 0;
-        }
-
-        let c = this.cursor;
-        if (!c) {
-            c = this.cursor = this.fragment.tree.cursor();
-            c.firstChild();
-        }
-
-        const rPos = pos + this.fragment.offset;
-        while (c.to <= rPos) if (!c.parent()) return false;
-        for (;;) {
-            if (c.from >= rPos) return this.fragment.from <= pos;
-            if (!c.childAfter(rPos)) return false;
-        }
-    }
-
-    matches(hash: number) {
-        const tree = this.cursor?.tree;
-        return tree && tree.prop(NodeProp.contextHash) == hash;
-    }
-
-    takeNodes(cx: BlockContext) {
-        const cursor = this.cursor,
-            offset = this.fragment?.offset,
-            fragmentEnd = this.fragmentEnd - (this.fragment?.openEnd ? 1 : 0);
-        if (!cursor || !offset) return 0;
-        const start = cx.lineStart;
-        let end = start;
-        for (;;) {
-            if (cursor.to - offset > fragmentEnd) {
-                if (cursor.type.isAnonymous && cursor.firstChild()) continue;
-                break;
-            }
-            const pos = toRelative(cursor.from - offset, cx.ranges);
-            if (cursor.to - offset <= cx.ranges[cx.rangeI].to) {
-                if (cursor.tree) cx.addNode(cursor.tree, pos);
-            } else {
-                break;
-            }
-            end = cursor.to - offset;
-            if (!cursor.nextSibling()) break;
-        }
-        return end - start;
-    }
-}
-
-// Convert an input-stream-relative position to a pg document relative position by subtracting the size of all
-// input gaps before `abs`.
-const toRelative = (abs: number, ranges: readonly { from: number; to: number }[]) => {
-    let pos = abs;
-    for (let i = 1; i < ranges.length; ++i) {
-        if (ranges[i - 1].to < abs) pos -= ranges[i].from - ranges[i - 1].to;
-    }
-    return pos;
-};
 
 export const pgTextHighlighting = styleTags({
     'MathModeMark ParsedMathModeMark PerlCommandMark': t.processingInstruction,

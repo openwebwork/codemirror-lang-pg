@@ -1,4 +1,4 @@
-import type { Input, TreeFragment, TreeCursor, PartialParse } from '@lezer/common';
+import type { Input, TreeFragment, PartialParse } from '@lezer/common';
 import { Tree, TreeBuffer, NodeType, NodeProp, NodeSet, Parser } from '@lezer/common';
 import { styleTags, tags as t } from '@lezer/highlight';
 import { parser as pgPerlParser } from './pg.grammar';
@@ -96,7 +96,6 @@ enum Type {
 class BlockContext implements PartialParse {
     block: CompositeBlock;
     private atEnd = false;
-    private fragments: FragmentCursor | null;
     private to: number;
     reusePlaceholders = new Map<Tree, Tree>();
     stoppedAt: number | null = null;
@@ -120,14 +119,13 @@ class BlockContext implements PartialParse {
         // The parser configuration used.
         readonly parser: PGMLParser,
         readonly input: Input,
-        fragments: readonly TreeFragment[],
+        _fragments: readonly TreeFragment[],
         readonly ranges: readonly { from: number; to: number }[]
     ) {
         this.from = this.pos = ranges[0].from;
         this.to = ranges[ranges.length - 1].to;
         this.contentStart = this.contentEnd = ranges[0].from;
         this.block = CompositeBlock.create(Type.PGMLContent, this.pos, 0, 0);
-        this.fragments = fragments.length ? new FragmentCursor(fragments, input) : null;
         this.readContent();
     }
 
@@ -142,9 +140,6 @@ class BlockContext implements PartialParse {
             if (this.contentPos < this.content.length) break;
             if (!this.nextRangeContent()) return this.finish();
         }
-
-        // FIXME: This is disabled for now. Make it work.
-        //if (this.fragments && this.reuseFragment(this.contentPos)) return null;
 
         const parser = new Parse(this.content);
         if (parser.root) {
@@ -164,26 +159,6 @@ class BlockContext implements PartialParse {
     stopAt(pos: number) {
         if (this.stoppedAt != null && this.stoppedAt < pos) throw new RangeError("Can't move stoppedAt forward");
         this.stoppedAt = pos;
-    }
-
-    private reuseFragment(start: number) {
-        if (
-            !this.fragments?.moveTo(this.contentStart + start, this.contentStart) ||
-            !this.fragments.matches(this.block.hash)
-        )
-            return false;
-        const taken = this.fragments.takeNodes(this);
-        if (!taken) return false;
-        this.contentStart += taken;
-        this.moveRangeI();
-        if (this.contentStart < this.to) {
-            ++this.contentStart;
-            this.readContent();
-        } else {
-            this.atEnd = true;
-            this.readContent();
-        }
-        return true;
     }
 
     // Move to the next input range content.
@@ -563,93 +538,6 @@ class TreeElement {
 const elt = (type: Type, from: number, to: number, children?: readonly (Element | TreeElement)[]) => {
     return new Element(type, from, to, children);
 };
-
-class FragmentCursor {
-    // Index into fragment array
-    i = 0;
-    // Active fragment
-    fragment: TreeFragment | null = null;
-    fragmentEnd = -1;
-    // Cursor into the current fragment, if any. When `moveTo` returns true, this points at the first block after `pos`.
-    cursor: TreeCursor | null = null;
-
-    constructor(
-        readonly fragments: readonly TreeFragment[],
-        readonly input: Input
-    ) {
-        if (fragments.length) this.fragment = fragments[this.i++];
-    }
-
-    nextFragment() {
-        this.fragment = this.i < this.fragments.length ? this.fragments[this.i++] : null;
-        this.cursor = null;
-        this.fragmentEnd = -1;
-    }
-
-    moveTo(pos: number, contentStart: number) {
-        while (this.fragment && this.fragment.to <= pos) this.nextFragment();
-        if (!this.fragment || this.fragment.from > pos) return false;
-        if (this.fragmentEnd < 0) {
-            let end = this.fragment.to;
-            while (end > 0 && this.input.read(end - 1, end) != '\n') --end;
-            this.fragmentEnd = end ? end - 1 : 0;
-        }
-
-        let c = this.cursor;
-        if (!c) {
-            c = this.cursor = this.fragment.tree.cursor();
-            c.firstChild();
-        }
-
-        const rPos = pos + this.fragment.offset;
-        while (c.to <= rPos) if (!c.parent()) return false;
-        for (;;) {
-            if (c.from >= rPos) return this.fragment.from <= contentStart;
-            if (!c.childAfter(rPos)) return false;
-        }
-    }
-
-    matches(hash: number) {
-        return this.cursor?.tree?.prop(NodeProp.contextHash) === hash;
-    }
-
-    takeNodes(cx: BlockContext) {
-        const cur = this.cursor,
-            off = this.fragment?.offset,
-            fragEnd = this.fragmentEnd - (this.fragment?.openEnd ? 1 : 0);
-        if (!cur || !off) return 0;
-        const start = cx.contentStart;
-        let end = start,
-            blockI = cx.block.children.length;
-        for (;;) {
-            if (cur.to - off > fragEnd) {
-                if (cur.type.isAnonymous && cur.firstChild()) continue;
-                break;
-            }
-            const pos = cur.from - off;
-            if (cur.to - off <= cx.ranges[cx.rangeI].to) {
-                // Fits in current range
-                if (cur.tree) cx.addNode(cur.tree, pos);
-            } else {
-                const dummy = new Tree(cx.parser.nodeSet.types[Type.Paragraph], [], [], 0, cx.block.hashProp);
-                if (cur.tree) cx.reusePlaceholders.set(dummy, cur.tree);
-                cx.addNode(dummy, pos);
-            }
-            // Taken content must always end in a block, because incremental parsing happens on block boundaries. Never
-            // stop directly after an indented code block, since those can continue after any number of blank lines.
-            if (cur.type.is('Block')) {
-                end = cur.to - off;
-                blockI = cx.block.children.length;
-            }
-            if (!cur.nextSibling()) break;
-        }
-        while (cx.block.children.length > blockI) {
-            cx.block.children.pop();
-            cx.block.positions.pop();
-        }
-        return end - start;
-    }
-}
 
 export const pgmlHighlighting = styleTags({
     Paragraph: t.content,
