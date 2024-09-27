@@ -62,47 +62,40 @@ enum Type {
 class BlockContext implements PartialParse {
     block: CompositeBlock;
     line = '';
-    private atEnd = false;
     private fragments: FragmentCursor | null;
     private to: number;
-    // For reused nodes on gaps, we can't directly put the original node into the tree, since that may be better than
-    // its parent.  When this happens, we create a dummy tree that is replaced by the proper node in `injectGaps`
-    reusePlaceholders = new Map<Tree, Tree>();
     stoppedAt: number | null = null;
 
-    // The start of the current line.
+    // The start and end of the current line.
     lineStart: number;
-    // The absolute (non-gap-adjusted) position of the line
-    absoluteLineStart: number;
-    // The range index that absoluteLineStart points into
+    lineEnd: number;
+
+    // The range index that lineStart points into
     rangeI = 0;
-    absoluteLineEnd: number;
 
     constructor(
-        // The parser configuration used.
         readonly parser: PGTextParser,
         readonly input: Input,
         fragments: readonly TreeFragment[],
         readonly ranges: readonly { from: number; to: number }[]
     ) {
         this.to = ranges[ranges.length - 1].to;
-        this.lineStart = this.absoluteLineStart = ranges[0].from;
-        this.absoluteLineEnd = this.absoluteLineStart - 1;
+        this.lineStart = this.lineEnd = ranges[0].from;
         this.block = CompositeBlock.create(Type.PGTextContent, this.lineStart, 0, 0);
         this.fragments = fragments.length ? new FragmentCursor(fragments, input) : null;
+        if (this.input.read(ranges[0].from, ranges[0].from + 1) == '\n') this.readLine();
     }
 
     get parsedPos() {
-        return this.absoluteLineStart;
+        return this.lineStart;
     }
 
     advance() {
-        if ((this.stoppedAt != null && this.absoluteLineStart > this.stoppedAt) || !this.nextLine())
-            return this.finish();
-        if (this.fragments && this.reuseFragment(0)) return null;
+        if ((this.stoppedAt != null && this.lineStart > this.stoppedAt) || !this.nextLine()) return this.finish();
+        if (this.fragments && this.reuseFragment()) return null;
 
-        const cx = new InlineContext(this, this.line, this.absoluteLineStart);
-        outer: for (let pos = this.absoluteLineStart; pos < cx.end; ) {
+        const cx = new InlineContext(this, this.line, this.lineStart);
+        outer: for (let pos = this.lineStart; pos < cx.end; ) {
             const next = cx.char(pos);
             for (const token of InlineParsers) {
                 const result = token(cx, next, pos);
@@ -127,39 +120,22 @@ class BlockContext implements PartialParse {
         this.stoppedAt = pos;
     }
 
-    private reuseFragment(start: number) {
-        if (
-            !this.fragments?.moveTo(this.absoluteLineStart + start, this.absoluteLineStart) ||
-            !this.fragments.matches(this.block.hash)
-        )
-            return false;
+    private reuseFragment() {
+        if (!this.fragments?.moveTo(this.lineStart) || !this.fragments.matches(this.block.hash)) return false;
         const taken = this.fragments.takeNodes(this);
         if (!taken) return false;
-        this.absoluteLineStart += taken;
-        this.lineStart = toRelative(this.absoluteLineStart, this.ranges);
-        this.moveRangeI();
-        if (this.absoluteLineStart < this.to) {
-            ++this.lineStart;
-            ++this.absoluteLineStart;
-            this.readLine();
-        } else {
-            this.atEnd = true;
-            this.readLine();
-        }
+        this.lineStart += taken;
+        this.lineEnd = this.lineStart;
         return true;
     }
 
     // Move to the next input line.
     nextLine() {
-        this.lineStart += this.line.length;
-        if (this.absoluteLineEnd >= this.to) {
-            this.absoluteLineStart = this.absoluteLineEnd;
-            this.atEnd = true;
-            this.readLine();
+        if (this.lineEnd >= this.to) {
+            this.lineStart = this.lineEnd;
             return false;
         } else {
-            ++this.lineStart;
-            this.absoluteLineStart = this.absoluteLineEnd + 1;
+            this.lineStart = this.lineEnd + 1;
             this.moveRangeI();
             this.readLine();
             return true;
@@ -167,57 +143,44 @@ class BlockContext implements PartialParse {
     }
 
     private moveRangeI() {
-        while (this.rangeI < this.ranges.length - 1 && this.absoluteLineStart >= this.ranges[this.rangeI].to) {
+        while (this.rangeI < this.ranges.length - 1 && this.lineStart >= this.ranges[this.rangeI].to) {
             ++this.rangeI;
-            this.absoluteLineStart = Math.max(this.absoluteLineStart, this.ranges[this.rangeI].from);
+            this.lineStart = Math.max(this.lineStart, this.ranges[this.rangeI].from);
         }
-    }
-
-    scanLine(start: number) {
-        const r = { text: '', end: 0 };
-        r.end = start;
-        if (start >= this.to) {
-            r.text = '';
-        } else {
-            r.text = this.lineChunkAt(start);
-            r.end += r.text.length;
-            if (this.ranges.length > 1) {
-                let textOffset = this.absoluteLineStart,
-                    rangeI = this.rangeI;
-                while (this.ranges[rangeI].to < r.end) {
-                    ++rangeI;
-                    const nextFrom = this.ranges[rangeI].from;
-                    const after = this.lineChunkAt(nextFrom);
-                    r.end = nextFrom + after.length;
-                    r.text = r.text.slice(0, this.ranges[rangeI - 1].to - textOffset) + after;
-                    textOffset = r.end - r.text.length;
-                }
-            }
-        }
-        return r;
     }
 
     readLine() {
-        const { text, end } = this.scanLine(this.absoluteLineStart);
-        this.absoluteLineEnd = end;
+        let text = '';
+        let end = this.lineStart;
+        if (this.lineStart < this.to) {
+            text = this.lineChunkAt(this.lineStart);
+            end += text.length;
+            if (this.ranges.length > 1) {
+                let textOffset = this.lineStart,
+                    rangeI = this.rangeI;
+                while (this.ranges[rangeI].to < end) {
+                    ++rangeI;
+                    const nextFrom = this.ranges[rangeI].from;
+                    const after = this.lineChunkAt(nextFrom);
+                    end = nextFrom + after.length;
+                    text = text.slice(0, this.ranges[rangeI - 1].to - textOffset) + after;
+                    textOffset = end - text.length;
+                }
+            }
+        }
+        this.lineEnd = end;
         this.line = text;
     }
 
     private lineChunkAt(pos: number) {
-        const next = this.input.chunk(pos);
-        let text;
+        let text = this.input.chunk(pos);
         if (!this.input.lineChunks) {
-            const eol = next.indexOf('\n');
-            text = eol < 0 ? next : next.slice(0, eol);
-        } else {
-            text = next == '\n' ? '' : next;
+            const eol = text.indexOf('\n');
+            text = eol < 0 ? text : text.slice(0, eol);
+        } else if (text === '\n') {
+            text = '';
         }
         return pos + text.length > this.to ? text.slice(0, this.to - pos) : text;
-    }
-
-    // The end position of the previous line.
-    prevLineEnd() {
-        return this.atEnd ? this.lineStart : this.lineStart - 1;
     }
 
     addNode(block: Tree, from: number) {
@@ -524,6 +487,7 @@ const InlineParsers: ((cx: InlineContext, next: number, pos: number) => number)[
     },
 
     // Parsed math mode
+    // FIXME: This needs to work like the math mode above an allow internal parsing.
     (cx, next, start) => {
         if (next != 96 /* ` */ || (start && cx.char(start - 1) == 96)) return -1;
         let pos = start + 1;
@@ -651,7 +615,7 @@ class FragmentCursor {
         this.fragmentEnd = -1;
     }
 
-    moveTo(pos: number, lineStart: number) {
+    moveTo(pos: number) {
         while (this.fragment && this.fragment.to <= pos) this.nextFragment();
         if (!this.fragment || this.fragment.from > (pos ? pos - 1 : 0)) return false;
         if (this.fragmentEnd < 0) {
@@ -669,7 +633,7 @@ class FragmentCursor {
         const rPos = pos + this.fragment.offset;
         while (c.to <= rPos) if (!c.parent()) return false;
         for (;;) {
-            if (c.from >= rPos) return this.fragment.from <= lineStart;
+            if (c.from >= rPos) return this.fragment.from <= pos;
             if (!c.childAfter(rPos)) return false;
         }
     }
@@ -680,38 +644,25 @@ class FragmentCursor {
     }
 
     takeNodes(cx: BlockContext) {
-        const cur = this.cursor,
-            off = this.fragment?.offset,
-            fragEnd = this.fragmentEnd - (this.fragment?.openEnd ? 1 : 0);
-        if (!cur || !off) return 0;
-        const start = cx.absoluteLineStart;
-        let end = start,
-            blockI = cx.block.children.length;
+        const cursor = this.cursor,
+            offset = this.fragment?.offset,
+            fragmentEnd = this.fragmentEnd - (this.fragment?.openEnd ? 1 : 0);
+        if (!cursor || !offset) return 0;
+        const start = cx.lineStart;
+        let end = start;
         for (;;) {
-            if (cur.to - off > fragEnd) {
-                if (cur.type.isAnonymous && cur.firstChild()) continue;
+            if (cursor.to - offset > fragmentEnd) {
+                if (cursor.type.isAnonymous && cursor.firstChild()) continue;
                 break;
             }
-            const pos = toRelative(cur.from - off, cx.ranges);
-            if (cur.to - off <= cx.ranges[cx.rangeI].to) {
-                // Fits in current range
-                if (cur.tree) cx.addNode(cur.tree, pos);
+            const pos = toRelative(cursor.from - offset, cx.ranges);
+            if (cursor.to - offset <= cx.ranges[cx.rangeI].to) {
+                if (cursor.tree) cx.addNode(cursor.tree, pos);
             } else {
-                const dummy = new Tree(cx.parser.nodeSet.types[Type.PGTextContent], [], [], 0, cx.block.hashProp);
-                if (cur.tree) cx.reusePlaceholders.set(dummy, cur.tree);
-                cx.addNode(dummy, pos);
+                break;
             }
-            // Taken content must always end in a block, because incremental parsing happens on block boundaries. Never
-            // stop directly after an indented code block, since those can continue after any number of blank lines.
-            if (cur.type.is('Block')) {
-                end = cur.to - off;
-                blockI = cx.block.children.length;
-            }
-            if (!cur.nextSibling()) break;
-        }
-        while (cx.block.children.length > blockI) {
-            cx.block.children.pop();
-            cx.block.positions.pop();
+            end = cursor.to - offset;
+            if (!cursor.nextSibling()) break;
         }
         return end - start;
     }
@@ -722,9 +673,7 @@ class FragmentCursor {
 const toRelative = (abs: number, ranges: readonly { from: number; to: number }[]) => {
     let pos = abs;
     for (let i = 1; i < ranges.length; ++i) {
-        const gapFrom = ranges[i - 1].to,
-            gapTo = ranges[i].from;
-        if (gapFrom < abs) pos -= gapTo - gapFrom;
+        if (ranges[i - 1].to < abs) pos -= ranges[i].from - ranges[i - 1].to;
     }
     return pos;
 };
