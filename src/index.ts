@@ -19,6 +19,7 @@ export { PGMLShow } from './pgml-parse';
 
 export const pgmlLanguage = new Language(defineLanguageFacet(), PGMLParser, [], 'pgml');
 
+// FIXME: Get autocompletion to work when wrapped by the outer pg parser, and add useful autocompletion.
 export const pgmlCompletion = pgmlLanguage.data.of({
     autocomplete: completeFromList([{ label: 'my', type: 'keyword' }])
 });

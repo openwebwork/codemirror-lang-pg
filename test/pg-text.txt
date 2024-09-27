@@ -102,8 +102,8 @@ BEGIN_TEXT
 ``x / 3``
 `x / 3`*
 ``x / 3``*
-```error to many start delimiters``
-`error to many end delimiters``
+`x / 3```x + 3``
+`$a x / 5`
 END_TEXT
 
 ==>
@@ -115,9 +115,10 @@ Program(
             ParsedMathMode(ParsedMathModeMark, ParsedMathModeMark),
             ParsedMathMode(ParsedMathModeMark, ParsedMathModeMark),
             ParsedMathMode(ParsedMathModeMark, ParsedMathModeMark),
-            ParsedMathMode(ParsedMathModeMark, ParsedMathModeMark),
-            PGTextError,
-            PGTextError,
+            ParsedMathMode(ParsedMathModeMark, ParsedMathModeMark)
+            ParsedMathMode(ParsedMathModeMark, ParsedMathModeMark)
+            ParsedMathMode(ParsedMathModeMark, ParsedMathModeMark)
+            ParsedMathMode(ParsedMathModeMark, Variable, ParsedMathModeMark)
         ),
         EndPG
     )

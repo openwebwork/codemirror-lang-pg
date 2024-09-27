@@ -264,6 +264,7 @@ const elt = (type: Type, from: number, to: number, children?: readonly (Element 
 enum DelimiterType {
     InlineMathMode = 1,
     DisplayMathMode,
+    ParsedMathMode,
     PerlCommand,
     Emphasis,
     StrongEmphasis
@@ -440,31 +441,41 @@ const InlineParsers: ((cx: InlineContext, next: number, pos: number) => number)[
     },
 
     // Parsed math mode
-    // FIXME: This needs to work like the math mode above an allow internal parsing.
+    (cx, next, start) => {
+        if (
+            next != 96 /* ` */ ||
+            (start &&
+                cx.char(start - 1) == 96 &&
+                (!(cx.parts.at(-1) instanceof Element) || cx.parts.at(-1)?.type !== Type.ParsedMathMode)) ||
+            cx.parts.find((p) => p instanceof InlineDelimiter && p.type === DelimiterType.ParsedMathMode)
+        )
+            return -1;
+        return cx.addDelimiter(DelimiterType.ParsedMathMode, start, start + (cx.char(start + 1) == 96 ? 1 : 0) + 1);
+    },
+
+    // Parsed math mode end
     (cx, next, start) => {
         if (next != 96 /* ` */ || (start && cx.char(start - 1) == 96)) return -1;
-        let pos = start + 1;
-        while (pos < cx.end && cx.char(pos) == 96) ++pos;
-        const size = pos - start;
-        if (size > 2) return cx.append(elt(Type.PGTextError, start, start + size));
-        let curSize = 0;
-        for (; !cx.atEnd(pos); ++pos) {
-            if (cx.char(pos) == 96) {
-                ++curSize;
-                if (curSize == size && cx.char(pos + 1) != 96) {
-                    const star = cx.char(pos + 1) == 42 /* * */ ? 1 : 0;
-                    return cx.append(
-                        elt(Type.ParsedMathMode, start, pos + 1 + star, [
-                            elt(Type.ParsedMathModeMark, start, start + size),
-                            elt(Type.ParsedMathModeMark, pos + 1 - size, pos + 1 + star)
-                        ])
-                    );
-                } else if (curSize == size && cx.char(pos + 1) == 96) {
-                    while (cx.char(++pos) == 96);
-                    return cx.append(elt(Type.PGTextError, start, pos + 1));
-                }
-            } else if (curSize) {
-                return cx.append(elt(Type.PGTextError, start, pos));
+        // Scan back to the last parsed math mode start marker.
+        for (let i = cx.parts.length - 1; i >= 0; --i) {
+            const part = cx.parts[i];
+            if (part instanceof InlineDelimiter && part.type === DelimiterType.ParsedMathMode) {
+                const content = cx.takeContent(i);
+
+                const numBackticks = part.to - part.from;
+                if (numBackticks == 2 && cx.char(start + 1) != 96) return -1;
+
+                // Finish the content and replace the entire range in cx.parts with the parsed math mode node.
+                const star = cx.char(start + numBackticks) == 42 /* * */ ? 1 : 0;
+                content.unshift(elt(Type.ParsedMathModeMark, part.from, part.to));
+                content.push(elt(Type.ParsedMathModeMark, start, start + numBackticks + star));
+                const mathMode = (cx.parts[i] = elt(
+                    Type.ParsedMathMode,
+                    part.from,
+                    start + numBackticks + star,
+                    content
+                ));
+                return mathMode.to;
             }
         }
         return -1;
