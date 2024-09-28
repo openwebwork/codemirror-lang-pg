@@ -11,7 +11,7 @@ import {
     indentNodeProp
 } from '@codemirror/language';
 import { parseMixed } from '@lezer/common';
-import { completeFromList, CompletionContext, snippetCompletion } from '@codemirror/autocomplete';
+import { completeFromList, snippetCompletion } from '@codemirror/autocomplete';
 import { parser } from './pg.grammar';
 import { pgmlParser } from './pgml';
 import { pgTextParser } from './pg-text';
@@ -38,7 +38,7 @@ export const pgLanguage = LRLanguage.define({
                 'PGMLBlock PGTextBlock': flatIndent
             }),
             foldNodeProp.add({
-                'Block Array ArrayRef HashRef PGMLBlock PGTextBlock': foldInside,
+                'Block Array ArrayRef HashRef': foldInside,
                 'InterpolatedHeredocBody UninterpolatedHeredocBody': (node) => {
                     if (node.prevSibling && node.lastChild?.prevSibling)
                         return { from: node.prevSibling.to, to: node.lastChild.prevSibling.to };
@@ -69,25 +69,15 @@ export const pgLanguage = LRLanguage.define({
     }),
     languageData: {
         commentTokens: { line: '#' },
-        autocomplete: (context: CompletionContext) => {
-            const previous = context.matchBefore(/^[ \t]*\w*/);
-            if (previous && /^\s*$/.test(previous.text) && !context.explicit) return null;
-            return {
-                from:
-                    (previous?.from ?? context.pos) +
-                    (([...(previous?.text.matchAll(/[ \t]/g) ?? [])].pop()?.index ?? -1) + 1),
-                to: previous?.to,
-                options: [
-                    ...['PGML', 'PGML_HINT', 'PGML_SOLUTION', 'TEXT', 'HINT', 'SOLUTION'].map((t, i) =>
-                        snippetCompletion(`BEGIN_${t}\n\${}\nEND_${t}`, {
-                            label: `BEGIN_${t}`,
-                            type: 'type',
-                            boost: 99 - i
-                        })
-                    )
-                ]
-            };
-        }
+        autocomplete: completeFromList(
+            ['PGML', 'PGML_HINT', 'PGML_SOLUTION', 'TEXT', 'HINT', 'SOLUTION'].map((t, i) =>
+                snippetCompletion(`BEGIN_${t}\n\${}\nEND_${t}`, {
+                    label: `BEGIN_${t}`,
+                    type: 'type',
+                    boost: 99 - i
+                })
+            )
+        )
     }
 });
 

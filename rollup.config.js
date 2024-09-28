@@ -17,29 +17,30 @@ export default {
             name: 'rollup-plugin-grammar-parser',
 
             resolveId(source, importer) {
-                if (!source.endsWith('.grammar')) return null;
+                if (!source.endsWith('.grammar') && !source.endsWith('.grammar.terms.js')) return null;
                 return resolve(importer ? dirname(importer) : process.cwd(), source);
             },
 
             load(id) {
-                if (!id.endsWith('.grammar')) return null;
-                this.addWatchFile(id);
+                const isGrammarFile = id.endsWith('.grammar');
+                if (!isGrammarFile && !id.endsWith('.grammar.terms.js')) return null;
+                if (isGrammarFile) this.addWatchFile(id);
+                const grammarFile = id.replace(/\.terms\.js$/, '');
                 const build =
-                    built.get(id) ||
+                    built.get(grammarFile) ||
                     built
                         .set(
-                            id,
-                            fs.readFile(id, 'utf8').then((code) => {
-                                const result = buildParserFile(code, {
-                                    fileName: id,
+                            grammarFile,
+                            fs.readFile(grammarFile, 'utf8').then((code) => {
+                                return buildParserFile(code, {
+                                    fileName: grammarFile,
                                     moduleStyle: 'es',
                                     warn: (message) => this.warn(message)
                                 });
-                                return fs.writeFile(`${id}.terms.js`, result.terms).then(() => result);
                             })
                         )
-                        .get(id);
-                return build.then((result) => result.parser);
+                        .get(grammarFile);
+                return build.then((result) => (isGrammarFile ? result.parser : result.terms));
             },
 
             watchChange(id) {
