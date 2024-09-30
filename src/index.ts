@@ -5,26 +5,38 @@ import {
     continuedIndent,
     defineLanguageFacet,
     delimitedIndent,
-    flatIndent,
     foldInside,
     foldNodeProp,
-    indentNodeProp
+    indentNodeProp,
+    languageDataProp
 } from '@codemirror/language';
 import { parseMixed } from '@lezer/common';
 import { completeFromList, snippetCompletion } from '@codemirror/autocomplete';
 import { parser } from './pg.grammar';
-import { pgmlParser } from './pgml';
-import { pgTextParser } from './pg-text';
+import { PGMLParser } from './pgml';
+import { PGTextParser } from './pg-text';
 export { pgmlShow } from './pgml-parse';
 
+export const pgmlParser = new PGMLParser([
+    indentNodeProp.add({ PGMLContent: () => null }),
+    languageDataProp.add({
+        PGMLContent: defineLanguageFacet({
+            commentTokens: { block: { open: '[%', close: '%]' } },
+            autocomplete: completeFromList([{ label: 'my', type: 'keyword' }])
+        })
+    })
+]);
 export const pgmlLanguage = new Language(defineLanguageFacet(), pgmlParser, [], 'pgml');
+export const pgml = () => new LanguageSupport(pgmlLanguage);
 
-// FIXME: Get autocompletion to work when wrapped by the outer pg parser, and add useful autocompletion.
-export const pgmlCompletion = pgmlLanguage.data.of({
-    autocomplete: completeFromList([{ label: 'my', type: 'keyword' }])
-});
-
-export const pgml = () => new LanguageSupport(pgmlLanguage, [pgmlCompletion]);
+export const pgTextParser = new PGTextParser([
+    indentNodeProp.add({ PGTextContent: () => null }),
+    languageDataProp.add({
+        PGTextContent: defineLanguageFacet({ autocomplete: completeFromList([{ label: 'my', type: 'keyword' }]) })
+    })
+]);
+export const pgTextLanguage = new Language(defineLanguageFacet(), pgTextParser, [], 'pg-text');
+export const pgText = () => new LanguageSupport(pgTextLanguage);
 
 export const pgLanguage = LRLanguage.define({
     name: 'pg',
@@ -34,11 +46,10 @@ export const pgLanguage = LRLanguage.define({
                 IfStatement: continuedIndent({ except: /^\s*({|else\b|elsif\b)/ }),
                 Block: delimitedIndent({ closing: '}' }),
                 String: () => null,
-                Statement: continuedIndent(),
-                'PGMLBlock PGTextBlock': flatIndent
+                Statement: continuedIndent()
             }),
             foldNodeProp.add({
-                'Block Array ArrayRef HashRef': foldInside,
+                'Block Array ArrayRef HashRef PGMLBlock PGTextBlock': foldInside,
                 'InterpolatedHeredocBody UninterpolatedHeredocBody': (node) => {
                     if (node.prevSibling && node.lastChild?.prevSibling)
                         return { from: node.prevSibling.to, to: node.lastChild.prevSibling.to };
@@ -81,4 +92,4 @@ export const pgLanguage = LRLanguage.define({
     }
 });
 
-export const pg = () => new LanguageSupport(pgLanguage, [pgml().support]);
+export const pg = () => new LanguageSupport(pgLanguage, [pgml().support, pgText().support]);

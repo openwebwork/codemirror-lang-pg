@@ -1,4 +1,4 @@
-import type { Input, PartialParse, TreeFragment } from '@lezer/common';
+import type { Input, NodePropSource, PartialParse, TreeFragment } from '@lezer/common';
 import { NodeProp, NodeSet, NodeType, Parser, Tree } from '@lezer/common';
 import { styleTags, tags as t } from '@lezer/highlight';
 import { CompositeBlock } from './composite-block';
@@ -21,6 +21,17 @@ enum Type {
     Variable,
 
     PGTextError
+}
+
+const nodeTypes = [NodeType.none];
+for (let i = 1, name; (name = Type[i]); ++i) {
+    nodeTypes[i] = NodeType.define({
+        id: i,
+        name,
+        props: i > Type.PGTextContent.valueOf() ? [] : [[NodeProp.group, ['Block', 'BlockContext']]],
+        top: name === 'PGTextContent',
+        error: name === 'PGTextError'
+    });
 }
 
 // Block-level parsing functions get access to this context object.
@@ -143,40 +154,6 @@ class BlockContext implements PartialParse {
     private finish() {
         return this.block.toTree(this.parser.nodeSet, this.lineStart);
     }
-}
-
-// A PG Text parser configuration.
-export class PGTextParser extends Parser {
-    nodeTypes = Object.create(null) as Record<string, number>;
-
-    // The parser's syntax node types.
-    constructor(readonly nodeSet: NodeSet) {
-        super();
-        for (const t of nodeSet.types) this.nodeTypes[t.name] = t.id;
-    }
-
-    createParse(
-        input: Input,
-        fragments: readonly TreeFragment[],
-        ranges: readonly { from: number; to: number }[]
-    ): PartialParse {
-        return new BlockContext(this, input, fragments, ranges);
-    }
-
-    getNodeType(name: string) {
-        return this.nodeTypes[name];
-    }
-}
-
-const nodeTypes = [NodeType.none];
-for (let i = 1, name; (name = Type[i]); ++i) {
-    nodeTypes[i] = NodeType.define({
-        id: i,
-        name,
-        props: i > Type.PGTextContent.valueOf() ? [] : [[NodeProp.group, ['Block', 'BlockContext']]],
-        top: name === 'PGTextContent',
-        error: name === 'PGTextError'
-    });
 }
 
 class Buffer {
@@ -566,4 +543,27 @@ export const pgTextHighlighting = styleTags({
     PGTextError: t.invalid
 });
 
-export const pgTextParser = new PGTextParser(new NodeSet(nodeTypes).extend(pgTextHighlighting));
+// A PG Text parser configuration.
+export class PGTextParser extends Parser {
+    nodeTypes = Object.create(null) as Record<string, number>;
+    readonly nodeSet: NodeSet;
+
+    // The parser's syntax [node types](https://lezer.codemirror.net/docs/ref/#common.NodeSet).
+    constructor(props?: NodePropSource[]) {
+        super();
+        this.nodeSet = new NodeSet(nodeTypes).extend(pgTextHighlighting, ...(props?.length ? props : []));
+        for (const t of this.nodeSet.types) this.nodeTypes[t.name] = t.id;
+    }
+
+    createParse(
+        input: Input,
+        fragments: readonly TreeFragment[],
+        ranges: readonly { from: number; to: number }[]
+    ): PartialParse {
+        return new BlockContext(this, input, fragments, ranges);
+    }
+
+    getNodeType(name: string) {
+        return this.nodeTypes[name];
+    }
+}

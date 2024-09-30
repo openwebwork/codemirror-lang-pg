@@ -1,4 +1,4 @@
-import type { Input, TreeFragment, PartialParse } from '@lezer/common';
+import type { Input, NodePropSource, TreeFragment, PartialParse } from '@lezer/common';
 import { Tree, NodeType, NodeProp, NodeSet, Parser } from '@lezer/common';
 import { styleTags, tags as t } from '@lezer/highlight';
 import { CompositeBlock } from './composite-block';
@@ -55,6 +55,19 @@ enum Type {
     VariableMark,
     Verbatim,
     VerbatimMark
+}
+
+const nodeTypes = [NodeType.none];
+for (let i = 1, name; (name = Type[i]); ++i) {
+    nodeTypes[i] = NodeType.define({
+        id: i,
+        name,
+        props:
+            i > Type.Paragraph.valueOf()
+                ? []
+                : [[NodeProp.group, i === Type.PGMLContent.valueOf() ? ['Block', 'BlockContext'] : ['Block']]],
+        top: name == 'PGMLContent'
+    });
 }
 
 // Block-level parsing functions get access to this context object.
@@ -364,42 +377,6 @@ const pgmlFormat = (block: Item, offset: number): Element[] => {
     return children;
 };
 
-// A PGML parser configuration.
-export class PGMLParser extends Parser {
-    nodeTypes = Object.create(null) as Record<string, number>;
-
-    // The parser's syntax [node types](https://lezer.codemirror.net/docs/ref/#common.NodeSet).
-    constructor(readonly nodeSet: NodeSet) {
-        super();
-        for (const t of nodeSet.types) this.nodeTypes[t.name] = t.id;
-    }
-
-    createParse(
-        input: Input,
-        fragments: readonly TreeFragment[],
-        ranges: readonly { from: number; to: number }[]
-    ): PartialParse {
-        return new BlockContext(this, input, fragments, ranges);
-    }
-
-    getNodeType(name: string) {
-        return this.nodeTypes[name];
-    }
-}
-
-const nodeTypes = [NodeType.none];
-for (let i = 1, name; (name = Type[i]); ++i) {
-    nodeTypes[i] = NodeType.define({
-        id: i,
-        name,
-        props:
-            i > Type.Paragraph.valueOf()
-                ? []
-                : [[NodeProp.group, i === Type.PGMLContent.valueOf() ? ['Block', 'BlockContext'] : ['Block']]],
-        top: name == 'PGMLContent'
-    });
-}
-
 class Buffer {
     content: number[] = [];
     nodes: Tree[] = [];
@@ -508,4 +485,27 @@ export const pgmlHighlighting = styleTags({
     StarOption: t.controlOperator
 });
 
-export const pgmlParser = new PGMLParser(new NodeSet(nodeTypes).extend(pgmlHighlighting));
+// A PGML parser configuration.
+export class PGMLParser extends Parser {
+    nodeTypes = Object.create(null) as Record<string, number>;
+    readonly nodeSet: NodeSet;
+
+    // The parser's syntax [node types](https://lezer.codemirror.net/docs/ref/#common.NodeSet).
+    constructor(props?: NodePropSource[]) {
+        super();
+        this.nodeSet = new NodeSet(nodeTypes).extend(pgmlHighlighting, ...(props?.length ? props : []));
+        for (const t of this.nodeSet.types) this.nodeTypes[t.name] = t.id;
+    }
+
+    createParse(
+        input: Input,
+        fragments: readonly TreeFragment[],
+        ranges: readonly { from: number; to: number }[]
+    ): PartialParse {
+        return new BlockContext(this, input, fragments, ranges);
+    }
+
+    getNodeType(name: string) {
+        return this.nodeTypes[name];
+    }
+}
