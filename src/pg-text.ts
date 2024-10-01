@@ -23,12 +23,16 @@ enum Type {
     PGTextError
 }
 
+const nodeProps = new Map<Type, [NodeProp<readonly string[]>, string[]][]>([
+    [Type.PGTextContent, [[NodeProp.group, ['Block', 'BlockContext']]]]
+]);
+
 const nodeTypes = [NodeType.none];
 for (let i = 1, name; (name = Type[i]); ++i) {
     nodeTypes[i] = NodeType.define({
         id: i,
         name,
-        props: i > Type.PGTextContent.valueOf() ? [] : [[NodeProp.group, ['Block', 'BlockContext']]],
+        props: nodeProps.get(i) ?? [],
         top: name === 'PGTextContent',
         error: name === 'PGTextError'
     });

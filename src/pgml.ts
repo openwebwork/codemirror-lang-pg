@@ -57,17 +57,14 @@ enum Type {
     VerbatimMark
 }
 
+const nodeProps = new Map<Type, [NodeProp<readonly string[]>, string[]][]>([
+    [Type.PGMLContent, [[NodeProp.group, ['Block', 'BlockContext']]]],
+    [Type.Paragraph, [[NodeProp.group, ['Block']]]]
+]);
+
 const nodeTypes = [NodeType.none];
 for (let i = 1, name; (name = Type[i]); ++i) {
-    nodeTypes[i] = NodeType.define({
-        id: i,
-        name,
-        props:
-            i > Type.Paragraph.valueOf()
-                ? []
-                : [[NodeProp.group, i === Type.PGMLContent.valueOf() ? ['Block', 'BlockContext'] : ['Block']]],
-        top: name == 'PGMLContent'
-    });
+    nodeTypes[i] = NodeType.define({ id: i, name, props: nodeProps.get(i) ?? [], top: name == 'PGMLContent' });
 }
 
 // Block-level parsing functions get access to this context object.
