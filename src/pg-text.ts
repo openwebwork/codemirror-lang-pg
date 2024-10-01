@@ -1,7 +1,7 @@
 import type { Input, NodePropSource, PartialParse, TreeFragment } from '@lezer/common';
 import { NodeProp, NodeSet, NodeType, Parser, Tree } from '@lezer/common';
 import { styleTags, tags as t } from '@lezer/highlight';
-import { CompositeBlock } from './composite-block';
+import { CompositeBlock, Element, TreeElement, elt } from './parse-elements';
 import { skipSpace, isIdentifierChar, isVariableStartChar } from './text-utils';
 import { parser as pgPerlParser } from './pg.grammar';
 
@@ -155,88 +155,6 @@ class BlockContext implements PartialParse {
         return this.block.toTree(this.parser.nodeSet, this.lineStart);
     }
 }
-
-class Buffer {
-    content: number[] = [];
-    nodes: Tree[] = [];
-    constructor(readonly nodeSet: NodeSet) {}
-
-    write(type: Type, from: number, to: number, children = 0) {
-        this.content.push(type, from, to, 4 + children * 4);
-        return this;
-    }
-
-    writeElements(elts: readonly (Element | TreeElement)[], offset = 0) {
-        for (const e of elts) e.writeTo(this, offset);
-        return this;
-    }
-
-    finish(type: Type, length: number) {
-        return Tree.build({
-            buffer: this.content,
-            nodeSet: this.nodeSet,
-            reused: this.nodes,
-            topID: type,
-            length
-        });
-    }
-}
-
-// Elements are used to compose syntax nodes during parsing.
-class Element {
-    constructor(
-        // The node's id.
-        readonly type: number,
-        // The start of the node, as an offset from the start of the document.
-        readonly from: number,
-        // The end of the node.
-        public to: number,
-        // The node's child nodes
-        readonly children: readonly (Element | TreeElement)[] = []
-    ) {}
-
-    writeTo(buf: Buffer, offset: number) {
-        const startOff = buf.content.length;
-        buf.writeElements(this.children, offset);
-        buf.content.push(this.type, this.from + offset, this.to + offset, buf.content.length + 4 - startOff);
-    }
-
-    toTree(nodeSet: NodeSet): Tree {
-        return new Buffer(nodeSet).writeElements(this.children, -this.from).finish(this.type, this.to - this.from);
-    }
-}
-
-class TreeElement {
-    constructor(
-        readonly tree: Tree,
-        readonly from: number
-    ) {}
-
-    get to() {
-        return this.from + this.tree.length;
-    }
-
-    get type() {
-        return this.tree.type.id;
-    }
-
-    get children() {
-        return [];
-    }
-
-    writeTo(buf: Buffer, offset: number) {
-        buf.nodes.push(this.tree);
-        buf.content.push(buf.nodes.length - 1, this.from + offset, this.to + offset, -1);
-    }
-
-    toTree(): Tree {
-        return this.tree;
-    }
-}
-
-const elt = (type: Type, from: number, to: number, children?: readonly (Element | TreeElement)[]) => {
-    return new Element(type, from, to, children);
-};
 
 enum DelimiterType {
     InlineMathMode = 1,
@@ -461,7 +379,7 @@ const InlineParsers: ((cx: InlineContext, next: number, pos: number) => number)[
 
 // Inline parsing functions get access to this context, and use it to read the content and emit syntax nodes.
 class InlineContext {
-    parts: (Element | InlineDelimiter | null)[] = [];
+    parts: (Element<Type> | InlineDelimiter | null)[] = [];
 
     constructor(
         // The current block context.
@@ -497,7 +415,7 @@ class InlineContext {
         return this.text.slice(from - this.offset, to - this.offset);
     }
 
-    append(elt: Element | InlineDelimiter) {
+    append(elt: Element<Type> | InlineDelimiter) {
         this.parts.push(elt);
         return elt.to;
     }

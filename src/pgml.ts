@@ -1,7 +1,7 @@
 import type { Input, NodePropSource, TreeFragment, PartialParse } from '@lezer/common';
 import { Tree, NodeType, NodeProp, NodeSet, Parser } from '@lezer/common';
 import { styleTags, tags as t } from '@lezer/highlight';
-import { CompositeBlock } from './composite-block';
+import { CompositeBlock, Element, TreeElement, elt } from './parse-elements';
 import { parser as pgPerlParser } from './pg.grammar';
 import { PGMLParse, Item } from './pgml-parse';
 
@@ -195,16 +195,16 @@ class BlockContext implements PartialParse {
     }
 }
 
-const pgmlFormat = (block: Item, offset: number): Element[] => {
+const pgmlFormat = (block: Item, offset: number): Element<Type>[] => {
     if (['text', 'par', 'break', 'quote', 'forced', 'balance'].includes(block.type)) return [];
 
-    const children: Element[] = [];
+    const children: Element<Type>[] = [];
     for (const item of block.stack ?? block.children ?? []) {
         if (!(item instanceof Item) || item.type === 'text') continue;
         children.push(...pgmlFormat(item, offset));
     }
 
-    const options: Element[] = [];
+    const options: Element<Type>[] = [];
     for (const item of block.optionStack ?? []) {
         options.push(...pgmlFormat(item, offset));
     }
@@ -375,92 +375,6 @@ const pgmlFormat = (block: Item, offset: number): Element[] => {
 
     console.log(`unhandled ${block.type}`);
     return children;
-};
-
-class Buffer {
-    content: number[] = [];
-    nodes: Tree[] = [];
-    constructor(readonly nodeSet: NodeSet) {}
-
-    write(type: Type, from: number, to: number, children = 0) {
-        this.content.push(type, from, to, 4 + children * 4);
-        return this;
-    }
-
-    writeElements(elts: readonly (Element | TreeElement)[], offset = 0) {
-        for (const e of elts) e.writeTo(this, offset);
-        return this;
-    }
-
-    finish(type: Type, length: number) {
-        return Tree.build({
-            buffer: this.content,
-            nodeSet: this.nodeSet,
-            reused: this.nodes,
-            topID: type,
-            length
-        });
-    }
-}
-
-// Elements are used to compose syntax nodes during parsing.
-class Element {
-    children: (Element | TreeElement)[] = [];
-
-    constructor(
-        // The node's [id](https://lezer.codemirror.net/docs/ref/#common.NodeType.id).
-        readonly type: number,
-        // The start of the node, as an offset from the start of the document.
-        readonly from: number,
-        // The end of the node.
-        readonly to: number,
-        // The node's child nodes
-        children: readonly (Element | TreeElement)[] = []
-    ) {
-        this.children.push(...children);
-    }
-
-    writeTo(buf: Buffer, offset: number) {
-        const startOff = buf.content.length;
-        buf.writeElements(this.children, offset);
-        buf.content.push(this.type, this.from + offset, this.to + offset, buf.content.length + 4 - startOff);
-    }
-
-    toTree(nodeSet: NodeSet): Tree {
-        return new Buffer(nodeSet).writeElements(this.children, -this.from).finish(this.type, this.to - this.from);
-    }
-}
-
-class TreeElement {
-    constructor(
-        readonly tree: Tree,
-        readonly from: number
-    ) {}
-
-    get to() {
-        return this.from + this.tree.length;
-    }
-
-    get type() {
-        return this.tree.type.id;
-    }
-
-    get children() {
-        return [];
-    }
-
-    writeTo(buf: Buffer, offset: number) {
-        buf.nodes.push(this.tree);
-        buf.content.push(buf.nodes.length - 1, this.from + offset, this.to + offset, -1);
-    }
-
-    toTree(): Tree {
-        return this.tree;
-    }
-}
-
-const elt = (type: Type, from: number, to: number, children?: readonly (Element | TreeElement)[]) => {
-    return new Element(type, from, to, children);
 };
 
 export const pgmlHighlighting = styleTags({
