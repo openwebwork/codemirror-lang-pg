@@ -22,6 +22,8 @@ export const pgTextLanguageData = {
                 type: 'constant',
                 boost: 97
             })
-        ])
+        ]),
+        // '(', '[', and '{' are removed from this list because they interfere with the above snippets.
+        closeBrackets: { brackets: ["'", '"'] }
     })
 };

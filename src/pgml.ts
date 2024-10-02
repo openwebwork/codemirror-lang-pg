@@ -215,15 +215,33 @@ const pgmlFormat = (block: Item, offset: number): Element<Type>[] => {
         return children.length ? [elt(Type.Paragraph, block.from + offset, block.to + offset, children)] : [];
     } else if (block.type === 'variable') {
         children.unshift(elt(Type.VariableMark, block.from + offset, block.from + 1 + offset));
-        children.push(new TreeElement(pgPerlParser.parse(`$${block.text ?? ''}`), block.from + 1 + offset));
-        children.push(
-            elt(
-                Type.VariableMark,
-                block.to - 1 - (block.hasStar ? block.hasStar : block.hasDblStar ? 2 : 0) + offset,
-                block.to + offset
-            )
-        );
+        if (block.text?.length)
+            children.push(new TreeElement(pgPerlParser.parse(`$${block.text}`), block.from + 1 + offset));
+        if (typeof block.terminator === 'string')
+            children.push(
+                elt(
+                    Type.VariableMark,
+                    block.to - 1 - (block.hasStar ? block.hasStar : block.hasDblStar ? 2 : 0) + offset,
+                    block.to + offset
+                )
+            );
+        else children.push(elt(Type.PGMLError, block.to + offset, block.to + offset));
         return [elt(Type.Variable, block.from + offset, block.to + offset, children)];
+    } else if (block.type === 'command') {
+        children.unshift(elt(Type.PerlCommandMark, block.from + offset, block.from + 2 + offset));
+        children.push(
+            new TreeElement(pgPerlParser.parse(block.text ?? ''), (block.textFrom ?? block.from + 2) + offset)
+        );
+        if (typeof block.terminator === 'string')
+            children.push(
+                elt(
+                    Type.PerlCommandMark,
+                    block.to - (block.hasStar ? block.hasStar : block.hasDblStar ? 2 : 0) - 2 + offset,
+                    block.to + offset
+                )
+            );
+        else children.push(elt(Type.PGMLError, block.to + offset, block.to + offset));
+        return [elt(Type.PerlCommand, block.from + offset, block.to + offset, children)];
     } else if (block.type === 'pre') {
         children.unshift(elt(Type.PreMark, block.from + offset, block.from + (block.token?.length ?? 1) + offset));
         return [elt(Type.Pre, block.from + offset, block.to + offset, children)];
@@ -239,21 +257,15 @@ const pgmlFormat = (block: Item, offset: number): Element<Type>[] => {
             );
         else children.push(elt(Type.PGMLError, block.to + offset, block.to + offset));
         return [elt(Type.Verbatim, block.from + offset, block.to + offset, children)];
-    } else if (block.type === 'command') {
-        children.unshift(elt(Type.PerlCommandMark, block.from + offset, block.from + 2 + offset));
-        children.push(
-            new TreeElement(pgPerlParser.parse(block.text ?? ''), (block.textFrom ?? block.from + 2) + offset)
-        );
-        children.push(
-            elt(
-                Type.PerlCommandMark,
-                block.to - (block.hasStar ? block.hasStar : block.hasDblStar ? 2 : 0) - 2 + offset,
-                block.to + offset
-            )
-        );
-        return [elt(Type.PerlCommand, block.from + offset, block.to + offset, children)];
     } else if (block.type === 'comment') {
-        return [elt(Type.Comment, block.from + offset, block.to + offset)];
+        return [
+            elt(
+                Type.Comment,
+                block.from + offset,
+                block.to + offset,
+                block.terminator instanceof RegExp ? [elt(Type.PGMLError, block.to + offset, block.to + offset)] : []
+            )
+        ];
     } else if (block.type === 'answer') {
         const firstOptionBlock = options.at(0);
         return [
@@ -302,13 +314,15 @@ const pgmlFormat = (block: Item, offset: number): Element<Type>[] => {
         const firstOptionBlock = options.at(0);
         const to = firstOptionBlock ? firstOptionBlock.from : block.to + offset;
         children.unshift(elt(Type.ImageMark, block.from + offset, block.from + 2 + offset));
-        children.push(elt(Type.ImageMark, to - 2, to));
+        if (typeof block.terminator === 'string') children.push(elt(Type.ImageMark, to - 2, to));
+        else children.push(elt(Type.PGMLError, to, to));
         return [elt(Type.Image, block.from + offset, to, children), ...options];
     } else if (block.type === 'tag') {
         const firstOptionBlock = options.at(0);
         const to = firstOptionBlock ? firstOptionBlock.from : block.to + offset;
         children.unshift(elt(Type.TagMark, block.from + offset, block.from + 2 + offset));
-        children.push(elt(Type.TagMark, to - 2, to));
+        if (typeof block.terminator === 'string') children.push(elt(Type.TagMark, to - 2, to));
+        else children.push(elt(Type.PGMLError, to, to));
         return [elt(Type.Tag, block.from + offset, to, children), ...options];
     } else if (block.type === 'options') {
         children.unshift(elt(Type.OptionMark, block.from + offset, block.from + 1 + offset));

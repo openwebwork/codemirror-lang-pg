@@ -6,7 +6,7 @@ import { snippetCompletion } from '@codemirror/autocomplete';
 let i = 99;
 let rank = 1;
 
-const answerRuleSnippet = snippetCompletion('[_${}]${}{${answer}}', {
+const answerRuleSnippet = snippetCompletion('[_${}]${}{${$answer}}', {
     label: '[_]{ }',
     info: 'answer rule',
     section: { name: 'answer', rank },
@@ -22,7 +22,7 @@ const mathModeSnippets = [
     ['[:: ::]', 'parsed display style math'],
     ['[::: :::]', 'parsed block display math']
 ].map(([label, info]) => {
-    return snippetCompletion(label.replace(' ', '${ }'), {
+    return snippetCompletion(label.replace(' ', '${ }') + '${}', {
         label,
         info,
         type: 'function',
@@ -31,7 +31,7 @@ const mathModeSnippets = [
     });
 });
 
-const variableSnippet = snippetCompletion('[$${ }]', {
+const variableSnippet = snippetCompletion('[$${ }]${}', {
     label: '[$ ]',
     info: 'variable',
     section: { name: 'substitution', rank: ++rank },
@@ -39,7 +39,7 @@ const variableSnippet = snippetCompletion('[$${ }]', {
     boost: i--
 });
 
-const perlCommandSnippet = snippetCompletion('[@ ${ } @]', {
+const perlCommandSnippet = snippetCompletion('[@ ${ } @]${}', {
     label: '[@ @]',
     info: 'perl command',
     section: { name: 'substitution', rank },
@@ -47,36 +47,58 @@ const perlCommandSnippet = snippetCompletion('[@ ${ } @]', {
     boost: i--
 });
 
-const imageSnippet = snippetCompletion('[!${alt}!]{${image}}', {
+const imageSnippet = snippetCompletion('[!${alt text}!]{${$source}}${}', {
     label: '[! !]{ }',
     info: 'image',
-    type: 'variable',
+    type: 'type',
     section: { name: 'substitution', rank },
     boost: i--
 });
 
-const tagSnippet = snippetCompletion('[< ${ } >]', {
+const tagSnippet = snippetCompletion('[<${ }>]${}', {
     label: '[< >]',
     info: 'html tag',
     type: 'type',
-    section: { name: 'formatting', rank: ++rank },
+    section: { name: 'substitution', rank: ++rank },
     boost: i--
 });
 
-const tableSnippet = snippetCompletion('[# [.${ }.] #]', {
-    label: '[# [. .] #]',
+const commentSnippet = snippetCompletion('[% ${ } %]${}', {
+    label: '[% %]',
+    info: 'comment',
+    type: 'type',
+    section: { name: 'substitution', rank },
+    boost: i--
+});
+
+const tableSnippet = snippetCompletion('[#${ }#]${}', {
+    label: '[# #]',
     info: 'table',
-    section: { name: 'formatting', rank },
+    section: { name: 'table', rank: ++rank },
     type: 'type',
     boost: i--
 });
 
-const tableCellSnippet = snippetCompletion('[.${ }.]', {
+const tableCellSnippet = snippetCompletion('[.${ }.]${}', {
     label: '[. .]',
     info: 'table cell',
-    section: { name: 'formatting', rank },
+    section: { name: 'table', rank },
     type: 'type',
     boost: i--
+});
+
+++rank;
+const verbatimSnippets = [
+    ['[| |]', 'verbatim'],
+    ['[|| ||]', 'verbatim with unprocessed inner verbatim']
+].map(([label, info]) => {
+    return snippetCompletion(label.replace(' ', '${ }') + '${}', {
+        label,
+        info,
+        type: 'type',
+        section: { name: 'formatting', rank },
+        boost: i--
+    });
 });
 
 const preSnippet = snippetCompletion(':   ${}', {
@@ -91,43 +113,76 @@ export const pgmlLanguageData = {
     PGMLContent: defineLanguageFacet({
         commentTokens: { block: { open: '[%', close: '%]' } },
         autocomplete: (context: CompletionContext) => {
-            const isIn = (nodeName: string) => {
-                for (
-                    let pos: SyntaxNode | null = syntaxTree(context.state).resolveInner(context.pos, 0);
-                    pos;
-                    pos = pos.parent
-                ) {
-                    if (pos.name === nodeName && (!pos.lastChild || pos.lastChild.name !== 'PGMLError')) return true;
+            const nodeAt = syntaxTree(context.state).resolveInner(context.pos, 0);
+            const currentLine = context.state.doc.lineAt(context.pos);
+            const textBefore = currentLine.text.slice(0, context.pos - currentLine.from);
+            const textAfter = currentLine.text.slice(context.pos - currentLine.from);
+
+            // This returns 2 if inside a complete node, 1 if inside an incomplete node, and false otherwise.
+            const inside = (nodeNames: string | string[]) => {
+                for (let pos: SyntaxNode | null = nodeAt; pos; pos = pos.parent) {
+                    if ((nodeNames instanceof Array && nodeNames.includes(pos.name)) || nodeNames === pos.name)
+                        return (pos.name === 'Comment' && !pos.lastChild) ||
+                            (pos.name !== 'Comment' && pos.lastChild && pos.lastChild.name !== 'PGMLError')
+                            ? 2
+                            : 1;
                     if (pos.type.isTop) break;
                 }
                 return false;
             };
 
-            const previous = context.matchBefore(/.*/);
+            if (inside(['Comment', 'PerlCommand', 'Variable', 'Option', 'Verbatim']) === 2) return;
 
-            if (isIn('Table') && !isIn('TableCell')) {
+            const insideTable = inside('Table');
+            if (
+                (insideTable == 2 || (insideTable == 1 && (!textBefore.endsWith('[#') || /^\s*#\]/.test(textAfter)))) &&
+                (!inside('TableCell') || (textBefore.endsWith('[.') && !/^[ \t]*.\]/.test(textAfter)))
+            ) {
+                const previous = context.matchBefore(/\[|\[\./);
                 return {
-                    from:
-                        previous && previous.text.lastIndexOf('[') !== -1
-                            ? previous.from + previous.text.lastIndexOf('[')
-                            : context.pos,
+                    from: previous?.from ?? context.pos,
                     options: [tableCellSnippet]
                 };
             }
 
-            if (isIn('MathMode')) {
+            const insideMathMode = inside('MathMode');
+            if (
+                insideMathMode == 2 ||
+                (insideMathMode == 1 &&
+                    (!/\[`{1,3}$/.test(textBefore) || /^\s*`{1,3}\]/.test(textAfter)) &&
+                    (!/\[:{1,3}$/.test(textBefore) || /^\s*:{1,3}\]/.test(textAfter)))
+            ) {
+                const previous = context.matchBefore(/\[|\[\$|\[@/);
+                if (!previous && !context.explicit) return;
                 return {
-                    from:
-                        previous && previous.text.lastIndexOf('[') !== -1
-                            ? previous.from + previous.text.lastIndexOf('[')
-                            : context.pos,
+                    from: previous?.from ?? context.pos,
                     options: [variableSnippet, perlCommandSnippet]
                 };
             }
 
-            if (previous && /\[(`*|:*|[$@!<#])$/.test(previous.text)) {
+            const insideImage = inside('Image');
+            if (insideImage == 2 || (insideImage == 1 && (!textBefore.endsWith('[!') || /^\s*!\]/.test(textAfter)))) {
+                const previous = context.matchBefore(/\[[$@]?\s*$/);
+                if (!previous && !context.explicit) return;
                 return {
-                    from: previous.from + previous.text.lastIndexOf('['),
+                    from: previous?.from ?? context.pos,
+                    options: [variableSnippet, perlCommandSnippet]
+                };
+            }
+
+            const insideVerbatim = inside('Verbatim');
+            if (
+                insideVerbatim == 2 ||
+                (insideVerbatim == 1 && (!/\[\|*$/.test(textBefore) || /^\s*\|*\]/.test(textAfter)))
+            ) {
+                return null;
+            }
+
+            if (/\[(`{1,3}|:{1,3}|\|{1,}|[_$@!<#%])?[\t ]*$/.test(textBefore)) {
+                const previous = context.matchBefore(/\[(`{1,3}|:{1,3}|\|{1,}|[_$@!<#%])?[\t ]*$/);
+                if (!previous && !context.explicit) return;
+                return {
+                    from: previous?.from ?? context.pos,
                     options: [
                         answerRuleSnippet,
                         ...mathModeSnippets,
@@ -135,19 +190,22 @@ export const pgmlLanguageData = {
                         perlCommandSnippet,
                         imageSnippet,
                         tagSnippet,
-                        tableSnippet
+                        commentSnippet,
+                        tableSnippet,
+                        ...verbatimSnippets
                     ]
                 };
             }
 
-            if (previous && /^(\s{4})*:\s*/.test(previous.text)) {
+            if (/^(\s{4})*:\s*/.test(textBefore)) {
+                const previous = context.matchBefore(/:\s*/);
                 return {
-                    from: previous.from + previous.text.lastIndexOf(':'),
+                    from: previous?.from ?? context.pos,
                     options: [preSnippet]
                 };
             }
 
-            if (!context.explicit) return null;
+            if (!context.explicit) return;
 
             return {
                 from: context.pos,
@@ -158,7 +216,9 @@ export const pgmlLanguageData = {
                     perlCommandSnippet,
                     imageSnippet,
                     tagSnippet,
+                    commentSnippet,
                     tableSnippet,
+                    ...verbatimSnippets,
                     preSnippet
                 ]
             };
