@@ -866,7 +866,7 @@ export class Item implements BlockDefinition {
         if (!indent) indent = '';
         const strings = [];
         for (const id of Object.keys(this).sort()) {
-            if (id === 'stack' || !Object.hasOwn(this, id)) continue;
+            if (id === 'stack' || id === 'prev' || !Object.hasOwn(this, id)) continue;
             const value = this[id as keyof Item];
             if (typeof value === 'undefined') continue;
             if (value instanceof Array && (id === 'children' || id === 'optionStack')) {
