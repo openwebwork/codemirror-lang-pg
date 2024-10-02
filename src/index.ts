@@ -12,7 +12,8 @@ import {
     languageDataProp
 } from '@codemirror/language';
 import { parseMixed } from '@lezer/common';
-import { completeFromList, snippetCompletion } from '@codemirror/autocomplete';
+import type { CompletionContext } from '@codemirror/autocomplete';
+import { snippetCompletion } from '@codemirror/autocomplete';
 import { parser } from './pg.grammar';
 import { PGMLParser } from './pgml';
 import { pgmlLanguageData } from './pgml-language-data';
@@ -77,15 +78,19 @@ export const pgLanguage = LRLanguage.define({
     }),
     languageData: {
         commentTokens: { line: '#' },
-        autocomplete: completeFromList(
-            ['PGML', 'PGML_HINT', 'PGML_SOLUTION', 'TEXT', 'HINT', 'SOLUTION'].map((t, i) =>
-                snippetCompletion(`BEGIN_${t}\n\${}\nEND_${t}`, {
-                    label: `BEGIN_${t}`,
-                    type: 'type',
-                    boost: 99 - i
-                })
-            )
-        )
+        autocomplete: (context: CompletionContext) => {
+            if (!context.matchBefore(/^\s*\w*/)) return;
+            return {
+                from: context.matchBefore(/\w+/)?.from ?? context.pos,
+                options: ['PGML', 'PGML_HINT', 'PGML_SOLUTION', 'TEXT', 'HINT', 'SOLUTION'].map((t, i) =>
+                    snippetCompletion(`BEGIN_${t}\n\${}\nEND_${t}`, {
+                        label: `BEGIN_${t}`,
+                        type: 'type',
+                        boost: 99 - i
+                    })
+                )
+            };
+        }
     }
 });
 

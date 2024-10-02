@@ -122,13 +122,10 @@ class BlockContext implements PartialParse {
         )
             return this.finish();
 
-        const parser = new PGMLParse(this.content);
-        if (parser.root) {
-            for (const item of parser.root.stack ?? []) {
-                if (!(item instanceof Item)) continue;
-                for (const elt of pgmlFormat(item, this.from)) {
-                    this.addNode(elt.toTree(this.parser.nodeSet), elt.from);
-                }
+        for (const item of new PGMLParse(this.content).root?.stack ?? []) {
+            if (!(item instanceof Item)) continue;
+            for (const elt of pgmlFormat(item, this.from)) {
+                this.addNode(elt.toTree(this.parser.nodeSet), elt.from);
             }
         }
         this.contentPos += this.content.length;
@@ -289,8 +286,8 @@ const pgmlFormat = (block: Item, offset: number): Element<Type>[] => {
         children.unshift(elt(Type.TableMark, block.from + offset, block.from + (block.token?.length ?? 0) + offset));
         if (typeof block.terminator === 'string')
             children.push(elt(Type.TableMark, to - block.terminator.length - (block.hasStar ?? 0), to));
-        else children.push(elt(Type.PGMLError, to + offset, to + offset));
-        return [elt(Type.Table, block.from + offset, to + offset, children), ...options];
+        else children.push(elt(Type.PGMLError, to, to));
+        return [elt(Type.Table, block.from + offset, to, children), ...options];
     } else if (block.type === 'table-cell') {
         const firstOptionBlock = options.at(0);
         const to = firstOptionBlock ? firstOptionBlock.from : block.to + offset;
@@ -299,8 +296,8 @@ const pgmlFormat = (block: Item, offset: number): Element<Type>[] => {
         );
         if (typeof block.terminator === 'string')
             children.push(elt(Type.TableCellMark, to - block.terminator.length - (block.hasStar ?? 0), to));
-        else children.push(elt(Type.PGMLError, to + offset, to + offset));
-        return [elt(Type.TableCell, block.from + offset, to + offset, children), ...options];
+        else children.push(elt(Type.PGMLError, to, to));
+        return [elt(Type.TableCell, block.from + offset, to, children), ...options];
     } else if (block.type === 'image') {
         const firstOptionBlock = options.at(0);
         const to = firstOptionBlock ? firstOptionBlock.from : block.to + offset;
