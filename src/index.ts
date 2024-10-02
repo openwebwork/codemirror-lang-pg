@@ -5,6 +5,7 @@ import {
     continuedIndent,
     defineLanguageFacet,
     delimitedIndent,
+    flatIndent,
     foldInside,
     foldNodeProp,
     indentNodeProp,
@@ -14,26 +15,21 @@ import { parseMixed } from '@lezer/common';
 import { completeFromList, snippetCompletion } from '@codemirror/autocomplete';
 import { parser } from './pg.grammar';
 import { PGMLParser } from './pgml';
+import { pgmlLanguageData } from './pgml-language-data';
 import { PGTextParser } from './pg-text';
+import { pgTextLanguageData } from './pg-text-language-data';
 export { pgmlShow } from './pgml-parse';
 
 export const pgmlParser = new PGMLParser([
     indentNodeProp.add({ PGMLContent: () => null }),
-    languageDataProp.add({
-        PGMLContent: defineLanguageFacet({
-            commentTokens: { block: { open: '[%', close: '%]' } },
-            autocomplete: completeFromList([{ label: 'my', type: 'keyword' }])
-        })
-    })
+    languageDataProp.add(pgmlLanguageData)
 ]);
 export const pgmlLanguage = new Language(defineLanguageFacet(), pgmlParser, [], 'pgml');
 export const pgml = () => new LanguageSupport(pgmlLanguage);
 
 export const pgTextParser = new PGTextParser([
     indentNodeProp.add({ PGTextContent: () => null }),
-    languageDataProp.add({
-        PGTextContent: defineLanguageFacet({ autocomplete: completeFromList([{ label: 'my', type: 'keyword' }]) })
-    })
+    languageDataProp.add(pgTextLanguageData)
 ]);
 export const pgTextLanguage = new Language(defineLanguageFacet(), pgTextParser, [], 'pg-text');
 export const pgText = () => new LanguageSupport(pgTextLanguage);
@@ -46,7 +42,8 @@ export const pgLanguage = LRLanguage.define({
                 IfStatement: continuedIndent({ except: /^\s*({|else\b|elsif\b)/ }),
                 Block: delimitedIndent({ closing: '}' }),
                 String: () => null,
-                Statement: continuedIndent()
+                Statement: continuedIndent(),
+                'PGMLBlock PGTextBlock': flatIndent
             }),
             foldNodeProp.add({
                 'Block Array ArrayRef HashRef PGMLBlock PGTextBlock': foldInside,

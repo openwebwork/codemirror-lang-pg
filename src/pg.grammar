@@ -668,6 +668,6 @@ maybeParens<content> { !noParens content | "(" !parens content ")" }
     }
 }
 
-@external propSource pgHighlighting from "./highlight"
+@external propSource pgHighlighting from "./pg-highlighting"
 
 @detectDelim

@@ -54,7 +54,9 @@ enum Type {
     Variable,
     VariableMark,
     Verbatim,
-    VerbatimMark
+    VerbatimMark,
+
+    PGMLError
 }
 
 const nodeProps = new Map<Type, [NodeProp<readonly string[]>, string[]][]>([
@@ -64,7 +66,13 @@ const nodeProps = new Map<Type, [NodeProp<readonly string[]>, string[]][]>([
 
 const nodeTypes = [NodeType.none];
 for (let i = 1, name; (name = Type[i]); ++i) {
-    nodeTypes[i] = NodeType.define({ id: i, name, props: nodeProps.get(i) ?? [], top: name == 'PGMLContent' });
+    nodeTypes[i] = NodeType.define({
+        id: i,
+        name,
+        props: nodeProps.get(i) ?? [],
+        top: name == 'PGMLContent',
+        error: name === 'PGMLError'
+    });
 }
 
 // Block-level parsing functions get access to this context object.
@@ -224,13 +232,15 @@ const pgmlFormat = (block: Item, offset: number): Element<Type>[] => {
         return [elt(Type.Pre, block.from + offset, block.to + offset, children)];
     } else if (block.type === 'verbatim') {
         children.unshift(elt(Type.VerbatimMark, block.from + offset, block.from + (block.token?.length ?? 2) + offset));
-        children.push(
-            elt(
-                Type.VerbatimMark,
-                block.to - (block.terminator as string).length - (block.hasStar ?? 0) + offset,
-                block.to + offset
-            )
-        );
+        if (typeof block.terminator === 'string')
+            children.push(
+                elt(
+                    Type.VerbatimMark,
+                    block.to - block.terminator.length - (block.hasStar ?? 0) + offset,
+                    block.to + offset
+                )
+            );
+        else children.push(elt(Type.PGMLError, block.to + offset, block.to + offset));
         return [elt(Type.Verbatim, block.from + offset, block.to + offset, children)];
     } else if (block.type === 'command') {
         children.unshift(elt(Type.PerlCommandMark, block.from + offset, block.from + 2 + offset));
@@ -263,19 +273,23 @@ const pgmlFormat = (block: Item, offset: number): Element<Type>[] => {
         const firstOptionBlock = options.at(0);
         const to = firstOptionBlock ? firstOptionBlock.from : block.to + offset;
         children.unshift(elt(Type.MathModeMark, block.from + offset, block.from + (block.token?.length ?? 0) + offset));
-        children.push(
-            elt(
-                Type.MathModeMark,
-                to - (block.terminator as string).length - (block.hasStar ? block.hasStar : block.hasDblStar ? 2 : 0),
-                to
-            )
-        );
+        if (typeof block.terminator === 'string')
+            children.push(
+                elt(
+                    Type.MathModeMark,
+                    to - block.terminator.length - (block.hasStar ? block.hasStar : block.hasDblStar ? 2 : 0),
+                    to
+                )
+            );
+        else children.push(elt(Type.PGMLError, to + offset, to + offset));
         return [elt(Type.MathMode, block.from + offset, to, children), ...options];
     } else if (block.type === 'table') {
         const firstOptionBlock = options.at(0);
         const to = firstOptionBlock ? firstOptionBlock.from : block.to + offset;
         children.unshift(elt(Type.TableMark, block.from + offset, block.from + (block.token?.length ?? 0) + offset));
-        children.push(elt(Type.TableMark, to - (block.terminator as string).length - (block.hasStar ?? 0), to));
+        if (typeof block.terminator === 'string')
+            children.push(elt(Type.TableMark, to - block.terminator.length - (block.hasStar ?? 0), to));
+        else children.push(elt(Type.PGMLError, to + offset, to + offset));
         return [elt(Type.Table, block.from + offset, to + offset, children), ...options];
     } else if (block.type === 'table-cell') {
         const firstOptionBlock = options.at(0);
@@ -283,7 +297,9 @@ const pgmlFormat = (block: Item, offset: number): Element<Type>[] => {
         children.unshift(
             elt(Type.TableCellMark, block.from + offset, block.from + (block.token?.length ?? 0) + offset)
         );
-        children.push(elt(Type.TableCellMark, to - (block.terminator as string).length - (block.hasStar ?? 0), to));
+        if (typeof block.terminator === 'string')
+            children.push(elt(Type.TableCellMark, to - block.terminator.length - (block.hasStar ?? 0), to));
+        else children.push(elt(Type.PGMLError, to + offset, to + offset));
         return [elt(Type.TableCell, block.from + offset, to + offset, children), ...options];
     } else if (block.type === 'image') {
         const firstOptionBlock = options.at(0);
@@ -363,7 +379,9 @@ const pgmlFormat = (block: Item, offset: number): Element<Type>[] => {
                       ]
                     : []),
                 ...(codeText instanceof Item ? [elt(Type.CodeText, codeText.from + offset, codeText.to + offset)] : []),
-                elt(Type.CodeMark, block.to - (block.terminator as string).length + offset, block.to + offset)
+                typeof block.terminator === 'string'
+                    ? elt(Type.CodeMark, block.to - block.terminator.length + offset, block.to + offset)
+                    : elt(Type.PGMLError, block.to + offset, block.to + offset)
             ])
         ];
     } else if (block.type === 'slash') {
@@ -393,7 +411,8 @@ export const pgmlHighlighting = styleTags({
     Comment: t.lineComment,
     'Emphasis/...': t.emphasis,
     'StrongEmphasis/...': t.strong,
-    StarOption: t.controlOperator
+    StarOption: t.controlOperator,
+    PGMLError: t.invalid
 });
 
 // A PGML parser configuration.

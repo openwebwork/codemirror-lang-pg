@@ -1,18 +1,3 @@
-const warnings: string[] = [];
-//const warningsFatal = false;
-
-const Warning = (..._messages: string[]) => {
-    /*
-    const warning = messages.join('');
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    if (warningsFatal) {
-        console.log(warning);
-        process.exit(1);
-    }
-    warnings.push(warning);
-    */
-};
-
 const splitPatternParts = [
     '^(?:\\t| {4})+', // indent
     '\\[(?:[!<%@$#.]|::?:?|``?`?|\\|+ ?)', // open
@@ -109,25 +94,6 @@ export class PGMLParse {
         // Javascript adds that, but Perl doesn't (unless you add the optional limit -1 argument to split).
         if (split.slice(-1)[0] === '') split.pop();
         return split;
-    }
-
-    Error(message: string) {
-        Warning(`${this.block?.token?.trim() ?? 'unknown block'}: ${message}`);
-    }
-
-    Unwind() {
-        const block = this.block;
-        this.block = block?.prev;
-        this.block?.popItem();
-        this.Text(block?.token ?? '');
-        this.block?.pushItem(...(block?.stack ?? []));
-        if (block?.terminator && !(block.terminator instanceof RegExp)) this.Text(block.terminator);
-        this.atBlockStart = 0;
-    }
-
-    blockError(message: string) {
-        this.Error(message);
-        this.Unwind();
     }
 
     isLineEnd(block?: Block) {
@@ -255,10 +221,7 @@ export class PGMLParse {
         const end = this.block?.isContainer ? this.block.terminator : this.block?.containerEnd;
         if (end) block.containerEnd = end;
 
-        if (block.container && this.block?.type !== block.container) {
-            Warning(`A ${type} must appear in a ${block.container}`);
-            block.hasWarning = true;
-        }
+        if (block.container && this.block?.type !== block.container) block.hasWarning = true;
 
         this.block?.pushItem(block);
         block.prev = this.block;
@@ -274,9 +237,7 @@ export class PGMLParse {
         const topItem = block?.topItem();
         if (topItem instanceof Block && topItem.type === 'break' && block?.type !== 'align') block?.popItem();
         while (block?.type !== 'root') {
-            if (block?.terminator instanceof RegExp || block?.cancelPar)
-                this.blockError(`block not closed before ${action}`);
-            else this.Terminate();
+            this.Terminate();
             if (endAt && endAt === block) return;
             block = this.block;
         }
@@ -317,7 +278,6 @@ export class PGMLParse {
     }
 
     Unbalanced(token: string) {
-        if (this.block?.cancelUnbalanced) this.blockError(`parenthesis mismatch: block terminated by ${token}`);
         this.Text(token);
     }
 
@@ -340,7 +300,6 @@ export class PGMLParse {
             if (this.block) this.block.to += 1;
             this.ignoreNL = 0;
         } else {
-            while (this.block?.cancelNL) this.blockError('block not closed before line break');
             const top = this.block?.topItem();
             if (top && top instanceof Block && top.breakInside) top.pushText(token);
             else this.Text(token);
@@ -351,7 +310,6 @@ export class PGMLParse {
     }
 
     ForceBreak(token: string) {
-        while (this.block?.cancelNL) this.blockError('block not closed before forced break');
         if (token === '   ') {
             this.End('forced break');
             this.Item('forced', token, { noIndent: 1 });
@@ -732,7 +690,6 @@ export class PGMLParse {
             else if (item.type === 'variable') strings.push(this.replaceVariable(item));
             else if (item.type === 'command') strings.push(this.replaceCommand(item));
             else if (item.type === 'balance') strings.push(this.replaceBalance(item));
-            else Warning(`Warning: unexpected type ${item.type} in stackText`);
         }
         return strings.join('');
     }
@@ -1073,11 +1030,8 @@ export class Table extends Block {
             if (item.type === 'text') {
                 const text = item.stack?.join('') ?? '';
                 this.to += text.length;
-                if (!/^\s*$/.test(text)) Warning('Table text must be in cells');
             } else if (item.type === 'table-cell' || item.type === 'options' || item.type === 'comment') {
                 super.pushItem(item);
-            } else {
-                Warning('Tables can contain only table cells');
             }
         }
     }
@@ -1333,8 +1287,5 @@ const BlockDefs: Record<string, OriginalBlockDefinition | undefined> = {
 };
 
 export const pgmlShow = (input: string) => {
-    warnings.length = 0;
-    const parser = new PGMLParse(input);
-    if (warnings.length) console.warn('Errors parsing PGML:\n' + warnings.join('\n'));
-    return parser.root?.show() ?? '';
+    return new PGMLParse(input).root?.show() ?? '';
 };
