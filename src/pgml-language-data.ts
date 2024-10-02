@@ -91,23 +91,19 @@ export const pgmlLanguageData = {
     PGMLContent: defineLanguageFacet({
         commentTokens: { block: { open: '[%', close: '%]' } },
         autocomplete: (context: CompletionContext) => {
-            const previous = context.matchBefore(/.*/);
-
             const isIn = (nodeName: string) => {
                 for (
                     let pos: SyntaxNode | null = syntaxTree(context.state).resolveInner(context.pos, 0);
                     pos;
                     pos = pos.parent
                 ) {
-                    if (
-                        pos.name === nodeName &&
-                        (!pos.lastChild || pos.lastChild.name !== 'PGMLError' || context.pos !== pos.lastChild.from)
-                    )
-                        return true;
+                    if (pos.name === nodeName && (!pos.lastChild || pos.lastChild.name !== 'PGMLError')) return true;
                     if (pos.type.isTop) break;
                 }
                 return false;
             };
+
+            const previous = context.matchBefore(/.*/);
 
             if (isIn('Table') && !isIn('TableCell')) {
                 return {

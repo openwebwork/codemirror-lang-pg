@@ -147,6 +147,17 @@ export class PGMLParse {
             )
                 this.Terminate(token);
             else if (
+                !block.containerEnd &&
+                block.prev?.terminator &&
+                RegExp(
+                    `^${
+                        block.prev.terminator instanceof RegExp ? block.prev.terminator.source : block.prev.terminator
+                    }$`
+                ).test(token)
+            ) {
+                this.Terminate();
+                this.Terminate(token);
+            } else if (
                 block.containerEnd &&
                 RegExp(
                     `^${block.containerEnd instanceof RegExp ? block.containerEnd.source : block.containerEnd}$`
@@ -266,14 +277,11 @@ export class PGMLParse {
         delete block.noIndent;
         delete block.ignoreIndent;
         this.block = prev;
-        if (block.stack && prev) {
-            if (block.stack.length == 0) prev.popItem();
-            else if (block.combine) prev.combineTopItems();
-        }
+        if (block.stack && block.combine) prev?.combineTopItems();
     }
 
     EndContainer(token: string) {
-        while (!this.block?.isContainer) this.Terminate(token);
+        while (!this.block?.isContainer) this.Terminate();
         this.Terminate(token);
     }
 
