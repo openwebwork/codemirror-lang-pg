@@ -9,9 +9,10 @@ import {
     foldInside,
     foldNodeProp,
     indentNodeProp,
-    languageDataProp
+    languageDataProp,
+    syntaxTree
 } from '@codemirror/language';
-import { parseMixed } from '@lezer/common';
+import { SyntaxNode, parseMixed } from '@lezer/common';
 import type { CompletionContext } from '@codemirror/autocomplete';
 import { snippetCompletion } from '@codemirror/autocomplete';
 import { parser } from './pg.grammar';
@@ -79,6 +80,34 @@ export const pgLanguage = LRLanguage.define({
     languageData: {
         commentTokens: { line: '#' },
         autocomplete: (context: CompletionContext) => {
+            for (
+                let pos: SyntaxNode | null = syntaxTree(context.state).resolveInner(context.pos, -1);
+                pos;
+                pos = pos.parent
+            ) {
+                if (pos.name === 'MethodInvocation') {
+                    if (pos.parent?.name !== 'ExpressionStatement' && !context.explicit) break;
+                    const arrowOperator = pos.getChild('ArrowOperator');
+                    if (arrowOperator) {
+                        const before = context.matchBefore(/\w*/);
+                        if (arrowOperator.to === context.pos || before) {
+                            return {
+                                from: before?.from ?? context.pos,
+                                options: ['LATEX_IMAGE', 'TIKZ'].map((t, i) =>
+                                    snippetCompletion(`BEGIN_${t}\n\${}\nEND_${t}`, {
+                                        label: `BEGIN_${t}`,
+                                        type: 'interface',
+                                        boost: 99 - i
+                                    })
+                                )
+                            };
+                        }
+                    }
+                    break;
+                }
+                if (pos.type.isTop) break;
+            }
+
             if (!context.matchBefore(/^\s*\w*/)) return;
             return {
                 from: context.matchBefore(/\w+/)?.from ?? context.pos,
