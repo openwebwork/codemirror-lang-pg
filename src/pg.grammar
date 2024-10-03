@@ -518,8 +518,8 @@ semicolon { ";" | automaticSemicolon }
 
     PodStatement { PodDirective PodContent PodCut }
 
-    PGMLBlock { BeginPG PGMLContent EndPG }
-    PGTextBlock { BeginPG PGTextContent EndPG }
+    PGMLBlock { BeginPG "\n" PGMLContent EndPG }
+    PGTextBlock { BeginPG "\n" PGTextContent EndPG }
 }
 
 @skip { Comment | horizontalWhitespace | verticalWhitespace | UninterpolatedHeredocBody | InterpolatedHeredocBody }

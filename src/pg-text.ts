@@ -59,9 +59,9 @@ class BlockContext implements PartialParse {
         readonly ranges: readonly { from: number; to: number }[]
     ) {
         this.to = ranges[ranges.length - 1].to;
-        this.lineStart = this.lineEnd = ranges[0].from;
+        this.lineStart = ranges[0].from;
+        this.lineEnd = this.lineStart - 1;
         this.block = CompositeBlock.create(Type.PGTextContent, this.lineStart, 0, 0);
-        if (this.input.read(ranges[0].from, ranges[0].from + 1) == '\n') this.readLine();
     }
 
     get parsedPos() {
