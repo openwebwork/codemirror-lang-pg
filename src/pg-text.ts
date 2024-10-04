@@ -85,7 +85,7 @@ class BlockContext implements PartialParse {
             ++pos;
             if (!cx.delimitersResolved() && pos >= cx.end) cx.nextLine();
         }
-        for (const elt of cx.takeContent()) {
+        for (const elt of cx.takeContent(0, true)) {
             this.addNode(elt.toTree(this.parser.nodeSet), elt.from);
         }
 
@@ -160,14 +160,18 @@ class BlockContext implements PartialParse {
     }
 }
 
-enum DelimiterType {
-    InlineMathMode = 1,
-    DisplayMathMode,
-    ParsedMathMode,
-    PerlCommand,
-    Emphasis,
-    StrongEmphasis
+interface DelimiterType {
+    nodeType: Type;
+    mark: Type;
 }
+
+const Delimiters: Record<string, DelimiterType> = {
+    InlineMathMode: { nodeType: Type.InlineMathMode, mark: Type.MathModeMark },
+    DisplayMathMode: { nodeType: Type.DisplayMathMode, mark: Type.MathModeMark },
+    ParsedMathMode: { nodeType: Type.ParsedMathMode, mark: Type.ParsedMathModeMark },
+    Emphasis: { nodeType: Type.Emphasis, mark: Type.EmphasisMark },
+    StrongEmphasis: { nodeType: Type.StrongEmphasis, mark: Type.EmphasisMark }
+};
 
 class InlineDelimiter {
     constructor(
@@ -176,6 +180,9 @@ class InlineDelimiter {
         readonly to: number
     ) {}
 }
+
+const bold = [66, 79, 76, 68]; // BOLD
+const italic = [73, 84, 65, 76, 73, 67]; // ITALIC
 
 const InlineParsers: ((cx: InlineContext, next: number, pos: number) => number)[] = [
     // Perl command
@@ -188,7 +195,9 @@ const InlineParsers: ((cx: InlineContext, next: number, pos: number) => number)[
             elt(Type.PerlCommand, start, end, [
                 elt(Type.PerlCommandMark, start, start + 2),
                 new TreeElement(pgPerlParser.parse(cx.slice(start + 2, pos)), start + 2),
-                elt(Type.PerlCommandMark, pos, end)
+                cx.char(end - 2) == 92 && cx.char(end - 1) == 125
+                    ? elt(Type.PerlCommandMark, pos, end)
+                    : elt(Type.PGTextError, end, end)
             ])
         );
     },
@@ -204,10 +213,10 @@ const InlineParsers: ((cx: InlineContext, next: number, pos: number) => number)[
             pos = cx.skipSpace(pos);
         }
 
-        /* BBOLD */
-        const isBold = [66, 66, 79, 76, 68].every((ch, i) => cx.char(pos + i) == ch);
-        /* BITALIC */
-        const isItalic = [66, 73, 84, 65, 76, 73, 67].every((ch, i) => cx.char(pos + i) == ch);
+        // BBOLD
+        const isBold = [66, ...bold].every((ch, i) => cx.char(pos + i) == ch);
+        // BITALIC
+        const isItalic = [66, ...italic].every((ch, i) => cx.char(pos + i) == ch);
 
         if (isBold) pos += 5;
         else if (isItalic) pos += 7;
@@ -219,7 +228,7 @@ const InlineParsers: ((cx: InlineContext, next: number, pos: number) => number)[
             ++pos;
         } else if (isIdentifierChar(cx.char(pos))) return -1;
 
-        return cx.addDelimiter(isBold ? DelimiterType.StrongEmphasis : DelimiterType.Emphasis, start, pos);
+        return cx.addDelimiter(isBold ? Delimiters.StrongEmphasis : Delimiters.Emphasis, start, pos);
     },
 
     // Emphasis end
@@ -233,10 +242,10 @@ const InlineParsers: ((cx: InlineContext, next: number, pos: number) => number)[
             pos = cx.skipSpace(pos);
         }
 
-        /* EBOLD */
-        const isBold = [69, 66, 79, 76, 68].every((ch, i) => cx.char(pos + i) == ch);
-        /* EITALIC */
-        const isItalic = [69, 73, 84, 65, 76, 73, 67].every((ch, i) => cx.char(pos + i) == ch);
+        // EBOLD
+        const isBold = [69, ...bold].every((ch, i) => cx.char(pos + i) == ch);
+        // EITALIC
+        const isItalic = [69, ...italic].every((ch, i) => cx.char(pos + i) == ch);
 
         if (isBold) pos += 5;
         else if (isItalic) pos += 7;
@@ -253,18 +262,13 @@ const InlineParsers: ((cx: InlineContext, next: number, pos: number) => number)[
             const part = cx.parts[i];
             if (
                 part instanceof InlineDelimiter &&
-                (part.type === DelimiterType.Emphasis || part.type === DelimiterType.StrongEmphasis)
+                (part.type === Delimiters.Emphasis || part.type === Delimiters.StrongEmphasis)
             ) {
                 // Finish the content and replace the entire range in cx.parts with the emphasis node.
                 const content = cx.takeContent(i);
                 content.unshift(elt(Type.EmphasisMark, part.from, part.to));
                 content.push(elt(Type.EmphasisMark, start, pos));
-                const emphasis = (cx.parts[i] = elt(
-                    isBold ? Type.StrongEmphasis : Type.Emphasis,
-                    part.from,
-                    pos,
-                    content
-                ));
+                const emphasis = (cx.parts[i] = elt(part.type.nodeType, part.from, pos, content));
                 return emphasis.to;
             }
         }
@@ -294,7 +298,7 @@ const InlineParsers: ((cx: InlineContext, next: number, pos: number) => number)[
     (cx, next, start) => {
         if (next != 92 /* \\ */ || (cx.char(start + 1) != 40 /* ( */ && cx.char(start + 1) != 91) /* [ */) return -1;
         return cx.addDelimiter(
-            cx.char(start + 1) == 40 ? DelimiterType.InlineMathMode : DelimiterType.DisplayMathMode,
+            cx.char(start + 1) == 40 ? Delimiters.InlineMathMode : Delimiters.DisplayMathMode,
             start,
             start + 2
         );
@@ -308,7 +312,7 @@ const InlineParsers: ((cx: InlineContext, next: number, pos: number) => number)[
             const part = cx.parts[i];
             if (
                 part instanceof InlineDelimiter &&
-                (part.type === DelimiterType.InlineMathMode || part.type === DelimiterType.DisplayMathMode)
+                (part.type === Delimiters.InlineMathMode || part.type === Delimiters.DisplayMathMode)
             ) {
                 const content = cx.takeContent(i);
 
@@ -317,7 +321,7 @@ const InlineParsers: ((cx: InlineContext, next: number, pos: number) => number)[
                     cx.parts.find(
                         (p) =>
                             p instanceof InlineDelimiter &&
-                            (p.type === DelimiterType.InlineMathMode || p.type === DelimiterType.DisplayMathMode)
+                            (p.type === Delimiters.InlineMathMode || p.type === Delimiters.DisplayMathMode)
                     )
                 ) {
                     const errorNode = (cx.parts[i] = elt(Type.PGTextError, part.from, start + 2));
@@ -327,12 +331,7 @@ const InlineParsers: ((cx: InlineContext, next: number, pos: number) => number)[
                 // Finish the content and replace the entire range in cx.parts with the math mode node.
                 content.unshift(elt(Type.MathModeMark, part.from, part.to));
                 content.push(elt(Type.MathModeMark, start, start + 2));
-                const mathMode = (cx.parts[i] = elt(
-                    part.type == DelimiterType.InlineMathMode ? Type.InlineMathMode : Type.DisplayMathMode,
-                    part.from,
-                    start + 2,
-                    content
-                ));
+                const mathMode = (cx.parts[i] = elt(part.type.nodeType, part.from, start + 2, content));
                 return mathMode.to;
             }
         }
@@ -346,10 +345,10 @@ const InlineParsers: ((cx: InlineContext, next: number, pos: number) => number)[
             (start &&
                 cx.char(start - 1) == 96 &&
                 (!(cx.parts.at(-1) instanceof Element) || cx.parts.at(-1)?.type !== Type.ParsedMathMode)) ||
-            cx.parts.find((p) => p instanceof InlineDelimiter && p.type === DelimiterType.ParsedMathMode)
+            cx.parts.find((p) => p instanceof InlineDelimiter && p.type === Delimiters.ParsedMathMode)
         )
             return -1;
-        return cx.addDelimiter(DelimiterType.ParsedMathMode, start, start + (cx.char(start + 1) == 96 ? 1 : 0) + 1);
+        return cx.addDelimiter(Delimiters.ParsedMathMode, start, start + (cx.char(start + 1) == 96 ? 1 : 0) + 1);
     },
 
     // Parsed math mode end
@@ -358,7 +357,7 @@ const InlineParsers: ((cx: InlineContext, next: number, pos: number) => number)[
         // Scan back to the last parsed math mode start marker.
         for (let i = cx.parts.length - 1; i >= 0; --i) {
             const part = cx.parts[i];
-            if (part instanceof InlineDelimiter && part.type === DelimiterType.ParsedMathMode) {
+            if (part instanceof InlineDelimiter && part.type === Delimiters.ParsedMathMode) {
                 const content = cx.takeContent(i);
 
                 const numBackticks = part.to - part.from;
@@ -369,7 +368,7 @@ const InlineParsers: ((cx: InlineContext, next: number, pos: number) => number)[
                 content.unshift(elt(Type.ParsedMathModeMark, part.from, part.to));
                 content.push(elt(Type.ParsedMathModeMark, start, start + numBackticks + star));
                 const mathMode = (cx.parts[i] = elt(
-                    Type.ParsedMathMode,
+                    part.type.nodeType,
                     part.from,
                     start + numBackticks + star,
                     content
@@ -437,13 +436,23 @@ class InlineContext {
         return true;
     }
 
-    // Return element parts from the given start index on as an array of elements.
-    // All unresolved inline delimiters in the range are dropped.
-    takeContent(startIndex = 0) {
+    // Return element parts from the given start index on as an array of elements.  All unresolved inline delimiters in
+    // the range (except a delimiter in the startIndex position if resolveStart is true) are turning into the
+    // appropriate node terminated by an error node.
+    takeContent(startIndex = 0, resolveStart = false) {
         const content = [];
         for (let i = startIndex; i < this.parts.length; ++i) {
             const part = this.parts[i];
             if (part instanceof Element) content.push(part);
+            else if ((resolveStart || i > startIndex) && part instanceof InlineDelimiter) {
+                const to = this.parts[i + 1]?.from ?? this.end;
+                content.push(
+                    elt(part.type.nodeType, part.from, to, [
+                        elt(part.type.mark, part.from, part.to),
+                        elt(Type.PGTextError, to, to)
+                    ])
+                );
+            }
         }
         this.parts.length = startIndex;
         return content;
