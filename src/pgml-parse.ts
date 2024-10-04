@@ -89,7 +89,7 @@ export class PGMLParse {
 
     Split(input: string): (string | undefined)[] {
         this.input = input;
-        const split = input.replace(/^(?:\t* +|\t+ *)$/gm, '').split(splitPattern);
+        const split = input.split(splitPattern);
         // Need to remove the last entry from split array when a split occurs at the end of the input.
         // Javascript adds that, but Perl doesn't (unless you add the optional limit -1 argument to split).
         if (split.slice(-1)[0] === '') split.pop();
@@ -179,15 +179,7 @@ export class PGMLParse {
             else if (/^[}\]]$/.test(token)) this.Unbalanced(token);
             else this.Text(token);
 
-            if (token.includes('\n\n')) {
-                for (let i = 0; i < token.length; ++i) {
-                    ++this.pos;
-                    if (token[i] !== '\n' || token[i + 1] !== '\n') continue;
-                    while (this.input[this.pos] === ' ' || this.input[this.pos] === '\t') ++this.pos;
-                }
-            } else {
-                this.pos += this.split[this.i - 1]?.length ?? 0;
-            }
+            this.pos += this.split[this.i - 1]?.length ?? 0;
         }
 
         this.End('END_PGML');
