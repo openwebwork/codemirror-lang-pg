@@ -108,9 +108,72 @@ END_TEXT
                     "from": 11,
                     "to": 55,
                     "children": [
-                        { "name": "Variable", "from": 20, "to": 24 },
-                        { "name": "Variable", "from": 34, "to": 36 },
-                        { "name": "Variable", "from": 37, "to": 45 }
+                        {
+                            "name": "Variable",
+                            "from": 20,
+                            "to": 24,
+                            "children": [
+                                {
+                                    "name": "Program",
+                                    "from": 20,
+                                    "to": 24,
+                                    "children": [
+                                        {
+                                            "name": "ExpressionStatement",
+                                            "from": 20,
+                                            "to": 24,
+                                            "children": [
+                                                { "name": "PGVariable", "from": 20, "to": 24 }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Variable",
+                            "from": 34,
+                            "to": 36,
+                            "children": [
+                                {
+                                    "name": "Program",
+                                    "from": 34,
+                                    "to": 36,
+                                    "children": [
+                                        {
+                                            "name": "ExpressionStatement",
+                                            "from": 34,
+                                            "to": 36,
+                                            "children": [
+                                                { "name": "ScalarVariable", "from": 34, "to": 36 }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Variable",
+                            "from": 37,
+                            "to": 45,
+                            "children": [
+                                {
+                                    "name": "Program",
+                                    "from": 37,
+                                    "to": 45,
+                                    "children": [
+                                        {
+                                            "name": "ExpressionStatement",
+                                            "from": 37,
+                                            "to": 45,
+                                            "children": [
+                                                { "name": "PGVariable", "from": 37, "to": 45 }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
                     ]
                 },
                 { "name": "EndPG", "from": 55, "to": 63 }
@@ -156,7 +219,28 @@ END_TEXT
                                 { "name": "EmphasisMark", "from": 28, "to": 34 }
                             ]
                         },
-                        { "name": "Variable", "from": 35, "to": 39 },
+                        {
+                            "name": "Variable",
+                            "from": 35,
+                            "to": 39,
+                            "children": [
+                                {
+                                    "name": "Program",
+                                    "from": 35,
+                                    "to": 39,
+                                    "children": [
+                                        {
+                                            "name": "ExpressionStatement",
+                                            "from": 35,
+                                            "to": 39,
+                                            "children": [
+                                                { "name": "PGVariable", "from": 35, "to": 39 }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
                         {
                             "name": "Emphasis",
                             "from": 40,
@@ -166,7 +250,28 @@ END_TEXT
                                 { "name": "EmphasisMark", "from": 61, "to": 71 }
                             ]
                         },
-                        { "name": "Variable", "from": 72, "to": 76 },
+                        {
+                            "name": "Variable",
+                            "from": 72,
+                            "to": 76,
+                            "children": [
+                                {
+                                    "name": "Program",
+                                    "from": 72,
+                                    "to": 76,
+                                    "children": [
+                                        {
+                                            "name": "ExpressionStatement",
+                                            "from": 72,
+                                            "to": 76,
+                                            "children": [
+                                                { "name": "PGVariable", "from": 72, "to": 76 }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
                         {
                             "name": "StrongEmphasis",
                             "from": 77,
@@ -206,6 +311,7 @@ END_TEXT
 
 ==>
 
+
 {
     "name": "Program",
     "from": 0,
@@ -228,7 +334,28 @@ END_TEXT
                             "to": 21,
                             "children": [
                                 { "name": "MathModeMark", "from": 11, "to": 13 },
-                                { "name": "Variable", "from": 17, "to": 19 },
+                                {
+                                    "name": "Variable",
+                                    "from": 17,
+                                    "to": 19,
+                                    "children": [
+                                        {
+                                            "name": "Program",
+                                            "from": 17,
+                                            "to": 19,
+                                            "children": [
+                                                {
+                                                    "name": "ExpressionStatement",
+                                                    "from": 17,
+                                                    "to": 19,
+                                                    "children": [
+                                                        { "name": "ScalarVariable", "from": 17, "to": 19 }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
                                 { "name": "MathModeMark", "from": 19, "to": 21 }
                             ]
                         },
@@ -267,6 +394,7 @@ END_TEXT
         }
     ]
 }
+
 
 # parsed math mode
 
@@ -357,7 +485,28 @@ END_TEXT
                             "to": 76,
                             "children": [
                                 { "name": "ParsedMathModeMark", "from": 66, "to": 67 },
-                                { "name": "Variable", "from": 67, "to": 69 },
+                                {
+                                    "name": "Variable",
+                                    "from": 67,
+                                    "to": 69,
+                                    "children": [
+                                        {
+                                            "name": "Program",
+                                            "from": 67,
+                                            "to": 69,
+                                            "children": [
+                                                {
+                                                    "name": "ExpressionStatement",
+                                                    "from": 67,
+                                                    "to": 69,
+                                                    "children": [
+                                                        { "name": "ScalarVariable", "from": 67, "to": 69 }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
                                 { "name": "ParsedMathModeMark", "from": 75, "to": 76 }
                             ]
                         }

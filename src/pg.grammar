@@ -125,7 +125,7 @@ statement[@isGroup=Statement] {
     ForStatement2 {
         Label?
         (kw<"for"> | kw<"foreach">)
-        (scope? ScalarVariable | "~~" scope? HashVariable)?
+        (scope? ScalarVariable | scope? PGVariable | "~~" scope? HashVariable)?
         ParenthesizedArguments
         Block
         Continue?
@@ -138,7 +138,7 @@ statement[@isGroup=Statement] {
     PodStatement |
     EndDataStatement[@dynamicPrecedence=4] { (kw<"__END__"> | kw<"__DATA__">) endDataBlock } |
     LaTeXImageCode {
-        (ScalarVariable | expression)
+        (ScalarVariable | PGVariable | expression)
         ArrowOperator
         !arrowOperator
         LaTeXImageCodeStart
@@ -163,11 +163,11 @@ expression[@isGroup=Expression] {
     } |
     Pair |
     listType |
-    ArrayLength { "$#" (Identifier | ScalarVariable | "{" expression "}") } |
+    ArrayLength { "$#" (Identifier | ScalarVariable | PGVariable | "{" expression "}") } |
     ArrayRef |
     HashRef |
     ArrayAccessVariable {
-        (ScalarVariable | expression)
+        (ScalarVariable | PGVariable | expression)
         !arrayMember
         (ArrowOperator !arrowOperator)?
         "["
@@ -175,7 +175,7 @@ expression[@isGroup=Expression] {
         "]"
     } |
     HashAccessVariable {
-        (ScalarVariable | expression)
+        (ScalarVariable | PGVariable | expression)
         !hashMember
         (ArrowOperator !arrowOperator)?
         "{"
@@ -192,8 +192,8 @@ expression[@isGroup=Expression] {
     ScalarDereference |
     ArrayDereference |
     HashDereference |
-    FunctionDereference { "&" (ScalarDereference | ScalarVariable | "{" expression "}") } |
-    TypeGlobDereference { "*" (ScalarDereference | ScalarVariable | "{" expression "}") } |
+    FunctionDereference { "&" (ScalarDereference | ScalarVariable | PGVariable | "{" expression "}") } |
+    TypeGlobDereference { "*" (ScalarDereference | ScalarVariable | PGVariable | "{" expression "}") } |
     Constant |
     VariableDeclaration { scope ("(" commaSep<maybeParens<variable | TypeGlob>> ")" | variable | TypeGlob) } |
     AnonymousFunction |
@@ -254,10 +254,14 @@ expression[@isGroup=Expression] {
         >
     } |
     SystemCall {
-        (kw<"exec"> | kw<"system">) maybeParens<(Block | ScalarVariable)? (~arguments commaSep<expression>)>
+        (kw<"exec"> | kw<"system">)
+        maybeParens<(Block | ScalarVariable | PGVariable)? (~arguments commaSep<expression>)>
     } |
     MethodInvocation {
-        ((!bareword Identifier | PackageName | StringSingleQuoted | ScalarVariable | expression) ~methodName)
+        (
+            (!bareword Identifier | PackageName | StringSingleQuoted | ScalarVariable | PGVariable | expression)
+            ~methodName
+        )
         (
             ArrowOperator
             !arrowOperator
@@ -265,6 +269,7 @@ expression[@isGroup=Expression] {
                 (kw<"SUPER"> "::")? FunctionName { !bareword Identifier } |
                 SpecialScalarVariable |
                 ScalarVariable |
+                PGVariable |
                 ScalarDereference |
                 ParenthesizedArguments
             )
@@ -273,7 +278,7 @@ expression[@isGroup=Expression] {
     } |
     IndirectMethodInvocation {
         (kw<"SUPER"> "::")? FunctionName { !bareword Identifier ~identifier }
-        ((PackageName | ScalarVariable) ~methodName)
+        ((PackageName | ScalarVariable | PGVariable) ~methodName)
         ParenthesizedArguments?
     } |
     CallExpressionRecursive { kw<"__SUB__"> !recursive ArrowOperator ParenthesizedArguments } |
@@ -351,6 +356,7 @@ PackageVariable {
 
 basicVariable[@dynamicPrecedence=1] {
     (ScalarVariable ~variable) |
+    PGVariable |
     ArrayVariable |
     HashVariable
 }
@@ -374,9 +380,9 @@ List { !list "(" !listContents commaSep<expression> ")" }
 ArrayRef { "[" commaSep<expression> "]" }
 HashRef { ArithOp<"+">? "{" commaSep<expression> "}" }
 
-ScalarDereference { "$" (ScalarDereference | ScalarVariable | "{" expression "}") }
-ArrayDereference { "@" (ScalarDereference | ScalarVariable | "{" expression "}") }
-HashDereference { "%" (ScalarDereference | ScalarVariable | "{" expression "}") }
+ScalarDereference { "$" (ScalarDereference | ScalarVariable | PGVariable | "{" expression "}") }
+ArrayDereference { "@" (ScalarDereference | ScalarVariable | PGVariable | "{" expression "}") }
+HashDereference { "%" (ScalarDereference | ScalarVariable | PGVariable | "{" expression "}") }
 
 toReference { RefOp<"~~"> !unary expression }
 
@@ -394,6 +400,7 @@ reference {
     ArrayRef |
     HashRef |
     ScalarVariable |
+    PGVariable |
     toReference |
     AnonymousFunction
 }
@@ -492,27 +499,27 @@ semicolon { ";" | automaticSemicolon }
     }
 
     ArrayAccessVariable {
-        (ScalarVariable | ArrayAccessVariable | HashAccessVariable)
+        (ScalarVariable | PGVariable | ArrayAccessVariable | HashAccessVariable)
         afterInterpolation?
         !arrayMember
         (ArrowOperator !arrowOperator)?
         "["
-        (Integer | ArithOp<"-"> Integer | Float | ScalarVariable | quotedString)
+        (Integer | ArithOp<"-"> Integer | Float | ScalarVariable | PGVariable | quotedString)
         "]"
     }
     HashAccessVariable {
-        (ScalarVariable | ArrayAccessVariable | HashAccessVariable)
+        (ScalarVariable | PGVariable | ArrayAccessVariable | HashAccessVariable)
         afterInterpolation?
         !hashMember
         (ArrowOperator !arrowOperator)?
         "{"
-        ((!bareword Identifier) | ScalarVariable | quotedString)
+        ((!bareword Identifier) | ScalarVariable | PGVariable | quotedString)
         "}"
     }
 
     IOOperator {
         IOOperatorStart
-        (kw<"STDIN"> | kw<"STDERR"> | kw<"STDOUT"> | ScalarVariable | Identifier | Glob | ReadonlySTDIN )?
+        (kw<"STDIN"> | kw<"STDERR"> | kw<"STDOUT"> | ScalarVariable | PGVariable | Identifier | Glob | ReadonlySTDIN )?
         IOOperatorEnd
     }
 
@@ -538,6 +545,7 @@ maybeParens<content> { !noParens content | "(" !parens content ")" }
 @external tokens unrestrictedIdentifier from "./tokens" { UnrestrictedIdentifier }
 @external tokens specialScalarVariable from "./tokens" { SpecialScalarVariable }
 @external tokens builtinOperator from "./tokens" { NamedUnaryOperator, ListOperator }
+@external specialize { ScalarVariable } pgVariable from "./tokens" { PGVariable }
 @external tokens fileIO from "./tokens" {
     FileTestOp,
     IOOperatorStart[closedBy=IOOperatorEnd],
@@ -623,7 +631,7 @@ maybeParens<content> { !noParens content | "(" !parens content ")" }
     Identifier { letter (letter | @digit)* }
     Option { "-" letter (letter | @digit)* }
 
-    maybeBraces<content> { content | "{" content "}" }
+    maybeBraces<content> { content | "{" horizontalWhitespace* content horizontalWhitespace* "}" }
 
     ScalarVariable { "$" maybeBraces<Identifier> }
     ArrayVariable { "@" $[+-_!] | "@" maybeBraces<Identifier> }

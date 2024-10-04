@@ -48,6 +48,7 @@ import {
     BeginPG,
     PGMLContent,
     PGTextContent,
+    PGVariable,
     EndPG
 } from './pg.grammar.terms.js';
 import {
@@ -62,6 +63,7 @@ import {
     isHex,
     isFileTestOperatorChar
 } from './text-utils';
+import { pgVariables } from './pg-variables';
 
 const isRegexOptionChar = (ch: number, regexType: number) => {
     if (regexType === tr || regexType === y) {
@@ -909,3 +911,9 @@ export const pgText = new ExternalTokenizer(
     },
     { contextual: true }
 );
+
+export const pgVariable = (name: string) => {
+    return pgVariables.has(name.replace(/^\$/, '')) || pgVariables.has(name.replace(/^\$\{\s*(\w*)\s*\}/, '$1'))
+        ? PGVariable
+        : -1;
+};

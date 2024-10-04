@@ -281,17 +281,19 @@ const InlineParsers: ((cx: InlineContext, next: number, pos: number) => number)[
     // Those things are rarely done anyway, so this is not a high priority.  Furthermore, authors should be using PGML
     // anyway.
     (cx, next, start) => {
-        const haveBrace = cx.char(start + 1) == 123;
-        if (next != 36 /* $ */ || (!isVariableStartChar(cx.char(start + 1)) && !haveBrace) /* { */) return -1;
+        const haveBrace = cx.char(start + 1) == 123; /* { */
+        if (next != 36 /* $ */ || (!isVariableStartChar(cx.char(start + 1)) && !haveBrace)) return -1;
         let pos = start + 2;
         if (haveBrace) pos = cx.skipSpace(pos);
         for (; pos < cx.end && isIdentifierChar(cx.char(pos)); ++pos);
         if (haveBrace) {
             pos = cx.skipSpace(pos);
-            if (cx.char(pos) != 125 /* } */) return cx.append(elt(Type.PGTextError, start, pos));
             if (cx.char(pos) == 125 /* } */) ++pos;
+            else return cx.append(elt(Type.PGTextError, start, pos));
         }
-        return cx.append(elt(Type.Variable, start, pos));
+        return cx.append(
+            elt(Type.Variable, start, pos, [new TreeElement(pgPerlParser.parse(cx.slice(start, pos)), start)])
+        );
     },
 
     // Math mode
@@ -468,7 +470,7 @@ class InlineContext {
 export const pgTextHighlighting = styleTags({
     'MathModeMark ParsedMathModeMark PerlCommandMark': t.processingInstruction,
     'InlineMathMode DisplayMathMode ParsedMathMode': t.atom,
-    'Variable EmphasisMark': t.variableName,
+    EmphasisMark: t.special(t.variableName),
     'Emphasis/...': t.emphasis,
     'StrongEmphasis/...': t.strong,
     PGTextError: t.invalid

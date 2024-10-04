@@ -44,4 +44,5 @@ export declare const automaticSemicolon: number,
     BeginPG: number,
     PGMLContent: number,
     PGTextContent: number,
+    PGVariable: number,
     EndPG: number;

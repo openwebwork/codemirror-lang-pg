@@ -71,7 +71,7 @@ for (let i = 1, name; (name = Type[i]); ++i) {
         id: i,
         name,
         props: nodeProps.get(i) ?? [],
-        top: name == 'PGMLContent',
+        top: name === 'PGMLContent',
         error: name === 'PGMLError'
     });
 }
