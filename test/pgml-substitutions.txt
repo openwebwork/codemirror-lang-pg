@@ -10,64 +10,257 @@ END_PGML
 
 ==>
 
-Program(
-    PGMLBlock(
-        BeginPG,
-        PGMLContent(
-            Paragraph(
-                PerlCommand(
-                    PerlCommandMark,
-                    Program(
-                        ExpressionStatement(
-                            CallExpression(
-                                FunctionName(Identifier),
-                                ParenthesizedArguments(
-                                    "(",
-                                    StringSingleQuoted,
-                                    Comma,
-                                    Pair(Identifier, FatComma, Integer),
-                                    ")"
-                                )
-                            )
-                        )
-                    ),
-                    PerlCommandMark
-                ),
-                PerlCommand(
-                    PerlCommandMark,
-                    Program(
-                        ExpressionStatement(
-                            StringQQuoted(q, QuoteLikeStartDelimiter, StringContent, QuoteLikeEndDelimiter)
-                        )
-                    ),
-                    PerlCommandMark
-                ),
-                PerlCommand(PerlCommandMark, Program(ExpressionStatement(StringSingleQuoted)), PerlCommandMark),
-                PerlCommand(
-                    PerlCommandMark,
-                    Program(
-                        ExpressionStatement(
-                            Assignment(HashVariable, "=", List("(", Pair(Identifier, FatComma, Integer), ")")),
-                            ";"
-                        ),
-                        ExpressionStatement(HashAccessVariable(ScalarVariable, "{", Identifier, "}"))
-                    ),
-                    PerlCommandMark
-                ),
-                PerlCommand(
-                    PerlCommandMark,
-                    Program(
-                        ExpressionStatement(
-                            StringQQuoted(q, QuoteLikeStartDelimiter, StringContent, QuoteLikeEndDelimiter)
-                        )
-                    ),
-                    PerlCommandMark
-                )
-            )
-        ),
-        EndPG
-    )
-)
+{
+    "name": "Program",
+    "from": 0,
+    "to": 165,
+    "children": [
+        {
+            "name": "PGMLBlock",
+            "from": 0,
+            "to": 165,
+            "children": [
+                { "name": "BeginPG", "from": 0, "to": 10 },
+                {
+                    "name": "PGMLContent",
+                    "from": 11,
+                    "to": 157,
+                    "children": [
+                        {
+                            "name": "Paragraph",
+                            "from": 11,
+                            "to": 157,
+                            "children": [
+                                {
+                                    "name": "PerlCommand",
+                                    "from": 11,
+                                    "to": 57,
+                                    "children": [
+                                        { "name": "PerlCommandMark", "from": 11, "to": 13 },
+                                        {
+                                            "name": "Program",
+                                            "from": 13,
+                                            "to": 54,
+                                            "children": [
+                                                {
+                                                    "name": "ExpressionStatement",
+                                                    "from": 14,
+                                                    "to": 53,
+                                                    "children": [
+                                                        {
+                                                            "name": "CallExpression",
+                                                            "from": 14,
+                                                            "to": 53,
+                                                            "children": [
+                                                                {
+                                                                    "name": "FunctionName",
+                                                                    "from": 14,
+                                                                    "to": 19,
+                                                                    "children": [
+                                                                        { "name": "Identifier", "from": 14, "to": 19 }
+                                                                    ]
+                                                                },
+                                                                {
+                                                                    "name": "ParenthesizedArguments",
+                                                                    "from": 19,
+                                                                    "to": 53,
+                                                                    "children": [
+                                                                        { "name": "(", "from": 19, "to": 20 },
+                                                                        { "name": "StringSingleQuoted", "from": 20, "to": 38 },
+                                                                        { "name": "Comma", "from": 38, "to": 39 },
+                                                                        {
+                                                                            "name": "Pair",
+                                                                            "from": 40,
+                                                                            "to": 52,
+                                                                            "children": [
+                                                                                { "name": "Identifier", "from": 40, "to": 45 },
+                                                                                { "name": "FatComma", "from": 46, "to": 48 },
+                                                                                { "name": "Integer", "from": 49, "to": 52 }
+                                                                            ]
+                                                                        },
+                                                                        { "name": ")", "from": 52, "to": 53 }
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        { "name": "PerlCommandMark", "from": 54, "to": 57 }
+                                    ]
+                                },
+                                {
+                                    "name": "PerlCommand",
+                                    "from": 58,
+                                    "to": 87,
+                                    "children": [
+                                        { "name": "PerlCommandMark", "from": 58, "to": 60 },
+                                        {
+                                            "name": "Program",
+                                            "from": 60,
+                                            "to": 83,
+                                            "children": [
+                                                {
+                                                    "name": "ExpressionStatement",
+                                                    "from": 61,
+                                                    "to": 82,
+                                                    "children": [
+                                                        {
+                                                            "name": "StringQQuoted",
+                                                            "from": 61,
+                                                            "to": 82,
+                                                            "children": [
+                                                                { "name": "q", "from": 61, "to": 62 },
+                                                                { "name": "QuoteLikeStartDelimiter", "from": 62, "to": 63 },
+                                                                { "name": "StringContent", "from": 63, "to": 81 },
+                                                                { "name": "QuoteLikeEndDelimiter", "from": 81, "to": 82 }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        { "name": "PerlCommandMark", "from": 83, "to": 87 }
+                                    ]
+                                },
+                                {
+                                    "name": "PerlCommand",
+                                    "from": 88,
+                                    "to": 115,
+                                    "children": [
+                                        { "name": "PerlCommandMark", "from": 88, "to": 90 },
+                                        {
+                                            "name": "Program",
+                                            "from": 90,
+                                            "to": 110,
+                                            "children": [
+                                                {
+                                                    "name": "ExpressionStatement",
+                                                    "from": 91,
+                                                    "to": 109,
+                                                    "children": [
+                                                        { "name": "StringSingleQuoted", "from": 91, "to": 109 }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        { "name": "PerlCommandMark", "from": 110, "to": 115 }
+                                    ]
+                                },
+                                {
+                                    "name": "PerlCommand",
+                                    "from": 116,
+                                    "to": 142,
+                                    "children": [
+                                        { "name": "PerlCommandMark", "from": 116, "to": 118 },
+                                        {
+                                            "name": "Program",
+                                            "from": 118,
+                                            "to": 140,
+                                            "children": [
+                                                {
+                                                    "name": "ExpressionStatement",
+                                                    "from": 119,
+                                                    "to": 133,
+                                                    "children": [
+                                                        {
+                                                            "name": "Assignment",
+                                                            "from": 119,
+                                                            "to": 132,
+                                                            "children": [
+                                                                { "name": "HashVariable", "from": 119, "to": 121 },
+                                                                { "name": "=", "from": 122, "to": 123 },
+                                                                {
+                                                                    "name": "List",
+                                                                    "from": 124,
+                                                                    "to": 132,
+                                                                    "children": [
+                                                                        { "name": "(", "from": 124, "to": 125 },
+                                                                        {
+                                                                            "name": "Pair",
+                                                                            "from": 125,
+                                                                            "to": 131,
+                                                                            "children": [
+                                                                                { "name": "Identifier", "from": 125, "to": 126 },
+                                                                                { "name": "FatComma", "from": 127, "to": 129 },
+                                                                                { "name": "Integer", "from": 130, "to": 131 }
+                                                                            ]
+                                                                        },
+                                                                        { "name": ")", "from": 131, "to": 132 }
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        },
+                                                        { "name": ";", "from": 132, "to": 133 }
+                                                    ]
+                                                },
+                                                {
+                                                    "name": "ExpressionStatement",
+                                                    "from": 134,
+                                                    "to": 139,
+                                                    "children": [
+                                                        {
+                                                            "name": "HashAccessVariable",
+                                                            "from": 134,
+                                                            "to": 139,
+                                                            "children": [
+                                                                { "name": "ScalarVariable", "from": 134, "to": 136 },
+                                                                { "name": "{", "from": 136, "to": 137 },
+                                                                { "name": "Identifier", "from": 137, "to": 138 },
+                                                                { "name": "}", "from": 138, "to": 139 }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        { "name": "PerlCommandMark", "from": 140, "to": 142 }
+                                    ]
+                                },
+                                {
+                                    "name": "PerlCommand",
+                                    "from": 143,
+                                    "to": 156,
+                                    "children": [
+                                        { "name": "PerlCommandMark", "from": 143, "to": 145 },
+                                        {
+                                            "name": "Program",
+                                            "from": 145,
+                                            "to": 154,
+                                            "children": [
+                                                {
+                                                    "name": "ExpressionStatement",
+                                                    "from": 146,
+                                                    "to": 153,
+                                                    "children": [
+                                                        {
+                                                            "name": "StringQQuoted",
+                                                            "from": 146,
+                                                            "to": 153,
+                                                            "children": [
+                                                                { "name": "q", "from": 146, "to": 147 },
+                                                                { "name": "QuoteLikeStartDelimiter", "from": 147, "to": 148 },
+                                                                { "name": "StringContent", "from": 148, "to": 152 },
+                                                                { "name": "QuoteLikeEndDelimiter", "from": 152, "to": 153 }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        { "name": "PerlCommandMark", "from": 154, "to": 156 }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                { "name": "EndPG", "from": 157, "to": 165 }
+            ]
+        }
+    ]
+}
 
 ==>
 
@@ -203,7 +396,45 @@ END_PGML
 
 ==>
 
-Program(PGMLBlock(BeginPG, PGMLContent(Paragraph(Comment), Paragraph(Comment)), EndPG))
+{
+    "name": "Program",
+    "from": 0,
+    "to": 102,
+    "children": [
+        {
+            "name": "PGMLBlock",
+            "from": 0,
+            "to": 102,
+            "children": [
+                { "name": "BeginPG", "from": 0, "to": 10 },
+                {
+                    "name": "PGMLContent",
+                    "from": 11,
+                    "to": 94,
+                    "children": [
+                        {
+                            "name": "Paragraph",
+                            "from": 11,
+                            "to": 36,
+                            "children": [
+                                { "name": "Comment", "from": 11, "to": 36 }
+                            ]
+                        },
+                        {
+                            "name": "Paragraph",
+                            "from": 38,
+                            "to": 94,
+                            "children": [
+                                { "name": "Comment", "from": 38, "to": 93 }
+                            ]
+                        }
+                    ]
+                },
+                { "name": "EndPG", "from": 94, "to": 102 }
+            ]
+        }
+    ]
+}
 
 ==>
 
@@ -283,41 +514,298 @@ END_PGML
 
 ==>
 
-Program(
-    PGMLBlock(
-        BeginPG,
-        PGMLContent(
-            Paragraph(
-                Image(ImageMark, ImageMark),
-                Option(OptionMark, Program(ExpressionStatement(StringSingleQuoted)), OptionMark),
-                Option(OptionMark, Program(ExpressionStatement(Integer)), OptionMark),
-                Option(OptionMark, Program(ExpressionStatement(Integer)), OptionMark),
-                Option(
-                    OptionMark,
-                    Program(StandaloneBlock(Block("{", ExpressionStatement(Pair(Identifier, FatComma, Integer)), "}"))),
-                    OptionMark
-                ),
-                Image(
-                    ImageMark,
-                    Variable(VariableMark, Program(ExpressionStatement(ScalarVariable)), VariableMark),
-                    ImageMark
-                ),
-                Option(OptionMark, Program(ExpressionStatement(StringSingleQuoted)), OptionMark),
-                Option(OptionMark, Program(ExpressionStatement(Integer)), OptionMark),
-                Option(
-                    OptionMark,
-                    Program(
-                        ExpressionStatement(
-                            Pair(Identifier, FatComma, HashRef("{", Pair(Identifier, FatComma, Integer), "}"))
-                        )
-                    ),
-                    OptionMark
-                )
-            )
-        ),
-        EndPG
-    )
-)
+{
+    "name": "Program",
+    "from": 0,
+    "to": 152,
+    "children": [
+        {
+            "name": "PGMLBlock",
+            "from": 0,
+            "to": 152,
+            "children": [
+                { "name": "BeginPG", "from": 0, "to": 10 },
+                {
+                    "name": "PGMLContent",
+                    "from": 11,
+                    "to": 144,
+                    "children": [
+                        {
+                            "name": "Paragraph",
+                            "from": 11,
+                            "to": 144,
+                            "children": [
+                                {
+                                    "name": "Image",
+                                    "from": 11,
+                                    "to": 25,
+                                    "children": [
+                                        { "name": "ImageMark", "from": 11, "to": 13 },
+                                        { "name": "ImageMark", "from": 23, "to": 25 }
+                                    ]
+                                },
+                                {
+                                    "name": "Option",
+                                    "from": 25,
+                                    "to": 38,
+                                    "children": [
+                                        { "name": "OptionMark", "from": 25, "to": 26 },
+                                        {
+                                            "name": "Program",
+                                            "from": 26,
+                                            "to": 37,
+                                            "children": [
+                                                {
+                                                    "name": "ExpressionStatement",
+                                                    "from": 26,
+                                                    "to": 37,
+                                                    "children": [
+                                                        { "name": "StringSingleQuoted", "from": 26, "to": 37 }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        { "name": "OptionMark", "from": 37, "to": 38 }
+                                    ]
+                                },
+                                {
+                                    "name": "Option",
+                                    "from": 38,
+                                    "to": 43,
+                                    "children": [
+                                        { "name": "OptionMark", "from": 38, "to": 39 },
+                                        {
+                                            "name": "Program",
+                                            "from": 39,
+                                            "to": 42,
+                                            "children": [
+                                                {
+                                                    "name": "ExpressionStatement",
+                                                    "from": 39,
+                                                    "to": 42,
+                                                    "children": [
+                                                        { "name": "Integer", "from": 39, "to": 42 }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        { "name": "OptionMark", "from": 42, "to": 43 }
+                                    ]
+                                },
+                                {
+                                    "name": "Option",
+                                    "from": 43,
+                                    "to": 48,
+                                    "children": [
+                                        { "name": "OptionMark", "from": 43, "to": 44 },
+                                        {
+                                            "name": "Program",
+                                            "from": 44,
+                                            "to": 47,
+                                            "children": [
+                                                {
+                                                    "name": "ExpressionStatement",
+                                                    "from": 44,
+                                                    "to": 47,
+                                                    "children": [
+                                                        { "name": "Integer", "from": 44, "to": 47 }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        { "name": "OptionMark", "from": 47, "to": 48 }
+                                    ]
+                                },
+                                {
+                                    "name": "Option",
+                                    "from": 48,
+                                    "to": 70,
+                                    "children": [
+                                        { "name": "OptionMark", "from": 48, "to": 49 },
+                                        {
+                                            "name": "Program",
+                                            "from": 49,
+                                            "to": 69,
+                                            "children": [
+                                                {
+                                                    "name": "StandaloneBlock",
+                                                    "from": 49,
+                                                    "to": 69,
+                                                    "children": [
+                                                        {
+                                                            "name": "Block",
+                                                            "from": 49,
+                                                            "to": 69,
+                                                            "children": [
+                                                                { "name": "{", "from": 49, "to": 50 },
+                                                                {
+                                                                    "name": "ExpressionStatement",
+                                                                    "from": 51,
+                                                                    "to": 67,
+                                                                    "children": [
+                                                                        {
+                                                                            "name": "Pair",
+                                                                            "from": 51,
+                                                                            "to": 67,
+                                                                            "children": [
+                                                                                { "name": "Identifier", "from": 51, "to": 59 },
+                                                                                { "name": "FatComma", "from": 60, "to": 62 },
+                                                                                { "name": "Integer", "from": 63, "to": 67 }
+                                                                            ]
+                                                                        }
+                                                                    ]
+                                                                },
+                                                                { "name": "}", "from": 68, "to": 69 }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        { "name": "OptionMark", "from": 69, "to": 70 }
+                                    ]
+                                },
+                                {
+                                    "name": "Image",
+                                    "from": 71,
+                                    "to": 85,
+                                    "children": [
+                                        { "name": "ImageMark", "from": 71, "to": 73 },
+                                        {
+                                            "name": "Variable",
+                                            "from": 73,
+                                            "to": 83,
+                                            "children": [
+                                                { "name": "VariableMark", "from": 73, "to": 74 },
+                                                {
+                                                    "name": "Program",
+                                                    "from": 74,
+                                                    "to": 82,
+                                                    "children": [
+                                                        {
+                                                            "name": "ExpressionStatement",
+                                                            "from": 74,
+                                                            "to": 82,
+                                                            "children": [
+                                                                { "name": "ScalarVariable", "from": 74, "to": 82 }
+                                                            ]
+                                                        }
+                                                    ]
+                                                },
+                                                { "name": "VariableMark", "from": 82, "to": 83 }
+                                            ]
+                                        },
+                                        { "name": "ImageMark", "from": 83, "to": 85 }
+                                    ]
+                                },
+                                {
+                                    "name": "Option",
+                                    "from": 85,
+                                    "to": 98,
+                                    "children": [
+                                        { "name": "OptionMark", "from": 85, "to": 86 },
+                                        {
+                                            "name": "Program",
+                                            "from": 86,
+                                            "to": 97,
+                                            "children": [
+                                                {
+                                                    "name": "ExpressionStatement",
+                                                    "from": 86,
+                                                    "to": 97,
+                                                    "children": [
+                                                        { "name": "StringSingleQuoted", "from": 86, "to": 97 }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        { "name": "OptionMark", "from": 97, "to": 98 }
+                                    ]
+                                },
+                                {
+                                    "name": "Option",
+                                    "from": 98,
+                                    "to": 103,
+                                    "children": [
+                                        { "name": "OptionMark", "from": 98, "to": 99 },
+                                        {
+                                            "name": "Program",
+                                            "from": 99,
+                                            "to": 102,
+                                            "children": [
+                                                {
+                                                    "name": "ExpressionStatement",
+                                                    "from": 99,
+                                                    "to": 102,
+                                                    "children": [
+                                                        { "name": "Integer", "from": 99, "to": 102 }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        { "name": "OptionMark", "from": 102, "to": 103 }
+                                    ]
+                                },
+                                {
+                                    "name": "Option",
+                                    "from": 103,
+                                    "to": 143,
+                                    "children": [
+                                        { "name": "OptionMark", "from": 103, "to": 104 },
+                                        {
+                                            "name": "Program",
+                                            "from": 104,
+                                            "to": 142,
+                                            "children": [
+                                                {
+                                                    "name": "ExpressionStatement",
+                                                    "from": 105,
+                                                    "to": 141,
+                                                    "children": [
+                                                        {
+                                                            "name": "Pair",
+                                                            "from": 105,
+                                                            "to": 141,
+                                                            "children": [
+                                                                { "name": "Identifier", "from": 105, "to": 118 },
+                                                                { "name": "FatComma", "from": 119, "to": 121 },
+                                                                {
+                                                                    "name": "HashRef",
+                                                                    "from": 122,
+                                                                    "to": 141,
+                                                                    "children": [
+                                                                        { "name": "{", "from": 122, "to": 123 },
+                                                                        {
+                                                                            "name": "Pair",
+                                                                            "from": 124,
+                                                                            "to": 139,
+                                                                            "children": [
+                                                                                { "name": "Identifier", "from": 124, "to": 132 },
+                                                                                { "name": "FatComma", "from": 133, "to": 135 },
+                                                                                { "name": "Integer", "from": 136, "to": 139 }
+                                                                            ]
+                                                                        },
+                                                                        { "name": "}", "from": 140, "to": 141 }
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        { "name": "OptionMark", "from": 142, "to": 143 }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                { "name": "EndPG", "from": 144, "to": 152 }
+            ]
+        }
+    ]
+}
 
 ==>
 

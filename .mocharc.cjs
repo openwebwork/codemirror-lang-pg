@@ -7,5 +7,5 @@ register('ts-node/esm/transpile-only', pathToFileURL('./'));
 
 module.exports = {
     extension: ['ts'],
-    spec: ['test/tree-test.ts', 'test/pgml-parse-test.ts']
+    spec: ['test/perl-tree-test.ts', 'test/pgml-parse-test.ts', 'test/pg-tree-test.ts']
 };

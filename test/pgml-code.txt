@@ -10,7 +10,46 @@ END_PGML
 
 ==>
 
-Program(PGMLBlock(BeginPG, PGMLContent(Paragraph(Code(CodeMark, CodeText, CodeMark))), EndPG))
+{
+    "name": "Program",
+    "from": 0,
+    "to": 70,
+    "children": [
+        {
+            "name": "PGMLBlock",
+            "from": 0,
+            "to": 70,
+            "children": [
+                { "name": "BeginPG", "from": 0, "to": 10 },
+                {
+                    "name": "PGMLContent",
+                    "from": 11,
+                    "to": 62,
+                    "children": [
+                        {
+                            "name": "Paragraph",
+                            "from": 11,
+                            "to": 62,
+                            "children": [
+                                {
+                                    "name": "Code",
+                                    "from": 11,
+                                    "to": 61,
+                                    "children": [
+                                        { "name": "CodeMark", "from": 11, "to": 14 },
+                                        { "name": "CodeText", "from": 14, "to": 58 },
+                                        { "name": "CodeMark", "from": 58, "to": 61 }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                { "name": "EndPG", "from": 62, "to": 70 }
+            ]
+        }
+    ]
+}
 
 ==>
 
@@ -59,7 +98,47 @@ END_PGML
 
 ==>
 
-Program(PGMLBlock(BeginPG, PGMLContent(Paragraph(Code(CodeMark, CodeClass, CodeText, CodeMark))), EndPG))
+{
+    "name": "Program",
+    "from": 0,
+    "to": 74,
+    "children": [
+        {
+            "name": "PGMLBlock",
+            "from": 0,
+            "to": 74,
+            "children": [
+                { "name": "BeginPG", "from": 0, "to": 10 },
+                {
+                    "name": "PGMLContent",
+                    "from": 11,
+                    "to": 66,
+                    "children": [
+                        {
+                            "name": "Paragraph",
+                            "from": 11,
+                            "to": 66,
+                            "children": [
+                                {
+                                    "name": "Code",
+                                    "from": 11,
+                                    "to": 65,
+                                    "children": [
+                                        { "name": "CodeMark", "from": 11, "to": 14 },
+                                        { "name": "CodeClass", "from": 14, "to": 18 },
+                                        { "name": "CodeText", "from": 18, "to": 62 },
+                                        { "name": "CodeMark", "from": 62, "to": 65 }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                { "name": "EndPG", "from": 66, "to": 74 }
+            ]
+        }
+    ]
+}
 
 ==>
 

@@ -12,30 +12,134 @@ END_PGML
 
 ==>
 
-Program(
-    PGMLBlock(
-        BeginPG,
-        PGMLContent(
-            Paragraph(
-                Table(
-                    TableMark,
-                    TableCell(TableCellMark, MathMode(MathModeMark, MathModeMark), TableCellMark),
-                    Comment,
-                    TableCell(TableCellMark, MathMode(MathModeMark, MathModeMark), TableCellMark),
-                    TableCell(TableCellMark, MathMode(MathModeMark, MathModeMark), TableCellMark),
-                    TableCell(
-                        TableCellMark,
-                        AnswerRule,
-                        Option(OptionMark, Program(ExpressionStatement(Integer)), OptionMark),
-                        TableCellMark
-                    ),
-                    TableMark
-                )
-            )
-        ),
-        EndPG
-    )
-)
+{
+    "name": "Program",
+    "from": 0,
+    "to": 120,
+    "children": [
+        {
+            "name": "PGMLBlock",
+            "from": 0,
+            "to": 120,
+            "children": [
+                { "name": "BeginPG", "from": 0, "to": 10 },
+                {
+                    "name": "PGMLContent",
+                    "from": 11,
+                    "to": 112,
+                    "children": [
+                        {
+                            "name": "Paragraph",
+                            "from": 11,
+                            "to": 112,
+                            "children": [
+                                {
+                                    "name": "Table",
+                                    "from": 11,
+                                    "to": 111,
+                                    "children": [
+                                        { "name": "TableMark", "from": 11, "to": 13 },
+                                        {
+                                            "name": "TableCell",
+                                            "from": 18,
+                                            "to": 29,
+                                            "children": [
+                                                { "name": "TableCellMark", "from": 18, "to": 20 },
+                                                {
+                                                    "name": "MathMode",
+                                                    "from": 21,
+                                                    "to": 26,
+                                                    "children": [
+                                                        { "name": "MathModeMark", "from": 21, "to": 23 },
+                                                        { "name": "MathModeMark", "from": 24, "to": 26 }
+                                                    ]
+                                                },
+                                                { "name": "TableCellMark", "from": 27, "to": 29 }
+                                            ]
+                                        },
+                                        { "name": "Comment", "from": 34, "to": 56 },
+                                        {
+                                            "name": "TableCell",
+                                            "from": 61,
+                                            "to": 75,
+                                            "children": [
+                                                { "name": "TableCellMark", "from": 61, "to": 63 },
+                                                {
+                                                    "name": "MathMode",
+                                                    "from": 64,
+                                                    "to": 71,
+                                                    "children": [
+                                                        { "name": "MathModeMark", "from": 64, "to": 66 },
+                                                        { "name": "MathModeMark", "from": 69, "to": 71 }
+                                                    ]
+                                                },
+                                                { "name": "TableCellMark", "from": 72, "to": 75 }
+                                            ]
+                                        },
+                                        {
+                                            "name": "TableCell",
+                                            "from": 80,
+                                            "to": 91,
+                                            "children": [
+                                                { "name": "TableCellMark", "from": 80, "to": 82 },
+                                                {
+                                                    "name": "MathMode",
+                                                    "from": 83,
+                                                    "to": 88,
+                                                    "children": [
+                                                        { "name": "MathModeMark", "from": 83, "to": 85 },
+                                                        { "name": "MathModeMark", "from": 86, "to": 88 }
+                                                    ]
+                                                },
+                                                { "name": "TableCellMark", "from": 89, "to": 91 }
+                                            ]
+                                        },
+                                        {
+                                            "name": "TableCell",
+                                            "from": 96,
+                                            "to": 108,
+                                            "children": [
+                                                { "name": "TableCellMark", "from": 96, "to": 98 },
+                                                { "name": "AnswerRule", "from": 99, "to": 102 },
+                                                {
+                                                    "name": "Option",
+                                                    "from": 102,
+                                                    "to": 105,
+                                                    "children": [
+                                                        { "name": "OptionMark", "from": 102, "to": 103 },
+                                                        {
+                                                            "name": "Program",
+                                                            "from": 103,
+                                                            "to": 104,
+                                                            "children": [
+                                                                {
+                                                                    "name": "ExpressionStatement",
+                                                                    "from": 103,
+                                                                    "to": 104,
+                                                                    "children": [
+                                                                        { "name": "Integer", "from": 103, "to": 104 }
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        },
+                                                        { "name": "OptionMark", "from": 104, "to": 105 }
+                                                    ]
+                                                },
+                                                { "name": "TableCellMark", "from": 106, "to": 108 }
+                                            ]
+                                        },
+                                        { "name": "TableMark", "from": 109, "to": 111 }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                { "name": "EndPG", "from": 112, "to": 120 }
+            ]
+        }
+    ]
+}
 
 ==>
 
@@ -282,49 +386,235 @@ END_PGML
 
 ==>
 
-Program(
-    PGMLBlock(
-        BeginPG,
-        PGMLContent(
-            Paragraph(
-                Table(
-                    TableMark,
-                    TableCell(TableCellMark, TableCellMark),
-                    TableCell(
-                        TableCellMark,
-                        Image(ImageMark, ImageMark),
-                        Option(OptionMark, Program(ExpressionStatement(StringSingleQuoted)), OptionMark),
-                        TableCellMark
-                    ),
-                    TableCell(
-                        TableCellMark,
-                        Table(
-                            TableMark,
-                            TableCell(TableCellMark, MathMode(MathModeMark, MathModeMark), TableCellMark),
-                            TableCell(TableCellMark, MathMode(MathModeMark, MathModeMark), TableCellMark),
-                            Option(
-                                OptionMark,
-                                Program(ExpressionStatement(Pair(Identifier, FatComma, Integer))),
-                                OptionMark
-                            ),
-                            TableCell(TableCellMark, MathMode(MathModeMark, MathModeMark), TableCellMark),
-                            TableCell(
-                                TableCellMark,
-                                AnswerRule,
-                                Option(OptionMark, Program(ExpressionStatement(Integer)), OptionMark),
-                                TableCellMark
-                            ),
-                            TableMark
-                        ),
-                        TableCellMark
-                    ),
-                    TableMark
-                )
-            )
-        ),
-        EndPG
-    )
-)
+{
+    "name": "Program",
+    "from": 0,
+    "to": 193,
+    "children": [
+        {
+            "name": "PGMLBlock",
+            "from": 0,
+            "to": 193,
+            "children": [
+                { "name": "BeginPG", "from": 0, "to": 10 },
+                {
+                    "name": "PGMLContent",
+                    "from": 11,
+                    "to": 185,
+                    "children": [
+                        {
+                            "name": "Paragraph",
+                            "from": 11,
+                            "to": 185,
+                            "children": [
+                                {
+                                    "name": "Table",
+                                    "from": 11,
+                                    "to": 184,
+                                    "children": [
+                                        { "name": "TableMark", "from": 11, "to": 13 },
+                                        {
+                                            "name": "TableCell",
+                                            "from": 15,
+                                            "to": 30,
+                                            "children": [
+                                                { "name": "TableCellMark", "from": 15, "to": 17 },
+                                                { "name": "TableCellMark", "from": 28, "to": 30 }
+                                            ]
+                                        },
+                                        {
+                                            "name": "TableCell",
+                                            "from": 32,
+                                            "to": 79,
+                                            "children": [
+                                                { "name": "TableCellMark", "from": 32, "to": 34 },
+                                                {
+                                                    "name": "Image",
+                                                    "from": 35,
+                                                    "to": 55,
+                                                    "children": [
+                                                        { "name": "ImageMark", "from": 35, "to": 37 },
+                                                        { "name": "ImageMark", "from": 53, "to": 55 }
+                                                    ]
+                                                },
+                                                {
+                                                    "name": "Option",
+                                                    "from": 55,
+                                                    "to": 75,
+                                                    "children": [
+                                                        { "name": "OptionMark", "from": 55, "to": 56 },
+                                                        {
+                                                            "name": "Program",
+                                                            "from": 56,
+                                                            "to": 74,
+                                                            "children": [
+                                                                {
+                                                                    "name": "ExpressionStatement",
+                                                                    "from": 56,
+                                                                    "to": 74,
+                                                                    "children": [
+                                                                        { "name": "StringSingleQuoted", "from": 56, "to": 74 }
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        },
+                                                        { "name": "OptionMark", "from": 74, "to": 75 }
+                                                    ]
+                                                },
+                                                { "name": "TableCellMark", "from": 76, "to": 79 }
+                                            ]
+                                        },
+                                        {
+                                            "name": "TableCell",
+                                            "from": 82,
+                                            "to": 180,
+                                            "children": [
+                                                { "name": "TableCellMark", "from": 82, "to": 84 },
+                                                {
+                                                    "name": "Table",
+                                                    "from": 87,
+                                                    "to": 176,
+                                                    "children": [
+                                                        { "name": "TableMark", "from": 87, "to": 89 },
+                                                        {
+                                                            "name": "TableCell",
+                                                            "from": 93,
+                                                            "to": 104,
+                                                            "children": [
+                                                                { "name": "TableCellMark", "from": 93, "to": 95 },
+                                                                {
+                                                                    "name": "MathMode",
+                                                                    "from": 96,
+                                                                    "to": 101,
+                                                                    "children": [
+                                                                        { "name": "MathModeMark", "from": 96, "to": 98 },
+                                                                        { "name": "MathModeMark", "from": 99, "to": 101 }
+                                                                    ]
+                                                                },
+                                                                { "name": "TableCellMark", "from": 102, "to": 104 }
+                                                            ]
+                                                        },
+                                                        {
+                                                            "name": "TableCell",
+                                                            "from": 108,
+                                                            "to": 122,
+                                                            "children": [
+                                                                { "name": "TableCellMark", "from": 108, "to": 110 },
+                                                                {
+                                                                    "name": "MathMode",
+                                                                    "from": 111,
+                                                                    "to": 118,
+                                                                    "children": [
+                                                                        { "name": "MathModeMark", "from": 111, "to": 113 },
+                                                                        { "name": "MathModeMark", "from": 116, "to": 118 }
+                                                                    ]
+                                                                },
+                                                                { "name": "TableCellMark", "from": 119, "to": 122 }
+                                                            ]
+                                                        },
+                                                        {
+                                                            "name": "Option",
+                                                            "from": 122,
+                                                            "to": 140,
+                                                            "children": [
+                                                                { "name": "OptionMark", "from": 122, "to": 123 },
+                                                                {
+                                                                    "name": "Program",
+                                                                    "from": 123,
+                                                                    "to": 139,
+                                                                    "children": [
+                                                                        {
+                                                                            "name": "ExpressionStatement",
+                                                                            "from": 124,
+                                                                            "to": 138,
+                                                                            "children": [
+                                                                                {
+                                                                                    "name": "Pair",
+                                                                                    "from": 124,
+                                                                                    "to": 138,
+                                                                                    "children": [
+                                                                                        { "name": "Identifier", "from": 124, "to": 133 },
+                                                                                        { "name": "FatComma", "from": 134, "to": 136 },
+                                                                                        { "name": "Integer", "from": 137, "to": 138 }
+                                                                                    ]
+                                                                                }
+                                                                            ]
+                                                                        }
+                                                                    ]
+                                                                },
+                                                                { "name": "OptionMark", "from": 139, "to": 140 }
+                                                            ]
+                                                        },
+                                                        {
+                                                            "name": "TableCell",
+                                                            "from": 144,
+                                                            "to": 155,
+                                                            "children": [
+                                                                { "name": "TableCellMark", "from": 144, "to": 146 },
+                                                                {
+                                                                    "name": "MathMode",
+                                                                    "from": 147,
+                                                                    "to": 152,
+                                                                    "children": [
+                                                                        { "name": "MathModeMark", "from": 147, "to": 149 },
+                                                                        { "name": "MathModeMark", "from": 150, "to": 152 }
+                                                                    ]
+                                                                },
+                                                                { "name": "TableCellMark", "from": 153, "to": 155 }
+                                                            ]
+                                                        },
+                                                        {
+                                                            "name": "TableCell",
+                                                            "from": 159,
+                                                            "to": 171,
+                                                            "children": [
+                                                                { "name": "TableCellMark", "from": 159, "to": 161 },
+                                                                { "name": "AnswerRule", "from": 162, "to": 165 },
+                                                                {
+                                                                    "name": "Option",
+                                                                    "from": 165,
+                                                                    "to": 168,
+                                                                    "children": [
+                                                                        { "name": "OptionMark", "from": 165, "to": 166 },
+                                                                        {
+                                                                            "name": "Program",
+                                                                            "from": 166,
+                                                                            "to": 167,
+                                                                            "children": [
+                                                                                {
+                                                                                    "name": "ExpressionStatement",
+                                                                                    "from": 166,
+                                                                                    "to": 167,
+                                                                                    "children": [
+                                                                                        { "name": "Integer", "from": 166, "to": 167 }
+                                                                                    ]
+                                                                                }
+                                                                            ]
+                                                                        },
+                                                                        { "name": "OptionMark", "from": 167, "to": 168 }
+                                                                    ]
+                                                                },
+                                                                { "name": "TableCellMark", "from": 169, "to": 171 }
+                                                            ]
+                                                        },
+                                                        { "name": "TableMark", "from": 174, "to": 176 }
+                                                    ]
+                                                },
+                                                { "name": "TableCellMark", "from": 178, "to": 180 }
+                                            ]
+                                        },
+                                        { "name": "TableMark", "from": 181, "to": 184 }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                { "name": "EndPG", "from": 185, "to": 193 }
+            ]
+        }
+    ]
+}
 
 ==>
 
@@ -671,42 +961,188 @@ END_PGML
 
 ==>
 
-Program(
-    PGMLBlock(
-        BeginPG,
-        PGMLContent(
-            Paragraph(
-                Table(
-                    TableMark,
-                    TableCell(TableCellMark, MathMode(MathModeMark, MathModeMark), TableCellMark),
-                    TableCell(TableCellMark, MathMode(MathModeMark, MathModeMark), TableCellMark),
-                    TableCell(TableCellMark, MathMode(MathModeMark, MathModeMark), TableCellMark),
-                    TableCell(
-                        TableCellMark,
-                        AnswerRule,
-                        Option(OptionMark, Program(ExpressionStatement(Integer)), OptionMark),
-                        TableCellMark
-                    ),
-                    TableMark
-                ),
-                Option(
-                    OptionMark,
-                    Program(
-                        ExpressionStatement(
-                            Pair(Identifier, FatComma, Integer),
-                            Comma,
-                            Pair(Identifier, FatComma, StringSingleQuoted),
-                            Comma,
-                            Pair(Identifier, FatComma, Integer)
-                        )
-                    ),
-                    OptionMark
-                )
-            )
-        ),
-        EndPG
-    )
-)
+{
+    "name": "Program",
+    "from": 0,
+    "to": 134,
+    "children": [
+        {
+            "name": "PGMLBlock",
+            "from": 0,
+            "to": 134,
+            "children": [
+                { "name": "BeginPG", "from": 0, "to": 10 },
+                {
+                    "name": "PGMLContent",
+                    "from": 11,
+                    "to": 126,
+                    "children": [
+                        {
+                            "name": "Paragraph",
+                            "from": 11,
+                            "to": 126,
+                            "children": [
+                                {
+                                    "name": "Table",
+                                    "from": 11,
+                                    "to": 70,
+                                    "children": [
+                                        { "name": "TableMark", "from": 11, "to": 13 },
+                                        {
+                                            "name": "TableCell",
+                                            "from": 15,
+                                            "to": 26,
+                                            "children": [
+                                                { "name": "TableCellMark", "from": 15, "to": 17 },
+                                                {
+                                                    "name": "MathMode",
+                                                    "from": 18,
+                                                    "to": 23,
+                                                    "children": [
+                                                        { "name": "MathModeMark", "from": 18, "to": 20 },
+                                                        { "name": "MathModeMark", "from": 21, "to": 23 }
+                                                    ]
+                                                },
+                                                { "name": "TableCellMark", "from": 24, "to": 26 }
+                                            ]
+                                        },
+                                        {
+                                            "name": "TableCell",
+                                            "from": 27,
+                                            "to": 41,
+                                            "children": [
+                                                { "name": "TableCellMark", "from": 27, "to": 29 },
+                                                {
+                                                    "name": "MathMode",
+                                                    "from": 30,
+                                                    "to": 37,
+                                                    "children": [
+                                                        { "name": "MathModeMark", "from": 30, "to": 32 },
+                                                        { "name": "MathModeMark", "from": 35, "to": 37 }
+                                                    ]
+                                                },
+                                                { "name": "TableCellMark", "from": 38, "to": 41 }
+                                            ]
+                                        },
+                                        {
+                                            "name": "TableCell",
+                                            "from": 43,
+                                            "to": 54,
+                                            "children": [
+                                                { "name": "TableCellMark", "from": 43, "to": 45 },
+                                                {
+                                                    "name": "MathMode",
+                                                    "from": 46,
+                                                    "to": 51,
+                                                    "children": [
+                                                        { "name": "MathModeMark", "from": 46, "to": 48 },
+                                                        { "name": "MathModeMark", "from": 49, "to": 51 }
+                                                    ]
+                                                },
+                                                { "name": "TableCellMark", "from": 52, "to": 54 }
+                                            ]
+                                        },
+                                        {
+                                            "name": "TableCell",
+                                            "from": 55,
+                                            "to": 67,
+                                            "children": [
+                                                { "name": "TableCellMark", "from": 55, "to": 57 },
+                                                { "name": "AnswerRule", "from": 58, "to": 61 },
+                                                {
+                                                    "name": "Option",
+                                                    "from": 61,
+                                                    "to": 64,
+                                                    "children": [
+                                                        { "name": "OptionMark", "from": 61, "to": 62 },
+                                                        {
+                                                            "name": "Program",
+                                                            "from": 62,
+                                                            "to": 63,
+                                                            "children": [
+                                                                {
+                                                                    "name": "ExpressionStatement",
+                                                                    "from": 62,
+                                                                    "to": 63,
+                                                                    "children": [
+                                                                        { "name": "Integer", "from": 62, "to": 63 }
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        },
+                                                        { "name": "OptionMark", "from": 63, "to": 64 }
+                                                    ]
+                                                },
+                                                { "name": "TableCellMark", "from": 65, "to": 67 }
+                                            ]
+                                        },
+                                        { "name": "TableMark", "from": 68, "to": 70 }
+                                    ]
+                                },
+                                {
+                                    "name": "Option",
+                                    "from": 70,
+                                    "to": 125,
+                                    "children": [
+                                        { "name": "OptionMark", "from": 70, "to": 71 },
+                                        {
+                                            "name": "Program",
+                                            "from": 71,
+                                            "to": 124,
+                                            "children": [
+                                                {
+                                                    "name": "ExpressionStatement",
+                                                    "from": 72,
+                                                    "to": 123,
+                                                    "children": [
+                                                        {
+                                                            "name": "Pair",
+                                                            "from": 72,
+                                                            "to": 83,
+                                                            "children": [
+                                                                { "name": "Identifier", "from": 72, "to": 78 },
+                                                                { "name": "FatComma", "from": 79, "to": 81 },
+                                                                { "name": "Integer", "from": 82, "to": 83 }
+                                                            ]
+                                                        },
+                                                        { "name": "Comma", "from": 83, "to": 84 },
+                                                        {
+                                                            "name": "Pair",
+                                                            "from": 85,
+                                                            "to": 101,
+                                                            "children": [
+                                                                { "name": "Identifier", "from": 85, "to": 90 },
+                                                                { "name": "FatComma", "from": 91, "to": 93 },
+                                                                { "name": "StringSingleQuoted", "from": 94, "to": 101 }
+                                                            ]
+                                                        },
+                                                        { "name": "Comma", "from": 101, "to": 102 },
+                                                        {
+                                                            "name": "Pair",
+                                                            "from": 103,
+                                                            "to": 123,
+                                                            "children": [
+                                                                { "name": "Identifier", "from": 103, "to": 118 },
+                                                                { "name": "FatComma", "from": 119, "to": 121 },
+                                                                { "name": "Integer", "from": 122, "to": 123 }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        { "name": "OptionMark", "from": 124, "to": 125 }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                { "name": "EndPG", "from": 126, "to": 134 }
+            ]
+        }
+    ]
+}
 
 ==>
 

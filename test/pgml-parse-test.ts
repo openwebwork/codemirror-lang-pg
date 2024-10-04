@@ -45,9 +45,9 @@ for (const file of readdirSync(caseDir)) {
     const tests = fileTests(file);
 
     describe(testName, function () {
-        for (const { name, run } of tests)
-            it(name, function () {
-                run(pgmlShow);
+        for (const test of tests)
+            it(test.name, function () {
+                test.run(pgmlShow);
             });
     });
 }

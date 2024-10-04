@@ -6,7 +6,54 @@ END_PGML
 
 ==>
 
-Program(PGMLBlock(BeginPG, PGMLContent(Paragraph(Tag(TagMark, MathMode(MathModeMark, MathModeMark), TagMark))), EndPG))
+{
+    "name": "Program",
+    "from": 0,
+    "to": 45,
+    "children": [
+        {
+            "name": "PGMLBlock",
+            "from": 0,
+            "to": 45,
+            "children": [
+                { "name": "BeginPG", "from": 0, "to": 10 },
+                {
+                    "name": "PGMLContent",
+                    "from": 11,
+                    "to": 37,
+                    "children": [
+                        {
+                            "name": "Paragraph",
+                            "from": 11,
+                            "to": 37,
+                            "children": [
+                                {
+                                    "name": "Tag",
+                                    "from": 11,
+                                    "to": 36,
+                                    "children": [
+                                        { "name": "TagMark", "from": 11, "to": 13 },
+                                        {
+                                            "name": "MathMode",
+                                            "from": 24,
+                                            "to": 33,
+                                            "children": [
+                                                { "name": "MathModeMark", "from": 24, "to": 26 },
+                                                { "name": "MathModeMark", "from": 31, "to": 33 }
+                                            ]
+                                        },
+                                        { "name": "TagMark", "from": 34, "to": 36 }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                { "name": "EndPG", "from": 37, "to": 45 }
+            ]
+        }
+    ]
+}
 
 ==>
 
@@ -83,33 +130,131 @@ END_PGML
 
 ==>
 
-Program(
-    PGMLBlock(
-        BeginPG,
-        PGMLContent(
-            Paragraph(
-                Tag(TagMark, MathMode(MathModeMark, MathModeMark), TagMark),
-                Option(
-                    OptionMark,
-                    Program(
-                        ExpressionStatement(
-                            ArrayRef(
-                                "[",
-                                StringSingleQuoted,
-                                Comma,
-                                Pair(Identifier, FatComma, StringSingleQuoted),
-                                "]"
-                            )
-                        )
-                    ),
-                    OptionMark
-                ),
-                Option(OptionMark, Program(ExpressionStatement(ArrayRef("[", StringSingleQuoted, "]"))), OptionMark)
-            )
-        ),
-        EndPG
-    )
-)
+{
+    "name": "Program",
+    "from": 0,
+    "to": 118,
+    "children": [
+        {
+            "name": "PGMLBlock",
+            "from": 0,
+            "to": 118,
+            "children": [
+                { "name": "BeginPG", "from": 0, "to": 10 },
+                {
+                    "name": "PGMLContent",
+                    "from": 11,
+                    "to": 110,
+                    "children": [
+                        {
+                            "name": "Paragraph",
+                            "from": 11,
+                            "to": 110,
+                            "children": [
+                                {
+                                    "name": "Tag",
+                                    "from": 11,
+                                    "to": 48,
+                                    "children": [
+                                        { "name": "TagMark", "from": 11, "to": 13 },
+                                        {
+                                            "name": "MathMode",
+                                            "from": 32,
+                                            "to": 45,
+                                            "children": [
+                                                { "name": "MathModeMark", "from": 32, "to": 34 },
+                                                { "name": "MathModeMark", "from": 43, "to": 45 }
+                                            ]
+                                        },
+                                        { "name": "TagMark", "from": 46, "to": 48 }
+                                    ]
+                                },
+                                {
+                                    "name": "Option",
+                                    "from": 48,
+                                    "to": 89,
+                                    "children": [
+                                        { "name": "OptionMark", "from": 48, "to": 49 },
+                                        {
+                                            "name": "Program",
+                                            "from": 49,
+                                            "to": 88,
+                                            "children": [
+                                                {
+                                                    "name": "ExpressionStatement",
+                                                    "from": 50,
+                                                    "to": 87,
+                                                    "children": [
+                                                        {
+                                                            "name": "ArrayRef",
+                                                            "from": 50,
+                                                            "to": 87,
+                                                            "children": [
+                                                                { "name": "[", "from": 50, "to": 51 },
+                                                                { "name": "StringSingleQuoted", "from": 52, "to": 58 },
+                                                                { "name": "Comma", "from": 58, "to": 59 },
+                                                                {
+                                                                    "name": "Pair",
+                                                                    "from": 60,
+                                                                    "to": 85,
+                                                                    "children": [
+                                                                        { "name": "Identifier", "from": 60, "to": 65 },
+                                                                        { "name": "FatComma", "from": 66, "to": 68 },
+                                                                        { "name": "StringSingleQuoted", "from": 69, "to": 85 }
+                                                                    ]
+                                                                },
+                                                                { "name": "]", "from": 86, "to": 87 }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        { "name": "OptionMark", "from": 88, "to": 89 }
+                                    ]
+                                },
+                                {
+                                    "name": "Option",
+                                    "from": 89,
+                                    "to": 109,
+                                    "children": [
+                                        { "name": "OptionMark", "from": 89, "to": 90 },
+                                        {
+                                            "name": "Program",
+                                            "from": 90,
+                                            "to": 108,
+                                            "children": [
+                                                {
+                                                    "name": "ExpressionStatement",
+                                                    "from": 91,
+                                                    "to": 107,
+                                                    "children": [
+                                                        {
+                                                            "name": "ArrayRef",
+                                                            "from": 91,
+                                                            "to": 107,
+                                                            "children": [
+                                                                { "name": "[", "from": 91, "to": 92 },
+                                                                { "name": "StringSingleQuoted", "from": 92, "to": 106 },
+                                                                { "name": "]", "from": 106, "to": 107 }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        { "name": "OptionMark", "from": 108, "to": 109 }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                { "name": "EndPG", "from": 110, "to": 118 }
+            ]
+        }
+    ]
+}
 
 ==>
 
@@ -210,42 +355,199 @@ END_PGML
 
 ==>
 
-Program(
-    PGMLBlock(
-        BeginPG,
-        PGMLContent(
-            Paragraph(
-                Tag(
-                    TagMark,
-                    MathMode(MathModeMark, MathModeMark),
-                    Image(ImageMark, ImageMark),
-                    Option(OptionMark, Program(ExpressionStatement(StringSingleQuoted)), OptionMark),
-                    Option(OptionMark, Program(ExpressionStatement(Integer)), OptionMark),
-                    TagMark
-                ),
-                Option(
-                    OptionMark,
-                    Program(
-                        ExpressionStatement(
-                            ArrayRef(
-                                "[",
-                                StringSingleQuoted,
-                                Comma,
-                                Pair(Identifier, FatComma, StringSingleQuoted),
-                                Comma,
-                                Pair(Identifier, FatComma, StringSingleQuoted),
-                                "]"
-                            )
-                        )
-                    ),
-                    OptionMark
-                ),
-                Option(OptionMark, Program(ExpressionStatement(ArrayRef("[", StringSingleQuoted, "]"))), OptionMark)
-            )
-        ),
-        EndPG
-    )
-)
+{
+    "name": "Program",
+    "from": 0,
+    "to": 233,
+    "children": [
+        {
+            "name": "PGMLBlock",
+            "from": 0,
+            "to": 233,
+            "children": [
+                { "name": "BeginPG", "from": 0, "to": 10 },
+                {
+                    "name": "PGMLContent",
+                    "from": 11,
+                    "to": 225,
+                    "children": [
+                        {
+                            "name": "Paragraph",
+                            "from": 11,
+                            "to": 225,
+                            "children": [
+                                {
+                                    "name": "Tag",
+                                    "from": 11,
+                                    "to": 132,
+                                    "children": [
+                                        { "name": "TagMark", "from": 11, "to": 13 },
+                                        {
+                                            "name": "MathMode",
+                                            "from": 36,
+                                            "to": 53,
+                                            "children": [
+                                                { "name": "MathModeMark", "from": 36, "to": 38 },
+                                                { "name": "MathModeMark", "from": 51, "to": 53 }
+                                            ]
+                                        },
+                                        {
+                                            "name": "Image",
+                                            "from": 60,
+                                            "to": 78,
+                                            "children": [
+                                                { "name": "ImageMark", "from": 60, "to": 62 },
+                                                { "name": "ImageMark", "from": 76, "to": 78 }
+                                            ]
+                                        },
+                                        {
+                                            "name": "Option",
+                                            "from": 78,
+                                            "to": 97,
+                                            "children": [
+                                                { "name": "OptionMark", "from": 78, "to": 79 },
+                                                {
+                                                    "name": "Program",
+                                                    "from": 79,
+                                                    "to": 96,
+                                                    "children": [
+                                                        {
+                                                            "name": "ExpressionStatement",
+                                                            "from": 79,
+                                                            "to": 96,
+                                                            "children": [
+                                                                { "name": "StringSingleQuoted", "from": 79, "to": 96 }
+                                                            ]
+                                                        }
+                                                    ]
+                                                },
+                                                { "name": "OptionMark", "from": 96, "to": 97 }
+                                            ]
+                                        },
+                                        {
+                                            "name": "Option",
+                                            "from": 97,
+                                            "to": 102,
+                                            "children": [
+                                                { "name": "OptionMark", "from": 97, "to": 98 },
+                                                {
+                                                    "name": "Program",
+                                                    "from": 98,
+                                                    "to": 101,
+                                                    "children": [
+                                                        {
+                                                            "name": "ExpressionStatement",
+                                                            "from": 98,
+                                                            "to": 101,
+                                                            "children": [
+                                                                { "name": "Integer", "from": 98, "to": 101 }
+                                                            ]
+                                                        }
+                                                    ]
+                                                },
+                                                { "name": "OptionMark", "from": 101, "to": 102 }
+                                            ]
+                                        },
+                                        { "name": "TagMark", "from": 130, "to": 132 }
+                                    ]
+                                },
+                                {
+                                    "name": "Option",
+                                    "from": 132,
+                                    "to": 204,
+                                    "children": [
+                                        { "name": "OptionMark", "from": 132, "to": 133 },
+                                        {
+                                            "name": "Program",
+                                            "from": 133,
+                                            "to": 203,
+                                            "children": [
+                                                {
+                                                    "name": "ExpressionStatement",
+                                                    "from": 134,
+                                                    "to": 202,
+                                                    "children": [
+                                                        {
+                                                            "name": "ArrayRef",
+                                                            "from": 134,
+                                                            "to": 202,
+                                                            "children": [
+                                                                { "name": "[", "from": 134, "to": 135 },
+                                                                { "name": "StringSingleQuoted", "from": 136, "to": 141 },
+                                                                { "name": "Comma", "from": 141, "to": 142 },
+                                                                {
+                                                                    "name": "Pair",
+                                                                    "from": 143,
+                                                                    "to": 168,
+                                                                    "children": [
+                                                                        { "name": "Identifier", "from": 143, "to": 148 },
+                                                                        { "name": "FatComma", "from": 149, "to": 151 },
+                                                                        { "name": "StringSingleQuoted", "from": 152, "to": 168 }
+                                                                    ]
+                                                                },
+                                                                { "name": "Comma", "from": 168, "to": 169 },
+                                                                {
+                                                                    "name": "Pair",
+                                                                    "from": 170,
+                                                                    "to": 200,
+                                                                    "children": [
+                                                                        { "name": "Identifier", "from": 170, "to": 182 },
+                                                                        { "name": "FatComma", "from": 183, "to": 185 },
+                                                                        { "name": "StringSingleQuoted", "from": 186, "to": 200 }
+                                                                    ]
+                                                                },
+                                                                { "name": "]", "from": 201, "to": 202 }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        { "name": "OptionMark", "from": 203, "to": 204 }
+                                    ]
+                                },
+                                {
+                                    "name": "Option",
+                                    "from": 204,
+                                    "to": 224,
+                                    "children": [
+                                        { "name": "OptionMark", "from": 204, "to": 205 },
+                                        {
+                                            "name": "Program",
+                                            "from": 205,
+                                            "to": 223,
+                                            "children": [
+                                                {
+                                                    "name": "ExpressionStatement",
+                                                    "from": 206,
+                                                    "to": 222,
+                                                    "children": [
+                                                        {
+                                                            "name": "ArrayRef",
+                                                            "from": 206,
+                                                            "to": 222,
+                                                            "children": [
+                                                                { "name": "[", "from": 206, "to": 207 },
+                                                                { "name": "StringSingleQuoted", "from": 207, "to": 221 },
+                                                                { "name": "]", "from": 221, "to": 222 }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        { "name": "OptionMark", "from": 223, "to": 224 }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                { "name": "EndPG", "from": 225, "to": 233 }
+            ]
+        }
+    ]
+}
 
 ==>
 
@@ -401,28 +703,121 @@ END_PGML
 
 ==>
 
-Program(
-    PGMLBlock(
-        BeginPG,
-        PGMLContent(
-            Paragraph(
-                Tag(
-                    TagMark,
-                    AnswerRule,
-                    Option(OptionMark, Program(ExpressionStatement(ScalarVariable)), OptionMark),
-                    MathMode(MathModeMark, MathModeMark),
-                    TagMark
-                ),
-                Option(
-                    OptionMark,
-                    Program(ExpressionStatement(ArrayRef("[", Pair(Identifier, FatComma, StringSingleQuoted), "]"))),
-                    OptionMark
-                )
-            )
-        ),
-        EndPG
-    )
-)
+{
+    "name": "Program",
+    "from": 0,
+    "to": 184,
+    "children": [
+        {
+            "name": "PGMLBlock",
+            "from": 0,
+            "to": 184,
+            "children": [
+                { "name": "BeginPG", "from": 0, "to": 10 },
+                {
+                    "name": "PGMLContent",
+                    "from": 11,
+                    "to": 176,
+                    "children": [
+                        {
+                            "name": "Paragraph",
+                            "from": 11,
+                            "to": 176,
+                            "children": [
+                                {
+                                    "name": "Tag",
+                                    "from": 11,
+                                    "to": 116,
+                                    "children": [
+                                        { "name": "TagMark", "from": 11, "to": 13 },
+                                        { "name": "AnswerRule", "from": 18, "to": 22 },
+                                        {
+                                            "name": "Option",
+                                            "from": 22,
+                                            "to": 31,
+                                            "children": [
+                                                { "name": "OptionMark", "from": 22, "to": 23 },
+                                                {
+                                                    "name": "Program",
+                                                    "from": 23,
+                                                    "to": 30,
+                                                    "children": [
+                                                        {
+                                                            "name": "ExpressionStatement",
+                                                            "from": 23,
+                                                            "to": 30,
+                                                            "children": [
+                                                                { "name": "ScalarVariable", "from": 23, "to": 30 }
+                                                            ]
+                                                        }
+                                                    ]
+                                                },
+                                                { "name": "OptionMark", "from": 30, "to": 31 }
+                                            ]
+                                        },
+                                        {
+                                            "name": "MathMode",
+                                            "from": 32,
+                                            "to": 113,
+                                            "children": [
+                                                { "name": "MathModeMark", "from": 32, "to": 35 },
+                                                { "name": "MathModeMark", "from": 110, "to": 113 }
+                                            ]
+                                        },
+                                        { "name": "TagMark", "from": 114, "to": 116 }
+                                    ]
+                                },
+                                {
+                                    "name": "Option",
+                                    "from": 116,
+                                    "to": 175,
+                                    "children": [
+                                        { "name": "OptionMark", "from": 116, "to": 117 },
+                                        {
+                                            "name": "Program",
+                                            "from": 117,
+                                            "to": 174,
+                                            "children": [
+                                                {
+                                                    "name": "ExpressionStatement",
+                                                    "from": 118,
+                                                    "to": 173,
+                                                    "children": [
+                                                        {
+                                                            "name": "ArrayRef",
+                                                            "from": 118,
+                                                            "to": 173,
+                                                            "children": [
+                                                                { "name": "[", "from": 118, "to": 119 },
+                                                                {
+                                                                    "name": "Pair",
+                                                                    "from": 120,
+                                                                    "to": 171,
+                                                                    "children": [
+                                                                        { "name": "Identifier", "from": 120, "to": 125 },
+                                                                        { "name": "FatComma", "from": 126, "to": 128 },
+                                                                        { "name": "StringSingleQuoted", "from": 129, "to": 171 }
+                                                                    ]
+                                                                },
+                                                                { "name": "]", "from": 172, "to": 173 }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        { "name": "OptionMark", "from": 174, "to": 175 }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                { "name": "EndPG", "from": 176, "to": 184 }
+            ]
+        }
+    ]
+}
 
 ==>
 

@@ -6,28 +6,79 @@ END_TEXT
 
 ==>
 
-Program(
-    PGTextBlock(
-        BeginPG,
-        PGTextContent(
-            PerlCommand(
-                PerlCommandMark,
-                Program(
-                    ExpressionStatement(
-                        MethodInvocation(
-                            ScalarVariable,
-                            ArrowOperator,
-                            FunctionName(Identifier),
-                            ParenthesizedArguments("(", Integer, ")")
-                        )
-                    )
-                ),
-                PerlCommandMark
-            )
-        ),
-        EndPG
-    )
-)
+{
+    "name": "Program",
+    "from": 0,
+    "to": 44,
+    "children": [
+        {
+            "name": "PGTextBlock",
+            "from": 0,
+            "to": 44,
+            "children": [
+                { "name": "BeginPG", "from": 0, "to": 10 },
+                {
+                    "name": "PGTextContent",
+                    "from": 11,
+                    "to": 36,
+                    "children": [
+                        {
+                            "name": "PerlCommand",
+                            "from": 11,
+                            "to": 35,
+                            "children": [
+                                { "name": "PerlCommandMark", "from": 11, "to": 13 },
+                                {
+                                    "name": "Program",
+                                    "from": 13,
+                                    "to": 33,
+                                    "children": [
+                                        {
+                                            "name": "ExpressionStatement",
+                                            "from": 14,
+                                            "to": 32,
+                                            "children": [
+                                                {
+                                                    "name": "MethodInvocation",
+                                                    "from": 14,
+                                                    "to": 32,
+                                                    "children": [
+                                                        { "name": "ScalarVariable", "from": 14, "to": 18 },
+                                                        { "name": "ArrowOperator", "from": 18, "to": 20 },
+                                                        {
+                                                            "name": "FunctionName",
+                                                            "from": 20,
+                                                            "to": 28,
+                                                            "children": [
+                                                                { "name": "Identifier", "from": 20, "to": 28 }
+                                                            ]
+                                                        },
+                                                        {
+                                                            "name": "ParenthesizedArguments",
+                                                            "from": 28,
+                                                            "to": 32,
+                                                            "children": [
+                                                                { "name": "(", "from": 28, "to": 29 },
+                                                                { "name": "Integer", "from": 29, "to": 31 },
+                                                                { "name": ")", "from": 31, "to": 32 }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                { "name": "PerlCommandMark", "from": 33, "to": 35 }
+                            ]
+                        }
+                    ]
+                },
+                { "name": "EndPG", "from": 36, "to": 44 }
+            ]
+        }
+    ]
+}
 
 # variable substitution
 
@@ -41,7 +92,32 @@ END_TEXT
 
 ==>
 
-Program(PGTextBlock(BeginPG, PGTextContent(Variable, Variable, Variable), EndPG))
+{
+    "name": "Program",
+    "from": 0,
+    "to": 63,
+    "children": [
+        {
+            "name": "PGTextBlock",
+            "from": 0,
+            "to": 63,
+            "children": [
+                { "name": "BeginPG", "from": 0, "to": 10 },
+                {
+                    "name": "PGTextContent",
+                    "from": 11,
+                    "to": 55,
+                    "children": [
+                        { "name": "Variable", "from": 20, "to": 24 },
+                        { "name": "Variable", "from": 34, "to": 36 },
+                        { "name": "Variable", "from": 37, "to": 45 }
+                    ]
+                },
+                { "name": "EndPG", "from": 55, "to": 63 }
+            ]
+        }
+    ]
+}
 
 # emphasis
 
@@ -55,19 +131,67 @@ END_TEXT
 
 ==>
 
-Program(
-    PGTextBlock(
-        BeginPG,
-        PGTextContent(
-            StrongEmphasis(EmphasisMark, EmphasisMark),
-            Variable,
-            Emphasis(EmphasisMark, EmphasisMark),
-            Variable,
-            StrongEmphasis(EmphasisMark, Emphasis(EmphasisMark, EmphasisMark), EmphasisMark)
-        ),
-        EndPG
-    )
-)
+{
+    "name": "Program",
+    "from": 0,
+    "to": 132,
+    "children": [
+        {
+            "name": "PGTextBlock",
+            "from": 0,
+            "to": 132,
+            "children": [
+                { "name": "BeginPG", "from": 0, "to": 10 },
+                {
+                    "name": "PGTextContent",
+                    "from": 11,
+                    "to": 124,
+                    "children": [
+                        {
+                            "name": "StrongEmphasis",
+                            "from": 11,
+                            "to": 34,
+                            "children": [
+                                { "name": "EmphasisMark", "from": 11, "to": 17 },
+                                { "name": "EmphasisMark", "from": 28, "to": 34 }
+                            ]
+                        },
+                        { "name": "Variable", "from": 35, "to": 39 },
+                        {
+                            "name": "Emphasis",
+                            "from": 40,
+                            "to": 71,
+                            "children": [
+                                { "name": "EmphasisMark", "from": 40, "to": 50 },
+                                { "name": "EmphasisMark", "from": 61, "to": 71 }
+                            ]
+                        },
+                        { "name": "Variable", "from": 72, "to": 76 },
+                        {
+                            "name": "StrongEmphasis",
+                            "from": 77,
+                            "to": 123,
+                            "children": [
+                                { "name": "EmphasisMark", "from": 77, "to": 83 },
+                                {
+                                    "name": "Emphasis",
+                                    "from": 83,
+                                    "to": 117,
+                                    "children": [
+                                        { "name": "EmphasisMark", "from": 83, "to": 91 },
+                                        { "name": "EmphasisMark", "from": 109, "to": 117 }
+                                    ]
+                                },
+                                { "name": "EmphasisMark", "from": 117, "to": 123 }
+                            ]
+                        }
+                    ]
+                },
+                { "name": "EndPG", "from": 124, "to": 132 }
+            ]
+        }
+    ]
+}
 
 # math mode
 
@@ -82,18 +206,67 @@ END_TEXT
 
 ==>
 
-Program(
-    PGTextBlock(
-        BeginPG,
-        PGTextContent(
-            InlineMathMode(MathModeMark, Variable, MathModeMark),
-            DisplayMathMode(MathModeMark, MathModeMark),
-            DisplayMathMode(MathModeMark, PGTextError, MathModeMark),
-            DisplayMathMode(MathModeMark, MathModeMark)
-        ),
-        EndPG
-    )
-)
+{
+    "name": "Program",
+    "from": 0,
+    "to": 93,
+    "children": [
+        {
+            "name": "PGTextBlock",
+            "from": 0,
+            "to": 93,
+            "children": [
+                { "name": "BeginPG", "from": 0, "to": 10 },
+                {
+                    "name": "PGTextContent",
+                    "from": 11,
+                    "to": 85,
+                    "children": [
+                        {
+                            "name": "InlineMathMode",
+                            "from": 11,
+                            "to": 21,
+                            "children": [
+                                { "name": "MathModeMark", "from": 11, "to": 13 },
+                                { "name": "Variable", "from": 17, "to": 19 },
+                                { "name": "MathModeMark", "from": 19, "to": 21 }
+                            ]
+                        },
+                        {
+                            "name": "DisplayMathMode",
+                            "from": 22,
+                            "to": 37,
+                            "children": [
+                                { "name": "MathModeMark", "from": 22, "to": 24 },
+                                { "name": "MathModeMark", "from": 35, "to": 37 }
+                            ]
+                        },
+                        {
+                            "name": "DisplayMathMode",
+                            "from": 38,
+                            "to": 68,
+                            "children": [
+                                { "name": "MathModeMark", "from": 38, "to": 40 },
+                                { "name": "PGTextError", "from": 40, "to": 66 },
+                                { "name": "MathModeMark", "from": 66, "to": 68 }
+                            ]
+                        },
+                        {
+                            "name": "DisplayMathMode",
+                            "from": 69,
+                            "to": 84,
+                            "children": [
+                                { "name": "MathModeMark", "from": 69, "to": 71 },
+                                { "name": "MathModeMark", "from": 82, "to": 84 }
+                            ]
+                        }
+                    ]
+                },
+                { "name": "EndPG", "from": 85, "to": 93 }
+            ]
+        }
+    ]
+}
 
 # parsed math mode
 
@@ -108,18 +281,90 @@ END_TEXT
 
 ==>
 
-Program(
-    PGTextBlock(
-        BeginPG,
-        PGTextContent(
-            ParsedMathMode(ParsedMathModeMark, ParsedMathModeMark),
-            ParsedMathMode(ParsedMathModeMark, ParsedMathModeMark),
-            ParsedMathMode(ParsedMathModeMark, ParsedMathModeMark),
-            ParsedMathMode(ParsedMathModeMark, ParsedMathModeMark)
-            ParsedMathMode(ParsedMathModeMark, ParsedMathModeMark)
-            ParsedMathMode(ParsedMathModeMark, ParsedMathModeMark)
-            ParsedMathMode(ParsedMathModeMark, Variable, ParsedMathModeMark)
-        ),
-        EndPG
-    )
-)
+{
+    "name": "Program",
+    "from": 0,
+    "to": 85,
+    "children": [
+        {
+            "name": "PGTextBlock",
+            "from": 0,
+            "to": 85,
+            "children": [
+                { "name": "BeginPG", "from": 0, "to": 10 },
+                {
+                    "name": "PGTextContent",
+                    "from": 11,
+                    "to": 77,
+                    "children": [
+                        {
+                            "name": "ParsedMathMode",
+                            "from": 11,
+                            "to": 18,
+                            "children": [
+                                { "name": "ParsedMathModeMark", "from": 11, "to": 12 },
+                                { "name": "ParsedMathModeMark", "from": 17, "to": 18 }
+                            ]
+                        },
+                        {
+                            "name": "ParsedMathMode",
+                            "from": 19,
+                            "to": 28,
+                            "children": [
+                                { "name": "ParsedMathModeMark", "from": 19, "to": 21 },
+                                { "name": "ParsedMathModeMark", "from": 26, "to": 28 }
+                            ]
+                        },
+                        {
+                            "name": "ParsedMathMode",
+                            "from": 29,
+                            "to": 37,
+                            "children": [
+                                { "name": "ParsedMathModeMark", "from": 29, "to": 30 },
+                                { "name": "ParsedMathModeMark", "from": 35, "to": 37 }
+                            ]
+                        },
+                        {
+                            "name": "ParsedMathMode",
+                            "from": 38,
+                            "to": 48,
+                            "children": [
+                                { "name": "ParsedMathModeMark", "from": 38, "to": 40 },
+                                { "name": "ParsedMathModeMark", "from": 45, "to": 48 }
+                            ]
+                        },
+                        {
+                            "name": "ParsedMathMode",
+                            "from": 49,
+                            "to": 56,
+                            "children": [
+                                { "name": "ParsedMathModeMark", "from": 49, "to": 50 },
+                                { "name": "ParsedMathModeMark", "from": 55, "to": 56 }
+                            ]
+                        },
+                        {
+                            "name": "ParsedMathMode",
+                            "from": 56,
+                            "to": 65,
+                            "children": [
+                                { "name": "ParsedMathModeMark", "from": 56, "to": 58 },
+                                { "name": "ParsedMathModeMark", "from": 63, "to": 65 }
+                            ]
+                        },
+                        {
+                            "name": "ParsedMathMode",
+                            "from": 66,
+                            "to": 76,
+                            "children": [
+                                { "name": "ParsedMathModeMark", "from": 66, "to": 67 },
+                                { "name": "Variable", "from": 67, "to": 69 },
+                                { "name": "ParsedMathModeMark", "from": 75, "to": 76 }
+                            ]
+                        }
+                    ]
+                },
+                { "name": "EndPG", "from": 77, "to": 85 }
+            ]
+        }
+    ]
+}

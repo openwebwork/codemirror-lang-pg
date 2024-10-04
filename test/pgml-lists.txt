@@ -19,19 +19,154 @@ END_PGML
 
 ==>
 
-Program(
-    PGMLBlock(
-        BeginPG,
-        PGMLContent(
-            OrderedList(ListItem(ListMark, Paragraph), ListItem(ListMark, Paragraph)),
-            OrderedList(ListItem(ListMark, Paragraph), ListItem(ListMark, Paragraph)),
-            OrderedList(ListItem(ListMark, Paragraph), ListItem(ListMark, Paragraph)),
-            OrderedList(ListItem(ListMark, Paragraph), ListItem(ListMark, Paragraph)),
-            OrderedList(ListItem(ListMark, Paragraph), ListItem(ListMark, Paragraph))
-        ),
-        EndPG
-    )
-)
+{
+    "name": "Program",
+    "from": 0,
+    "to": 299,
+    "children": [
+        {
+            "name": "PGMLBlock",
+            "from": 0,
+            "to": 299,
+            "children": [
+                { "name": "BeginPG", "from": 0, "to": 10 },
+                {
+                    "name": "PGMLContent",
+                    "from": 11,
+                    "to": 291,
+                    "children": [
+                        {
+                            "name": "OrderedList",
+                            "from": 11,
+                            "to": 65,
+                            "children": [
+                                {
+                                    "name": "ListItem",
+                                    "from": 11,
+                                    "to": 38,
+                                    "children": [
+                                        { "name": "ListMark", "from": 11, "to": 14 },
+                                        { "name": "Paragraph", "from": 14, "to": 38 }
+                                    ]
+                                },
+                                {
+                                    "name": "ListItem",
+                                    "from": 38,
+                                    "to": 65,
+                                    "children": [
+                                        { "name": "ListMark", "from": 38, "to": 41 },
+                                        { "name": "Paragraph", "from": 41, "to": 65 }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "name": "OrderedList",
+                            "from": 67,
+                            "to": 121,
+                            "children": [
+                                {
+                                    "name": "ListItem",
+                                    "from": 67,
+                                    "to": 94,
+                                    "children": [
+                                        { "name": "ListMark", "from": 67, "to": 70 },
+                                        { "name": "Paragraph", "from": 70, "to": 94 }
+                                    ]
+                                },
+                                {
+                                    "name": "ListItem",
+                                    "from": 94,
+                                    "to": 121,
+                                    "children": [
+                                        { "name": "ListMark", "from": 94, "to": 97 },
+                                        { "name": "Paragraph", "from": 97, "to": 121 }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "name": "OrderedList",
+                            "from": 123,
+                            "to": 177,
+                            "children": [
+                                {
+                                    "name": "ListItem",
+                                    "from": 123,
+                                    "to": 150,
+                                    "children": [
+                                        { "name": "ListMark", "from": 123, "to": 126 },
+                                        { "name": "Paragraph", "from": 126, "to": 150 }
+                                    ]
+                                },
+                                {
+                                    "name": "ListItem",
+                                    "from": 150,
+                                    "to": 177,
+                                    "children": [
+                                        { "name": "ListMark", "from": 150, "to": 153 },
+                                        { "name": "Paragraph", "from": 153, "to": 177 }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "name": "OrderedList",
+                            "from": 179,
+                            "to": 233,
+                            "children": [
+                                {
+                                    "name": "ListItem",
+                                    "from": 179,
+                                    "to": 206,
+                                    "children": [
+                                        { "name": "ListMark", "from": 179, "to": 182 },
+                                        { "name": "Paragraph", "from": 182, "to": 206 }
+                                    ]
+                                },
+                                {
+                                    "name": "ListItem",
+                                    "from": 206,
+                                    "to": 233,
+                                    "children": [
+                                        { "name": "ListMark", "from": 206, "to": 209 },
+                                        { "name": "Paragraph", "from": 209, "to": 233 }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "name": "OrderedList",
+                            "from": 235,
+                            "to": 291,
+                            "children": [
+                                {
+                                    "name": "ListItem",
+                                    "from": 235,
+                                    "to": 262,
+                                    "children": [
+                                        { "name": "ListMark", "from": 235, "to": 238 },
+                                        { "name": "Paragraph", "from": 238, "to": 262 }
+                                    ]
+                                },
+                                {
+                                    "name": "ListItem",
+                                    "from": 262,
+                                    "to": 291,
+                                    "children": [
+                                        { "name": "ListMark", "from": 262, "to": 266 },
+                                        { "name": "Paragraph", "from": 266, "to": 291 }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                { "name": "EndPG", "from": 291, "to": 299 }
+            ]
+        }
+    ]
+}
 
 ==>
 
@@ -288,18 +423,129 @@ END_PGML
 
 ==>
 
-Program(
-    PGMLBlock(
-        BeginPG,
-        PGMLContent(
-            BulletList(ListItem(ListMark, Paragraph), ListItem(ListMark, Paragraph)),
-            BulletList(ListItem(ListMark, Paragraph), ListItem(ListMark, Paragraph)),
-            BulletList(ListItem(ListMark, Paragraph), ListItem(ListMark, Paragraph)),
-            BulletList(ListItem(ListMark, Paragraph), ListItem(ListMark, Paragraph))
-        ),
-        EndPG
-    )
-)
+{
+    "name": "Program",
+    "from": 0,
+    "to": 90,
+    "children": [
+        {
+            "name": "PGMLBlock",
+            "from": 0,
+            "to": 90,
+            "children": [
+                { "name": "BeginPG", "from": 0, "to": 10 },
+                {
+                    "name": "PGMLContent",
+                    "from": 11,
+                    "to": 82,
+                    "children": [
+                        {
+                            "name": "BulletList",
+                            "from": 11,
+                            "to": 27,
+                            "children": [
+                                {
+                                    "name": "ListItem",
+                                    "from": 11,
+                                    "to": 19,
+                                    "children": [
+                                        { "name": "ListMark", "from": 11, "to": 13 },
+                                        { "name": "Paragraph", "from": 13, "to": 19 }
+                                    ]
+                                },
+                                {
+                                    "name": "ListItem",
+                                    "from": 19,
+                                    "to": 27,
+                                    "children": [
+                                        { "name": "ListMark", "from": 19, "to": 21 },
+                                        { "name": "Paragraph", "from": 21, "to": 27 }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "name": "BulletList",
+                            "from": 29,
+                            "to": 45,
+                            "children": [
+                                {
+                                    "name": "ListItem",
+                                    "from": 29,
+                                    "to": 37,
+                                    "children": [
+                                        { "name": "ListMark", "from": 29, "to": 31 },
+                                        { "name": "Paragraph", "from": 31, "to": 37 }
+                                    ]
+                                },
+                                {
+                                    "name": "ListItem",
+                                    "from": 37,
+                                    "to": 45,
+                                    "children": [
+                                        { "name": "ListMark", "from": 37, "to": 39 },
+                                        { "name": "Paragraph", "from": 39, "to": 45 }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "name": "BulletList",
+                            "from": 47,
+                            "to": 63,
+                            "children": [
+                                {
+                                    "name": "ListItem",
+                                    "from": 47,
+                                    "to": 55,
+                                    "children": [
+                                        { "name": "ListMark", "from": 47, "to": 49 },
+                                        { "name": "Paragraph", "from": 49, "to": 55 }
+                                    ]
+                                },
+                                {
+                                    "name": "ListItem",
+                                    "from": 55,
+                                    "to": 63,
+                                    "children": [
+                                        { "name": "ListMark", "from": 55, "to": 57 },
+                                        { "name": "Paragraph", "from": 57, "to": 63 }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "name": "BulletList",
+                            "from": 65,
+                            "to": 82,
+                            "children": [
+                                {
+                                    "name": "ListItem",
+                                    "from": 65,
+                                    "to": 73,
+                                    "children": [
+                                        { "name": "ListMark", "from": 65, "to": 67 },
+                                        { "name": "Paragraph", "from": 67, "to": 73 }
+                                    ]
+                                },
+                                {
+                                    "name": "ListItem",
+                                    "from": 73,
+                                    "to": 82,
+                                    "children": [
+                                        { "name": "ListMark", "from": 73, "to": 75 },
+                                        { "name": "Paragraph", "from": 75, "to": 82 }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                { "name": "EndPG", "from": 82, "to": 90 }
+            ]
+        }
+    ]
+}
 
 ==>
 
@@ -507,30 +753,156 @@ END_PGML
 
 ==>
 
-Program(
-    PGMLBlock(
-        BeginPG,
-        PGMLContent(
-            OrderedList(
-                ListItem(
-                    ListMark,
-                    Paragraph(
-                        OrderedList(
-                            ListItem(ListMark, Paragraph),
-                            ListItem(
-                                ListMark,
-                                Paragraph(OrderedList(ListItem(ListMark, Paragraph), ListItem(ListMark, Paragraph)))
-                            ),
-                            ListItem(ListMark, Paragraph)
-                        )
-                    )
-                ),
-                ListItem(ListMark, Paragraph(BulletList(ListItem(ListMark, Paragraph), ListItem(ListMark, Paragraph))))
-            )
-        ),
-        EndPG
-    )
-)
+{
+    "name": "Program",
+    "from": 0,
+    "to": 218,
+    "children": [
+        {
+            "name": "PGMLBlock",
+            "from": 0,
+            "to": 218,
+            "children": [
+                { "name": "BeginPG", "from": 0, "to": 10 },
+                {
+                    "name": "PGMLContent",
+                    "from": 11,
+                    "to": 210,
+                    "children": [
+                        {
+                            "name": "OrderedList",
+                            "from": 11,
+                            "to": 176,
+                            "children": [
+                                {
+                                    "name": "ListItem",
+                                    "from": 11,
+                                    "to": 147,
+                                    "children": [
+                                        { "name": "ListMark", "from": 11, "to": 14 },
+                                        {
+                                            "name": "Paragraph",
+                                            "from": 14,
+                                            "to": 147,
+                                            "children": [
+                                                {
+                                                    "name": "OrderedList",
+                                                    "from": 25,
+                                                    "to": 147,
+                                                    "children": [
+                                                        {
+                                                            "name": "ListItem",
+                                                            "from": 25,
+                                                            "to": 47,
+                                                            "children": [
+                                                                { "name": "ListMark", "from": 25, "to": 28 },
+                                                                { "name": "Paragraph", "from": 28, "to": 47 }
+                                                            ]
+                                                        },
+                                                        {
+                                                            "name": "ListItem",
+                                                            "from": 47,
+                                                            "to": 104,
+                                                            "children": [
+                                                                { "name": "ListMark", "from": 47, "to": 50 },
+                                                                {
+                                                                    "name": "Paragraph",
+                                                                    "from": 50,
+                                                                    "to": 104,
+                                                                    "children": [
+                                                                        {
+                                                                            "name": "OrderedList",
+                                                                            "from": 73,
+                                                                            "to": 104,
+                                                                            "children": [
+                                                                                {
+                                                                                    "name": "ListItem",
+                                                                                    "from": 73,
+                                                                                    "to": 89,
+                                                                                    "children": [
+                                                                                        { "name": "ListMark", "from": 73, "to": 76 },
+                                                                                        { "name": "Paragraph", "from": 76, "to": 89 }
+                                                                                    ]
+                                                                                },
+                                                                                {
+                                                                                    "name": "ListItem",
+                                                                                    "from": 89,
+                                                                                    "to": 104,
+                                                                                    "children": [
+                                                                                        { "name": "ListMark", "from": 89, "to": 92 },
+                                                                                        { "name": "Paragraph", "from": 92, "to": 104 }
+                                                                                    ]
+                                                                                }
+                                                                            ]
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        },
+                                                        {
+                                                            "name": "ListItem",
+                                                            "from": 104,
+                                                            "to": 147,
+                                                            "children": [
+                                                                { "name": "ListMark", "from": 104, "to": 107 },
+                                                                { "name": "Paragraph", "from": 107, "to": 147 }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name": "ListItem",
+                                    "from": 147,
+                                    "to": 210,
+                                    "children": [
+                                        { "name": "ListMark", "from": 147, "to": 150 },
+                                        {
+                                            "name": "Paragraph",
+                                            "from": 150,
+                                            "to": 210,
+                                            "children": [
+                                                {
+                                                    "name": "BulletList",
+                                                    "from": 176,
+                                                    "to": 210,
+                                                    "children": [
+                                                        {
+                                                            "name": "ListItem",
+                                                            "from": 176,
+                                                            "to": 196,
+                                                            "children": [
+                                                                { "name": "ListMark", "from": 176, "to": 178 },
+                                                                { "name": "Paragraph", "from": 178, "to": 196 }
+                                                            ]
+                                                        },
+                                                        {
+                                                            "name": "ListItem",
+                                                            "from": 196,
+                                                            "to": 210,
+                                                            "children": [
+                                                                { "name": "ListMark", "from": 196, "to": 198 },
+                                                                { "name": "Paragraph", "from": 198, "to": 210 }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                { "name": "EndPG", "from": 210, "to": 218 }
+            ]
+        }
+    ]
+}
 
 ==>
 
@@ -736,22 +1108,113 @@ END_PGML
 
 ==>
 
-Program(
-    PGMLBlock(
-        BeginPG,
-        PGMLContent(
-            OrderedList(ListItem(ListMark, Paragraph), ListItem(ListMark, Paragraph)),
-            OrderedList(
-                ListItem(ListMark, Paragraph),
-                ListItem(ListMark, Paragraph),
-                ListItem(ListMark, Paragraph),
-                ListItem(ListMark, Paragraph)
-            ),
-            OrderedList(ListItem(ListMark, Paragraph))
-        ),
-        EndPG
-    )
-)
+{
+    "name": "Program",
+    "from": 0,
+    "to": 491,
+    "children": [
+        {
+            "name": "PGMLBlock",
+            "from": 0,
+            "to": 491,
+            "children": [
+                { "name": "BeginPG", "from": 0, "to": 10 },
+                {
+                    "name": "PGMLContent",
+                    "from": 11,
+                    "to": 483,
+                    "children": [
+                        {
+                            "name": "OrderedList",
+                            "from": 11,
+                            "to": 135,
+                            "children": [
+                                {
+                                    "name": "ListItem",
+                                    "from": 11,
+                                    "to": 93,
+                                    "children": [
+                                        { "name": "ListMark", "from": 11, "to": 14 },
+                                        { "name": "Paragraph", "from": 14, "to": 93 }
+                                    ]
+                                },
+                                {
+                                    "name": "ListItem",
+                                    "from": 93,
+                                    "to": 135,
+                                    "children": [
+                                        { "name": "ListMark", "from": 93, "to": 96 },
+                                        { "name": "Paragraph", "from": 96, "to": 135 }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "name": "OrderedList",
+                            "from": 177,
+                            "to": 421,
+                            "children": [
+                                {
+                                    "name": "ListItem",
+                                    "from": 177,
+                                    "to": 229,
+                                    "children": [
+                                        { "name": "ListMark", "from": 177, "to": 180 },
+                                        { "name": "Paragraph", "from": 180, "to": 229 }
+                                    ]
+                                },
+                                {
+                                    "name": "ListItem",
+                                    "from": 229,
+                                    "to": 322,
+                                    "children": [
+                                        { "name": "ListMark", "from": 229, "to": 232 },
+                                        { "name": "Paragraph", "from": 232, "to": 322 }
+                                    ]
+                                },
+                                {
+                                    "name": "ListItem",
+                                    "from": 322,
+                                    "to": 370,
+                                    "children": [
+                                        { "name": "ListMark", "from": 322, "to": 325 },
+                                        { "name": "Paragraph", "from": 325, "to": 370 }
+                                    ]
+                                },
+                                {
+                                    "name": "ListItem",
+                                    "from": 370,
+                                    "to": 421,
+                                    "children": [
+                                        { "name": "ListMark", "from": 370, "to": 373 },
+                                        { "name": "Paragraph", "from": 373, "to": 421 }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "name": "OrderedList",
+                            "from": 425,
+                            "to": 483,
+                            "children": [
+                                {
+                                    "name": "ListItem",
+                                    "from": 425,
+                                    "to": 483,
+                                    "children": [
+                                        { "name": "ListMark", "from": 425, "to": 428 },
+                                        { "name": "Paragraph", "from": 428, "to": 483 }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                { "name": "EndPG", "from": 483, "to": 491 }
+            ]
+        }
+    ]
+}
 
 ==>
 

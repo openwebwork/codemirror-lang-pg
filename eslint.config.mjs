@@ -25,10 +25,6 @@ export default [
         files: ['**/*.{js,mjs,cjs}'],
         ...tseslint.configs.disableTypeChecked
     },
-    {
-        files: ['test/tree-test.ts'],
-        rules: { '@typescript-eslint/unbound-method': 'off' }
-    },
     eslintConfigPrettier,
     {
         plugins: { '@stylistic': stylistic },

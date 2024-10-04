@@ -6,21 +6,69 @@ END_PGML
 
 ==>
 
-Program(
-    PGMLBlock(
-        BeginPG,
-        PGMLContent(
-            Paragraph(
-                MathMode(
-                    MathModeMark,
-                    Variable(VariableMark, Program(ExpressionStatement(ScalarVariable)), VariableMark),
-                    MathModeMark
-                )
-            )
-        ),
-        EndPG
-    )
-)
+{
+    "name": "Program",
+    "from": 0,
+    "to": 41,
+    "children": [
+        {
+            "name": "PGMLBlock",
+            "from": 0,
+            "to": 41,
+            "children": [
+                { "name": "BeginPG", "from": 0, "to": 10 },
+                {
+                    "name": "PGMLContent",
+                    "from": 11,
+                    "to": 33,
+                    "children": [
+                        {
+                            "name": "Paragraph",
+                            "from": 11,
+                            "to": 33,
+                            "children": [
+                                {
+                                    "name": "MathMode",
+                                    "from": 11,
+                                    "to": 32,
+                                    "children": [
+                                        { "name": "MathModeMark", "from": 11, "to": 13 },
+                                        {
+                                            "name": "Variable",
+                                            "from": 19,
+                                            "to": 23,
+                                            "children": [
+                                                { "name": "VariableMark", "from": 19, "to": 20 },
+                                                {
+                                                    "name": "Program",
+                                                    "from": 20,
+                                                    "to": 22,
+                                                    "children": [
+                                                        {
+                                                            "name": "ExpressionStatement",
+                                                            "from": 20,
+                                                            "to": 22,
+                                                            "children": [
+                                                                { "name": "ScalarVariable", "from": 20, "to": 22 }
+                                                            ]
+                                                        }
+                                                    ]
+                                                },
+                                                { "name": "VariableMark", "from": 22, "to": 23 }
+                                            ]
+                                        },
+                                        { "name": "MathModeMark", "from": 30, "to": 32 }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                { "name": "EndPG", "from": 33, "to": 41 }
+            ]
+        }
+    ]
+}
 
 ==>
 
@@ -90,21 +138,69 @@ END_PGML
 
 ==>
 
-Program(
-    PGMLBlock(
-        BeginPG,
-        PGMLContent(
-            Paragraph(
-                MathMode(
-                    MathModeMark,
-                    Variable(VariableMark, Program(ExpressionStatement(ScalarVariable)), VariableMark),
-                    MathModeMark
-                )
-            )
-        ),
-        EndPG
-    )
-)
+{
+    "name": "Program",
+    "from": 0,
+    "to": 44,
+    "children": [
+        {
+            "name": "PGMLBlock",
+            "from": 0,
+            "to": 44,
+            "children": [
+                { "name": "BeginPG", "from": 0, "to": 10 },
+                {
+                    "name": "PGMLContent",
+                    "from": 11,
+                    "to": 36,
+                    "children": [
+                        {
+                            "name": "Paragraph",
+                            "from": 11,
+                            "to": 36,
+                            "children": [
+                                {
+                                    "name": "MathMode",
+                                    "from": 11,
+                                    "to": 35,
+                                    "children": [
+                                        { "name": "MathModeMark", "from": 11, "to": 14 },
+                                        {
+                                            "name": "Variable",
+                                            "from": 21,
+                                            "to": 25,
+                                            "children": [
+                                                { "name": "VariableMark", "from": 21, "to": 22 },
+                                                {
+                                                    "name": "Program",
+                                                    "from": 22,
+                                                    "to": 24,
+                                                    "children": [
+                                                        {
+                                                            "name": "ExpressionStatement",
+                                                            "from": 22,
+                                                            "to": 24,
+                                                            "children": [
+                                                                { "name": "ScalarVariable", "from": 22, "to": 24 }
+                                                            ]
+                                                        }
+                                                    ]
+                                                },
+                                                { "name": "VariableMark", "from": 24, "to": 25 }
+                                            ]
+                                        },
+                                        { "name": "MathModeMark", "from": 32, "to": 35 }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                { "name": "EndPG", "from": 36, "to": 44 }
+            ]
+        }
+    ]
+}
 
 ==>
 
@@ -175,25 +271,78 @@ END_PGML
 
 ==>
 
-Program(
-    PGMLBlock(
-        BeginPG,
-        PGMLContent(
-            Paragraph(
-                MathMode(
-                    MathModeMark,
-                    Variable(
-                        VariableMark,
-                        Program(ExpressionStatement(BinaryExpression(ScalarVariable, ArithOp, Integer))),
-                        VariableMark
-                    ),
-                    MathModeMark
-                )
-            )
-        ),
-        EndPG
-    )
-)
+{
+    "name": "Program",
+    "from": 0,
+    "to": 49,
+    "children": [
+        {
+            "name": "PGMLBlock",
+            "from": 0,
+            "to": 49,
+            "children": [
+                { "name": "BeginPG", "from": 0, "to": 10 },
+                {
+                    "name": "PGMLContent",
+                    "from": 11,
+                    "to": 41,
+                    "children": [
+                        {
+                            "name": "Paragraph",
+                            "from": 11,
+                            "to": 41,
+                            "children": [
+                                {
+                                    "name": "MathMode",
+                                    "from": 11,
+                                    "to": 40,
+                                    "children": [
+                                        { "name": "MathModeMark", "from": 11, "to": 15 },
+                                        {
+                                            "name": "Variable",
+                                            "from": 21,
+                                            "to": 29,
+                                            "children": [
+                                                { "name": "VariableMark", "from": 21, "to": 22 },
+                                                {
+                                                    "name": "Program",
+                                                    "from": 22,
+                                                    "to": 28,
+                                                    "children": [
+                                                        {
+                                                            "name": "ExpressionStatement",
+                                                            "from": 22,
+                                                            "to": 28,
+                                                            "children": [
+                                                                {
+                                                                    "name": "BinaryExpression",
+                                                                    "from": 22,
+                                                                    "to": 28,
+                                                                    "children": [
+                                                                        { "name": "ScalarVariable", "from": 22, "to": 24 },
+                                                                        { "name": "ArithOp", "from": 25, "to": 26 },
+                                                                        { "name": "Integer", "from": 27, "to": 28 }
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                },
+                                                { "name": "VariableMark", "from": 28, "to": 29 }
+                                            ]
+                                        },
+                                        { "name": "MathModeMark", "from": 36, "to": 40 }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                { "name": "EndPG", "from": 41, "to": 49 }
+            ]
+        }
+    ]
+}
 
 ==>
 
@@ -264,7 +413,45 @@ END_PGML
 
 ==>
 
-Program(PGMLBlock(BeginPG, PGMLContent(Paragraph(MathMode(MathModeMark, MathModeMark))), EndPG))
+{
+    "name": "Program",
+    "from": 0,
+    "to": 32,
+    "children": [
+        {
+            "name": "PGMLBlock",
+            "from": 0,
+            "to": 32,
+            "children": [
+                { "name": "BeginPG", "from": 0, "to": 10 },
+                {
+                    "name": "PGMLContent",
+                    "from": 11,
+                    "to": 24,
+                    "children": [
+                        {
+                            "name": "Paragraph",
+                            "from": 11,
+                            "to": 24,
+                            "children": [
+                                {
+                                    "name": "MathMode",
+                                    "from": 11,
+                                    "to": 23,
+                                    "children": [
+                                        { "name": "MathModeMark", "from": 11, "to": 13 },
+                                        { "name": "MathModeMark", "from": 21, "to": 23 }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                { "name": "EndPG", "from": 24, "to": 32 }
+            ]
+        }
+    ]
+}
 
 ==>
 
@@ -320,7 +507,45 @@ END_PGML
 
 ==>
 
-Program(PGMLBlock(BeginPG, PGMLContent(Paragraph(MathMode(MathModeMark, MathModeMark))), EndPG))
+{
+    "name": "Program",
+    "from": 0,
+    "to": 38,
+    "children": [
+        {
+            "name": "PGMLBlock",
+            "from": 0,
+            "to": 38,
+            "children": [
+                { "name": "BeginPG", "from": 0, "to": 10 },
+                {
+                    "name": "PGMLContent",
+                    "from": 11,
+                    "to": 30,
+                    "children": [
+                        {
+                            "name": "Paragraph",
+                            "from": 11,
+                            "to": 30,
+                            "children": [
+                                {
+                                    "name": "MathMode",
+                                    "from": 11,
+                                    "to": 29,
+                                    "children": [
+                                        { "name": "MathModeMark", "from": 11, "to": 13 },
+                                        { "name": "MathModeMark", "from": 26, "to": 29 }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                { "name": "EndPG", "from": 30, "to": 38 }
+            ]
+        }
+    ]
+}
 
 ==>
 
@@ -377,7 +602,45 @@ END_PGML
 
 ==>
 
-Program(PGMLBlock(BeginPG, PGMLContent(Paragraph(MathMode(MathModeMark, MathModeMark))), EndPG))
+{
+    "name": "Program",
+    "from": 0,
+    "to": 39,
+    "children": [
+        {
+            "name": "PGMLBlock",
+            "from": 0,
+            "to": 39,
+            "children": [
+                { "name": "BeginPG", "from": 0, "to": 10 },
+                {
+                    "name": "PGMLContent",
+                    "from": 11,
+                    "to": 31,
+                    "children": [
+                        {
+                            "name": "Paragraph",
+                            "from": 11,
+                            "to": 31,
+                            "children": [
+                                {
+                                    "name": "MathMode",
+                                    "from": 11,
+                                    "to": 30,
+                                    "children": [
+                                        { "name": "MathModeMark", "from": 11, "to": 13 },
+                                        { "name": "MathModeMark", "from": 26, "to": 30 }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                { "name": "EndPG", "from": 31, "to": 39 }
+            ]
+        }
+    ]
+}
 
 ==>
 
@@ -434,7 +697,45 @@ END_PGML
 
 ==>
 
-Program(PGMLBlock(BeginPG, PGMLContent(Paragraph(MathMode(MathModeMark, MathModeMark))), EndPG))
+{
+    "name": "Program",
+    "from": 0,
+    "to": 40,
+    "children": [
+        {
+            "name": "PGMLBlock",
+            "from": 0,
+            "to": 40,
+            "children": [
+                { "name": "BeginPG", "from": 0, "to": 10 },
+                {
+                    "name": "PGMLContent",
+                    "from": 11,
+                    "to": 32,
+                    "children": [
+                        {
+                            "name": "Paragraph",
+                            "from": 11,
+                            "to": 32,
+                            "children": [
+                                {
+                                    "name": "MathMode",
+                                    "from": 11,
+                                    "to": 31,
+                                    "children": [
+                                        { "name": "MathModeMark", "from": 11, "to": 13 },
+                                        { "name": "MathModeMark", "from": 26, "to": 31 }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                { "name": "EndPG", "from": 32, "to": 40 }
+            ]
+        }
+    ]
+}
 
 ==>
 
@@ -491,7 +792,45 @@ END_PGML
 
 ==>
 
-Program(PGMLBlock(BeginPG, PGMLContent(Paragraph(MathMode(MathModeMark, MathModeMark))), EndPG))
+{
+    "name": "Program",
+    "from": 0,
+    "to": 34,
+    "children": [
+        {
+            "name": "PGMLBlock",
+            "from": 0,
+            "to": 34,
+            "children": [
+                { "name": "BeginPG", "from": 0, "to": 10 },
+                {
+                    "name": "PGMLContent",
+                    "from": 11,
+                    "to": 26,
+                    "children": [
+                        {
+                            "name": "Paragraph",
+                            "from": 11,
+                            "to": 26,
+                            "children": [
+                                {
+                                    "name": "MathMode",
+                                    "from": 11,
+                                    "to": 25,
+                                    "children": [
+                                        { "name": "MathModeMark", "from": 11, "to": 14 },
+                                        { "name": "MathModeMark", "from": 22, "to": 25 }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                { "name": "EndPG", "from": 26, "to": 34 }
+            ]
+        }
+    ]
+}
 
 ==>
 
@@ -548,7 +887,45 @@ END_PGML
 
 ==>
 
-Program(PGMLBlock(BeginPG, PGMLContent(Paragraph(MathMode(MathModeMark, MathModeMark))), EndPG))
+{
+    "name": "Program",
+    "from": 0,
+    "to": 36,
+    "children": [
+        {
+            "name": "PGMLBlock",
+            "from": 0,
+            "to": 36,
+            "children": [
+                { "name": "BeginPG", "from": 0, "to": 10 },
+                {
+                    "name": "PGMLContent",
+                    "from": 11,
+                    "to": 28,
+                    "children": [
+                        {
+                            "name": "Paragraph",
+                            "from": 11,
+                            "to": 28,
+                            "children": [
+                                {
+                                    "name": "MathMode",
+                                    "from": 11,
+                                    "to": 27,
+                                    "children": [
+                                        { "name": "MathModeMark", "from": 11, "to": 15 },
+                                        { "name": "MathModeMark", "from": 23, "to": 27 }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                { "name": "EndPG", "from": 28, "to": 36 }
+            ]
+        }
+    ]
+}
 
 ==>
 
@@ -605,18 +982,69 @@ END_PGML
 
 ==>
 
-Program(
-    PGMLBlock(
-        BeginPG,
-        PGMLContent(
-            Paragraph(
-                MathMode(MathModeMark, MathModeMark),
-                Option(OptionMark, Program(ExpressionStatement(ScalarVariable)), OptionMark)
-            )
-        ),
-        EndPG
-    )
-)
+{
+    "name": "Program",
+    "from": 0,
+    "to": 40,
+    "children": [
+        {
+            "name": "PGMLBlock",
+            "from": 0,
+            "to": 40,
+            "children": [
+                { "name": "BeginPG", "from": 0, "to": 10 },
+                {
+                    "name": "PGMLContent",
+                    "from": 11,
+                    "to": 32,
+                    "children": [
+                        {
+                            "name": "Paragraph",
+                            "from": 11,
+                            "to": 32,
+                            "children": [
+                                {
+                                    "name": "MathMode",
+                                    "from": 11,
+                                    "to": 21,
+                                    "children": [
+                                        { "name": "MathModeMark", "from": 11, "to": 13 },
+                                        { "name": "MathModeMark", "from": 19, "to": 21 }
+                                    ]
+                                },
+                                {
+                                    "name": "Option",
+                                    "from": 21,
+                                    "to": 31,
+                                    "children": [
+                                        { "name": "OptionMark", "from": 21, "to": 22 },
+                                        {
+                                            "name": "Program",
+                                            "from": 22,
+                                            "to": 30,
+                                            "children": [
+                                                {
+                                                    "name": "ExpressionStatement",
+                                                    "from": 22,
+                                                    "to": 30,
+                                                    "children": [
+                                                        { "name": "ScalarVariable", "from": 22, "to": 30 }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        { "name": "OptionMark", "from": 30, "to": 31 }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                { "name": "EndPG", "from": 32, "to": 40 }
+            ]
+        }
+    ]
+}
 
 ==>
 

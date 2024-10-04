@@ -6,7 +6,37 @@ END_PGML
 
 ==>
 
-Program(PGMLBlock(BeginPG, PGMLContent(Paragraph(AnswerRule)), EndPG))
+{
+    "name": "Program",
+    "from": 0,
+    "to": 23,
+    "children": [
+        {
+            "name": "PGMLBlock",
+            "from": 0,
+            "to": 23,
+            "children": [
+                { "name": "BeginPG", "from": 0, "to": 10 },
+                {
+                    "name": "PGMLContent",
+                    "from": 11,
+                    "to": 15,
+                    "children": [
+                        {
+                            "name": "Paragraph",
+                            "from": 11,
+                            "to": 15,
+                            "children": [
+                                { "name": "AnswerRule", "from": 11, "to": 14 }
+                            ]
+                        }
+                    ]
+                },
+                { "name": "EndPG", "from": 15, "to": 23 }
+            ]
+        }
+    ]
+}
 
 ==>
 
@@ -48,19 +78,85 @@ END_PGML
 
 ==>
 
-Program(
-    PGMLBlock(
-        BeginPG,
-        PGMLContent(
-            Paragraph(
-                AnswerRule,
-                Option(OptionMark, Program(ExpressionStatement(ScalarVariable)), OptionMark),
-                Option(OptionMark, Program(ExpressionStatement(Integer)), OptionMark)
-            )
-        ),
-        EndPG
-    )
-)
+{
+    "name": "Program",
+    "from": 0,
+    "to": 31,
+    "children": [
+        {
+            "name": "PGMLBlock",
+            "from": 0,
+            "to": 31,
+            "children": [
+                { "name": "BeginPG", "from": 0, "to": 10 },
+                {
+                    "name": "PGMLContent",
+                    "from": 11,
+                    "to": 23,
+                    "children": [
+                        {
+                            "name": "Paragraph",
+                            "from": 11,
+                            "to": 23,
+                            "children": [
+                                { "name": "AnswerRule", "from": 11, "to": 14 },
+                                {
+                                    "name": "Option",
+                                    "from": 14,
+                                    "to": 18,
+                                    "children": [
+                                        { "name": "OptionMark", "from": 14, "to": 15 },
+                                        {
+                                            "name": "Program",
+                                            "from": 15,
+                                            "to": 17,
+                                            "children": [
+                                                {
+                                                    "name": "ExpressionStatement",
+                                                    "from": 15,
+                                                    "to": 17,
+                                                    "children": [
+                                                        { "name": "ScalarVariable", "from": 15, "to": 17 }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        { "name": "OptionMark", "from": 17, "to": 18 }
+                                    ]
+                                },
+                                {
+                                    "name": "Option",
+                                    "from": 18,
+                                    "to": 22,
+                                    "children": [
+                                        { "name": "OptionMark", "from": 18, "to": 19 },
+                                        {
+                                            "name": "Program",
+                                            "from": 19,
+                                            "to": 21,
+                                            "children": [
+                                                {
+                                                    "name": "ExpressionStatement",
+                                                    "from": 19,
+                                                    "to": 21,
+                                                    "children": [
+                                                        { "name": "Integer", "from": 19, "to": 21 }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        { "name": "OptionMark", "from": 21, "to": 22 }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                { "name": "EndPG", "from": 23, "to": 31 }
+            ]
+        }
+    ]
+}
 
 ==>
 
@@ -120,19 +216,85 @@ END_PGML
 
 ==>
 
-Program(
-    PGMLBlock(
-        BeginPG,
-        PGMLContent(
-            Paragraph(
-                AnswerRule,
-                Option(OptionMark, Program(ExpressionStatement(ScalarVariable)), OptionMark),
-                Option(OptionMark, Program(ExpressionStatement(Integer)), OptionMark)
-            )
-        ),
-        EndPG
-    )
-)
+{
+    "name": "Program",
+    "from": 0,
+    "to": 37,
+    "children": [
+        {
+            "name": "PGMLBlock",
+            "from": 0,
+            "to": 37,
+            "children": [
+                { "name": "BeginPG", "from": 0, "to": 10 },
+                {
+                    "name": "PGMLContent",
+                    "from": 11,
+                    "to": 29,
+                    "children": [
+                        {
+                            "name": "Paragraph",
+                            "from": 11,
+                            "to": 29,
+                            "children": [
+                                { "name": "AnswerRule", "from": 11, "to": 15 },
+                                {
+                                    "name": "Option",
+                                    "from": 15,
+                                    "to": 24,
+                                    "children": [
+                                        { "name": "OptionMark", "from": 15, "to": 16 },
+                                        {
+                                            "name": "Program",
+                                            "from": 16,
+                                            "to": 23,
+                                            "children": [
+                                                {
+                                                    "name": "ExpressionStatement",
+                                                    "from": 16,
+                                                    "to": 23,
+                                                    "children": [
+                                                        { "name": "ScalarVariable", "from": 16, "to": 23 }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        { "name": "OptionMark", "from": 23, "to": 24 }
+                                    ]
+                                },
+                                {
+                                    "name": "Option",
+                                    "from": 24,
+                                    "to": 28,
+                                    "children": [
+                                        { "name": "OptionMark", "from": 24, "to": 25 },
+                                        {
+                                            "name": "Program",
+                                            "from": 25,
+                                            "to": 27,
+                                            "children": [
+                                                {
+                                                    "name": "ExpressionStatement",
+                                                    "from": 25,
+                                                    "to": 27,
+                                                    "children": [
+                                                        { "name": "Integer", "from": 25, "to": 27 }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        { "name": "OptionMark", "from": 27, "to": 28 }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                { "name": "EndPG", "from": 29, "to": 37 }
+            ]
+        }
+    ]
+}
 
 ==>
 
@@ -193,36 +355,144 @@ END_PGML
 
 ==>
 
-Program(
-    PGMLBlock(
-        BeginPG,
-        PGMLContent(
-            Paragraph(
-                AnswerRule,
-                Option(
-                    OptionMark,
-                    Program(
-                        ExpressionStatement(
-                            Pair(Identifier, FatComma, ScalarVariable),
-                            Comma,
-                            Pair(
-                                Identifier,
-                                FatComma,
-                                CallExpression(FunctionName(Identifier), ParenthesizedArguments("(", ")"))
-                            ),
-                            Comma,
-                            Pair(Identifier, FatComma, Integer),
-                            Comma,
-                            Pair(Identifier, FatComma, HashRef("{", Pair(Identifier, FatComma, Float), "}"))
-                        )
-                    ),
-                    OptionMark
-                )
-            )
-        ),
-        EndPG
-    )
-)
+{
+    "name": "Program",
+    "from": 0,
+    "to": 118,
+    "children": [
+        {
+            "name": "PGMLBlock",
+            "from": 0,
+            "to": 118,
+            "children": [
+                { "name": "BeginPG", "from": 0, "to": 10 },
+                {
+                    "name": "PGMLContent",
+                    "from": 11,
+                    "to": 110,
+                    "children": [
+                        {
+                            "name": "Paragraph",
+                            "from": 11,
+                            "to": 110,
+                            "children": [
+                                { "name": "AnswerRule", "from": 11, "to": 14 },
+                                {
+                                    "name": "Option",
+                                    "from": 14,
+                                    "to": 109,
+                                    "children": [
+                                        { "name": "OptionMark", "from": 14, "to": 15 },
+                                        {
+                                            "name": "Program",
+                                            "from": 15,
+                                            "to": 108,
+                                            "children": [
+                                                {
+                                                    "name": "ExpressionStatement",
+                                                    "from": 16,
+                                                    "to": 107,
+                                                    "children": [
+                                                        {
+                                                            "name": "Pair",
+                                                            "from": 16,
+                                                            "to": 29,
+                                                            "children": [
+                                                                { "name": "Identifier", "from": 16, "to": 22 },
+                                                                { "name": "FatComma", "from": 23, "to": 25 },
+                                                                { "name": "ScalarVariable", "from": 26, "to": 29 }
+                                                            ]
+                                                        },
+                                                        { "name": "Comma", "from": 29, "to": 30 },
+                                                        {
+                                                            "name": "Pair",
+                                                            "from": 31,
+                                                            "to": 53,
+                                                            "children": [
+                                                                { "name": "Identifier", "from": 31, "to": 35 },
+                                                                { "name": "FatComma", "from": 36, "to": 38 },
+                                                                {
+                                                                    "name": "CallExpression",
+                                                                    "from": 39,
+                                                                    "to": 53,
+                                                                    "children": [
+                                                                        {
+                                                                            "name": "FunctionName",
+                                                                            "from": 39,
+                                                                            "to": 51,
+                                                                            "children": [
+                                                                                { "name": "Identifier", "from": 39, "to": 51 }
+                                                                            ]
+                                                                        },
+                                                                        {
+                                                                            "name": "ParenthesizedArguments",
+                                                                            "from": 51,
+                                                                            "to": 53,
+                                                                            "children": [
+                                                                                { "name": "(", "from": 51, "to": 52 },
+                                                                                { "name": ")", "from": 52, "to": 53 }
+                                                                            ]
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        },
+                                                        { "name": "Comma", "from": 53, "to": 54 },
+                                                        {
+                                                            "name": "Pair",
+                                                            "from": 55,
+                                                            "to": 66,
+                                                            "children": [
+                                                                { "name": "Identifier", "from": 55, "to": 60 },
+                                                                { "name": "FatComma", "from": 61, "to": 63 },
+                                                                { "name": "Integer", "from": 64, "to": 66 }
+                                                            ]
+                                                        },
+                                                        { "name": "Comma", "from": 66, "to": 67 },
+                                                        {
+                                                            "name": "Pair",
+                                                            "from": 68,
+                                                            "to": 107,
+                                                            "children": [
+                                                                { "name": "Identifier", "from": 68, "to": 79 },
+                                                                { "name": "FatComma", "from": 80, "to": 82 },
+                                                                {
+                                                                    "name": "HashRef",
+                                                                    "from": 83,
+                                                                    "to": 107,
+                                                                    "children": [
+                                                                        { "name": "{", "from": 83, "to": 84 },
+                                                                        {
+                                                                            "name": "Pair",
+                                                                            "from": 85,
+                                                                            "to": 105,
+                                                                            "children": [
+                                                                                { "name": "Identifier", "from": 85, "to": 94 },
+                                                                                { "name": "FatComma", "from": 95, "to": 97 },
+                                                                                { "name": "Float", "from": 98, "to": 105 }
+                                                                            ]
+                                                                        },
+                                                                        { "name": "}", "from": 106, "to": 107 }
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        { "name": "OptionMark", "from": 108, "to": 109 }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                { "name": "EndPG", "from": 110, "to": 118 }
+            ]
+        }
+    ]
+}
 
 ==>
 
@@ -274,28 +544,136 @@ END_PGML
 
 ==>
 
-Program(
-    PGMLBlock(
-        BeginPG,
-        PGMLContent(
-            Paragraph(
-                AnswerRule,
-                Option(OptionMark, Program(ExpressionStatement(ScalarVariable)), OptionMark),
-                Option(OptionMark, Program(ExpressionStatement(Integer)), OptionMark),
-                Option(
-                    OptionMark,
-                    Program(
-                        ExpressionStatement(
-                            Pair(Identifier, FatComma, HashRef("{", Pair(Identifier, FatComma, Float), "}"))
-                        )
-                    ),
-                    OptionMark
-                )
-            )
-        ),
-        EndPG
-    )
-)
+{
+    "name": "Program",
+    "from": 0,
+    "to": 75,
+    "children": [
+        {
+            "name": "PGMLBlock",
+            "from": 0,
+            "to": 75,
+            "children": [
+                { "name": "BeginPG", "from": 0, "to": 10 },
+                {
+                    "name": "PGMLContent",
+                    "from": 11,
+                    "to": 67,
+                    "children": [
+                        {
+                            "name": "Paragraph",
+                            "from": 11,
+                            "to": 67,
+                            "children": [
+                                { "name": "AnswerRule", "from": 11, "to": 14 },
+                                {
+                                    "name": "Option",
+                                    "from": 14,
+                                    "to": 19,
+                                    "children": [
+                                        { "name": "OptionMark", "from": 14, "to": 15 },
+                                        {
+                                            "name": "Program",
+                                            "from": 15,
+                                            "to": 18,
+                                            "children": [
+                                                {
+                                                    "name": "ExpressionStatement",
+                                                    "from": 15,
+                                                    "to": 18,
+                                                    "children": [
+                                                        { "name": "ScalarVariable", "from": 15, "to": 18 }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        { "name": "OptionMark", "from": 18, "to": 19 }
+                                    ]
+                                },
+                                {
+                                    "name": "Option",
+                                    "from": 19,
+                                    "to": 23,
+                                    "children": [
+                                        { "name": "OptionMark", "from": 19, "to": 20 },
+                                        {
+                                            "name": "Program",
+                                            "from": 20,
+                                            "to": 22,
+                                            "children": [
+                                                {
+                                                    "name": "ExpressionStatement",
+                                                    "from": 20,
+                                                    "to": 22,
+                                                    "children": [
+                                                        { "name": "Integer", "from": 20, "to": 22 }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        { "name": "OptionMark", "from": 22, "to": 23 }
+                                    ]
+                                },
+                                {
+                                    "name": "Option",
+                                    "from": 23,
+                                    "to": 66,
+                                    "children": [
+                                        { "name": "OptionMark", "from": 23, "to": 24 },
+                                        {
+                                            "name": "Program",
+                                            "from": 24,
+                                            "to": 65,
+                                            "children": [
+                                                {
+                                                    "name": "ExpressionStatement",
+                                                    "from": 25,
+                                                    "to": 64,
+                                                    "children": [
+                                                        {
+                                                            "name": "Pair",
+                                                            "from": 25,
+                                                            "to": 64,
+                                                            "children": [
+                                                                { "name": "Identifier", "from": 25, "to": 36 },
+                                                                { "name": "FatComma", "from": 37, "to": 39 },
+                                                                {
+                                                                    "name": "HashRef",
+                                                                    "from": 40,
+                                                                    "to": 64,
+                                                                    "children": [
+                                                                        { "name": "{", "from": 40, "to": 41 },
+                                                                        {
+                                                                            "name": "Pair",
+                                                                            "from": 42,
+                                                                            "to": 62,
+                                                                            "children": [
+                                                                                { "name": "Identifier", "from": 42, "to": 51 },
+                                                                                { "name": "FatComma", "from": 52, "to": 54 },
+                                                                                { "name": "Float", "from": 55, "to": 62 }
+                                                                            ]
+                                                                        },
+                                                                        { "name": "}", "from": 63, "to": 64 }
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        { "name": "OptionMark", "from": 65, "to": 66 }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                { "name": "EndPG", "from": 67, "to": 75 }
+            ]
+        }
+    ]
+}
 
 ==>
 

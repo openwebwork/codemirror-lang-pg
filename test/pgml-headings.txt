@@ -11,22 +11,90 @@ END_PGML
 
 ==>
 
-Program(
-    PGMLBlock(
-        BeginPG,
-        PGMLContent(
-            Paragraph(
-                Heading1(HeaderMark, HeaderMark),
-                Heading2(HeaderMark, HeaderMark),
-                Heading3(HeaderMark, HeaderMark),
-                Heading4(HeaderMark, HeaderMark),
-                Heading5(HeaderMark, HeaderMark),
-                Heading6(HeaderMark, HeaderMark)
-            )
-        ),
-        EndPG
-    )
-)
+{
+    "name": "Program",
+    "from": 0,
+    "to": 169,
+    "children": [
+        {
+            "name": "PGMLBlock",
+            "from": 0,
+            "to": 169,
+            "children": [
+                { "name": "BeginPG", "from": 0, "to": 10 },
+                {
+                    "name": "PGMLContent",
+                    "from": 11,
+                    "to": 161,
+                    "children": [
+                        {
+                            "name": "Paragraph",
+                            "from": 11,
+                            "to": 161,
+                            "children": [
+                                {
+                                    "name": "Heading1",
+                                    "from": 11,
+                                    "to": 30,
+                                    "children": [
+                                        { "name": "HeaderMark", "from": 11, "to": 12 },
+                                        { "name": "HeaderMark", "from": 29, "to": 30 }
+                                    ]
+                                },
+                                {
+                                    "name": "Heading2",
+                                    "from": 31,
+                                    "to": 52,
+                                    "children": [
+                                        { "name": "HeaderMark", "from": 31, "to": 33 },
+                                        { "name": "HeaderMark", "from": 50, "to": 52 }
+                                    ]
+                                },
+                                {
+                                    "name": "Heading3",
+                                    "from": 53,
+                                    "to": 76,
+                                    "children": [
+                                        { "name": "HeaderMark", "from": 53, "to": 56 },
+                                        { "name": "HeaderMark", "from": 73, "to": 76 }
+                                    ]
+                                },
+                                {
+                                    "name": "Heading4",
+                                    "from": 77,
+                                    "to": 102,
+                                    "children": [
+                                        { "name": "HeaderMark", "from": 77, "to": 81 },
+                                        { "name": "HeaderMark", "from": 98, "to": 102 }
+                                    ]
+                                },
+                                {
+                                    "name": "Heading5",
+                                    "from": 103,
+                                    "to": 130,
+                                    "children": [
+                                        { "name": "HeaderMark", "from": 103, "to": 108 },
+                                        { "name": "HeaderMark", "from": 125, "to": 130 }
+                                    ]
+                                },
+                                {
+                                    "name": "Heading6",
+                                    "from": 131,
+                                    "to": 160,
+                                    "children": [
+                                        { "name": "HeaderMark", "from": 131, "to": 137 },
+                                        { "name": "HeaderMark", "from": 154, "to": 160 }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                { "name": "EndPG", "from": 161, "to": 169 }
+            ]
+        }
+    ]
+}
 
 ==>
 
@@ -205,17 +273,95 @@ END_PGML
 
 ==>
 
-Program(
-    PGMLBlock(
-        BeginPG,
-        PGMLContent(
-            Paragraph(Heading3(HeaderMark, HeaderMark), Heading3(HeaderMark, HeaderMark)),
-            Paragraph(Heading3(HeaderMark, HeaderMark)),
-            Paragraph(Heading3(HeaderMark, HeaderMark), Heading3(HeaderMark, HeaderMark))
-        ),
-        EndPG
-    )
-)
+{
+    "name": "Program",
+    "from": 0,
+    "to": 175,
+    "children": [
+        {
+            "name": "PGMLBlock",
+            "from": 0,
+            "to": 175,
+            "children": [
+                { "name": "BeginPG", "from": 0, "to": 10 },
+                {
+                    "name": "PGMLContent",
+                    "from": 11,
+                    "to": 167,
+                    "children": [
+                        {
+                            "name": "Paragraph",
+                            "from": 11,
+                            "to": 58,
+                            "children": [
+                                {
+                                    "name": "Heading3",
+                                    "from": 11,
+                                    "to": 37,
+                                    "children": [
+                                        { "name": "HeaderMark", "from": 11, "to": 14 },
+                                        { "name": "HeaderMark", "from": 34, "to": 37 }
+                                    ]
+                                },
+                                {
+                                    "name": "Heading3",
+                                    "from": 38,
+                                    "to": 58,
+                                    "children": [
+                                        { "name": "HeaderMark", "from": 38, "to": 41 },
+                                        { "name": "HeaderMark", "from": 55, "to": 58 }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Paragraph",
+                            "from": 60,
+                            "to": 102,
+                            "children": [
+                                {
+                                    "name": "Heading3",
+                                    "from": 60,
+                                    "to": 102,
+                                    "children": [
+                                        { "name": "HeaderMark", "from": 60, "to": 63 },
+                                        { "name": "HeaderMark", "from": 99, "to": 102 }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Paragraph",
+                            "from": 104,
+                            "to": 167,
+                            "children": [
+                                {
+                                    "name": "Heading3",
+                                    "from": 104,
+                                    "to": 131,
+                                    "children": [
+                                        { "name": "HeaderMark", "from": 104, "to": 107 },
+                                        { "name": "HeaderMark", "from": 128, "to": 131 }
+                                    ]
+                                },
+                                {
+                                    "name": "Heading3",
+                                    "from": 134,
+                                    "to": 166,
+                                    "children": [
+                                        { "name": "HeaderMark", "from": 134, "to": 137 },
+                                        { "name": "HeaderMark", "from": 163, "to": 166 }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                { "name": "EndPG", "from": 167, "to": 175 }
+            ]
+        }
+    ]
+}
 
 ==>
 
@@ -381,7 +527,44 @@ END_PGML
 
 ==>
 
-Program(PGMLBlock(BeginPG, PGMLContent(Paragraph(Heading3(HeaderMark))), EndPG))
+{
+    "name": "Program",
+    "from": 0,
+    "to": 57,
+    "children": [
+        {
+            "name": "PGMLBlock",
+            "from": 0,
+            "to": 57,
+            "children": [
+                { "name": "BeginPG", "from": 0, "to": 10 },
+                {
+                    "name": "PGMLContent",
+                    "from": 11,
+                    "to": 49,
+                    "children": [
+                        {
+                            "name": "Paragraph",
+                            "from": 11,
+                            "to": 49,
+                            "children": [
+                                {
+                                    "name": "Heading3",
+                                    "from": 11,
+                                    "to": 49,
+                                    "children": [
+                                        { "name": "HeaderMark", "from": 11, "to": 14 }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                { "name": "EndPG", "from": 49, "to": 57 }
+            ]
+        }
+    ]
+}
 
 ==>
 
@@ -426,16 +609,64 @@ END_PGML
 
 ==>
 
-Program(
-    PGMLBlock(
-        BeginPG,
-        PGMLContent(
-            Align(AlignMark, Heading2(HeaderMark, HeaderMark), AlignMark),
-            Align(AlignMark, Heading2(HeaderMark, HeaderMark))
-        ),
-        EndPG
-    )
-)
+{
+    "name": "Program",
+    "from": 0,
+    "to": 73,
+    "children": [
+        {
+            "name": "PGMLBlock",
+            "from": 0,
+            "to": 73,
+            "children": [
+                { "name": "BeginPG", "from": 0, "to": 10 },
+                {
+                    "name": "PGMLContent",
+                    "from": 11,
+                    "to": 65,
+                    "children": [
+                        {
+                            "name": "Align",
+                            "from": 11,
+                            "to": 39,
+                            "children": [
+                                { "name": "AlignMark", "from": 11, "to": 14 },
+                                {
+                                    "name": "Heading2",
+                                    "from": 14,
+                                    "to": 36,
+                                    "children": [
+                                        { "name": "HeaderMark", "from": 14, "to": 16 },
+                                        { "name": "HeaderMark", "from": 34, "to": 36 }
+                                    ]
+                                },
+                                { "name": "AlignMark", "from": 36, "to": 39 }
+                            ]
+                        },
+                        {
+                            "name": "Align",
+                            "from": 40,
+                            "to": 65,
+                            "children": [
+                                { "name": "AlignMark", "from": 40, "to": 43 },
+                                {
+                                    "name": "Heading2",
+                                    "from": 43,
+                                    "to": 64,
+                                    "children": [
+                                        { "name": "HeaderMark", "from": 43, "to": 45 },
+                                        { "name": "HeaderMark", "from": 62, "to": 64 }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                { "name": "EndPG", "from": 65, "to": 73 }
+            ]
+        }
+    ]
+}
 
 ==>
 

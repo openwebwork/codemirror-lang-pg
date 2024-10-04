@@ -6,13 +6,54 @@ END_PGML
 
 ==>
 
-Program(
-    PGMLBlock(
-        BeginPG,
-        PGMLContent(Paragraph(StrongEmphasis(EmphasisMark, MathMode(MathModeMark, MathModeMark), EmphasisMark))),
-        EndPG
-    )
-)
+{
+    "name": "Program",
+    "from": 0,
+    "to": 51,
+    "children": [
+        {
+            "name": "PGMLBlock",
+            "from": 0,
+            "to": 51,
+            "children": [
+                { "name": "BeginPG", "from": 0, "to": 10 },
+                {
+                    "name": "PGMLContent",
+                    "from": 11,
+                    "to": 43,
+                    "children": [
+                        {
+                            "name": "Paragraph",
+                            "from": 11,
+                            "to": 43,
+                            "children": [
+                                {
+                                    "name": "StrongEmphasis",
+                                    "from": 11,
+                                    "to": 42,
+                                    "children": [
+                                        { "name": "EmphasisMark", "from": 11, "to": 12 },
+                                        {
+                                            "name": "MathMode",
+                                            "from": 32,
+                                            "to": 41,
+                                            "children": [
+                                                { "name": "MathModeMark", "from": 32, "to": 34 },
+                                                { "name": "MathModeMark", "from": 39, "to": 41 }
+                                            ]
+                                        },
+                                        { "name": "EmphasisMark", "from": 41, "to": 42 }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                { "name": "EndPG", "from": 43, "to": 51 }
+            ]
+        }
+    ]
+}
 
 ==>
 
@@ -78,7 +119,45 @@ END_PGML
 
 ==>
 
-Program(PGMLBlock(BeginPG, PGMLContent(Paragraph(Emphasis(EmphasisMark, EmphasisMark))), EndPG))
+{
+    "name": "Program",
+    "from": 0,
+    "to": 33,
+    "children": [
+        {
+            "name": "PGMLBlock",
+            "from": 0,
+            "to": 33,
+            "children": [
+                { "name": "BeginPG", "from": 0, "to": 10 },
+                {
+                    "name": "PGMLContent",
+                    "from": 11,
+                    "to": 25,
+                    "children": [
+                        {
+                            "name": "Paragraph",
+                            "from": 11,
+                            "to": 25,
+                            "children": [
+                                {
+                                    "name": "Emphasis",
+                                    "from": 11,
+                                    "to": 24,
+                                    "children": [
+                                        { "name": "EmphasisMark", "from": 11, "to": 12 },
+                                        { "name": "EmphasisMark", "from": 23, "to": 24 }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                { "name": "EndPG", "from": 25, "to": 33 }
+            ]
+        }
+    ]
+}
 
 ==>
 
@@ -128,13 +207,54 @@ END_PGML
 
 ==>
 
-Program(
-    PGMLBlock(
-        BeginPG,
-        PGMLContent(Paragraph(StrongEmphasis(EmphasisMark, Emphasis(EmphasisMark, EmphasisMark), EmphasisMark))),
-        EndPG
-    )
-)
+{
+    "name": "Program",
+    "from": 0,
+    "to": 40,
+    "children": [
+        {
+            "name": "PGMLBlock",
+            "from": 0,
+            "to": 40,
+            "children": [
+                { "name": "BeginPG", "from": 0, "to": 10 },
+                {
+                    "name": "PGMLContent",
+                    "from": 11,
+                    "to": 32,
+                    "children": [
+                        {
+                            "name": "Paragraph",
+                            "from": 11,
+                            "to": 32,
+                            "children": [
+                                {
+                                    "name": "StrongEmphasis",
+                                    "from": 11,
+                                    "to": 31,
+                                    "children": [
+                                        { "name": "EmphasisMark", "from": 11, "to": 12 },
+                                        {
+                                            "name": "Emphasis",
+                                            "from": 12,
+                                            "to": 30,
+                                            "children": [
+                                                { "name": "EmphasisMark", "from": 12, "to": 13 },
+                                                { "name": "EmphasisMark", "from": 29, "to": 30 }
+                                            ]
+                                        },
+                                        { "name": "EmphasisMark", "from": 30, "to": 31 }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                { "name": "EndPG", "from": 32, "to": 40 }
+            ]
+        }
+    ]
+}
 
 ==>
 
@@ -200,27 +320,171 @@ END_PGML
 
 ==>
 
-Program(
-    PGMLBlock(
-        BeginPG,
-        PGMLContent(
-            Paragraph(
-                HorizontalRule,
-                HorizontalRule,
-                HorizontalRule,
-                Option(OptionMark, Program(ExpressionStatement(Integer)), OptionMark),
-                HorizontalRule,
-                Option(OptionMark, Program(ExpressionStatement(StringSingleQuoted)), OptionMark),
-                HorizontalRule,
-                Option(OptionMark, Program(ExpressionStatement(StringSingleQuoted)), OptionMark),
-                Option(OptionMark, Program(ExpressionStatement(Integer)), OptionMark),
-                HorizontalRule,
-                Option(OptionMark, Program(ExpressionStatement(Pair(Identifier, FatComma, Integer))), OptionMark)
-            )
-        ),
-        EndPG
-    )
-)
+{
+    "name": "Program",
+    "from": 0,
+    "to": 103,
+    "children": [
+        {
+            "name": "PGMLBlock",
+            "from": 0,
+            "to": 103,
+            "children": [
+                { "name": "BeginPG", "from": 0, "to": 10 },
+                {
+                    "name": "PGMLContent",
+                    "from": 11,
+                    "to": 95,
+                    "children": [
+                        {
+                            "name": "Paragraph",
+                            "from": 11,
+                            "to": 95,
+                            "children": [
+                                { "name": "HorizontalRule", "from": 17, "to": 20 },
+                                { "name": "HorizontalRule", "from": 28, "to": 31 },
+                                { "name": "HorizontalRule", "from": 38, "to": 42 },
+                                {
+                                    "name": "Option",
+                                    "from": 42,
+                                    "to": 47,
+                                    "children": [
+                                        { "name": "OptionMark", "from": 42, "to": 43 },
+                                        {
+                                            "name": "Program",
+                                            "from": 43,
+                                            "to": 46,
+                                            "children": [
+                                                {
+                                                    "name": "ExpressionStatement",
+                                                    "from": 43,
+                                                    "to": 46,
+                                                    "children": [
+                                                        { "name": "Integer", "from": 43, "to": 46 }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        { "name": "OptionMark", "from": 46, "to": 47 }
+                                    ]
+                                },
+                                { "name": "HorizontalRule", "from": 48, "to": 52 },
+                                {
+                                    "name": "Option",
+                                    "from": 52,
+                                    "to": 59,
+                                    "children": [
+                                        { "name": "OptionMark", "from": 52, "to": 53 },
+                                        {
+                                            "name": "Program",
+                                            "from": 53,
+                                            "to": 58,
+                                            "children": [
+                                                {
+                                                    "name": "ExpressionStatement",
+                                                    "from": 53,
+                                                    "to": 58,
+                                                    "children": [
+                                                        { "name": "StringSingleQuoted", "from": 53, "to": 58 }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        { "name": "OptionMark", "from": 58, "to": 59 }
+                                    ]
+                                },
+                                { "name": "HorizontalRule", "from": 60, "to": 64 },
+                                {
+                                    "name": "Option",
+                                    "from": 64,
+                                    "to": 71,
+                                    "children": [
+                                        { "name": "OptionMark", "from": 64, "to": 65 },
+                                        {
+                                            "name": "Program",
+                                            "from": 65,
+                                            "to": 70,
+                                            "children": [
+                                                {
+                                                    "name": "ExpressionStatement",
+                                                    "from": 65,
+                                                    "to": 70,
+                                                    "children": [
+                                                        { "name": "StringSingleQuoted", "from": 65, "to": 70 }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        { "name": "OptionMark", "from": 70, "to": 71 }
+                                    ]
+                                },
+                                {
+                                    "name": "Option",
+                                    "from": 71,
+                                    "to": 74,
+                                    "children": [
+                                        { "name": "OptionMark", "from": 71, "to": 72 },
+                                        {
+                                            "name": "Program",
+                                            "from": 72,
+                                            "to": 73,
+                                            "children": [
+                                                {
+                                                    "name": "ExpressionStatement",
+                                                    "from": 72,
+                                                    "to": 73,
+                                                    "children": [
+                                                        { "name": "Integer", "from": 72, "to": 73 }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        { "name": "OptionMark", "from": 73, "to": 74 }
+                                    ]
+                                },
+                                { "name": "HorizontalRule", "from": 75, "to": 79 },
+                                {
+                                    "name": "Option",
+                                    "from": 79,
+                                    "to": 94,
+                                    "children": [
+                                        { "name": "OptionMark", "from": 79, "to": 80 },
+                                        {
+                                            "name": "Program",
+                                            "from": 80,
+                                            "to": 93,
+                                            "children": [
+                                                {
+                                                    "name": "ExpressionStatement",
+                                                    "from": 81,
+                                                    "to": 92,
+                                                    "children": [
+                                                        {
+                                                            "name": "Pair",
+                                                            "from": 81,
+                                                            "to": 92,
+                                                            "children": [
+                                                                { "name": "Identifier", "from": 81, "to": 87 },
+                                                                { "name": "FatComma", "from": 88, "to": 90 },
+                                                                { "name": "Integer", "from": 91, "to": 92 }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        { "name": "OptionMark", "from": 93, "to": 94 }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                { "name": "EndPG", "from": 95, "to": 103 }
+            ]
+        }
+    ]
+}
 
 ==>
 
@@ -390,23 +654,131 @@ END_PGML
 
 ==>
 
-Program(
-    PGMLBlock(
-        BeginPG,
-        PGMLContent(
-            Align(AlignMark, MathMode(MathModeMark, MathModeMark)),
-            Align(AlignMark, MathMode(MathModeMark, MathModeMark), AlignMark),
-            Align(
-                AlignMark,
-                HorizontalRule,
-                Option(OptionMark, Program(ExpressionStatement(Integer)), OptionMark),
-                AlignMark
-            ),
-            Align(AlignMark, HorizontalRule, Option(OptionMark, Program(ExpressionStatement(Integer)), OptionMark))
-        ),
-        EndPG
-    )
-)
+{
+    "name": "Program",
+    "from": 0,
+    "to": 116,
+    "children": [
+        {
+            "name": "PGMLBlock",
+            "from": 0,
+            "to": 116,
+            "children": [
+                { "name": "BeginPG", "from": 0, "to": 10 },
+                {
+                    "name": "PGMLContent",
+                    "from": 11,
+                    "to": 108,
+                    "children": [
+                        {
+                            "name": "Align",
+                            "from": 11,
+                            "to": 50,
+                            "children": [
+                                { "name": "AlignMark", "from": 11, "to": 14 },
+                                {
+                                    "name": "MathMode",
+                                    "from": 35,
+                                    "to": 49,
+                                    "children": [
+                                        { "name": "MathModeMark", "from": 35, "to": 37 },
+                                        { "name": "MathModeMark", "from": 47, "to": 49 }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Align",
+                            "from": 50,
+                            "to": 79,
+                            "children": [
+                                { "name": "AlignMark", "from": 50, "to": 53 },
+                                {
+                                    "name": "MathMode",
+                                    "from": 67,
+                                    "to": 76,
+                                    "children": [
+                                        { "name": "MathModeMark", "from": 67, "to": 69 },
+                                        { "name": "MathModeMark", "from": 74, "to": 76 }
+                                    ]
+                                },
+                                { "name": "AlignMark", "from": 76, "to": 79 }
+                            ]
+                        },
+                        {
+                            "name": "Align",
+                            "from": 80,
+                            "to": 94,
+                            "children": [
+                                { "name": "AlignMark", "from": 80, "to": 83 },
+                                { "name": "HorizontalRule", "from": 83, "to": 86 },
+                                {
+                                    "name": "Option",
+                                    "from": 86,
+                                    "to": 91,
+                                    "children": [
+                                        { "name": "OptionMark", "from": 86, "to": 87 },
+                                        {
+                                            "name": "Program",
+                                            "from": 87,
+                                            "to": 90,
+                                            "children": [
+                                                {
+                                                    "name": "ExpressionStatement",
+                                                    "from": 87,
+                                                    "to": 90,
+                                                    "children": [
+                                                        { "name": "Integer", "from": 87, "to": 90 }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        { "name": "OptionMark", "from": 90, "to": 91 }
+                                    ]
+                                },
+                                { "name": "AlignMark", "from": 91, "to": 94 }
+                            ]
+                        },
+                        {
+                            "name": "Align",
+                            "from": 95,
+                            "to": 108,
+                            "children": [
+                                { "name": "AlignMark", "from": 95, "to": 98 },
+                                { "name": "HorizontalRule", "from": 98, "to": 102 },
+                                {
+                                    "name": "Option",
+                                    "from": 102,
+                                    "to": 107,
+                                    "children": [
+                                        { "name": "OptionMark", "from": 102, "to": 103 },
+                                        {
+                                            "name": "Program",
+                                            "from": 103,
+                                            "to": 106,
+                                            "children": [
+                                                {
+                                                    "name": "ExpressionStatement",
+                                                    "from": 103,
+                                                    "to": 106,
+                                                    "children": [
+                                                        { "name": "Integer", "from": 103, "to": 106 }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        { "name": "OptionMark", "from": 106, "to": 107 }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                { "name": "EndPG", "from": 108, "to": 116 }
+            ]
+        }
+    ]
+}
 
 ==>
 
@@ -591,19 +963,63 @@ END_PGML
 
 ==>
 
-Program(
-    PGMLBlock(
-        BeginPG,
-        PGMLContent(
-            Paragraph(
-                Verbatim(VerbatimMark, VerbatimMark),
-                Verbatim(VerbatimMark, VerbatimMark),
-                Verbatim(VerbatimMark, VerbatimMark)
-            )
-        ),
-        EndPG
-    )
-)
+{
+    "name": "Program",
+    "from": 0,
+    "to": 125,
+    "children": [
+        {
+            "name": "PGMLBlock",
+            "from": 0,
+            "to": 125,
+            "children": [
+                { "name": "BeginPG", "from": 0, "to": 10 },
+                {
+                    "name": "PGMLContent",
+                    "from": 11,
+                    "to": 117,
+                    "children": [
+                        {
+                            "name": "Paragraph",
+                            "from": 11,
+                            "to": 117,
+                            "children": [
+                                {
+                                    "name": "Verbatim",
+                                    "from": 11,
+                                    "to": 57,
+                                    "children": [
+                                        { "name": "VerbatimMark", "from": 11, "to": 13 },
+                                        { "name": "VerbatimMark", "from": 55, "to": 57 }
+                                    ]
+                                },
+                                {
+                                    "name": "Verbatim",
+                                    "from": 58,
+                                    "to": 85,
+                                    "children": [
+                                        { "name": "VerbatimMark", "from": 58, "to": 61 },
+                                        { "name": "VerbatimMark", "from": 82, "to": 85 }
+                                    ]
+                                },
+                                {
+                                    "name": "Verbatim",
+                                    "from": 86,
+                                    "to": 116,
+                                    "children": [
+                                        { "name": "VerbatimMark", "from": 86, "to": 88 },
+                                        { "name": "VerbatimMark", "from": 113, "to": 116 }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                { "name": "EndPG", "from": 117, "to": 125 }
+            ]
+        }
+    ]
+}
 
 ==>
 
@@ -692,29 +1108,166 @@ END_PGML
 
 ==>
 
-Program(
-    PGMLBlock(
-        BeginPG,
-        PGMLContent(
-            Pre(PreMark),
-            Pre(PreMark),
-            Pre(
-                PreMark,
-                PerlCommand(
-                    PerlCommandMark,
-                    Program(ExpressionStatement(StringDoubleQuoted(InterpolatedStringContent))),
-                    PerlCommandMark
-                ),
-                Variable(VariableMark, Program(ExpressionStatement(ScalarVariable)), VariableMark),
-                StrongEmphasis(EmphasisMark, EmphasisMark)
-            ),
-            Pre(PreMark, Verbatim(VerbatimMark, VerbatimMark)),
-            Pre(PreMark, EscapeSequence),
-            Paragraph(Pre(PreMark), Pre(PreMark))
-        ),
-        EndPG
-    )
-)
+{
+    "name": "Program",
+    "from": 0,
+    "to": 445,
+    "children": [
+        {
+            "name": "PGMLBlock",
+            "from": 0,
+            "to": 445,
+            "children": [
+                { "name": "BeginPG", "from": 0, "to": 10 },
+                {
+                    "name": "PGMLContent",
+                    "from": 11,
+                    "to": 437,
+                    "children": [
+                        {
+                            "name": "Pre",
+                            "from": 11,
+                            "to": 37,
+                            "children": [
+                                { "name": "PreMark", "from": 11, "to": 15 }
+                            ]
+                        },
+                        {
+                            "name": "Pre",
+                            "from": 37,
+                            "to": 92,
+                            "children": [
+                                { "name": "PreMark", "from": 37, "to": 41 }
+                            ]
+                        },
+                        {
+                            "name": "Pre",
+                            "from": 92,
+                            "to": 171,
+                            "children": [
+                                { "name": "PreMark", "from": 92, "to": 96 },
+                                {
+                                    "name": "PerlCommand",
+                                    "from": 104,
+                                    "to": 120,
+                                    "children": [
+                                        { "name": "PerlCommandMark", "from": 104, "to": 106 },
+                                        {
+                                            "name": "Program",
+                                            "from": 106,
+                                            "to": 118,
+                                            "children": [
+                                                {
+                                                    "name": "ExpressionStatement",
+                                                    "from": 107,
+                                                    "to": 117,
+                                                    "children": [
+                                                        {
+                                                            "name": "StringDoubleQuoted",
+                                                            "from": 107,
+                                                            "to": 117,
+                                                            "children": [
+                                                                { "name": "InterpolatedStringContent", "from": 108, "to": 116 }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        { "name": "PerlCommandMark", "from": 118, "to": 120 }
+                                    ]
+                                },
+                                {
+                                    "name": "Variable",
+                                    "from": 122,
+                                    "to": 126,
+                                    "children": [
+                                        { "name": "VariableMark", "from": 122, "to": 123 },
+                                        {
+                                            "name": "Program",
+                                            "from": 123,
+                                            "to": 125,
+                                            "children": [
+                                                {
+                                                    "name": "ExpressionStatement",
+                                                    "from": 123,
+                                                    "to": 125,
+                                                    "children": [
+                                                        { "name": "ScalarVariable", "from": 123, "to": 125 }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        { "name": "VariableMark", "from": 125, "to": 126 }
+                                    ]
+                                },
+                                {
+                                    "name": "StrongEmphasis",
+                                    "from": 138,
+                                    "to": 146,
+                                    "children": [
+                                        { "name": "EmphasisMark", "from": 138, "to": 139 },
+                                        { "name": "EmphasisMark", "from": 145, "to": 146 }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Pre",
+                            "from": 171,
+                            "to": 276,
+                            "children": [
+                                { "name": "PreMark", "from": 171, "to": 175 },
+                                {
+                                    "name": "Verbatim",
+                                    "from": 198,
+                                    "to": 218,
+                                    "children": [
+                                        { "name": "VerbatimMark", "from": 198, "to": 200 },
+                                        { "name": "VerbatimMark", "from": 216, "to": 218 }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Pre",
+                            "from": 276,
+                            "to": 317,
+                            "children": [
+                                { "name": "PreMark", "from": 276, "to": 280 },
+                                { "name": "EscapeSequence", "from": 311, "to": 313 }
+                            ]
+                        },
+                        {
+                            "name": "Paragraph",
+                            "from": 323,
+                            "to": 437,
+                            "children": [
+                                {
+                                    "name": "Pre",
+                                    "from": 350,
+                                    "to": 373,
+                                    "children": [
+                                        { "name": "PreMark", "from": 350, "to": 354 }
+                                    ]
+                                },
+                                {
+                                    "name": "Pre",
+                                    "from": 377,
+                                    "to": 399,
+                                    "children": [
+                                        { "name": "PreMark", "from": 377, "to": 381 }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                { "name": "EndPG", "from": 437, "to": 445 }
+            ]
+        }
+    ]
+}
 
 ==>
 
@@ -967,7 +1520,39 @@ END_PGML
 
 ==>
 
-Program(PGMLBlock(BeginPG, PGMLContent(Paragraph(EscapeSequence, EscapeSequence, EscapeSequence)), EndPG))
+{
+    "name": "Program",
+    "from": 0,
+    "to": 52,
+    "children": [
+        {
+            "name": "PGMLBlock",
+            "from": 0,
+            "to": 52,
+            "children": [
+                { "name": "BeginPG", "from": 0, "to": 10 },
+                {
+                    "name": "PGMLContent",
+                    "from": 11,
+                    "to": 44,
+                    "children": [
+                        {
+                            "name": "Paragraph",
+                            "from": 11,
+                            "to": 44,
+                            "children": [
+                                { "name": "EscapeSequence", "from": 11, "to": 13 },
+                                { "name": "EscapeSequence", "from": 24, "to": 26 },
+                                { "name": "EscapeSequence", "from": 27, "to": 29 }
+                            ]
+                        }
+                    ]
+                },
+                { "name": "EndPG", "from": 44, "to": 52 }
+            ]
+        }
+    ]
+}
 
 ==>
 
