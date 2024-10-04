@@ -1,7 +1,19 @@
 import type { SyntaxNode } from '@lezer/common';
-import { defineLanguageFacet, syntaxTree } from '@codemirror/language';
+import {
+    defineLanguageFacet,
+    delimitedIndent,
+    indentNodeProp,
+    languageDataProp,
+    syntaxTree
+} from '@codemirror/language';
 import type { CompletionContext } from '@codemirror/autocomplete';
 import { snippetCompletion } from '@codemirror/autocomplete';
+
+export const pgmlIndent = {
+    PerlCommand: delimitedIndent({ closing: '@]' }),
+    Table: delimitedIndent({ closing: '#]' }),
+    Tag: delimitedIndent({ closing: '>]' })
+};
 
 let i = 99;
 let rank = 1;
@@ -227,3 +239,5 @@ export const pgmlLanguageData = {
         closeBrackets: { brackets: ['(', '{', "'", '"'] }
     })
 };
+
+export const pgmlNodeProps = [indentNodeProp.add(pgmlIndent), languageDataProp.add(pgmlLanguageData)];

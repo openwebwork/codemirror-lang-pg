@@ -1,27 +1,31 @@
 import type { SyntaxNode } from '@lezer/common';
-import { defineLanguageFacet, syntaxTree } from '@codemirror/language';
+import { defineLanguageFacet, indentNodeProp, languageDataProp, syntaxTree } from '@codemirror/language';
 import type { CompletionContext } from '@codemirror/autocomplete';
 import { snippetCompletion } from '@codemirror/autocomplete';
+
+export const pgTextIndent = { PGTextContent: () => null };
+
+let i = 99;
 
 const perlCommandSnippet = snippetCompletion('\\\\{${ }\\\\}', {
     label: '\\{ \\}',
     info: 'perl command',
     type: 'constant',
-    boost: 99
+    boost: i--
 });
 
 const inlineMathSnippet = snippetCompletion('\\(${ }\\)', {
     label: '\\( \\)',
     info: 'inline math',
     type: 'constant',
-    boost: 98
+    boost: i--
 });
 
 const displayMathSnippet = snippetCompletion('\\[${ }\\]', {
     label: '\\[ \\]',
     info: 'display math',
     type: 'constant',
-    boost: 97
+    boost: i--
 });
 
 export const pgTextLanguageData = {
@@ -75,3 +79,5 @@ export const pgTextLanguageData = {
         closeBrackets: { brackets: ["'", '"'] }
     })
 };
+
+export const pgTextNodeProps = [indentNodeProp.add(pgTextIndent), languageDataProp.add(pgTextLanguageData)];

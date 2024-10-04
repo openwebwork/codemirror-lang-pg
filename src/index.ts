@@ -9,7 +9,6 @@ import {
     foldInside,
     foldNodeProp,
     indentNodeProp,
-    languageDataProp,
     syntaxTree
 } from '@codemirror/language';
 import type { SyntaxNode } from '@lezer/common';
@@ -18,26 +17,17 @@ import type { CompletionContext } from '@codemirror/autocomplete';
 import { snippetCompletion } from '@codemirror/autocomplete';
 import { parser } from './pg.grammar';
 import { PGMLParser } from './pgml';
-import { pgmlLanguageData } from './pgml-language-data';
+import { pgmlNodeProps } from './pgml-language-data';
 import { PGTextParser } from './pg-text';
-import { pgTextLanguageData } from './pg-text-language-data';
+import { pgTextNodeProps } from './pg-text-language-data';
+
 export { pgmlShow } from './pgml-parse';
 
-export const pgmlParser = new PGMLParser([
-    indentNodeProp.add({
-        PerlCommand: delimitedIndent({ closing: '@]' }),
-        Table: delimitedIndent({ closing: '#]' }),
-        Tag: delimitedIndent({ closing: '>]' })
-    }),
-    languageDataProp.add(pgmlLanguageData)
-]);
+export const pgmlParser = new PGMLParser(pgmlNodeProps);
 export const pgmlLanguage = new Language(defineLanguageFacet(), pgmlParser, [], 'pgml');
 export const pgml = () => new LanguageSupport(pgmlLanguage);
 
-export const pgTextParser = new PGTextParser([
-    indentNodeProp.add({ PGTextContent: () => null }),
-    languageDataProp.add(pgTextLanguageData)
-]);
+export const pgTextParser = new PGTextParser(pgTextNodeProps);
 export const pgTextLanguage = new Language(defineLanguageFacet(), pgTextParser, [], 'pg-text');
 export const pgText = () => new LanguageSupport(pgTextLanguage);
 
