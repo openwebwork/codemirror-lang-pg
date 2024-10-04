@@ -237,7 +237,7 @@ expression[@isGroup=Expression] {
     NamedUnaryExpression { NamedUnaryOperator !namedUnary maybeParens<expression>? } |
     ListOperatorExpression { (ListOperator | builtinArrayFunction) (ParenthesizedArguments | Arguments) } |
     CallExpression {
-        FunctionName { "&"? !callExpressionName (PackageName | Identifier) ~methodName }
+        FunctionName { "&"? !callExpressionName (PackageName | PGOperator | Identifier) ~methodName }
         (ParenthesizedArguments | Arguments)
     } |
     CallExpressionWithBareword {
@@ -544,7 +544,7 @@ maybeParens<content> { !noParens content | "(" !parens content ")" }
 @external tokens semicolon from "./tokens" { automaticSemicolon }
 @external tokens unrestrictedIdentifier from "./tokens" { UnrestrictedIdentifier }
 @external tokens specialScalarVariable from "./tokens" { SpecialScalarVariable }
-@external tokens builtinOperator from "./tokens" { NamedUnaryOperator, ListOperator }
+@external tokens builtinOperator from "./tokens" { NamedUnaryOperator, ListOperator, PGOperator }
 @external specialize { ScalarVariable } pgVariable from "./tokens" { PGVariable }
 @external tokens fileIO from "./tokens" {
     FileTestOp,

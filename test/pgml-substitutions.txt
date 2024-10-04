@@ -57,7 +57,7 @@ END_PGML
                                                                     "from": 14,
                                                                     "to": 19,
                                                                     "children": [
-                                                                        { "name": "Identifier", "from": 14, "to": 19 }
+                                                                        { "name": "PGOperator", "from": 14, "to": 19 }
                                                                     ]
                                                                 },
                                                                 {

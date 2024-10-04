@@ -7,21 +7,21 @@ export const pgTextIndent = { PGTextContent: () => null };
 
 let i = 99;
 
-const perlCommandSnippet = snippetCompletion('\\\\{${ }\\\\}', {
+const perlCommandSnippet = snippetCompletion('\\\\{${ }\\\\}${}', {
     label: '\\{ \\}',
     info: 'perl command',
     type: 'constant',
     boost: i--
 });
 
-const inlineMathSnippet = snippetCompletion('\\(${ }\\)', {
+const inlineMathSnippet = snippetCompletion('\\(${ }\\)${}', {
     label: '\\( \\)',
     info: 'inline math',
     type: 'constant',
     boost: i--
 });
 
-const displayMathSnippet = snippetCompletion('\\[${ }\\]', {
+const displayMathSnippet = snippetCompletion('\\[${ }\\]${}', {
     label: '\\[ \\]',
     info: 'display math',
     type: 'constant',

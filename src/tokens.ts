@@ -1,6 +1,7 @@
 import type { InputStream } from '@lezer/lr';
 import { ContextTracker, ExternalTokenizer } from '@lezer/lr';
 import { namedUnaryOperators, listOperators } from './operators';
+import { pgOperators } from './pg-variables';
 import {
     automaticSemicolon,
     UnrestrictedIdentifier,
@@ -12,6 +13,7 @@ import {
     SpecialScalarVariable,
     NamedUnaryOperator,
     ListOperator,
+    PGOperator,
     HeredocStartIdentifier,
     LaTeXImageCodeStart,
     uninterpolatedHeredocStart,
@@ -395,6 +397,19 @@ export const specialScalarVariable = new ExternalTokenizer((input, stack) => {
     }
 });
 
+// Finds the longest word coming up in the stream.  Returns an array containing
+// the word and the ascii character code of the next character after it.
+const peekWord = (input: InputStream): [string, number] => {
+    let pos = 0;
+    let word = '',
+        nextChar: number;
+    while (isASCIILetter((nextChar = input.peek(pos)))) {
+        ++pos;
+        word += String.fromCharCode(nextChar);
+    }
+    return [word, nextChar];
+};
+
 // Finds the longest lower case word coming up in the stream.  Returns an array
 // containing the word and the ascii character code of the next character after it.
 const peekLCWord = (input: InputStream): [string, number] => {
@@ -409,6 +424,11 @@ const peekLCWord = (input: InputStream): [string, number] => {
 };
 
 export const builtinOperator = new ExternalTokenizer((input, stack) => {
+    if (stack.canShift(PGOperator)) {
+        const [word, nextChar] = peekWord(input);
+        if (pgOperators.has(word) && !isIdentifierChar(nextChar)) input.acceptToken(PGOperator, word.length);
+    }
+
     if (stack.canShift(NamedUnaryOperator)) {
         const [word, nextChar] = peekLCWord(input);
         if (namedUnaryOperators.includes(word) && !isIdentifierChar(nextChar))
