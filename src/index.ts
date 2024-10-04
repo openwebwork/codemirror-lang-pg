@@ -12,7 +12,8 @@ import {
     languageDataProp,
     syntaxTree
 } from '@codemirror/language';
-import { SyntaxNode, parseMixed } from '@lezer/common';
+import type { SyntaxNode } from '@lezer/common';
+import { parseMixed } from '@lezer/common';
 import type { CompletionContext } from '@codemirror/autocomplete';
 import { snippetCompletion } from '@codemirror/autocomplete';
 import { parser } from './pg.grammar';
@@ -23,7 +24,11 @@ import { pgTextLanguageData } from './pg-text-language-data';
 export { pgmlShow } from './pgml-parse';
 
 export const pgmlParser = new PGMLParser([
-    indentNodeProp.add({ PGMLContent: () => null }),
+    indentNodeProp.add({
+        PerlCommand: delimitedIndent({ closing: '@]' }),
+        Table: delimitedIndent({ closing: '#]' }),
+        Tag: delimitedIndent({ closing: '>]' })
+    }),
     languageDataProp.add(pgmlLanguageData)
 ]);
 export const pgmlLanguage = new Language(defineLanguageFacet(), pgmlParser, [], 'pgml');
@@ -85,6 +90,19 @@ export const pgLanguage = LRLanguage.define({
                 pos;
                 pos = pos.parent
             ) {
+                // When on the first line inside a PGMLBlock or PGTextBlock this autocomplete is called instead of the
+                // PGML or PGText parser's autocomplete.  This seems to be a bug in codemirror.  At this point the
+                // cursor is at the beginning of the PGMLContent or PGTextContent block, and so it should be the case
+                // that the PGML or PGText parser's autocomplete method is called.  So at this point don't offer
+                // autocompletion here since it wouldn't be appropriate.  Unfortunately, the PGML or PGText
+                // autocompletion also doesn't get offered.
+                if (
+                    (pos.name === 'PGMLBlock' || pos.name === 'PGTextBlock') &&
+                    pos.lastChild &&
+                    pos.lastChild.name !== '⚠'
+                )
+                    return;
+
                 if (pos.name === 'MethodInvocation') {
                     if (pos.parent?.name !== 'ExpressionStatement' && !context.explicit) break;
                     const arrowOperator = pos.getChild('ArrowOperator');

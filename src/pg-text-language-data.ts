@@ -1,6 +1,7 @@
 import type { SyntaxNode } from '@lezer/common';
 import { defineLanguageFacet, syntaxTree } from '@codemirror/language';
-import { CompletionContext, snippetCompletion } from '@codemirror/autocomplete';
+import type { CompletionContext } from '@codemirror/autocomplete';
+import { snippetCompletion } from '@codemirror/autocomplete';
 
 const perlCommandSnippet = snippetCompletion('\\\\{${ }\\\\}', {
     label: '\\{ \\}',

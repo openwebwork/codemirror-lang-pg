@@ -1,7 +1,8 @@
-import type { Input, NodePropSource, TreeFragment, PartialParse } from '@lezer/common';
-import { Tree, NodeType, NodeProp, NodeSet, Parser } from '@lezer/common';
+import type { Input, NodePropSource, TreeFragment, PartialParse, Tree } from '@lezer/common';
+import { NodeType, NodeProp, NodeSet, Parser } from '@lezer/common';
 import { styleTags, tags as t } from '@lezer/highlight';
-import { CompositeBlock, Element, TreeElement, elt } from './parse-elements';
+import type { Element } from './parse-elements';
+import { CompositeBlock, TreeElement, elt } from './parse-elements';
 import { parser as pgPerlParser } from './pg.grammar';
 import { PGMLParse, Item } from './pgml-parse';
 

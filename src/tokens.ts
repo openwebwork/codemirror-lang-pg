@@ -897,12 +897,8 @@ export const pgText = new ExternalTokenizer(
         if (stack.canShift(PGMLContent) || stack.canShift(PGTextContent)) {
             if (input.peek(-1) != 10) return;
             while (input.next >= 0) {
-                if (input.next != 10) {
-                    input.advance();
-                    continue;
-                }
-                input.advance();
                 if (stack.context.atEnd(input)) break;
+                input.advance();
             }
             if (stack.context.tag[4] == 80) input.acceptToken(PGMLContent);
             else input.acceptToken(PGTextContent);

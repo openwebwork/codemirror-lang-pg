@@ -1,5 +1,5 @@
-import type { Input, NodePropSource, PartialParse, TreeFragment } from '@lezer/common';
-import { NodeProp, NodeSet, NodeType, Parser, Tree } from '@lezer/common';
+import type { Input, NodePropSource, PartialParse, TreeFragment, Tree } from '@lezer/common';
+import { NodeProp, NodeSet, NodeType, Parser } from '@lezer/common';
 import { styleTags, tags as t } from '@lezer/highlight';
 import { CompositeBlock, Element, TreeElement, elt } from './parse-elements';
 import { skipSpace, isIdentifierChar, isVariableStartChar } from './text-utils';

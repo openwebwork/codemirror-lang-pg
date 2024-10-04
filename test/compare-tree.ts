@@ -1,4 +1,4 @@
-import { Tree, TreeCursor } from '@lezer/common';
+import type { Tree, TreeCursor } from '@lezer/common';
 
 interface JSONTreeElement {
     name: string;
