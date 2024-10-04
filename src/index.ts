@@ -14,12 +14,13 @@ import {
 import type { SyntaxNode } from '@lezer/common';
 import { parseMixed } from '@lezer/common';
 import type { CompletionContext } from '@codemirror/autocomplete';
-import { snippetCompletion } from '@codemirror/autocomplete';
+import { completeFromList, snippetCompletion } from '@codemirror/autocomplete';
 import { parser } from './pg.grammar';
 import { PGMLParser } from './pgml';
 import { pgmlNodeProps } from './pgml-language-data';
 import { PGTextParser } from './pg-text';
 import { pgTextNodeProps } from './pg-text-language-data';
+import { pgVariables } from './pg-variables';
 
 export { pgmlShow } from './pgml-parse';
 
@@ -38,7 +39,8 @@ export const pgLanguage = LRLanguage.define({
             indentNodeProp.add({
                 IfStatement: continuedIndent({ except: /^\s*({|else\b|elsif\b)/ }),
                 Block: delimitedIndent({ closing: '}' }),
-                String: () => null,
+                'StringSingleQuoted StringQQuoted StringDoubleQuoted StringQqQuoted': () => null,
+                'InterpolatedHeredocBody UninterpolatedHeredocBody': () => null,
                 Statement: continuedIndent(),
                 'PGMLBlock PGTextBlock': flatIndent
             }),
@@ -116,17 +118,24 @@ export const pgLanguage = LRLanguage.define({
                 if (pos.type.isTop) break;
             }
 
-            if (!context.matchBefore(/^\s*\w*/)) return;
-            return {
-                from: context.matchBefore(/\w+/)?.from ?? context.pos,
-                options: ['PGML', 'PGML_HINT', 'PGML_SOLUTION', 'TEXT', 'HINT', 'SOLUTION'].map((t, i) =>
-                    snippetCompletion(`BEGIN_${t}\n\${}\nEND_${t}`, {
-                        label: `BEGIN_${t}`,
-                        type: 'type',
-                        boost: 99 - i
-                    })
-                )
-            };
+            if (context.matchBefore(/\$\w*$/)) {
+                return completeFromList(Array.from(pgVariables.values()).map((label) => ({ label, type: 'variable' })))(
+                    context
+                );
+            }
+
+            if (context.matchBefore(/^\s*\w*/)) {
+                return {
+                    from: context.matchBefore(/\w+/)?.from ?? context.pos,
+                    options: ['PGML', 'PGML_HINT', 'PGML_SOLUTION', 'TEXT', 'HINT', 'SOLUTION'].map((t, i) =>
+                        snippetCompletion(`BEGIN_${t}\n\${}\nEND_${t}`, {
+                            label: `BEGIN_${t}`,
+                            type: 'type',
+                            boost: 99 - i
+                        })
+                    )
+                };
+            }
         }
     }
 });
