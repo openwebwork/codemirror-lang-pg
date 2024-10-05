@@ -1,6 +1,6 @@
 import type { InputStream } from '@lezer/lr';
 import { ContextTracker, ExternalTokenizer } from '@lezer/lr';
-import { namedUnaryOperators, listOperators } from './operators';
+import { namedUnaryOperators, listOperators } from './perl-operators';
 import { pgOperators } from './pg-variables';
 import {
     automaticSemicolon,
@@ -431,13 +431,13 @@ export const builtinOperator = new ExternalTokenizer((input, stack) => {
 
     if (stack.canShift(NamedUnaryOperator)) {
         const [word, nextChar] = peekLCWord(input);
-        if (namedUnaryOperators.includes(word) && !isIdentifierChar(nextChar))
+        if (namedUnaryOperators.has(word) && !isIdentifierChar(nextChar))
             input.acceptToken(NamedUnaryOperator, word.length);
     }
 
     if (stack.canShift(ListOperator)) {
         const [word, nextChar] = peekLCWord(input);
-        if (listOperators.includes(word) && !isIdentifierChar(nextChar)) input.acceptToken(ListOperator, word.length);
+        if (listOperators.has(word) && !isIdentifierChar(nextChar)) input.acceptToken(ListOperator, word.length);
     }
 });
 

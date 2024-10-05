@@ -3,7 +3,7 @@ import { NodeProp, NodeSet, NodeType, Parser } from '@lezer/common';
 import { styleTags, tags as t } from '@lezer/highlight';
 import { CompositeBlock, Element, TreeElement, elt } from './parse-elements';
 import { skipSpace, isIdentifierChar, isVariableStartChar } from './text-utils';
-import { parser as pgPerlParser } from './pg.grammar';
+import { pgPerlParser } from './pg-parser';
 
 enum Type {
     PGTextContent = 1,

@@ -1,5 +1,5 @@
 // Note that 'eval' and 'do' are not in this list as they can accept a block.
-export const namedUnaryOperators = [
+export const namedUnaryOperators = new Set([
     'abs',
     'alarm',
     'await',
@@ -62,10 +62,10 @@ export const namedUnaryOperators = [
     'umask',
     'undef',
     'untie'
-];
+]);
 
 // The list operators that can operate on a block (grep, map, join, sort, and unpack) are handled separately.
-export const listOperators = [
+export const listOperators = new Set([
     'atan2',
     'chomp',
     'chop',
@@ -109,4 +109,4 @@ export const listOperators = [
     'vec',
     'waitpid',
     'warn'
-];
+]);
