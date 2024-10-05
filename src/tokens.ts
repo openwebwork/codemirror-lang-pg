@@ -5,11 +5,6 @@ import { pgOperators } from './pg-variables';
 import {
     automaticSemicolon,
     UnrestrictedIdentifier,
-    FileTestOp,
-    IOOperatorStart,
-    Glob,
-    ReadonlySTDIN,
-    IOOperatorEnd,
     SpecialScalarVariable,
     NamedUnaryOperator,
     ListOperator,
@@ -41,12 +36,10 @@ import {
     qq,
     qr,
     qw,
-    qx,
     s,
     tr,
     y,
     Prototype,
-    PackageName,
     BeginPG,
     PGMLContent,
     PGTextContent,
@@ -62,8 +55,7 @@ import {
     isIdentifierChar,
     isVariableStartChar,
     isSpecialVariableChar,
-    isHex,
-    isFileTestOperatorChar
+    isHex
 } from './text-utils';
 import { pgVariables } from './pg-variables';
 
@@ -208,12 +200,10 @@ class Context {
 export const contextTracker = new ContextTracker<Context>({
     start: new Context('root'),
     shift(context, term, stack, input) {
-        if (term === q || term === qq || term === qx || term === qw) {
+        if (term === q || term === qq || term === qw) {
             return new Context('quoteLike', context, stack.pos, { quoteLikeType: term });
         } else if (term === m || term === qr || term === s || term === tr || term === y) {
             return new Context('quoteLike&regex', context, stack.pos, { quoteLikeType: term });
-        } else if (term === IOOperatorStart) {
-            return new Context('iooperator', context);
         } else if (term === HeredocStartIdentifier) {
             let pos = 0;
             const indented = input.next == 126 && input.peek(1) != 126; /* ~ follows but not ~~ */
@@ -223,10 +213,7 @@ export const contextTracker = new ContextTracker<Context>({
                 haveWhitespace = true;
                 ++pos;
             }
-            const quote =
-                input.peek(pos) == 39 /* ' */ || input.peek(pos) == 34 /* " */ || input.peek(pos) == 96 /* ` */
-                    ? input.peek(pos)
-                    : undefined;
+            const quote = input.peek(pos) == 39 /* ' */ || input.peek(pos) == 34 /* " */ ? input.peek(pos) : undefined;
             if (!quote && haveWhitespace) return context;
             if (quote) ++pos;
             const escapedTag = !quote && input.peek(pos) == 126 && input.peek(pos + 1) == 126; /* ~ */
@@ -296,7 +283,7 @@ export const contextTracker = new ContextTracker<Context>({
             term !== InterpolatedStringContent &&
             context.type !== 'pg'
         ) {
-            if (input.next == 34 /* " */ || input.next == 96 /* ` */) {
+            if (input.next == 34 /* " */) {
                 return new Context('quote', context, stack.pos, { startDelimiter: input.next });
             }
         }
@@ -312,10 +299,7 @@ export const contextTracker = new ContextTracker<Context>({
                 if (
                     context.quoteLikeType === tr ||
                     context.quoteLikeType === y ||
-                    ((context.quoteLikeType === m ||
-                        context.quoteLikeType === qr ||
-                        context.quoteLikeType === qx ||
-                        context.quoteLikeType === s) &&
+                    ((context.quoteLikeType === m || context.quoteLikeType === qr || context.quoteLikeType === s) &&
                         startDelimiter == 39) /* ' */
                 )
                     context.interpolating = false;
@@ -342,7 +326,6 @@ export const contextTracker = new ContextTracker<Context>({
                 (context.type === 'regex' && term === regexEnd) ||
                 (context.type === 'quoteLike&regex' && term === regexEnd) ||
                 (context.type === 'heredoc' && term === HeredocEndIdentifier) ||
-                (context.type === 'iooperator' && term === IOOperatorEnd) ||
                 (context.type === 'pg' && term === EndPG))
         ) {
             return context.parent;
@@ -441,73 +424,13 @@ export const builtinOperator = new ExternalTokenizer((input, stack) => {
     }
 });
 
-export const fileIO = new ExternalTokenizer(
-    (input, stack) => {
-        if (stack.canShift(FileTestOp) && !stack.canShift(PackageName)) {
-            gobbleWhitespace(input);
-            if (input.next == 45 /* - */ && isFileTestOperatorChar(input.peek(1)) && !isASCIILetter(input.peek(2)))
-                input.acceptToken(FileTestOp, 2);
-        }
-
-        // Start an IO operator if the following input contains a '<' character that is not followed by another
-        // one or the following input specifically contains <<>>.
-        if (
-            stack.canShift(IOOperatorStart) &&
-            input.next == 60 &&
-            (input.peek(1) != 60 || (input.peek(2) == 62 && input.peek(3) == 62))
-        ) {
-            input.acceptToken(IOOperatorStart, 1);
-            return;
-        }
-
-        if (!(stack.context instanceof Context) || stack.context.type !== 'iooperator') return;
-
-        // End the IO operator when the '>' character is encountered.
-        if (stack.canShift(IOOperatorEnd) && input.next == 62) {
-            input.acceptToken(IOOperatorEnd, 1);
-            return;
-        }
-
-        // In this case the initial '<' started the IO operator, and what follows is '<>>'
-        // to finish the read only standard input declaration.
-        if (input.peek(0) == 60 && input.peek(1) == 62 && input.peek(2) == 62) {
-            input.acceptToken(ReadonlySTDIN, 2);
-            return;
-        }
-
-        let pos = 0,
-            ch: number;
-        const isPossibleVariable = input.next == 36; /* $ */
-        if (isPossibleVariable) ++pos;
-        let haveWhitespace = false,
-            haveNonASCII = false;
-        while ((ch = input.peek(pos)) >= 0 && ch != 62 /* > */) {
-            if (isWhitespace(ch)) haveWhitespace = true;
-            if (!isASCIILetter(ch)) haveNonASCII = true;
-            ++pos;
-        }
-        if (
-            (isPossibleVariable && !haveWhitespace && !haveNonASCII) ||
-            (!isPossibleVariable && !haveWhitespace && !haveNonASCII) ||
-            ch < 0
-        )
-            return;
-
-        input.acceptToken(Glob, pos);
-    },
-    { contextual: true }
-);
-
 export const heredoc = new ExternalTokenizer(
     (input, stack) => {
         if (stack.canShift(HeredocStartIdentifier)) {
             const indented = input.next == 126 && input.peek(1) != 126; /* ~ follows but not ~~ */
             if (indented) input.advance();
             gobbleWhitespace(input);
-            const quote =
-                input.next == 39 /* ' */ || input.next == 34 /* " */ || input.next == 96 /* ` */
-                    ? input.next
-                    : undefined;
+            const quote = input.next == 39 /* ' */ || input.next == 34 /* " */ ? input.next : undefined;
             if (!quote && isWhitespace(input.peek(-1))) return;
             if (quote) input.advance();
             const escapedTag = !quote && input.next == 126 && input.peek(1) == 126; /* ~ */

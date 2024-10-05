@@ -136,80 +136,6 @@ Program(
     )
 )
 
-# backtick quoted commands
-
-`echo "value is $var"`;
-`echo "array access: $a[1]"`;
-`echo "deref array access: $a->[-1]"`;
-`echo "hash access: $var{b}"`;
-`echo "deref hash access: $var->{b}"`;
-`echo "dereferenced scalar reference ${~~($a + 2)}"`;
-`echo "dereferenced array reference @{['a' . 'b']}"`;
-
-==>
-
-Program(
-    ExpressionStatement(BacktickQuoted(InterpolatedStringContent, ScalarVariable, InterpolatedStringContent), ";"),
-    ExpressionStatement(
-        BacktickQuoted(
-            InterpolatedStringContent,
-            ArrayAccessVariable(ScalarVariable, "[", Integer, "]"),
-            InterpolatedStringContent
-        ),
-        ";"
-    ),
-    ExpressionStatement(
-        BacktickQuoted(
-            InterpolatedStringContent,
-            ArrayAccessVariable(ScalarVariable, ArrowOperator, "[", ArithOp, Integer, "]"),
-            InterpolatedStringContent
-        ),
-        ";"
-    ),
-    ExpressionStatement(
-        BacktickQuoted(
-            InterpolatedStringContent,
-            HashAccessVariable(ScalarVariable, "{", Identifier, "}"),
-            InterpolatedStringContent
-        ),
-        ";"
-    ),
-    ExpressionStatement(
-        BacktickQuoted(
-            InterpolatedStringContent,
-            HashAccessVariable(ScalarVariable, ArrowOperator, "{", Identifier, "}"),
-            InterpolatedStringContent
-        ),
-        ";"
-    ),
-    ExpressionStatement(
-        BacktickQuoted(
-            InterpolatedStringContent,
-            ScalarDereference(
-                "$",
-                "{",
-                UnaryExpression(RefOp, List("(", BinaryExpression(ScalarVariable, ArithOp, Integer), ")")),
-                "}"
-            ),
-            InterpolatedStringContent
-        ),
-        ";"
-    ),
-    ExpressionStatement(
-        BacktickQuoted(
-            InterpolatedStringContent,
-            ArrayDereference(
-                "@"
-                "{",
-                ArrayRef("[", BinaryExpression(StringSingleQuoted, ConcatOp, StringSingleQuoted), "]"),
-                "}"
-            ),
-            InterpolatedStringContent
-        ),
-        ";"
-    )
-)
-
 # q quoted strings
 
 q/abc/;
@@ -398,116 +324,6 @@ Program(
             Comment,
             QWListContent(QuoteLikeStartDelimiter, QWElement, QWElement, QWElement, QuoteLikeEndDelimiter)
         ),
-        ";"
-    )
-)
-
-# qx commands
-
-qx/echo "value is $var"/;
-qx{echo "array access: $a[1]"};
-qx!echo "deref array access: $a->[-1]"!;
-qx/echo "hash access: $var{b}"/;
-qx[echo "deref hash access: $var->{b}"];
-qx<echo "dereferenced scalar reference ${~~($a + 2)}">;
-qx(echo "dereferenced array reference @{['a' . 'b']}");
-qx'echo "uninterpolated contents $var"';
-qx # Comment
-    {echo "hello"};
-
-==>
-
-Program(
-    ExpressionStatement(
-        CommandQxQuoted(
-            qx,
-            QuoteLikeStartDelimiter,
-            InterpolatedStringContent,
-            ScalarVariable,
-            InterpolatedStringContent,
-            QuoteLikeEndDelimiter
-        ),
-        ";"
-    ),
-    ExpressionStatement(
-        CommandQxQuoted(
-            qx,
-            QuoteLikeStartDelimiter,
-            InterpolatedStringContent,
-            ArrayAccessVariable(ScalarVariable, "[", Integer, "]"),
-            InterpolatedStringContent,
-            QuoteLikeEndDelimiter
-        ),
-        ";"
-    ),
-    ExpressionStatement(
-        CommandQxQuoted(
-            qx,
-            QuoteLikeStartDelimiter,
-            InterpolatedStringContent,
-            ArrayAccessVariable(ScalarVariable, ArrowOperator, "[", ArithOp, Integer, "]"),
-            InterpolatedStringContent,
-            QuoteLikeEndDelimiter
-        ),
-        ";"
-    ),
-    ExpressionStatement(
-        CommandQxQuoted(
-            qx,
-            QuoteLikeStartDelimiter,
-            InterpolatedStringContent,
-            HashAccessVariable(ScalarVariable, "{", Identifier, "}"),
-            InterpolatedStringContent,
-            QuoteLikeEndDelimiter
-        ),
-        ";"
-    ),
-    ExpressionStatement(
-        CommandQxQuoted(
-            qx,
-            QuoteLikeStartDelimiter,
-            InterpolatedStringContent,
-            HashAccessVariable(ScalarVariable, ArrowOperator, "{", Identifier, "}"),
-            InterpolatedStringContent,
-            QuoteLikeEndDelimiter
-        ),
-        ";"
-    ),
-    ExpressionStatement(
-        CommandQxQuoted(
-            qx,
-            QuoteLikeStartDelimiter,
-            InterpolatedStringContent,
-            ScalarDereference(
-                "$",
-                "{",
-                UnaryExpression(RefOp, List("(", BinaryExpression(ScalarVariable, ArithOp, Integer), ")")),
-                "}"
-            ),
-            InterpolatedStringContent,
-            QuoteLikeEndDelimiter
-        ),
-        ";"
-    ),
-    ExpressionStatement(
-        CommandQxQuoted(
-            qx,
-            QuoteLikeStartDelimiter,
-            InterpolatedStringContent,
-            ArrayDereference(
-                "@",
-                "{",
-                ArrayRef("[", BinaryExpression(StringSingleQuoted, ConcatOp, StringSingleQuoted), "]"),
-                "}"
-            ),
-            InterpolatedStringContent,
-            QuoteLikeEndDelimiter
-        ),
-        ";"
-    ),
-    ExpressionStatement(CommandQxQuoted(qx, QuoteLikeStartDelimiter, StringContent, QuoteLikeEndDelimiter), ";"),
-    ExpressionStatement(
-        CommandQxQuoted(qx, Comment, QuoteLikeStartDelimiter, InterpolatedStringContent, QuoteLikeEndDelimiter),
         ";"
     )
 )
@@ -757,7 +573,7 @@ Program(
 
 # interpolation of special scalar variables
 
-say qq(
+qq(
     $"
     $$
     $0
@@ -784,50 +600,47 @@ say qq(
 
 Program(
     ExpressionStatement(
-        OutputFunction(
-            say,
-            StringQqQuoted(
-                qq,
-                QuoteLikeStartDelimiter,
-                InterpolatedStringContent,
-                SpecialScalarVariable,
-                InterpolatedStringContent,
-                SpecialScalarVariable,
-                InterpolatedStringContent,
-                SpecialScalarVariable,
-                InterpolatedStringContent,
-                SpecialScalarVariable,
-                InterpolatedStringContent,
-                SpecialScalarVariable,
-                InterpolatedStringContent,
-                SpecialScalarVariable,
-                InterpolatedStringContent,
-                SpecialScalarVariable,
-                InterpolatedStringContent,
-                SpecialScalarVariable,
-                InterpolatedStringContent,
-                SpecialScalarVariable,
-                InterpolatedStringContent,
-                SpecialScalarVariable,
-                InterpolatedStringContent,
-                SpecialScalarVariable,
-                InterpolatedStringContent,
-                SpecialScalarVariable,
-                InterpolatedStringContent,
-                SpecialScalarVariable,
-                InterpolatedStringContent,
-                ArrayVariable,
-                InterpolatedStringContent,
-                ArrayVariable,
-                InterpolatedStringContent,
-                SpecialScalarVariable,
-                InterpolatedStringContent,
-                SpecialScalarVariable,
-                InterpolatedStringContent,
-                SpecialScalarVariable,
-                InterpolatedStringContent,
-                QuoteLikeEndDelimiter
-            )
+        StringQqQuoted(
+            qq,
+            QuoteLikeStartDelimiter,
+            InterpolatedStringContent,
+            SpecialScalarVariable,
+            InterpolatedStringContent,
+            SpecialScalarVariable,
+            InterpolatedStringContent,
+            SpecialScalarVariable,
+            InterpolatedStringContent,
+            SpecialScalarVariable,
+            InterpolatedStringContent,
+            SpecialScalarVariable,
+            InterpolatedStringContent,
+            SpecialScalarVariable,
+            InterpolatedStringContent,
+            SpecialScalarVariable,
+            InterpolatedStringContent,
+            SpecialScalarVariable,
+            InterpolatedStringContent,
+            SpecialScalarVariable,
+            InterpolatedStringContent,
+            SpecialScalarVariable,
+            InterpolatedStringContent,
+            SpecialScalarVariable,
+            InterpolatedStringContent,
+            SpecialScalarVariable,
+            InterpolatedStringContent,
+            SpecialScalarVariable,
+            InterpolatedStringContent,
+            ArrayVariable,
+            InterpolatedStringContent,
+            ArrayVariable,
+            InterpolatedStringContent,
+            SpecialScalarVariable,
+            InterpolatedStringContent,
+            SpecialScalarVariable,
+            InterpolatedStringContent,
+            SpecialScalarVariable,
+            InterpolatedStringContent,
+            QuoteLikeEndDelimiter
         ),
         ";"
     )

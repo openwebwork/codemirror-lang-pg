@@ -40,7 +40,7 @@ Frog::Foo::method(6);
 &someMethod(1, 2);
 &anotherMethod;
 grep $_ eq 'a', @array;
-eval { say 'hello' };
+eval { warn 'hello' };
 eval "use Foo::Package";
 do { $var += 1 } until $var > 10;
 
@@ -75,7 +75,10 @@ Program(
         ";"
     ),
 	ExpressionStatement(
-        EvalExpression(Eval, Block("{", ExpressionStatement(OutputFunction(say, StringSingleQuoted)), "}")),
+        EvalExpression(
+            Eval,
+            Block("{", ExpressionStatement(ListOperatorExpression(ListOperator, Arguments(StringSingleQuoted))), "}")
+        ),
         ";"
     ),
     ExpressionStatement(EvalExpression(Eval, StringDoubleQuoted(InterpolatedStringContent)), ";"),
@@ -87,93 +90,10 @@ Program(
     )
 )
 
-# print and say
-
-print "output~~n";
-print 'a', 'b', "~~n";
-print('a', 'b', "~~n"), exit;
-print STDOUT "output~~n";
-print(STDOUT "output~~n");
-print { $files[$i] } "stuff~~n";
-print for @array;
-print STDERR for @error;
-say 'output';
-say 'a', 'b';
-say('a', 'b'), exit;
-say STDERR 'error';
-say(STDERR 'error');
-say { $files[$i] } 'stuff';
-say for @array;
-say STDERR for @error;
-
-==>
-
-Program(
-    ExpressionStatement(OutputFunction(print, StringDoubleQuoted(InterpolatedStringContent, EscapeSequence)), ";"),
-    ExpressionStatement(
-        OutputFunction(print, StringSingleQuoted, Comma, StringSingleQuoted, Comma, StringDoubleQuoted(EscapeSequence)),
-        ";"
-    ),
-    ExpressionStatement(
-        OutputFunction(
-            print,
-            "(",
-            StringSingleQuoted,
-            Comma,
-            StringSingleQuoted,
-            Comma,
-            StringDoubleQuoted(EscapeSequence),
-            ")"
-        )
-        Comma,
-        NamedUnaryExpression(NamedUnaryOperator),
-        ";"
-    ),
-    ExpressionStatement(
-        OutputFunction(print, STDOUT, StringDoubleQuoted(InterpolatedStringContent, EscapeSequence)),
-        ";"
-    ),
-    ExpressionStatement(
-        OutputFunction(print, "(", STDOUT, StringDoubleQuoted(InterpolatedStringContent, EscapeSequence), ")"),
-        ";"
-    ),
-    ExpressionStatement(
-        OutputFunction(
-            print,
-            Block("{", ExpressionStatement(ArrayAccessVariable(ScalarVariable, "[", ScalarVariable, "]")), "}"),
-            StringDoubleQuoted(InterpolatedStringContent, EscapeSequence)
-        ),
-        ";"
-    ),
-    SingleLineStatement(OutputFunction(print), for, Arguments(ArrayVariable), ";"),
-    SingleLineStatement(OutputFunction(print, STDERR), for, Arguments(ArrayVariable), ";")
-    ExpressionStatement(OutputFunction(say, StringSingleQuoted), ";"),
-    ExpressionStatement(OutputFunction(say, StringSingleQuoted, Comma, StringSingleQuoted), ";"),
-    ExpressionStatement(
-        OutputFunction(say, "(", StringSingleQuoted, Comma, StringSingleQuoted, ")"),
-        Comma,
-        NamedUnaryExpression(NamedUnaryOperator),
-        ";"
-    ),
-    ExpressionStatement(OutputFunction(say, STDERR, StringSingleQuoted), ";"),
-    ExpressionStatement(OutputFunction(say, "(", STDERR, StringSingleQuoted, ")"), ";"),
-    ExpressionStatement(
-        OutputFunction(
-            say,
-            Block("{", ExpressionStatement(ArrayAccessVariable(ScalarVariable, "[", ScalarVariable, "]")), "}"),
-            StringSingleQuoted
-        ),
-        ";"
-    ),
-    SingleLineStatement(OutputFunction(say), for, Arguments(ArrayVariable), ";"),
-    SingleLineStatement(OutputFunction(say, STDERR), for, Arguments(ArrayVariable), ";")
-)
-
 # anonymous functions
 
 my $f = sub { my ($m, $n) = @_; return $m + $n; };
 my $f = sub ($$) { my ($m, $n) = @_; return $m + $n; };
-my $f = sub ($m, $n) { return $m + $n; };
 
 ==>
 
@@ -219,23 +139,6 @@ Program(
                         ),
                         ";"
                     ),
-                    ReturnExpression(return, BinaryExpression(ScalarVariable, ArithOp, ScalarVariable)),
-                    ";",
-                    "}"
-                )
-            )
-        ),
-        ";"
-    ),
-    ExpressionStatement(
-        Assignment(
-            VariableDeclaration(my, ScalarVariable),
-            "=",
-            AnonymousFunction(
-                sub,
-                FunctionSignature(ParenthesizedArguments("(", ScalarVariable, Comma, ScalarVariable, ")")),
-                Block(
-                    "{",
                     ReturnExpression(return, BinaryExpression(ScalarVariable, ArithOp, ScalarVariable)),
                     ";",
                     "}"
@@ -428,9 +331,6 @@ Program(
 delete $var->method->{key};
 defined $var->method->[0];
 !defined $user_authen_module || $user_authen_module == 3;
-chdir $foo;
-chdir($foo);
-rand(10) * 20;
 
 ==>
 
@@ -468,56 +368,15 @@ Program(
             BinaryExpression(ScalarVariable, CompareOp, Integer)
         ),
         ";"
-    ),
-    ExpressionStatement(NamedUnaryExpression(NamedUnaryOperator, ScalarVariable), ";"),
-    ExpressionStatement(NamedUnaryExpression(NamedUnaryOperator, List("(", ScalarVariable, ")")), ";"),
-    ExpressionStatement(
-        BinaryExpression(NamedUnaryExpression(NamedUnaryOperator, List("(", Integer, ")")), "*", Integer), ";"
     )
 )
 
-# async/await
-
-async sub method {
-    my $var = shift;
-    my $result = await another_method($var);
-    return $result;
-}
-
-==>
-
-Program(
-    FunctionDefinition(
-        async,
-        sub,
-        FunctionName(Identifier),
-        Block(
-            "{",
-            ExpressionStatement(Assignment(VariableDeclaration(my, ScalarVariable), "=", ArrayPopOrShift(shift)), ";"),
-            ExpressionStatement(
-                Assignment(
-                    VariableDeclaration(my, ScalarVariable),
-                    "=",
-                    NamedUnaryExpression(
-                        NamedUnaryOperator,
-                        CallExpression(FunctionName(Identifier), ParenthesizedArguments("(", ScalarVariable, ")"))
-                    )
-                ),
-                ";"
-            ),
-            ReturnExpression(return, ScalarVariable),
-            ";",
-            "}"
-        )
-    )
-)
-
-# recursive method call
+# function definition
 
 sub factorial {
     my $n = shift;
     return 1 if $n == 0 || $n == 1;
-    return $n * __SUB__->($n - 1);
+    return $n * factorial($n - 1);
 }
 
 ==>
@@ -546,9 +405,8 @@ Program(
                 BinaryExpression(
                     ScalarVariable,
                     "*",
-                    CallExpressionRecursive(
-                        __SUB__,
-                        ArrowOperator,
+                    CallExpression(
+                        FunctionName(Identifier),
                         ParenthesizedArguments("(", BinaryExpression(ScalarVariable, ArithOp, Integer), ")")
                     )
                 )

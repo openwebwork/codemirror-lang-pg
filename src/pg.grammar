@@ -5,7 +5,6 @@
     noParens,
     parens,
 
-    recursive,
     arrayFunction,
 
     arrowOperator @left,
@@ -20,7 +19,6 @@
     compare @left,
     equal @left,
     namedUnary,
-    isa @left,
     binAnd @left,
     binOr @left,
     logAnd @left,
@@ -41,9 +39,8 @@
     op,
     list,
     listContents,
-    scalarDeref @right,
     prototype,
-    signature,
+    attribute,
     named,
 
     bareword,
@@ -51,7 +48,6 @@
     packageVariable,
     packageName,
     constant,
-    heredocString,
     callExpressionName,
 
     loopControl,
@@ -64,50 +60,14 @@
 
 statement[@isGroup=Statement] {
     PackageStatement { kw<"package"> PackageName Version? (semicolon | Block) } |
-    UseNoStatement {
-        (kw<"use"> | kw<"no">)
-        (PackageName | ModuleName)
-        Version?
-        (ParenthesizedArguments | Arguments)?
-        semicolon
-    } |
-    UseNoIfStatement {
-        (kw<"use"> | kw<"no">)
-        ifPragma { kw<"if"> (ParenthesizedArguments | expression) }
-        commaOperator
-        (PackageName | ModuleName | string)
-        Version?
-        commaOperator?
-        (ParenthesizedArguments | Arguments)?
-        semicolon
-    } |
-    UseLibStatement { kw<"use"> kw<"lib"> string semicolon } |
-    UseNoSubsStatement { (kw<"use"> | kw<"no">) kw<"subs"> list semicolon } |
-    UseNoFeatureStatement { (kw<"use"> | kw<"no">) kw<"feature"> (list | string)? semicolon } |
-    UseNoVersion { (kw<"use"> | kw<"no">) Version semicolon } |
-    RequireStatement { kw<"require"> PackageName semicolon } |
-    UseConstantStatement {
-        kw<"use">
-        kw<"constant">
-        ((Constant | string) commaOperator expression | HashRef)
-        semicolon
-    } |
-    UseParentOrBaseStatement {
-        kw<"use">
-        (kw<"parent"> | kw<"base">)
-        (NoRequire Comma)?
-        (commaSep<maybeParens<string>> | QWList)
-        semicolon
-    } |
     ExpressionStatement { commaSep1<maybeParens<expression>> semicolon } |
     FunctionDefinition {
-        (scope | kw<"async">)?
+        (scope)?
         kw<"sub">
         FunctionName { !bareword Identifier }
         (
              FunctionPrototype FunctionAttribute* |
-             FunctionAttribute* FunctionSignature |
-             FunctionAttribute* FunctionPrototypeAttribute FunctionAttribute* FunctionSignature
+             FunctionAttribute* FunctionPrototypeAttribute FunctionAttribute*
         )?
         (semicolon | Block)
     } |
@@ -155,12 +115,7 @@ expression[@isGroup=Expression] {
     string |
     Integer |
     Float |
-    SpecialLiteral {
-        kw<"__FILE__"> |
-        kw<"__LINE__"> |
-        kw<"__PACKAGE__"> |
-        kw<"__SUB__">
-    } |
+    SpecialLiteral { kw<"__FILE__"> | kw<"__LINE__"> | kw<"__PACKAGE__"> } |
     Pair |
     listType |
     ArrayLength { "$#" (Identifier | ScalarVariable | PGVariable | "{" expression "}") } |
@@ -182,8 +137,6 @@ expression[@isGroup=Expression] {
         ((!bareword Identifier) | expression)
         "}"
     } |
-    BacktickQuoted |
-    CommandQxQuoted |
     PatternMatchM |
     PatternMatch |
     RegexQr |
@@ -211,9 +164,7 @@ expression[@isGroup=Expression] {
             !compare (CompareOp<"<" | ">" | "<=" | ">="> | kw<"lt"> | kw<"gt"> | kw<"le"> | kw<"ge">) expression
         )+ |
         expression (!equal (CompareOp<"==" | "!="> | kw<"eq"> | kw<"ne">) expression)+ |
-        // Note that the ~~ smart match operator has been removed since ~~ is the escape sequence.
         expression !equal (CompareOp<"<=>"> | kw<"cmp">) expression |
-        expression !isa kw<"isa"> expression |
         expression !binAnd BitOp { "&" } expression |
         expression !binOr BitOp<"|" | "^"> expression |
         expression !logAnd LogicOp<"&&"> expression |
@@ -231,9 +182,7 @@ expression[@isGroup=Expression] {
         expression !incdec ArithOp<"++" | "--"> |
         ArithOp<"++" | "--"> !incdec expression
     } |
-    NoArgumentNamedUnaryOperator {
-        (kw<"fork"> | kw<"getpid"> | kw<"time"> | kw<"times"> | kw<"wait"> | kw<"wantarray">) ("(" ")")?
-    } |
+    NoArgumentNamedUnaryOperator { (kw<"time"> | kw<"times"> | kw<"wantarray">) ("(" ")")? } |
     NamedUnaryExpression { NamedUnaryOperator !namedUnary maybeParens<expression>? } |
     ListOperatorExpression { (ListOperator | builtinArrayFunction) (ParenthesizedArguments | Arguments) } |
     CallExpression {
@@ -244,19 +193,6 @@ expression[@isGroup=Expression] {
         FunctionName { "&" (PackageName | (!bareword Identifier)) }
     } |
     Bless { kw<"bless"> maybeParens<reference (commaOperator expression)?> } |
-    OutputFunction {
-        (kw<"print"> | kw<"say"> | kw<"printf">)
-        maybeParens<
-            fileHandle {
-                (Block | kw<"STDIN"> | kw<"STDERR"> | kw<"STDOUT"> | (ScalarVariable ~variable) | Identifier)
-            }?
-            (~arguments commaSep<expression>)
-        >
-    } |
-    SystemCall {
-        (kw<"exec"> | kw<"system">)
-        maybeParens<(Block | ScalarVariable | PGVariable)? (~arguments commaSep<expression>)>
-    } |
     MethodInvocation {
         (
             (!bareword Identifier | PackageName | StringSingleQuoted | ScalarVariable | PGVariable | expression)
@@ -281,7 +217,6 @@ expression[@isGroup=Expression] {
         ((PackageName | ScalarVariable | PGVariable) ~methodName)
         ParenthesizedArguments?
     } |
-    CallExpressionRecursive { kw<"__SUB__"> !recursive ArrowOperator ParenthesizedArguments } |
     ArrayFunction {
         !arrayFunction
         (builtinArrayFunction | FunctionName { !bareword Identifier ~identifier })
@@ -289,8 +224,6 @@ expression[@isGroup=Expression] {
         Block
         commaSep1<maybeParens<expression>>
     } |
-    FileTest { FileTestOp !namedUnary expression } |
-    IOOperator |
     EvalExpression { Eval !namedUnary (Block | maybeParens<expression>?) } |
     DoExpression { kw<"do"> !namedUnary (Block | maybeParens<expression>?) } |
     GotoExpression { !goto kw<"goto"> (Identifier | expression) } |
@@ -313,10 +246,9 @@ PackageName { Identifier ("::" !packageName (UnrestrictedIdentifier | Identifier
 Label { Identifier ":" }
 Constant { !constant Identifier }
 
-FunctionSignature { !signature ParenthesizedArguments }
 FunctionPrototype { !prototype "(" Prototype? ")" }
 FunctionPrototypeAttribute { ":" kw<"prototype"> FunctionPrototype }
-FunctionAttribute { ":" (Identifier FunctionSignature?) }
+FunctionAttribute { ":" (Identifier (!attribute ParenthesizedArguments)?) }
 
 ParenthesizedArguments { "(" !parens commaSep<expression> ")" }
 Arguments { !noParens commaSep1<expression> }
@@ -372,8 +304,6 @@ listType { List | QWList }
 quotedString { StringSingleQuoted | StringQQuoted | StringDoubleQuoted | StringQqQuoted }
 string { quotedString | HeredocInitializer }
 
-list { listType | ArrayVariable }
-
 Pair { !pair ((!bareword Identifier) | (!option Option)) FatComma expression }
 List { !list "(" !listContents commaSep<expression> ")" }
 
@@ -390,8 +320,7 @@ AnonymousFunction {
     kw<"sub">
     (
         FunctionPrototype FunctionAttribute* |
-        FunctionAttribute* FunctionSignature |
-        FunctionAttribute* FunctionPrototypeAttribute FunctionAttribute* FunctionSignature
+        FunctionAttribute* FunctionPrototypeAttribute FunctionAttribute*
     )?
     Block
 }
@@ -413,12 +342,8 @@ semicolon { ";" | automaticSemicolon }
 
 @skip {} {
     StringDoubleQuoted { '"' interpolationContent* '"' }
-    BacktickQuoted { "`" interpolationContent* "`" }
     StringQQuoted { kw<"q"> injectedComments? QuoteLikeStartDelimiter StringContent QuoteLikeEndDelimiter }
     StringQqQuoted { kw<"qq"> injectedComments? QuoteLikeStartDelimiter interpolationContent* QuoteLikeEndDelimiter }
-    CommandQxQuoted {
-        kw<"qx"> injectedComments? QuoteLikeStartDelimiter (StringContent | interpolationContent*) QuoteLikeEndDelimiter
-    }
     QWList { kw<"qw"> injectedComments? QWListContent { QuoteLikeStartDelimiter QWElement* QuoteLikeEndDelimiter } }
     PatternMatchM {
         kw<"m">
@@ -517,12 +442,6 @@ semicolon { ";" | automaticSemicolon }
         "}"
     }
 
-    IOOperator {
-        IOOperatorStart
-        (kw<"STDIN"> | kw<"STDERR"> | kw<"STDOUT"> | ScalarVariable | PGVariable | Identifier | Glob | ReadonlySTDIN )?
-        IOOperatorEnd
-    }
-
     PodStatement { PodDirective PodContent PodCut }
 
     PGMLBlock { BeginPG "\n" PGMLContent EndPG }
@@ -546,13 +465,6 @@ maybeParens<content> { !noParens content | "(" !parens content ")" }
 @external tokens specialScalarVariable from "./tokens" { SpecialScalarVariable }
 @external tokens builtinOperator from "./tokens" { NamedUnaryOperator, ListOperator, PGOperator }
 @external specialize { ScalarVariable } pgVariable from "./tokens" { PGVariable }
-@external tokens fileIO from "./tokens" {
-    FileTestOp,
-    IOOperatorStart[closedBy=IOOperatorEnd],
-    Glob,
-    ReadonlySTDIN,
-    IOOperatorEnd[openedBy=IOOperatorStart]
-}
 @external tokens heredoc from "./tokens" {
     HeredocStartIdentifier,
     LaTeXImageCodeStart,
@@ -623,8 +535,6 @@ maybeParens<content> { !noParens content | "(" !parens content ")" }
     ConcatOp<term> { term }
     RangeOp<term> { term }
 
-    ModuleName { "'" ![\n]* ".pm" "'" | "\"" ![\n]* ".pm" "\"" }
-
     StringSingleQuoted[isolate] { ("'" (!['] | "~~'")* "'"?) }
 
     letter { $[_a-zA-Z] }
@@ -642,14 +552,11 @@ maybeParens<content> { !noParens content | "(" !parens content ")" }
     Comma { "," }
     FatComma { "=>" }
 
-    NoRequire { "-norequire" }
-
     Comment[isolate] { "#" ![\n]* }
 
     "{" "}" "[" "]" "(" ")" "$" "@" "%" "&" "*" "<<" "$#" ";" ":" "::" "~~" "=" "/"
 
     @precedence {
-        ModuleName,
         StringSingleQuoted,
         Version,
         Float,

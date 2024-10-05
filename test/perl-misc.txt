@@ -3,7 +3,7 @@
 !$user_authen_module || $user_authen_module == 3;
 my $var = { expires  => time + 2, valid => 0 };
 my $var = Package->method($var);
-say $_ for grep { $_ ne 'a' } @array;
+warn $_ for grep { $_ ne 'a' } @array;
 ;
 
 ==>
@@ -45,7 +45,7 @@ Program(
         ";"
     ),
     SingleLineStatement(
-        OutputFunction(say, ScalarVariable),
+        ListOperatorExpression(ListOperator, Arguments(ScalarVariable)),
         for,
         Arguments(
             ArrayFunction(

@@ -1,13 +1,16 @@
 # single quoted tag
 
-print(<< 'END');
+my $m = << 'END';
 basic text content
 END
 
 ==>
 
 Program(
-    ExpressionStatement(OutputFunction(print, "(", HeredocInitializer("<<", HeredocStartIdentifier), ")"), ";"),
+    ExpressionStatement(
+        Assignment(VariableDeclaration(my, ScalarVariable), "=", HeredocInitializer("<<", HeredocStartIdentifier)),
+        ";"
+    ),
     UninterpolatedHeredocBody(StringContent, HeredocEndIdentifier)
 )
 
@@ -110,38 +113,28 @@ Program(
 
 # escaped tag
 
-say <<~~END;
+my $m = <<~~END;
 uninterpolated content $var
 END
 
 ==>
 
 Program(
-    ExpressionStatement(OutputFunction(say, HeredocInitializer("<<", HeredocStartIdentifier)), ";"),
+    ExpressionStatement(
+        Assignment(VariableDeclaration(my, ScalarVariable), "=", HeredocInitializer("<<", HeredocStartIdentifier)),
+        ";"
+    ),
     UninterpolatedHeredocBody(StringContent, HeredocEndIdentifier)
-)
-
-# backtick quoted tag
-
-print(<< `END`);
-echo 'hello $var'
-END
-
-==>
-
-Program(
-    ExpressionStatement(OutputFunction(print, "(", HeredocInitializer("<<", HeredocStartIdentifier), ")"), ";"),
-    InterpolatedHeredocBody(InterpolatedStringContent, ScalarVariable, InterpolatedStringContent, HeredocEndIdentifier)
 )
 
 # tag with space at end consumed
 
-print(<< 'END');
+my $m = << 'END';
 basic text content
 END 
 END
 
-print(<< "END");
+my $n = << "END";
 basic text content
 END 
 END
@@ -149,20 +142,26 @@ END
 ==>
 
 Program(
-    ExpressionStatement(OutputFunction(print, "(", HeredocInitializer("<<", HeredocStartIdentifier), ")"), ";"),
+    ExpressionStatement(
+        Assignment(VariableDeclaration(my, ScalarVariable), "=", HeredocInitializer("<<", HeredocStartIdentifier)),
+        ";"
+    ),
     UninterpolatedHeredocBody(StringContent, HeredocEndIdentifier),
-    ExpressionStatement(OutputFunction(print, "(", HeredocInitializer("<<", HeredocStartIdentifier), ")"), ";"),
+    ExpressionStatement(
+        Assignment(VariableDeclaration(my, ScalarVariable), "=", HeredocInitializer("<<", HeredocStartIdentifier)),
+        ";"
+    ),
     InterpolatedHeredocBody(InterpolatedStringContent, HeredocEndIdentifier)
 )
 
 # indented tag is consumed
 
-print(<< 'END');
+my $m = << 'END';
 basic text content
     END
 END
 
-print(<<END);
+my $n = <<END;
 basic text content
     END
 END
@@ -170,40 +169,52 @@ END
 ==>
 
 Program(
-    ExpressionStatement(OutputFunction(print, "(", HeredocInitializer("<<", HeredocStartIdentifier), ")"), ";"),
+    ExpressionStatement(
+        Assignment(VariableDeclaration(my, ScalarVariable), "=", HeredocInitializer("<<", HeredocStartIdentifier)),
+        ";"
+    ),
     UninterpolatedHeredocBody(StringContent, HeredocEndIdentifier),
-    ExpressionStatement(OutputFunction(print, "(", HeredocInitializer("<<", HeredocStartIdentifier), ")"), ";"),
+    ExpressionStatement(
+        Assignment(VariableDeclaration(my, ScalarVariable), "=", HeredocInitializer("<<", HeredocStartIdentifier)),
+        ";"
+    ),
     InterpolatedHeredocBody(InterpolatedStringContent, HeredocEndIdentifier)
 )
 
 # indented heredoc
 
-print <<~ 'EOF';
+my $m =  <<~ 'EOF';
     this is indented
     EOF
 
-print <<~ "EOF";
+my $N = <<~ "EOF";
     this is indented and $var is interpolated
     EOF
 
 ==>
 
 Program(
-    ExpressionStatement(OutputFunction(print, HeredocInitializer("<<", HeredocStartIdentifier)), ";"),
+    ExpressionStatement(
+        Assignment(VariableDeclaration(my, ScalarVariable), "=", HeredocInitializer("<<", HeredocStartIdentifier)),
+        ";"
+    ),
     UninterpolatedHeredocBody(StringContent, HeredocEndIdentifier),
-    ExpressionStatement(OutputFunction(print, HeredocInitializer("<<", HeredocStartIdentifier)), ";"),
+    ExpressionStatement(
+        Assignment(VariableDeclaration(my, ScalarVariable), "=", HeredocInitializer("<<", HeredocStartIdentifier)),
+        ";"
+    ),
     InterpolatedHeredocBody(InterpolatedStringContent, ScalarVariable, InterpolatedStringContent, HeredocEndIdentifier)
 )
 
 # multiple heredocs
 
-print(<< 'THIS', << "THAT");
+my $m = << 'THIS' . << "THAT";
 this text $var
 THIS
 that text $var
 THAT
 
-print(<<THIS, << 'THAT', << "THEN");
+my $n = <<THIS . << 'THAT' . << "THEN";
 this text $var
 THIS
 that text $var
@@ -215,28 +226,32 @@ THEN
 
 Program(
     ExpressionStatement(
-        OutputFunction(
-            print,
-            "(",
-            HeredocInitializer("<<", HeredocStartIdentifier),
-            Comma,
-            HeredocInitializer("<<", HeredocStartIdentifier),
-            ")"
+        Assignment(
+            VariableDeclaration(my, ScalarVariable),
+            "=",
+            BinaryExpression(
+                HeredocInitializer("<<", HeredocStartIdentifier),
+                ConcatOp,
+                HeredocInitializer("<<", HeredocStartIdentifier)
+            )
         ),
         ";"
     ),
     UninterpolatedHeredocBody(StringContent, HeredocEndIdentifier),
     InterpolatedHeredocBody(InterpolatedStringContent, ScalarVariable, InterpolatedStringContent, HeredocEndIdentifier),
     ExpressionStatement(
-        OutputFunction(
-            print,
-            "(",
-            HeredocInitializer("<<", HeredocStartIdentifier),
-            Comma,
-            HeredocInitializer("<<", HeredocStartIdentifier),
-            Comma,
-            HeredocInitializer("<<", HeredocStartIdentifier),
-            ")"
+        Assignment(
+            VariableDeclaration(my, ScalarVariable),
+            "=",
+            BinaryExpression(
+                BinaryExpression(
+                    HeredocInitializer("<<", HeredocStartIdentifier),
+                    ConcatOp,
+                    HeredocInitializer("<<", HeredocStartIdentifier)
+                ),
+                ConcatOp,
+                HeredocInitializer("<<", HeredocStartIdentifier)
+            )
         ),
         ";"
     ),
@@ -247,11 +262,11 @@ Program(
 
 # heredocs with quote like operator mixed in
 
-print(<< 'END', q{quote-like content});
+my $m = << 'END' . q{quote-like content};
 heredoc content
 END
 
-print(<< "THIS", qq!middle quote like!, << 'THAT');
+my $n = << "THIS" . qq!middle quote like! . << 'THAT';
 this text $var
 THIS
 that text $var
@@ -261,27 +276,31 @@ THAT
 
 Program(
     ExpressionStatement(
-        OutputFunction(
-            print,
-            "(",
-            HeredocInitializer("<<", HeredocStartIdentifier),
-            Comma,
-            StringQQuoted(q, QuoteLikeStartDelimiter, StringContent, QuoteLikeEndDelimiter),
-            ")"
+        Assignment(
+            VariableDeclaration(my, ScalarVariable),
+            "=",
+            BinaryExpression(
+                HeredocInitializer("<<", HeredocStartIdentifier),
+                ConcatOp,
+                StringQQuoted(q, QuoteLikeStartDelimiter, StringContent, QuoteLikeEndDelimiter)
+            )
         ),
         ";"
     ),
     UninterpolatedHeredocBody(StringContent, HeredocEndIdentifier),
     ExpressionStatement(
-        OutputFunction(
-            print,
-            "(",
-            HeredocInitializer("<<", HeredocStartIdentifier),
-            Comma,
-            StringQqQuoted(qq, QuoteLikeStartDelimiter, InterpolatedStringContent, QuoteLikeEndDelimiter),
-            Comma,
-            HeredocInitializer("<<", HeredocStartIdentifier),
-            ")"
+        Assignment(
+            VariableDeclaration(my, ScalarVariable),
+            "=",
+            BinaryExpression(
+                BinaryExpression(
+                    HeredocInitializer("<<", HeredocStartIdentifier),
+                    ConcatOp,
+                    StringQqQuoted(qq, QuoteLikeStartDelimiter, InterpolatedStringContent, QuoteLikeEndDelimiter)
+                ),
+                ConcatOp,
+                HeredocInitializer("<<", HeredocStartIdentifier)
+            )
         ),
         ";"
     ),
@@ -291,7 +310,7 @@ Program(
 
 # quote like operator containing dereferenced quantities with heredoc starts
 
-say qq{before @{[ << 'INNER1' ]}middle ${~~( <<INNER2 )}after};
+my $m = qq{before @{[ << 'INNER1' ]}middle ${~~( <<INNER2 )}after};
 inside interpolated array deref $var
 INNER1
 inside interpolated scalar deref $var2
@@ -301,8 +320,9 @@ INNER2
 
 Program(
     ExpressionStatement(
-        OutputFunction(
-            say,
+        Assignment(
+            VariableDeclaration(my, ScalarVariable),
+            "=",
             StringQqQuoted(
                 qq,
                 QuoteLikeStartDelimiter,
@@ -312,10 +332,7 @@ Program(
                 ScalarDereference(
                     "$",
                     "{",
-                    UnaryExpression(
-                        RefOp,
-                        List("(", HeredocInitializer("<<", HeredocStartIdentifier), ")")
-                    ),
+                    UnaryExpression(RefOp, List("(", HeredocInitializer("<<", HeredocStartIdentifier), ")")),
                     "}"
                 ),
                 InterpolatedStringContent,
@@ -330,7 +347,7 @@ Program(
 
 # interpolated heredoc with body containing dereferenced quantity that starts another heredoc
 
-print << "END";
+my $m = << "END";
 @{[ << "INNER" ]}
 inner stuff $var
 INNER
@@ -340,7 +357,10 @@ END
 ==>
 
 Program(
-    ExpressionStatement(OutputFunction(print, HeredocInitializer("<<", HeredocStartIdentifier)), ";"),
+    ExpressionStatement(
+        Assignment(VariableDeclaration(my, ScalarVariable), "=", HeredocInitializer("<<", HeredocStartIdentifier)),
+        ";"
+    ),
     InterpolatedHeredocBody(
         ArrayDereference("@", "{", ArrayRef("[", HeredocInitializer("<<", HeredocStartIdentifier), "]"), "}"),
         InterpolatedHeredocBody(
@@ -358,7 +378,7 @@ Program(
 
 # interpolated heredoc with nested dereferencing and quoting
 
-print << "END";
+my $m = << "END";
 before
 @{[ qq{inside quote like ${~~("interpolate $var")} in heredoc} ]}
 after
@@ -367,7 +387,10 @@ END
 ==>
 
 Program(
-    ExpressionStatement(OutputFunction(print, HeredocInitializer("<<", HeredocStartIdentifier)), ";"),
+    ExpressionStatement(
+        Assignment(VariableDeclaration(my, ScalarVariable), "=", HeredocInitializer("<<", HeredocStartIdentifier)),
+        ";"
+    ),
     InterpolatedHeredocBody(
         InterpolatedStringContent,
         ArrayDereference(
@@ -407,7 +430,7 @@ hello
 END_DOC
 ;
 
-print(<< "END"
+warn (<< "END"
 content of heredoc
 with interpolated $var
 END
@@ -426,17 +449,19 @@ Program(
         ";"
     ),
     ExpressionStatement(
-        OutputFunction(
-            print,
-            "(",
-            HeredocInitializer("<<", HeredocStartIdentifier),
-            InterpolatedHeredocBody(
-                InterpolatedStringContent,
-                ScalarVariable,
-                InterpolatedStringContent,
-                HeredocEndIdentifier
-             ),
-            ")"
+        ListOperatorExpression(
+            ListOperator,
+            ParenthesizedArguments(
+                "(",
+                HeredocInitializer("<<", HeredocStartIdentifier),
+                InterpolatedHeredocBody(
+                    InterpolatedStringContent,
+                    ScalarVariable,
+                    InterpolatedStringContent,
+                    HeredocEndIdentifier
+                ),
+                ")"
+            )
         ),
         ";"
     )
@@ -444,7 +469,7 @@ Program(
 
 # heredoc with dereferenced array with quotelike also with dereferenced array that starts another heredoc
 
-print << "END1";
+my $m =  << "END1";
 first heredoc before
 @{[ qq{quoteLike before @{[<< 'END2' ]}qouteLike after} ]}
 inner heredoc content
@@ -452,7 +477,7 @@ END2
 first heredoc after
 END1
 
-print << "END1";
+my $n = << "END1";
 first heredoc before
 @{[ qq{quoteLike before @{[<< 'END2'
 inner heredoc content
@@ -464,7 +489,10 @@ END1
 ==>
 
 Program(
-    ExpressionStatement(OutputFunction(print, HeredocInitializer("<<", HeredocStartIdentifier)), ";"),
+    ExpressionStatement(
+        Assignment(VariableDeclaration(my, ScalarVariable), "=", HeredocInitializer("<<", HeredocStartIdentifier)),
+        ";"
+    ),
     InterpolatedHeredocBody(
         InterpolatedStringContent,
         ArrayDereference(
@@ -493,7 +521,10 @@ Program(
         InterpolatedStringContent,
         HeredocEndIdentifier
     ),
-    ExpressionStatement(OutputFunction(print, HeredocInitializer("<<", HeredocStartIdentifier)), ";"),
+    ExpressionStatement(
+        Assignment(VariableDeclaration(my, ScalarVariable), "=", HeredocInitializer("<<", HeredocStartIdentifier)),
+        ";"
+    ),
     InterpolatedHeredocBody(
         InterpolatedStringContent,
         ArrayDereference(
@@ -530,7 +561,7 @@ Program(
 
 # heredoc started inside qq string with text after on same line and ended after body
 
-say qq{quoteLike before @{[<< 'END' ]}quoteLike after
+my $m = qq{quoteLike before @{[<< 'END' ]}quoteLike after
 inner heredoc content
 END
 };
@@ -539,8 +570,9 @@ END
 
 Program(
     ExpressionStatement(
-        OutputFunction(
-            say,
+        Assignment(
+            VariableDeclaration(my, ScalarVariable),
+            "=",
             StringQqQuoted(
                 qq,
                 QuoteLikeStartDelimiter,
