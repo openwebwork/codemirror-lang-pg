@@ -397,13 +397,13 @@ export const specialScalarVariable = new ExternalTokenizer((input, stack) => {
     }
 });
 
-// Finds the longest word coming up in the stream.  Returns an array containing
-// the word and the ascii character code of the next character after it.
+// Finds the longest word coming up in the stream (word characters include underscores here).  Returns an array
+// containing the word and the ascii character code of the next character after it.
 const peekWord = (input: InputStream): [string, number] => {
     let pos = 0;
     let word = '',
         nextChar: number;
-    while (isASCIILetter((nextChar = input.peek(pos)))) {
+    while (isASCIILetter((nextChar = input.peek(pos))) || nextChar == 95 /* _ */) {
         ++pos;
         word += String.fromCharCode(nextChar);
     }
