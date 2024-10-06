@@ -840,7 +840,8 @@ export const pgText = new ExternalTokenizer(
         if (!(stack.context instanceof Context) || stack.context.type !== 'pg' || !stack.context.tag) return;
 
         if (stack.canShift(PGMLContent) || stack.canShift(PGTextContent)) {
-            if (input.peek(-1) != 10) return;
+            if (input.next != 10) return;
+            // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
             while (input.next >= 0) {
                 if (stack.context.atEnd(input)) break;
                 input.advance();

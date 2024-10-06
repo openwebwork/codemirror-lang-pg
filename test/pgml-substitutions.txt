@@ -23,12 +23,12 @@ END_PGML
                 { "name": "BeginPG", "from": 0, "to": 10 },
                 {
                     "name": "PGMLContent",
-                    "from": 11,
+                    "from": 10,
                     "to": 157,
                     "children": [
                         {
                             "name": "Paragraph",
-                            "from": 11,
+                            "from": 10,
                             "to": 157,
                             "children": [
                                 {
@@ -409,12 +409,12 @@ END_PGML
                 { "name": "BeginPG", "from": 0, "to": 10 },
                 {
                     "name": "PGMLContent",
-                    "from": 11,
+                    "from": 10,
                     "to": 94,
                     "children": [
                         {
                             "name": "Paragraph",
-                            "from": 11,
+                            "from": 10,
                             "to": 36,
                             "children": [
                                 { "name": "Comment", "from": 11, "to": 36 }
@@ -527,12 +527,12 @@ END_PGML
                 { "name": "BeginPG", "from": 0, "to": 10 },
                 {
                     "name": "PGMLContent",
-                    "from": 11,
+                    "from": 10,
                     "to": 144,
                     "children": [
                         {
                             "name": "Paragraph",
-                            "from": 11,
+                            "from": 10,
                             "to": 144,
                             "children": [
                                 {

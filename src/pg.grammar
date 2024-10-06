@@ -444,8 +444,8 @@ semicolon { ";" | automaticSemicolon }
 
     PodStatement { PodDirective PodContent PodCut }
 
-    PGMLBlock { BeginPG "\n" PGMLContent EndPG }
-    PGTextBlock { BeginPG "\n" PGTextContent EndPG }
+    PGMLBlock { BeginPG PGMLContent EndPG }
+    PGTextBlock { BeginPG PGTextContent EndPG }
 }
 
 @skip { Comment | horizontalWhitespace | verticalWhitespace | UninterpolatedHeredocBody | InterpolatedHeredocBody }

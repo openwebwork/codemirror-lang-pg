@@ -23,13 +23,13 @@ END_PGML
                 { "name": "BeginPG", "from": 0, "to": 10 },
                 {
                     "name": "PGMLContent",
-                    "from": 11,
+                    "from": 10,
                     "to": 62,
                     "children": [
                         {
                             "name": "Paragraph",
-                            "from": 11,
-                            "to": 62,
+                            "from": 10,
+                            "to": 61,
                             "children": [
                                 {
                                     "name": "Code",
@@ -37,7 +37,7 @@ END_PGML
                                     "to": 61,
                                     "children": [
                                         { "name": "CodeMark", "from": 11, "to": 14 },
-                                        { "name": "CodeText", "from": 14, "to": 58 },
+                                        { "name": "CodeText", "from": 15, "to": 58 },
                                         { "name": "CodeMark", "from": 58, "to": 61 }
                                     ]
                                 }
@@ -111,13 +111,13 @@ END_PGML
                 { "name": "BeginPG", "from": 0, "to": 10 },
                 {
                     "name": "PGMLContent",
-                    "from": 11,
+                    "from": 10,
                     "to": 66,
                     "children": [
                         {
                             "name": "Paragraph",
-                            "from": 11,
-                            "to": 66,
+                            "from": 10,
+                            "to": 65,
                             "children": [
                                 {
                                     "name": "Code",

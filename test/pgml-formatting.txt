@@ -19,12 +19,12 @@ END_PGML
                 { "name": "BeginPG", "from": 0, "to": 10 },
                 {
                     "name": "PGMLContent",
-                    "from": 11,
+                    "from": 10,
                     "to": 43,
                     "children": [
                         {
                             "name": "Paragraph",
-                            "from": 11,
+                            "from": 10,
                             "to": 43,
                             "children": [
                                 {
@@ -132,12 +132,12 @@ END_PGML
                 { "name": "BeginPG", "from": 0, "to": 10 },
                 {
                     "name": "PGMLContent",
-                    "from": 11,
+                    "from": 10,
                     "to": 25,
                     "children": [
                         {
                             "name": "Paragraph",
-                            "from": 11,
+                            "from": 10,
                             "to": 25,
                             "children": [
                                 {
@@ -220,12 +220,12 @@ END_PGML
                 { "name": "BeginPG", "from": 0, "to": 10 },
                 {
                     "name": "PGMLContent",
-                    "from": 11,
+                    "from": 10,
                     "to": 32,
                     "children": [
                         {
                             "name": "Paragraph",
-                            "from": 11,
+                            "from": 10,
                             "to": 32,
                             "children": [
                                 {
@@ -333,12 +333,12 @@ END_PGML
                 { "name": "BeginPG", "from": 0, "to": 10 },
                 {
                     "name": "PGMLContent",
-                    "from": 11,
+                    "from": 10,
                     "to": 95,
                     "children": [
                         {
                             "name": "Paragraph",
-                            "from": 11,
+                            "from": 10,
                             "to": 95,
                             "children": [
                                 { "name": "HorizontalRule", "from": 17, "to": 20 },
@@ -667,7 +667,7 @@ END_PGML
                 { "name": "BeginPG", "from": 0, "to": 10 },
                 {
                     "name": "PGMLContent",
-                    "from": 11,
+                    "from": 10,
                     "to": 108,
                     "children": [
                         {
@@ -976,12 +976,12 @@ END_PGML
                 { "name": "BeginPG", "from": 0, "to": 10 },
                 {
                     "name": "PGMLContent",
-                    "from": 11,
+                    "from": 10,
                     "to": 117,
                     "children": [
                         {
                             "name": "Paragraph",
-                            "from": 11,
+                            "from": 10,
                             "to": 117,
                             "children": [
                                 {
@@ -1121,7 +1121,7 @@ END_PGML
                 { "name": "BeginPG", "from": 0, "to": 10 },
                 {
                     "name": "PGMLContent",
-                    "from": 11,
+                    "from": 10,
                     "to": 437,
                     "children": [
                         {
@@ -1533,12 +1533,12 @@ END_PGML
                 { "name": "BeginPG", "from": 0, "to": 10 },
                 {
                     "name": "PGMLContent",
-                    "from": 11,
+                    "from": 10,
                     "to": 44,
                     "children": [
                         {
                             "name": "Paragraph",
-                            "from": 11,
+                            "from": 10,
                             "to": 44,
                             "children": [
                                 { "name": "EscapeSequence", "from": 11, "to": 13 },

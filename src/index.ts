@@ -38,7 +38,7 @@ export const pgLanguage = LRLanguage.define({
                 'StringSingleQuoted StringQQuoted StringDoubleQuoted StringQqQuoted': () => null,
                 'InterpolatedHeredocBody UninterpolatedHeredocBody': () => null,
                 Statement: continuedIndent(),
-                'PGMLBlock PGTextBlock': flatIndent
+                'PGMLBlock PGTextBlock LaTeXImageCode': flatIndent
             }),
             foldNodeProp.add({
                 'Block Array ArrayRef HashRef PGMLBlock PGTextBlock': foldInside,

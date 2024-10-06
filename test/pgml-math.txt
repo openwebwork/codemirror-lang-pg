@@ -19,12 +19,12 @@ END_PGML
                 { "name": "BeginPG", "from": 0, "to": 10 },
                 {
                     "name": "PGMLContent",
-                    "from": 11,
+                    "from": 10,
                     "to": 33,
                     "children": [
                         {
                             "name": "Paragraph",
-                            "from": 11,
+                            "from": 10,
                             "to": 33,
                             "children": [
                                 {
@@ -151,12 +151,12 @@ END_PGML
                 { "name": "BeginPG", "from": 0, "to": 10 },
                 {
                     "name": "PGMLContent",
-                    "from": 11,
+                    "from": 10,
                     "to": 36,
                     "children": [
                         {
                             "name": "Paragraph",
-                            "from": 11,
+                            "from": 10,
                             "to": 36,
                             "children": [
                                 {
@@ -284,12 +284,12 @@ END_PGML
                 { "name": "BeginPG", "from": 0, "to": 10 },
                 {
                     "name": "PGMLContent",
-                    "from": 11,
+                    "from": 10,
                     "to": 41,
                     "children": [
                         {
                             "name": "Paragraph",
-                            "from": 11,
+                            "from": 10,
                             "to": 41,
                             "children": [
                                 {
@@ -426,12 +426,12 @@ END_PGML
                 { "name": "BeginPG", "from": 0, "to": 10 },
                 {
                     "name": "PGMLContent",
-                    "from": 11,
+                    "from": 10,
                     "to": 24,
                     "children": [
                         {
                             "name": "Paragraph",
-                            "from": 11,
+                            "from": 10,
                             "to": 24,
                             "children": [
                                 {
@@ -520,12 +520,12 @@ END_PGML
                 { "name": "BeginPG", "from": 0, "to": 10 },
                 {
                     "name": "PGMLContent",
-                    "from": 11,
+                    "from": 10,
                     "to": 30,
                     "children": [
                         {
                             "name": "Paragraph",
-                            "from": 11,
+                            "from": 10,
                             "to": 30,
                             "children": [
                                 {
@@ -615,12 +615,12 @@ END_PGML
                 { "name": "BeginPG", "from": 0, "to": 10 },
                 {
                     "name": "PGMLContent",
-                    "from": 11,
+                    "from": 10,
                     "to": 31,
                     "children": [
                         {
                             "name": "Paragraph",
-                            "from": 11,
+                            "from": 10,
                             "to": 31,
                             "children": [
                                 {
@@ -710,12 +710,12 @@ END_PGML
                 { "name": "BeginPG", "from": 0, "to": 10 },
                 {
                     "name": "PGMLContent",
-                    "from": 11,
+                    "from": 10,
                     "to": 32,
                     "children": [
                         {
                             "name": "Paragraph",
-                            "from": 11,
+                            "from": 10,
                             "to": 32,
                             "children": [
                                 {
@@ -805,12 +805,12 @@ END_PGML
                 { "name": "BeginPG", "from": 0, "to": 10 },
                 {
                     "name": "PGMLContent",
-                    "from": 11,
+                    "from": 10,
                     "to": 26,
                     "children": [
                         {
                             "name": "Paragraph",
-                            "from": 11,
+                            "from": 10,
                             "to": 26,
                             "children": [
                                 {
@@ -900,12 +900,12 @@ END_PGML
                 { "name": "BeginPG", "from": 0, "to": 10 },
                 {
                     "name": "PGMLContent",
-                    "from": 11,
+                    "from": 10,
                     "to": 28,
                     "children": [
                         {
                             "name": "Paragraph",
-                            "from": 11,
+                            "from": 10,
                             "to": 28,
                             "children": [
                                 {
@@ -995,12 +995,12 @@ END_PGML
                 { "name": "BeginPG", "from": 0, "to": 10 },
                 {
                     "name": "PGMLContent",
-                    "from": 11,
+                    "from": 10,
                     "to": 32,
                     "children": [
                         {
                             "name": "Paragraph",
-                            "from": 11,
+                            "from": 10,
                             "to": 32,
                             "children": [
                                 {

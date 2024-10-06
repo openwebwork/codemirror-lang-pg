@@ -21,13 +21,6 @@ export const pgCompletion = (isTop = false) => {
         };
 
         if (isTop) {
-            // When on the first line inside a PGMLBlock or PGTextBlock this autocomplete is called instead of the PGML
-            // or PGText parser's autocomplete.  This seems to be a bug in codemirror.  At this point the cursor is at
-            // the beginning of the PGMLContent or PGTextContent block, and so it should be the case that the PGML or
-            // PGText parser's autocomplete method is called and not this one.  So don't offer autocompletion here since
-            // it wouldn't be appropriate.  Unfortunately, the PGML or PGText autocompletion also doesn't get offered.
-            if (inside(['PGMLBlock', 'PGTextBlock'])?.[0] === 2) return;
-
             const [insideMethodInvocation, methodInvocation] = inside('MethodInvocation') ?? [];
             if (
                 insideMethodInvocation &&
