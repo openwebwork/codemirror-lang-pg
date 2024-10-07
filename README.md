@@ -4,7 +4,7 @@ This package implements PG language support for the [CodeMirror](https://codemir
 
 PG is the problem generation language for the [WeBWorK](https://github.com/openwebwork) online homework delivery system.
 
-This code is released under an [MIT license](https://github.com/drgrice1/lang-perl/tree/main/LICENSE).
+This code is released under an [MIT license](https://github.com/openwebwork/codemirror-lang-pg/tree/main/LICENSE).
 
 ## API Reference
 

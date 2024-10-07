@@ -5,9 +5,12 @@ rollup.config.js
 tsconfig.json
 .vim
 /misc
+generate-terms.js
+pgml-parse.js
+show-pgml-tree.js
 show-tree.js
+show-tree-detailed.js
 .editorconfig
 .prettierrc
 eslint.config.mjs
-generate-parser.js
 .mocharc.cjs

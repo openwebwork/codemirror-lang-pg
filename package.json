@@ -1,16 +1,17 @@
 {
     "name": "codemirror-lang-pg",
     "version": "0.1.2",
-    "description": "Perl language support for CodeMirror",
+    "description": "PG language support for CodeMirror",
+    "author": "The WeBWorK Project",
     "license": "MIT",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/drgrice1/codemirror-lang-pg.git"
+        "url": "git+https://github.com/openwebwork/codemirror-lang-pg.git"
     },
-    "homepage": "https://github.com/drgrice1/codemirror-lang-pg",
+    "homepage": "https://github.com/openwebwork/codemirror-lang-pg",
     "scripts": {
-        "format:prettier": "prettier --write .",
-        "lint:eslint": "eslint . --fix",
+        "format": "prettier --write .",
+        "lint": "eslint . --fix",
         "generate-terms": "node generate-terms.js",
         "build": "NODE_OPTIONS='--no-warnings=ExperimentalWarning' rollup -c",
         "watch": "NODE_OPTIONS='--no-warnings=ExperimentalWarning' rollup -cw",
