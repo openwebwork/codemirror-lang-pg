@@ -541,7 +541,10 @@ maybeParens<content> { !noParens content | "(" !parens content ")" }
     Identifier { letter (letter | @digit)* }
     Option { "-" letter (letter | @digit)* }
 
-    maybeBraces<content> { content | "{" horizontalWhitespace* content horizontalWhitespace* "}" }
+    maybeBraces<content> {
+        content |
+        "{" (horizontalWhitespace | verticalWhitespace)* content (horizontalWhitespace | verticalWhitespace)* "}"
+    }
 
     ScalarVariable { "$" maybeBraces<Identifier> }
     ArrayVariable { "@" $[+-_!] | "@" maybeBraces<Identifier> }
