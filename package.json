@@ -11,7 +11,9 @@
     "homepage": "https://github.com/openwebwork/codemirror-lang-pg",
     "scripts": {
         "format": "prettier --write .",
+        "format:check": "prettier --check .",
         "lint": "eslint . --fix",
+        "lint:check": "eslint .",
         "generate-terms": "node generate-terms.js",
         "build": "NODE_OPTIONS='--no-warnings=ExperimentalWarning' rollup -c",
         "watch": "NODE_OPTIONS='--no-warnings=ExperimentalWarning' rollup -cw",
