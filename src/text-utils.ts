@@ -18,8 +18,11 @@ export const isIdentifierChar = (ch: number) => ch == 95 /* _ */ || isASCIILette
 export const isVariableStartChar = (ch: number) => ch == 95 /* _ */ || isASCIILetter(ch);
 
 // !"$%&'()*+,-./0123456789:;<=>?@[\]`~
-export const isSpecialVariableChar = (ch: number) =>
-    (ch >= 33 && ch != 35 && ch <= 64) || ch == 91 || ch == 92 || ch == 93 || ch == 96 || ch == 126;
+// For arrays this is only used for interpolation and in that case only @$, @+, @-, and @1 .. @9 are allowed.
+export const isSpecialVariableChar = (ch: number, arrayType = false) =>
+    arrayType
+        ? ch == 36 || ch == 43 || ch == 45 || (ch >= 49 && ch <= 57)
+        : (ch >= 33 && ch != 35 && ch <= 64) || ch == 91 || ch == 92 || ch == 93 || ch == 96 || ch == 126;
 
 /* 0-9, a-f, A-F */
 export const isHex = (ch: number) => (ch >= 48 && ch <= 55) || (ch >= 97 && ch <= 102) || (ch >= 65 && ch <= 70);

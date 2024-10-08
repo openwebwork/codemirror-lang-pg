@@ -582,7 +582,7 @@ export const interpolated = new ExternalTokenizer(
                 ((input.next == 36 /* $ */ || input.next == 64) /* @ */ &&
                     (isVariableStartChar(input.peek(1)) ||
                         input.peek(1) == 123 /* { */ ||
-                        (isSpecialVariableChar(input.peek(1)) &&
+                        (isSpecialVariableChar(input.peek(1), input.next == 64 /* @ */) &&
                             (stack.context.nestLevel > 0 || input.peek(1) !== stack.context.endDelimiter))))
             ) {
                 break;
