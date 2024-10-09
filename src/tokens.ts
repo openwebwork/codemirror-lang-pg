@@ -10,6 +10,7 @@ import {
     NamedUnaryOperator,
     ListOperator,
     PGOperator,
+    ENDDOCUMENT,
     HeredocStartIdentifier,
     LaTeXImageCodeStart,
     uninterpolatedHeredocStart,
@@ -421,7 +422,8 @@ const peekLCWord = (input: InputStream): [string, number] => {
 export const builtinOperator = new ExternalTokenizer((input, stack) => {
     if (stack.canShift(PGOperator)) {
         const [word, nextChar] = peekWord(input);
-        if (pgOperators.has(word) && !isIdentifierChar(nextChar)) input.acceptToken(PGOperator, word.length);
+        if (word.startsWith('ENDDOCUMENT')) input.acceptToken(ENDDOCUMENT, 11);
+        else if (pgOperators.has(word) && !isIdentifierChar(nextChar)) input.acceptToken(PGOperator, word.length);
     }
 
     if (stack.canShift(NamedUnaryOperator)) {

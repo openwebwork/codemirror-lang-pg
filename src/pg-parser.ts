@@ -56,7 +56,13 @@ export const pgCompletion = (isTop = false) => {
 
         if (
             isTop &&
-            !inside(['InterpolatedHeredocBody', 'UninterpolatedHeredocBody']) &&
+            !inside([
+                'InterpolatedHeredocBody',
+                'UninterpolatedHeredocBody',
+                'PodStatement',
+                'EndDataStatement',
+                'EndDocument'
+            ]) &&
             ((context.matchBefore(/^\s*\w*/) && context.explicit) || context.matchBefore(/^\s*B\w*/))
         ) {
             completionOptions.push(

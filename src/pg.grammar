@@ -94,6 +94,7 @@ statement[@isGroup=Statement] {
     EmptyStatement { ~block ";" } |
     PodStatement |
     EndDataStatement[@dynamicPrecedence=4] { (kw<"__END__"> | kw<"__DATA__">) endDataBlock } |
+    EndDocument[@dynamicPrecedence=4] { kw<"ENDDOCUMENT"> endDataBlock } |
     LaTeXImageCode {
         (ScalarVariable | PGVariable | expression)
         ArrowOperator
