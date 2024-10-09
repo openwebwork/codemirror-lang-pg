@@ -41,7 +41,7 @@ export const pgLanguage = LRLanguage.define({
                 'PGMLBlock PGTextBlock LaTeXImageCode': flatIndent
             }),
             foldNodeProp.add({
-                'Block Array ArrayRef HashRef PGMLBlock PGTextBlock': foldInside,
+                'Block Array ArrayRef HashRef': foldInside,
                 'InterpolatedHeredocBody UninterpolatedHeredocBody': (node) => {
                     if (node.prevSibling && node.lastChild)
                         return { from: node.prevSibling.to, to: node.lastChild.from };
