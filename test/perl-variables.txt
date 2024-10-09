@@ -8,9 +8,10 @@ my ($var1, $var2) = (1, 2);
 ==>
 
 Program(
-    ExpressionStatement(Assignment(VariableDeclaration(my, ScalarVariable), "=", Integer), ";"),
+    ExpressionStatement(Assignment(VariableDeclaration(my, ScalarVariable), "=", Integer), StatementEnd(";")),
     ExpressionStatement(
-        Assignment(VariableDeclaration(my, ArrayVariable), "=", List("(", Integer, Comma, Integer, ")")), ";"
+        Assignment(VariableDeclaration(my, ArrayVariable), "=", List("(", Integer, Comma, Integer, ")")),
+        StatementEnd(";")
     ),
     ExpressionStatement(
         Assignment(
@@ -18,7 +19,7 @@ Program(
             "=",
             List("(", Pair(Identifier, FatComma, Integer), Comma, Pair(Identifier, FatComma, Integer), ")")
         ),
-        ";"
+        StatementEnd(";")
     ),
     ExpressionStatement(
         Assignment(
@@ -26,7 +27,7 @@ Program(
             "=",
             List("(", Integer, Comma, Integer, ")")
         ),
-        ";"
+        StatementEnd(";")
     )
 )
 
@@ -55,25 +56,25 @@ $var x= 2;
 ==>
 
 Program(
-    ExpressionStatement(UpdateExpression(ScalarVariable, UpdateOp, Integer), ";"),
-    ExpressionStatement(UpdateExpression(ScalarVariable, UpdateOp, Integer), ";"),
-    ExpressionStatement(UpdateExpression(ScalarVariable, UpdateOp, Integer), ";"),
-    ExpressionStatement(UpdateExpression(ScalarVariable, UpdateOp, Integer), ";"),
-    ExpressionStatement(UpdateExpression(ScalarVariable, UpdateOp, Integer), ";"),
-    ExpressionStatement(UpdateExpression(ScalarVariable, UpdateOp, Integer), ";"),
-    ExpressionStatement(UpdateExpression(ScalarVariable, UpdateOp, StringSingleQuoted), ";"),
-    ExpressionStatement(UpdateExpression(ScalarVariable, UpdateOp, Integer), ";"),
-    ExpressionStatement(UpdateExpression(ScalarVariable, UpdateOp, Integer), ";"),
-    ExpressionStatement(UpdateExpression(ScalarVariable, UpdateOp, Integer), ";"),
-    ExpressionStatement(UpdateExpression(ScalarVariable, UpdateOp, Integer), ";"),
-    ExpressionStatement(UpdateExpression(ScalarVariable, UpdateOp, Integer), ";"),
-    ExpressionStatement(UpdateExpression(ScalarVariable, UpdateOp, Integer), ";"),
-    ExpressionStatement(UpdateExpression(ScalarVariable, UpdateOp, Integer), ";"),
-    ExpressionStatement(UpdateExpression(ScalarVariable, UpdateOp, Integer), ";"),
-    ExpressionStatement(UpdateExpression(ScalarVariable, UpdateOp, Integer), ";"),
-    ExpressionStatement(UpdateExpression(ScalarVariable, UpdateOp, Integer), ";"),
-    ExpressionStatement(UpdateExpression(ScalarVariable, UpdateOp, Integer), ";"),
-    ExpressionStatement(UpdateExpression(ScalarVariable, x, "=", Integer), ";")
+    ExpressionStatement(UpdateExpression(ScalarVariable, UpdateOp, Integer), StatementEnd(";")),
+    ExpressionStatement(UpdateExpression(ScalarVariable, UpdateOp, Integer), StatementEnd(";")),
+    ExpressionStatement(UpdateExpression(ScalarVariable, UpdateOp, Integer), StatementEnd(";")),
+    ExpressionStatement(UpdateExpression(ScalarVariable, UpdateOp, Integer), StatementEnd(";")),
+    ExpressionStatement(UpdateExpression(ScalarVariable, UpdateOp, Integer), StatementEnd(";")),
+    ExpressionStatement(UpdateExpression(ScalarVariable, UpdateOp, Integer), StatementEnd(";")),
+    ExpressionStatement(UpdateExpression(ScalarVariable, UpdateOp, StringSingleQuoted), StatementEnd(";")),
+    ExpressionStatement(UpdateExpression(ScalarVariable, UpdateOp, Integer), StatementEnd(";")),
+    ExpressionStatement(UpdateExpression(ScalarVariable, UpdateOp, Integer), StatementEnd(";")),
+    ExpressionStatement(UpdateExpression(ScalarVariable, UpdateOp, Integer), StatementEnd(";")),
+    ExpressionStatement(UpdateExpression(ScalarVariable, UpdateOp, Integer), StatementEnd(";")),
+    ExpressionStatement(UpdateExpression(ScalarVariable, UpdateOp, Integer), StatementEnd(";")),
+    ExpressionStatement(UpdateExpression(ScalarVariable, UpdateOp, Integer), StatementEnd(";")),
+    ExpressionStatement(UpdateExpression(ScalarVariable, UpdateOp, Integer), StatementEnd(";")),
+    ExpressionStatement(UpdateExpression(ScalarVariable, UpdateOp, Integer), StatementEnd(";")),
+    ExpressionStatement(UpdateExpression(ScalarVariable, UpdateOp, Integer), StatementEnd(";")),
+    ExpressionStatement(UpdateExpression(ScalarVariable, UpdateOp, Integer), StatementEnd(";")),
+    ExpressionStatement(UpdateExpression(ScalarVariable, UpdateOp, Integer), StatementEnd(";")),
+    ExpressionStatement(UpdateExpression(ScalarVariable, x, "=", Integer), StatementEnd(";"))
 )
 
 # variable dereferencing
@@ -92,14 +93,14 @@ ${$var};
 ==>
 
 Program(
-    ExpressionStatement(ScalarDereference("$", ScalarVariable), ";"),
-    ExpressionStatement(ScalarDereference("$", "{", ScalarVariable, "}"), ";"),
-    ExpressionStatement(ArrayDereference("@", ScalarVariable), ";"),
-    ExpressionStatement(ArrayDereference("@" "{", ScalarVariable, "}"), ";"),
-    ExpressionStatement(HashDereference("%", ScalarVariable), ";"),
-    ExpressionStatement(HashDereference("%", "{", ScalarVariable, "}"), ";"),
-    ExpressionStatement(TypeGlobDereference("*", "{", ScalarVariable, "}"), ";"),
-    ExpressionStatement(TypeGlobDereference("*", ScalarVariable), ";"),
+    ExpressionStatement(ScalarDereference("$", ScalarVariable), StatementEnd(";")),
+    ExpressionStatement(ScalarDereference("$", "{", ScalarVariable, "}"), StatementEnd(";")),
+    ExpressionStatement(ArrayDereference("@", ScalarVariable), StatementEnd(";")),
+    ExpressionStatement(ArrayDereference("@" "{", ScalarVariable, "}"), StatementEnd(";")),
+    ExpressionStatement(HashDereference("%", ScalarVariable), StatementEnd(";")),
+    ExpressionStatement(HashDereference("%", "{", ScalarVariable, "}"), StatementEnd(";")),
+    ExpressionStatement(TypeGlobDereference("*", "{", ScalarVariable, "}"), StatementEnd(";")),
+    ExpressionStatement(TypeGlobDereference("*", ScalarVariable), StatementEnd(";")),
     ExpressionStatement(
         FunctionDereference(
             "&",
@@ -107,9 +108,9 @@ Program(
             BinaryExpression(ScalarVariable, ConcatOp, StringDoubleQuoted(InterpolatedStringContent, ScalarVariable)),
             "}"
         ),
-        ";"
+        StatementEnd(";")
     ),
-    ExpressionStatement(FunctionDereference("&", ScalarVariable), ";")
+    ExpressionStatement(FunctionDereference("&", ScalarVariable), StatementEnd(";"))
 )
 
 # hash and array references
@@ -124,11 +125,11 @@ my $var = +{ a => 1, b => 2 };
 Program(
     ExpressionStatement(
         Assignment(VariableDeclaration(my, ScalarVariable), "=", UnaryExpression(RefOp, ArrayVariable)),
-        ";"
+        StatementEnd(";")
     ),
     ExpressionStatement(
         Assignment(VariableDeclaration(my, ScalarVariable), "=", ArrayRef("[", Integer, Comma, Integer, "]")),
-        ";"
+        StatementEnd(";")
     ),
     ExpressionStatement(
         Assignment(
@@ -136,7 +137,7 @@ Program(
             "=",
             HashRef("{", Pair(Identifier, FatComma, Integer), Comma, Pair(Identifier, FatComma, Integer), "}")
         ),
-        ";"
+        StatementEnd(";")
     ),
     ExpressionStatement(
         Assignment(
@@ -144,7 +145,7 @@ Program(
             "=",
             HashRef(ArithOp, "{", Pair(Identifier, FatComma, Integer), Comma, Pair(Identifier, FatComma, Integer), "}")
         ),
-        ";"
+        StatementEnd(";")
     )
 )
 
@@ -166,19 +167,19 @@ $var->{a}->{a};
 ==>
 
 Program(
-    ExpressionStatement(ArrayAccessVariable(ScalarVariable, "[", Integer, "]"), ";"),
+    ExpressionStatement(ArrayAccessVariable(ScalarVariable, "[", Integer, "]"), StatementEnd(";")),
     ExpressionStatement(
         ArrayAccessVariable(ArrayAccessVariable(ScalarVariable, "[", Integer, "]"), "[", Integer, "]"),
-        ";"
+        StatementEnd(";")
     ),
-    ExpressionStatement(ArrayAccessVariable(ScalarVariable, ArrowOperator, "[", Integer, "]"), ";"),
+    ExpressionStatement(ArrayAccessVariable(ScalarVariable, ArrowOperator, "[", Integer, "]"), StatementEnd(";")),
     ExpressionStatement(
         ArrayAccessVariable(ScalarVariable, ArrowOperator, "[", UnaryExpression(ArithOp, Integer), "]"),
-        ";"
+        StatementEnd(";")
     ),
     ExpressionStatement(
         ArrayAccessVariable(ArrayAccessVariable(ScalarVariable, ArrowOperator, "[", Integer, "]"), "[", Integer, "]"),
-        ";"
+        StatementEnd(";")
     ),
     ExpressionStatement(
         ArrayAccessVariable(
@@ -188,15 +189,18 @@ Program(
             Integer,
             "]"
         ),
-        ";"
+        StatementEnd(";")
     ),
-    ExpressionStatement(HashAccessVariable(ScalarVariable, "{", Identifier, "}"), ";"),
+    ExpressionStatement(HashAccessVariable(ScalarVariable, "{", Identifier, "}"), StatementEnd(";")),
     ExpressionStatement(
         HashAccessVariable(HashAccessVariable(ScalarVariable, "{", Identifier, "}"), "{", Identifier, "}"),
-        ";"
+        StatementEnd(";")
     ),
-    ExpressionStatement(HashAccessVariable(ScalarVariable, ArrowOperator, "{", Identifier, "}"), ";"),
-    ExpressionStatement(HashAccessVariable(ScalarVariable, ArrowOperator, "{", StringSingleQuoted, "}"), ";"),
+    ExpressionStatement(HashAccessVariable(ScalarVariable, ArrowOperator, "{", Identifier, "}"), StatementEnd(";")),
+    ExpressionStatement(
+        HashAccessVariable(ScalarVariable, ArrowOperator, "{", StringSingleQuoted, "}"),
+        StatementEnd(";")
+    ),
     ExpressionStatement(
         HashAccessVariable(
             HashAccessVariable(ScalarVariable, ArrowOperator, "{", Identifier, "}"),
@@ -204,7 +208,7 @@ Program(
             Identifier,
             "}"
         ),
-        ";"
+        StatementEnd(";")
     ),
     ExpressionStatement(
         HashAccessVariable(
@@ -214,7 +218,7 @@ Program(
             Identifier,
             "}"
         ),
-        ";"
+        StatementEnd(";")
     )
 )
 
@@ -229,11 +233,11 @@ ${^CHILD_ERROR_NATIVE};
 ==>
 
 Program(
-    ExpressionStatement(SpecialScalarVariable, ";"),
-    ExpressionStatement(SpecialScalarVariable, ";"),
-    ExpressionStatement(SpecialScalarVariable, ";"),
-    ExpressionStatement(SpecialScalarVariable, ";"),
-    ExpressionStatement(SpecialScalarVariable, ";")
+    ExpressionStatement(SpecialScalarVariable, StatementEnd(";")),
+    ExpressionStatement(SpecialScalarVariable, StatementEnd(";")),
+    ExpressionStatement(SpecialScalarVariable, StatementEnd(";")),
+    ExpressionStatement(SpecialScalarVariable, StatementEnd(";")),
+    ExpressionStatement(SpecialScalarVariable, StatementEnd(";"))
 )
 
 # type globs
@@ -248,19 +252,19 @@ local *fh;
 ==>
 
 Program(
-    ExpressionStatement(Assignment(TypeGlob, "=", TypeGlob), ";"),
+    ExpressionStatement(Assignment(TypeGlob, "=", TypeGlob), StatementEnd(";")),
     ExpressionStatement(
         Assignment(
             VariableDeclaration(local, TypeGlob),
             "=",
             UnaryExpression(RefOp, PackageVariable(PackageName(ScalarVariable), "::", PackageVariableName(Identifier)))
         ),
-        ";"
+        StatementEnd(";")
     ),
-    ExpressionStatement(Assignment(ScalarVariable, "=", TypeGlob), ";"),
-    ExpressionStatement(Assignment(ScalarVariable, "=", UnaryExpression(RefOp, TypeGlob)), ";"),
-    ExpressionStatement(VariableDeclaration(local, TypeGlob), ";"),
-    ExpressionStatement(HashAccessVariable(TypeGlob, "{", Identifier, "}"), ";")
+    ExpressionStatement(Assignment(ScalarVariable, "=", TypeGlob), StatementEnd(";")),
+    ExpressionStatement(Assignment(ScalarVariable, "=", UnaryExpression(RefOp, TypeGlob)), StatementEnd(";")),
+    ExpressionStatement(VariableDeclaration(local, TypeGlob), StatementEnd(";")),
+    ExpressionStatement(HashAccessVariable(TypeGlob, "{", Identifier, "}"), StatementEnd(";"))
 )
 
 # package variables
@@ -279,7 +283,7 @@ Program(
             "=",
             StringSingleQuoted
         ),
-        ";"
+        StatementEnd(";")
     ),
     ExpressionStatement(
         Assignment(
@@ -287,7 +291,7 @@ Program(
             "=",
             List("(", Integer, Comma, Integer, Comma, Integer, ")")
         ),
-        ";"
+        StatementEnd(";")
     ),
     ExpressionStatement(
         Assignment(
@@ -295,7 +299,7 @@ Program(
             "=",
             List("(", Pair(Identifier, FatComma, Integer), Comma, Pair(Identifier, FatComma, Integer), ")")
         ),
-        ";"
+        StatementEnd(";")
     ),
     ExpressionStatement(
         Assignment(
@@ -307,6 +311,6 @@ Program(
             "=",
             Integer
         ),
-        ";"
+        StatementEnd(";")
     )
 )

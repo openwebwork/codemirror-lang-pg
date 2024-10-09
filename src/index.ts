@@ -36,7 +36,7 @@ export const pgLanguage = LRLanguage.define({
                 IfStatement: continuedIndent({ except: /^\s*({|else\b|elsif\b)/ }),
                 Block: delimitedIndent({ closing: '}' }),
                 'StringSingleQuoted StringQQuoted StringDoubleQuoted StringQqQuoted': () => null,
-                'InterpolatedHeredocBody UninterpolatedHeredocBody': () => null,
+                'StatementEnd InterpolatedHeredocBody UninterpolatedHeredocBody': () => null,
                 Statement: continuedIndent(),
                 'PGMLBlock PGTextBlock LaTeXImageCode': flatIndent
             }),

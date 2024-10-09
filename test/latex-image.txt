@@ -12,7 +12,7 @@ END_TIKZ
 Program(
     ExpressionStatement(
         Assignment(ScalarVariable, "=", CallExpression(FunctionName(Identifier), ParenthesizedArguments("(", ")"))),
-        ";"
+        StatementEnd(";")
     ),
     LaTeXImageCode(
         ScalarVariable,
@@ -38,7 +38,7 @@ END_LATEX_IMAGE
 Program(
     ExpressionStatement(
         Assignment(ScalarVariable, "=", CallExpression(FunctionName(Identifier), ParenthesizedArguments("(", ")"))),
-        ";"
+        StatementEnd(";")
     ),
     LaTeXImageCode(
         ScalarVariable,

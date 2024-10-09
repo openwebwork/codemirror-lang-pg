@@ -21,25 +21,34 @@ $var--;
 ==>
 
 Program(
-    ExpressionStatement(BinaryExpression(BinaryExpression(Integer, ArithOp, Integer), ArithOp, Integer), ";"),
-    ExpressionStatement(BinaryExpression(BinaryExpression(Integer, ArithOp, Integer), ArithOp, Integer), ";"),
-    ExpressionStatement(BinaryExpression(BinaryExpression(Integer, "*", Integer), "*", Integer), ";"),
-    ExpressionStatement(BinaryExpression(BinaryExpression(Integer, "/", Integer), "/", Integer), ";"),
-    ExpressionStatement(BinaryExpression(BinaryExpression(Integer, "%", Integer), "%", Integer), ";"),
-    ExpressionStatement(BinaryExpression(Integer, ArithOp, BinaryExpression(Integer, ArithOp, Integer)), ";"),
-    ExpressionStatement(BinaryExpression(List("(", Integer, ")"), x, Integer), ";"),
-    ExpressionStatement(BinaryExpression(Integer, ArithOp, BinaryExpression(Integer, "*", Integer)), ";"),
-    ExpressionStatement(BinaryExpression(Integer, ArithOp, BinaryExpression(Integer, "/", Integer)), ";"),
-    ExpressionStatement(UnaryExpression(ArithOp, Integer), ";"),
-    ExpressionStatement(UnaryExpression(ArithOp, Integer), ";"),
-    ExpressionStatement(UnaryExpression(LogicOp, Integer), ";"),
-    ExpressionStatement(UpdateExpression(ArithOp, ScalarVariable), ";"),
-    ExpressionStatement(UpdateExpression(ArithOp, ScalarVariable), ";"),
-    ExpressionStatement(UpdateExpression(ScalarVariable, ArithOp), ";"),
-    ExpressionStatement(UpdateExpression(ScalarVariable, ArithOp), ";"),
+    ExpressionStatement(
+        BinaryExpression(BinaryExpression(Integer, ArithOp, Integer), ArithOp, Integer),
+        StatementEnd(";")
+    ),
+    ExpressionStatement(
+        BinaryExpression(BinaryExpression(Integer, ArithOp, Integer), ArithOp, Integer),
+        StatementEnd(";")
+    ),
+    ExpressionStatement(BinaryExpression(BinaryExpression(Integer, "*", Integer), "*", Integer), StatementEnd(";")),
+    ExpressionStatement(BinaryExpression(BinaryExpression(Integer, "/", Integer), "/", Integer), StatementEnd(";")),
+    ExpressionStatement(BinaryExpression(BinaryExpression(Integer, "%", Integer), "%", Integer), StatementEnd(";")),
+    ExpressionStatement(
+        BinaryExpression(Integer, ArithOp, BinaryExpression(Integer, ArithOp, Integer)),
+        StatementEnd(";")
+    ),
+    ExpressionStatement(BinaryExpression(List("(", Integer, ")"), x, Integer), StatementEnd(";")),
+    ExpressionStatement(BinaryExpression(Integer, ArithOp, BinaryExpression(Integer, "*", Integer)), StatementEnd(";")),
+    ExpressionStatement(BinaryExpression(Integer, ArithOp, BinaryExpression(Integer, "/", Integer)), StatementEnd(";")),
+    ExpressionStatement(UnaryExpression(ArithOp, Integer), StatementEnd(";")),
+    ExpressionStatement(UnaryExpression(ArithOp, Integer), StatementEnd(";")),
+    ExpressionStatement(UnaryExpression(LogicOp, Integer), StatementEnd(";")),
+    ExpressionStatement(UpdateExpression(ArithOp, ScalarVariable), StatementEnd(";")),
+    ExpressionStatement(UpdateExpression(ArithOp, ScalarVariable), StatementEnd(";")),
+    ExpressionStatement(UpdateExpression(ScalarVariable, ArithOp), StatementEnd(";")),
+    ExpressionStatement(UpdateExpression(ScalarVariable, ArithOp), StatementEnd(";")),
     ExpressionStatement(
         BinaryExpression(List("(", BinaryExpression(Float, ArithOp, Float), ")"), "*", Integer),
-        ";"
+        StatementEnd(";")
     )
 )
 
@@ -62,19 +71,19 @@ Program(
 ==>
 
 Program(
-    ExpressionStatement(BinaryExpression(Integer, CompareOp, Integer), ";"),
-    ExpressionStatement(BinaryExpression(Integer, CompareOp, Integer), ";"),
-    ExpressionStatement(BinaryExpression(Integer, CompareOp, Integer), ";"),
-    ExpressionStatement(BinaryExpression(Integer, CompareOp, Integer), ";"),
-    ExpressionStatement(BinaryExpression(StringSingleQuoted, lt, StringSingleQuoted), ";"),
-    ExpressionStatement(BinaryExpression(StringSingleQuoted, gt, StringSingleQuoted), ";"),
-    ExpressionStatement(BinaryExpression(StringSingleQuoted, le, StringSingleQuoted), ";"),
-    ExpressionStatement(BinaryExpression(Integer, CompareOp, Integer), ";"),
-    ExpressionStatement(BinaryExpression(Integer, CompareOp, Integer), ";"),
-    ExpressionStatement(BinaryExpression(Integer, CompareOp, Integer), ";"),
-    ExpressionStatement(BinaryExpression(StringSingleQuoted, eq, StringSingleQuoted), ";"),
-    ExpressionStatement(BinaryExpression(StringSingleQuoted, ne, StringSingleQuoted), ";"),
-    ExpressionStatement(BinaryExpression(StringSingleQuoted, cmp, StringSingleQuoted), ";")
+    ExpressionStatement(BinaryExpression(Integer, CompareOp, Integer), StatementEnd(";")),
+    ExpressionStatement(BinaryExpression(Integer, CompareOp, Integer), StatementEnd(";")),
+    ExpressionStatement(BinaryExpression(Integer, CompareOp, Integer), StatementEnd(";")),
+    ExpressionStatement(BinaryExpression(Integer, CompareOp, Integer), StatementEnd(";")),
+    ExpressionStatement(BinaryExpression(StringSingleQuoted, lt, StringSingleQuoted), StatementEnd(";")),
+    ExpressionStatement(BinaryExpression(StringSingleQuoted, gt, StringSingleQuoted), StatementEnd(";")),
+    ExpressionStatement(BinaryExpression(StringSingleQuoted, le, StringSingleQuoted), StatementEnd(";")),
+    ExpressionStatement(BinaryExpression(Integer, CompareOp, Integer), StatementEnd(";")),
+    ExpressionStatement(BinaryExpression(Integer, CompareOp, Integer), StatementEnd(";")),
+    ExpressionStatement(BinaryExpression(Integer, CompareOp, Integer), StatementEnd(";")),
+    ExpressionStatement(BinaryExpression(StringSingleQuoted, eq, StringSingleQuoted), StatementEnd(";")),
+    ExpressionStatement(BinaryExpression(StringSingleQuoted, ne, StringSingleQuoted), StatementEnd(";")),
+    ExpressionStatement(BinaryExpression(StringSingleQuoted, cmp, StringSingleQuoted), StatementEnd(";"))
 )
 
 # logic operations
@@ -101,57 +110,60 @@ $a or $b or $c;
 ==>
 
 Program(
-    ExpressionStatement(BinaryExpression(ScalarVariable, LogicOp, ScalarVariable), ";"),
-    ExpressionStatement(BinaryExpression(ScalarVariable, LogicOp, ScalarVariable), ";"),
-    ExpressionStatement(BinaryExpression(ScalarVariable, LogicOp, ScalarVariable), ";"),
+    ExpressionStatement(BinaryExpression(ScalarVariable, LogicOp, ScalarVariable), StatementEnd(";")),
+    ExpressionStatement(BinaryExpression(ScalarVariable, LogicOp, ScalarVariable), StatementEnd(";")),
+    ExpressionStatement(BinaryExpression(ScalarVariable, LogicOp, ScalarVariable), StatementEnd(";")),
     ExpressionStatement(
         BinaryExpression(BinaryExpression(ScalarVariable, LogicOp, ScalarVariable), LogicOp, ScalarVariable),
-        ";"
+        StatementEnd(";")
     ),
     ExpressionStatement(
         BinaryExpression(ScalarVariable, LogicOp, BinaryExpression(ScalarVariable, LogicOp, ScalarVariable)),
-        ";"
+        StatementEnd(";")
     ),
     ExpressionStatement(
         BinaryExpression(ScalarVariable, LogicOp, BinaryExpression(ScalarVariable, LogicOp, ScalarVariable)),
-        ";"
+        StatementEnd(";")
     ),
     ExpressionStatement(
         BinaryExpression(BinaryExpression(ScalarVariable, LogicOp, ScalarVariable), LogicOp, ScalarVariable),
-        ";"
+        StatementEnd(";")
     ),
     ExpressionStatement(
         BinaryExpression(BinaryExpression(ScalarVariable, LogicOp, ScalarVariable), LogicOp, ScalarVariable),
-        ";"
+        StatementEnd(";")
     ),
     ExpressionStatement(
         BinaryExpression(BinaryExpression(ScalarVariable, LogicOp, ScalarVariable), LogicOp, ScalarVariable),
-        ";"
+        StatementEnd(";")
     ),
-    ExpressionStatement(BinaryExpression(ScalarVariable, and, ScalarVariable), ";"),
-    ExpressionStatement(BinaryExpression(ScalarVariable, or, ScalarVariable), ";"),
-    ExpressionStatement(BinaryExpression(ScalarVariable, xor, ScalarVariable), ";"),
+    ExpressionStatement(BinaryExpression(ScalarVariable, and, ScalarVariable), StatementEnd(";")),
+    ExpressionStatement(BinaryExpression(ScalarVariable, or, ScalarVariable), StatementEnd(";")),
+    ExpressionStatement(BinaryExpression(ScalarVariable, xor, ScalarVariable), StatementEnd(";")),
     ExpressionStatement(
         BinaryExpression(BinaryExpression(ScalarVariable, and, ScalarVariable), or, ScalarVariable),
-        ";"
+        StatementEnd(";")
     ),
     ExpressionStatement(
         BinaryExpression(ScalarVariable, or, BinaryExpression(ScalarVariable, and, ScalarVariable)),
-        ";"
+        StatementEnd(";")
     ),
     ExpressionStatement(
         BinaryExpression(BinaryExpression(ScalarVariable, and, ScalarVariable), xor, ScalarVariable),
-        ";"
+        StatementEnd(";")
     ),
     ExpressionStatement(
         BinaryExpression(ScalarVariable, xor, BinaryExpression(ScalarVariable, and, ScalarVariable)),
-        ";"
+        StatementEnd(";")
     ),
     ExpressionStatement(
         BinaryExpression(BinaryExpression(ScalarVariable, and, ScalarVariable), and, ScalarVariable),
-        ";"
+        StatementEnd(";")
     ),
-    ExpressionStatement(BinaryExpression(BinaryExpression(ScalarVariable, or, ScalarVariable), or, ScalarVariable), ";")
+    ExpressionStatement(
+        BinaryExpression(BinaryExpression(ScalarVariable, or, ScalarVariable), or, ScalarVariable),
+        StatementEnd(";")
+    )
 )
 
 # bitwise operations
@@ -171,15 +183,27 @@ Program(
 ==>
 
 Program(
-    ExpressionStatement(BinaryExpression(Integer, BitOp, Integer), ";"),
-    ExpressionStatement(BinaryExpression(Integer, BitOp("&"), Integer), ";"),
-    ExpressionStatement(BinaryExpression(Integer, BitOp, Integer), ";"),
-    ExpressionStatement(BinaryExpression(Integer, BitOp, Integer), ";"),
-    ExpressionStatement(BinaryExpression(Integer, "<<", Integer), ";"),
-    ExpressionStatement(BinaryExpression(BinaryExpression(Integer, BitOp("&"), Integer), BitOp, Integer), ";"),
-    ExpressionStatement(BinaryExpression(Integer, BitOp, BinaryExpression(Integer, BitOp("&"), Integer)), ";"),
-    ExpressionStatement(BinaryExpression(BinaryExpression(Integer, BitOp("&"), Integer), BitOp, Integer), ";"),
-    ExpressionStatement(BinaryExpression(Integer, BitOp, BinaryExpression(Integer, BitOp("&"), Integer)), ";"),
-    ExpressionStatement(BinaryExpression(BinaryExpression(Integer, BitOp, Integer), BitOp, Integer), ";"),
-    ExpressionStatement(BinaryExpression(BinaryExpression(Integer, BitOp, Integer), BitOp, Integer), ";")
+    ExpressionStatement(BinaryExpression(Integer, BitOp, Integer), StatementEnd(";")),
+    ExpressionStatement(BinaryExpression(Integer, BitOp("&"), Integer), StatementEnd(";")),
+    ExpressionStatement(BinaryExpression(Integer, BitOp, Integer), StatementEnd(";")),
+    ExpressionStatement(BinaryExpression(Integer, BitOp, Integer), StatementEnd(";")),
+    ExpressionStatement(BinaryExpression(Integer, "<<", Integer), StatementEnd(";")),
+    ExpressionStatement(
+        BinaryExpression(BinaryExpression(Integer, BitOp("&"), Integer), BitOp, Integer),
+        StatementEnd(";")
+    ),
+    ExpressionStatement(
+        BinaryExpression(Integer, BitOp, BinaryExpression(Integer, BitOp("&"), Integer)),
+        StatementEnd(";")
+    ),
+    ExpressionStatement(
+        BinaryExpression(BinaryExpression(Integer, BitOp("&"), Integer), BitOp, Integer),
+        StatementEnd(";")
+    ),
+    ExpressionStatement(
+        BinaryExpression(Integer, BitOp, BinaryExpression(Integer, BitOp("&"), Integer)),
+        StatementEnd(";")
+    ),
+    ExpressionStatement(BinaryExpression(BinaryExpression(Integer, BitOp, Integer), BitOp, Integer), StatementEnd(";")),
+    ExpressionStatement(BinaryExpression(BinaryExpression(Integer, BitOp, Integer), BitOp, Integer), StatementEnd(";"))
 )

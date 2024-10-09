@@ -13,10 +13,10 @@
 ==>
 
 Program(
-    ExpressionStatement(StringDoubleQuoted(InterpolatedStringContent, ScalarVariable), ";"),
+    ExpressionStatement(StringDoubleQuoted(InterpolatedStringContent, ScalarVariable), StatementEnd(";")),
     ExpressionStatement(
         StringDoubleQuoted(InterpolatedStringContent, ArrayAccessVariable(ScalarVariable, "[", Integer, "]")),
-        ";"
+        StatementEnd(";")
     ),
     ExpressionStatement(
         StringDoubleQuoted(
@@ -40,11 +40,11 @@ Program(
                 "]"
             )
         ),
-        ";"
+        StatementEnd(";")
     ),
     ExpressionStatement(
         StringDoubleQuoted(InterpolatedStringContent, HashAccessVariable(ScalarVariable, "{", Identifier, "}")),
-        ";"
+        StatementEnd(";")
     ),
     ExpressionStatement(
         StringDoubleQuoted(
@@ -66,7 +66,7 @@ Program(
                 "}"
             )
         ),
-        ";"
+        StatementEnd(";")
     ),
     ExpressionStatement(
         StringDoubleQuoted(
@@ -101,7 +101,7 @@ Program(
                 "}"
             )
         ),
-        ";"
+        StatementEnd(";")
     ),
     ExpressionStatement(
         StringDoubleQuoted(
@@ -113,7 +113,7 @@ Program(
                 "}"
             )
         ),
-        ";"
+        StatementEnd(";")
     ),
     ExpressionStatement(
         StringDoubleQuoted(
@@ -125,14 +125,14 @@ Program(
                 "}"
             )
         ),
-        ";"
+        StatementEnd(";")
     ),
     ExpressionStatement(
         StringDoubleQuoted(
             InterpolatedStringContent,
             PackageVariable(PackageName(ScalarVariable, "::", Identifier), "::", PackageVariableName(Identifier))
         ),
-        ";"
+        StatementEnd(";")
     )
 )
 
@@ -150,14 +150,29 @@ q # this is a comment
 ==>
 
 Program(
-    ExpressionStatement(StringQQuoted(q, QuoteLikeStartDelimiter, StringContent, QuoteLikeEndDelimiter), ";"),
-    ExpressionStatement(StringQQuoted(q, QuoteLikeStartDelimiter, StringContent, QuoteLikeEndDelimiter), ";"),
-    ExpressionStatement(StringQQuoted(q, QuoteLikeStartDelimiter, StringContent, QuoteLikeEndDelimiter), ";"),
-    ExpressionStatement(StringQQuoted(q, QuoteLikeStartDelimiter, StringContent, QuoteLikeEndDelimiter), ";"),
-    ExpressionStatement(StringQQuoted(q, QuoteLikeStartDelimiter, StringContent, QuoteLikeEndDelimiter), ";"),
+    ExpressionStatement(
+        StringQQuoted(q, QuoteLikeStartDelimiter, StringContent, QuoteLikeEndDelimiter),
+        StatementEnd(";")
+    ),
+    ExpressionStatement(
+        StringQQuoted(q, QuoteLikeStartDelimiter, StringContent, QuoteLikeEndDelimiter),
+        StatementEnd(";")
+    ),
+    ExpressionStatement(
+        StringQQuoted(q, QuoteLikeStartDelimiter, StringContent, QuoteLikeEndDelimiter),
+        StatementEnd(";")
+    ),
+    ExpressionStatement(
+        StringQQuoted(q, QuoteLikeStartDelimiter, StringContent, QuoteLikeEndDelimiter),
+        StatementEnd(";")
+    ),
+    ExpressionStatement(
+        StringQQuoted(q, QuoteLikeStartDelimiter, StringContent, QuoteLikeEndDelimiter),
+        StatementEnd(";")
+    ),
     ExpressionStatement(
         StringQQuoted(q, Comment, Comment, QuoteLikeStartDelimiter, StringContent, QuoteLikeEndDelimiter),
-        ";"
+        StatementEnd(";")
     )
 )
 
@@ -180,7 +195,7 @@ qq # Comment
 Program(
     ExpressionStatement(
         StringQqQuoted(qq, QuoteLikeStartDelimiter, InterpolatedStringContent, ScalarVariable, QuoteLikeEndDelimiter),
-        ";"
+        StatementEnd(";")
     ),
     ExpressionStatement(
         StringQqQuoted(
@@ -190,7 +205,7 @@ Program(
             ArrayAccessVariable(ScalarVariable, "[", Integer, "]"),
             QuoteLikeEndDelimiter
         ),
-        ";"
+        StatementEnd(";")
     ),
     ExpressionStatement(
         StringQqQuoted(
@@ -200,7 +215,7 @@ Program(
             ArrayAccessVariable(ScalarVariable, ArrowOperator, "[", ArithOp, Integer, "]"),
             QuoteLikeEndDelimiter
         ),
-        ";"
+        StatementEnd(";")
     ),
     ExpressionStatement(
         StringQqQuoted(
@@ -210,7 +225,7 @@ Program(
             HashAccessVariable(ScalarVariable, "{", Identifier, "}"),
             QuoteLikeEndDelimiter
         ),
-        ";"
+        StatementEnd(";")
     ),
     ExpressionStatement(
         StringQqQuoted(
@@ -221,7 +236,7 @@ Program(
             InterpolatedStringContent,
             QuoteLikeEndDelimiter
         ),
-        ";"
+        StatementEnd(";")
     ),
     ExpressionStatement(
         StringQqQuoted(
@@ -236,7 +251,7 @@ Program(
             ),
             QuoteLikeEndDelimiter
         ),
-        ";"
+        StatementEnd(";")
     ),
     ExpressionStatement(
         StringQqQuoted(
@@ -251,11 +266,11 @@ Program(
             ),
             QuoteLikeEndDelimiter
         ),
-        ";"
+        StatementEnd(";")
     ),
     ExpressionStatement(
         StringQqQuoted(qq, QuoteLikeStartDelimiter, InterpolatedStringContent, QuoteLikeEndDelimiter),
-        ";"
+        StatementEnd(";")
     ),
     ExpressionStatement(
         StringQqQuoted(
@@ -268,7 +283,7 @@ Program(
             InterpolatedStringContent,
             QuoteLikeEndDelimiter
         ),
-        ";"
+        StatementEnd(";")
     )
 )
 
@@ -288,15 +303,15 @@ qw  # this is a comment
 Program(
     ExpressionStatement(
         QWList(qw, QWListContent(QuoteLikeStartDelimiter, QWElement, QWElement, QWElement, QuoteLikeEndDelimiter)),
-        ";"
+        StatementEnd(";")
     ),
     ExpressionStatement(
         QWList(qw, QWListContent(QuoteLikeStartDelimiter, QWElement, QWElement, QWElement, QuoteLikeEndDelimiter)),
-        ";"
+        StatementEnd(";")
     ),
     ExpressionStatement(
         QWList(qw, QWListContent(QuoteLikeStartDelimiter, QWElement, QWElement, QWElement, QuoteLikeEndDelimiter)),
-        ";"
+        StatementEnd(";")
     ),
     ExpressionStatement(
         QWList(
@@ -311,11 +326,11 @@ Program(
                 QuoteLikeEndDelimiter
             )
         ),
-        ";"
+        StatementEnd(";")
     ),
     ExpressionStatement(
         QWList(qw, QWListContent(QuoteLikeStartDelimiter, QWElement, QWElement, QWElement, QuoteLikeEndDelimiter)),
-        ";"
+        StatementEnd(";")
     ),
     ExpressionStatement(
         QWList(
@@ -324,7 +339,7 @@ Program(
             Comment,
             QWListContent(QuoteLikeStartDelimiter, QWElement, QWElement, QWElement, QuoteLikeEndDelimiter)
         ),
-        ";"
+        StatementEnd(";")
     )
 )
 
@@ -353,15 +368,15 @@ Program(
             QuoteLikeEndDelimiter,
             RegexOptions
         ),
-        ";"
+        StatementEnd(";")
     ),
     ExpressionStatement(
         PatternMatchM(m, QuoteLikeStartDelimiter, StringContent, QuoteLikeEndDelimiter, RegexOptions),
-        ";"
+        StatementEnd(";")
     ),
     ExpressionStatement(
         PatternMatchM(m, Comment, QuoteLikeStartDelimiter, StringContent, QuoteLikeEndDelimiter, RegexOptions),
-        ";"
+        StatementEnd(";")
     ),
     ExpressionStatement(
         BinaryExpression(
@@ -369,23 +384,23 @@ Program(
             BindingOp,
             PatternMatch("/", InterpolatedStringContent, EscapeSequence, InterpolatedStringContent, "/")
         ),
-        ";"
+        StatementEnd(";")
     ),
     ExpressionStatement(
         BinaryExpression(ScalarVariable, BindingOp, PatternMatch("/", InterpolatedStringContent, "/", RegexOptions)),
-        ";"
+        StatementEnd(";")
     ),
     ExpressionStatement(
         BinaryExpression(ScalarVariable, BindingOp, PatternMatch("/", EscapeSequence, "/", RegexOptions)),
-        ";"
+        StatementEnd(";")
     ),
     ExpressionStatement(
         PatternMatchM(m, QuoteLikeStartDelimiter, EscapeSequence, QuoteLikeEndDelimiter, RegexOptions),
-        ";"
+        StatementEnd(";")
     ),
     ExpressionStatement(
         PatternMatch("/", InterpolatedStringContent, ScalarVariable, InterpolatedStringContent, "/"),
-        ";"
+        StatementEnd(";")
     )
 )
 
@@ -401,12 +416,15 @@ qr # comment
 Program(
     ExpressionStatement(
         RegexQr(qr, QuoteLikeStartDelimiter, InterpolatedStringContent, QuoteLikeEndDelimiter, RegexOptions),
-        ";"
+        StatementEnd(";")
     ),
-    ExpressionStatement(RegexQr(qr, QuoteLikeStartDelimiter, StringContent, QuoteLikeEndDelimiter, RegexOptions), ";"),
+    ExpressionStatement(
+        RegexQr(qr, QuoteLikeStartDelimiter, StringContent, QuoteLikeEndDelimiter, RegexOptions),
+        StatementEnd(";")
+    ),
     ExpressionStatement(
         RegexQr(qr, Comment, QuoteLikeStartDelimiter, StringContent, QuoteLikeEndDelimiter, RegexOptions),
-        ";"
+        StatementEnd(";")
     )
 )
 
@@ -437,7 +455,7 @@ Program(
             EscapeSequence,
             QuoteLikeEndDelimiter
         ),
-        ";"
+        StatementEnd(";")
     ),
     ExpressionStatement(
         SubstitutionS(
@@ -449,7 +467,7 @@ Program(
             QuoteLikeEndDelimiter,
             RegexOptions
         ),
-        ";"
+        StatementEnd(";")
     ),
     ExpressionStatement(
         SubstitutionS(
@@ -460,7 +478,7 @@ Program(
             StringContent,
             QuoteLikeEndDelimiter
         ),
-        ";"
+        StatementEnd(";")
     ),
     ExpressionStatement(
         SubstitutionS(
@@ -473,7 +491,7 @@ Program(
             QuoteLikeEndDelimiter,
             RegexOptions
         ),
-        ";"
+        StatementEnd(";")
     ),
     ExpressionStatement(
         SubstitutionS(
@@ -490,7 +508,7 @@ Program(
             QuoteLikeEndDelimiter,
             RegexOptions
         ),
-        ";"
+        StatementEnd(";")
     )
 )
 
@@ -522,7 +540,7 @@ Program(
             StringContent,
             QuoteLikeEndDelimiter
         ),
-        ";"
+        StatementEnd(";")
     ),
     ExpressionStatement(
         TransliterationTrOrY(
@@ -533,7 +551,7 @@ Program(
             StringContent,
             QuoteLikeEndDelimiter
         ),
-        ";"
+        StatementEnd(";")
     ),
     ExpressionStatement(
         TransliterationTrOrY(
@@ -550,7 +568,7 @@ Program(
             QuoteLikeEndDelimiter,
             RegexOptions
         ),
-        ";"
+        StatementEnd(";")
     ),
     ExpressionStatement(
         TransliterationTrOrY(
@@ -567,7 +585,7 @@ Program(
             QuoteLikeEndDelimiter,
             RegexOptions
         ),
-        ";"
+        StatementEnd(";")
     )
 )
 
@@ -642,6 +660,6 @@ Program(
             InterpolatedStringContent,
             QuoteLikeEndDelimiter
         ),
-        ";"
+        StatementEnd(";")
     )
 )

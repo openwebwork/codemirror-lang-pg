@@ -15,7 +15,7 @@ Program(
             LogicOp,
             BinaryExpression(ScalarVariable, CompareOp, Integer)
         ),
-        ";"
+        StatementEnd(";")
     ),
     ExpressionStatement(
         Assignment(
@@ -26,10 +26,10 @@ Program(
                 Pair(Identifier, FatComma, BinaryExpression(NoArgumentNamedUnaryOperator(time), ArithOp, Integer)),
                 Comma,
                 Pair(Identifier, FatComma, Integer),
-                "}"
+               "}"
             )
         ),
-        ";"
+        StatementEnd(";")
     ),
     ExpressionStatement(
         Assignment(
@@ -42,7 +42,7 @@ Program(
                 ParenthesizedArguments("(", ScalarVariable, ")")
             )
         ),
-        ";"
+        StatementEnd(";")
     ),
     SingleLineStatement(
         ListOperatorExpression(ListOperator, Arguments(ScalarVariable)),
@@ -54,7 +54,7 @@ Program(
                 ArrayVariable
             )
         ),
-        ";"
+        StatementEnd(";")
     ),
     EmptyStatement(";")
 )

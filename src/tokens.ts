@@ -4,6 +4,7 @@ import { namedUnaryOperators, listOperators } from './perl-operators';
 import { pgOperators } from './pg-variables';
 import {
     automaticSemicolon,
+    statementEnd,
     UnrestrictedIdentifier,
     SpecialScalarVariable,
     NamedUnaryOperator,
@@ -337,7 +338,18 @@ export const contextTracker = new ContextTracker<Context>({
 });
 
 export const semicolon = new ExternalTokenizer((input, stack) => {
-    if (stack.canShift(automaticSemicolon) && input.next != 59 /* ; */ && (input.next < 0 || input.next == 125) /* } */)
+    if (
+        stack.canShift(statementEnd) &&
+        !heredocQueue.length &&
+        (input.peek(-1) == 59 /* ; */ ||
+            (input.peek(-1) != 59 /* ; */ && (input.next < 0 || input.next == 10))) /* \n */
+    ) {
+        input.acceptToken(statementEnd, 0);
+    } else if (
+        stack.canShift(automaticSemicolon) &&
+        input.next != 59 /* ; */ &&
+        (input.next < 0 || input.next == 125) /* } */
+    )
         input.acceptToken(automaticSemicolon);
 });
 

@@ -16,7 +16,7 @@ Program(
                 ArrayVariable
             )
         ),
-        ";"
+        StatementEnd(";")
     ),
     ExpressionStatement(
         Assignment(
@@ -28,7 +28,7 @@ Program(
                 ArrayVariable
             )
         ),
-        ";"
+        StatementEnd(";")
     )
 )
 
@@ -52,41 +52,41 @@ Program(
             FunctionName(Identifier),
             ParenthesizedArguments("(", ScalarVariable, Comma, ScalarVariable, ")")
         ),
-        ";"
+        StatementEnd(";")
     ),
-    ExpressionStatement(CallExpression(FunctionName(Identifier), ParenthesizedArguments("(", ")")), ";"),
+    ExpressionStatement(CallExpression(FunctionName(Identifier), ParenthesizedArguments("(", ")")), StatementEnd(";")),
     ExpressionStatement(
         CallExpression(
             FunctionName(PackageName(Identifier, "::", Identifier, "::", Identifier)),
             ParenthesizedArguments("(", Integer, ")")
         ),
-        ";"
+        StatementEnd(";")
     ),
     ExpressionStatement(
         CallExpression(FunctionName("&", Identifier), ParenthesizedArguments("(", Integer, Comma, Integer, ")")),
-        ";"
+        StatementEnd(";")
     ),
-    ExpressionStatement(CallExpressionWithBareword(FunctionName("&", Identifier)), ";"),
+    ExpressionStatement(CallExpressionWithBareword(FunctionName("&", Identifier)), StatementEnd(";")),
     ExpressionStatement(
         ListOperatorExpression(
             grep,
             Arguments(BinaryExpression(ScalarVariable, eq, StringSingleQuoted), Comma, ArrayVariable)
         ),
-        ";"
+        StatementEnd(";")
     ),
 	ExpressionStatement(
         EvalExpression(
             Eval,
             Block("{", ExpressionStatement(ListOperatorExpression(ListOperator, Arguments(StringSingleQuoted))), "}")
         ),
-        ";"
+        StatementEnd(";")
     ),
-    ExpressionStatement(EvalExpression(Eval, StringDoubleQuoted(InterpolatedStringContent)), ";"),
+    ExpressionStatement(EvalExpression(Eval, StringDoubleQuoted(InterpolatedStringContent)), StatementEnd(";")),
     SingleLineStatement(
         DoExpression(do, Block("{", ExpressionStatement(UpdateExpression(ScalarVariable, UpdateOp, Integer)), "}")),
         until,
         Arguments(BinaryExpression(ScalarVariable, CompareOp, Integer)),
-        ";"
+        StatementEnd(";")
     )
 )
 
@@ -112,15 +112,15 @@ Program(
                             "=",
                             ArrayVariable
                         ),
-                        ";"
+                        StatementEnd(";")
                     ),
                     ReturnExpression(return, BinaryExpression(ScalarVariable, ArithOp, ScalarVariable)),
-                    ";",
+                    StatementEnd(";"),
                     "}"
                 )
             )
         ),
-        ";"
+        StatementEnd(";")
     ),
     ExpressionStatement(
         Assignment(
@@ -137,15 +137,15 @@ Program(
                             "=",
                             ArrayVariable
                         ),
-                        ";"
+                        StatementEnd(";")
                     ),
                     ReturnExpression(return, BinaryExpression(ScalarVariable, ArithOp, ScalarVariable)),
-                    ";",
+                    StatementEnd(";"),
                     "}"
                 )
             )
         ),
-        ";"
+        StatementEnd(";")
     )
 )
 
@@ -171,7 +171,7 @@ Program(
                 ParenthesizedArguments("(", ScalarVariable, Comma, ScalarVariable, ")")
             )
         ),
-        ";"
+        StatementEnd(";")
     ),
     ExpressionStatement(
         Assignment(
@@ -179,7 +179,7 @@ Program(
             "=",
             MethodInvocation(PackageName(Identifier, "::", Identifier), ArrowOperator, FunctionName(Identifier))
         ),
-        ";"
+        StatementEnd(";")
     ),
     ExpressionStatement(
         Assignment(
@@ -192,7 +192,7 @@ Program(
                 ParenthesizedArguments("(", Integer, ")")
             )
         ),
-        ";"
+        StatementEnd(";")
     ),
     ExpressionStatement(
         MethodInvocation(
@@ -201,7 +201,7 @@ Program(
             FunctionName(Identifier),
             ParenthesizedArguments("(", StringSingleQuoted, ")")
         ),
-        ";"
+        StatementEnd(";")
     ),
     ExpressionStatement(
         MethodInvocation(
@@ -209,7 +209,7 @@ Program(
             ArrowOperator,
             ParenthesizedArguments("(", ScalarVariable, Comma, ArrayVariable, ")")
         ),
-        ";"
+        StatementEnd(";")
     )
 )
 
@@ -233,7 +233,7 @@ Program(
                 ParenthesizedArguments("(", ScalarVariable, Comma, ScalarVariable, ")")
             )
         ),
-        ";"
+        StatementEnd(";")
     ),
     ExpressionStatement(
         Assignment(
@@ -241,7 +241,7 @@ Program(
             "=",
             IndirectMethodInvocation(FunctionName(Identifier), PackageName(Identifier, "::", Identifier))
         ),
-        ";"
+        StatementEnd(";")
     ),
     ExpressionStatement(
         Assignment(
@@ -253,7 +253,7 @@ Program(
                 ParenthesizedArguments("(", Integer, ")")
             )
         ),
-        ";"
+        StatementEnd(";")
     ),
     ExpressionStatement(
         IndirectMethodInvocation(
@@ -261,7 +261,7 @@ Program(
             ScalarVariable,
             ParenthesizedArguments("(", StringSingleQuoted, ")")
         ),
-        ";"
+        StatementEnd(";")
     )
 )
 
@@ -286,14 +286,17 @@ pop;
 Program(
     ExpressionStatement(
         ArrayModifierFunction(push, "(", ArrayVariable, Comma, Arguments(Integer, Comma, Integer, Comma, Integer), ")"),
-        ";"
+        StatementEnd(";")
     ),
     ExpressionStatement(
         ArrayModifierFunction(push, ArrayVariable, Comma, Arguments(Integer, Comma, Integer, Comma, Integer)),
-        ";"
+        StatementEnd(";")
     ),
-    ExpressionStatement(ArrayModifierFunction(unshift, ArrayVariable, Comma, Arguments(Integer)), ";"),
-    ExpressionStatement(ArrayModifierFunction(unshift, "(", ArrayVariable, Comma, Arguments(Integer), ")"), ";"),
+    ExpressionStatement(ArrayModifierFunction(unshift, ArrayVariable, Comma, Arguments(Integer)), StatementEnd(";")),
+    ExpressionStatement(
+        ArrayModifierFunction(unshift, "(", ArrayVariable, Comma, Arguments(Integer), ")"),
+        StatementEnd(";")
+    ),
     ExpressionStatement(
         ArrayModifierFunction(
             push,
@@ -303,7 +306,7 @@ Program(
             Arguments(Integer, Comma, Integer, Comma, Integer),
             ")"
         ),
-        ";"
+        StatementEnd(";")
     ),
     ExpressionStatement(
         HashOrArrayDestructureFunction(
@@ -315,15 +318,15 @@ Program(
                 "}"
             )
         ),
-        ";"
+        StatementEnd(";")
     ),
-    ExpressionStatement(HashOrArrayDestructureFunction(values, HashVariable), ";"),
-    ExpressionStatement(HashOrArrayDestructureFunction(each, ArrayVariable), ";"),
-    ExpressionStatement(ListOperatorExpression(ListOperator, Arguments(ArrayVariable)), ";"),
-    ExpressionStatement(ArrayPopOrShift(shift, ArrayVariable), ";"),
-    ExpressionStatement(ArrayPopOrShift(shift), ";"),
-    ExpressionStatement(ArrayPopOrShift(pop, ArrayVariable), ";"),
-    ExpressionStatement(ArrayPopOrShift(pop), ";")
+    ExpressionStatement(HashOrArrayDestructureFunction(values, HashVariable), StatementEnd(";")),
+    ExpressionStatement(HashOrArrayDestructureFunction(each, ArrayVariable), StatementEnd(";")),
+    ExpressionStatement(ListOperatorExpression(ListOperator, Arguments(ArrayVariable)), StatementEnd(";")),
+    ExpressionStatement(ArrayPopOrShift(shift, ArrayVariable), StatementEnd(";")),
+    ExpressionStatement(ArrayPopOrShift(shift), StatementEnd(";")),
+    ExpressionStatement(ArrayPopOrShift(pop, ArrayVariable), StatementEnd(";")),
+    ExpressionStatement(ArrayPopOrShift(pop), StatementEnd(";"))
 )
 
 # named unary operators
@@ -346,7 +349,7 @@ Program(
                 "}"
             )
         ),
-        ";"
+        StatementEnd(";")
     ),
     ExpressionStatement(
         NamedUnaryExpression(
@@ -359,7 +362,7 @@ Program(
                 "]"
             )
         ),
-        ";"
+        StatementEnd(";")
     ),
     ExpressionStatement(
         BinaryExpression(
@@ -367,7 +370,7 @@ Program(
             LogicOp,
             BinaryExpression(ScalarVariable, CompareOp, Integer)
         ),
-        ";"
+        StatementEnd(";")
     )
 )
 
@@ -387,7 +390,10 @@ Program(
         FunctionName(Identifier),
         Block(
             "{",
-            ExpressionStatement(Assignment(VariableDeclaration(my, ScalarVariable), "=", ArrayPopOrShift(shift)), ";"),
+            ExpressionStatement(
+                Assignment(VariableDeclaration(my, ScalarVariable), "=", ArrayPopOrShift(shift)),
+                StatementEnd(";")
+            ),
             SingleLineStatement(
                 ReturnExpression(return, Integer),
                 if,
@@ -398,7 +404,7 @@ Program(
                         BinaryExpression(ScalarVariable, CompareOp, Integer)
                     )
                 ),
-                ";"
+                StatementEnd(";")
             ),
             ReturnExpression(
                 return,
@@ -411,7 +417,7 @@ Program(
                     )
                 )
             ),
-            ";",
+            StatementEnd(";"),
             "}"
         )
     )

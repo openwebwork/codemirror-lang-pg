@@ -1,4 +1,5 @@
 export declare const automaticSemicolon: number,
+    statementEnd: number,
     UnrestrictedIdentifier: number,
     SpecialScalarVariable: number,
     NamedUnaryOperator: number,
