@@ -80,50 +80,53 @@ END_TEXT
     ]
 }
 
-# variable substitution
+# perl interpolation
 
 BEGIN_TEXT
-Line one
-$PAR
-Variable $a
+Basic variable $a
 ${ PAR }
-End line
+Array access $array[1]
+Hash access $hash{a}
+Array dereference with variable index $arrayRef->[$i]
+Hash dereference $hashRef->{a}
+Dereferenced scalar reference ${~~(join('', @array))}
 END_TEXT
 
 ==>
 
+
 {
     "name": "Program",
     "from": 0,
-    "to": 63,
+    "to": 229,
     "children": [
         {
             "name": "PGTextBlock",
             "from": 0,
-            "to": 63,
+            "to": 229,
             "children": [
                 { "name": "BeginPG", "from": 0, "to": 10 },
                 {
                     "name": "PGTextContent",
                     "from": 10,
-                    "to": 55,
+                    "to": 221,
                     "children": [
                         {
-                            "name": "Variable",
-                            "from": 20,
-                            "to": 24,
+                            "name": "PerlInterpolation",
+                            "from": 26,
+                            "to": 28,
                             "children": [
                                 {
                                     "name": "Program",
-                                    "from": 20,
-                                    "to": 24,
+                                    "from": 26,
+                                    "to": 28,
                                     "children": [
                                         {
                                             "name": "ExpressionStatement",
-                                            "from": 20,
-                                            "to": 24,
+                                            "from": 26,
+                                            "to": 28,
                                             "children": [
-                                                { "name": "PGVariable", "from": 20, "to": 24 }
+                                                { "name": "ScalarVariable", "from": 26, "to": 28 }
                                             ]
                                         }
                                     ]
@@ -131,21 +134,21 @@ END_TEXT
                             ]
                         },
                         {
-                            "name": "Variable",
-                            "from": 34,
-                            "to": 36,
+                            "name": "PerlInterpolation",
+                            "from": 29,
+                            "to": 37,
                             "children": [
                                 {
                                     "name": "Program",
-                                    "from": 34,
-                                    "to": 36,
+                                    "from": 29,
+                                    "to": 37,
                                     "children": [
                                         {
                                             "name": "ExpressionStatement",
-                                            "from": 34,
-                                            "to": 36,
+                                            "from": 29,
+                                            "to": 37,
                                             "children": [
-                                                { "name": "ScalarVariable", "from": 34, "to": 36 }
+                                                { "name": "PGVariable", "from": 29, "to": 37 }
                                             ]
                                         }
                                     ]
@@ -153,21 +156,219 @@ END_TEXT
                             ]
                         },
                         {
-                            "name": "Variable",
-                            "from": 37,
-                            "to": 45,
+                            "name": "PerlInterpolation",
+                            "from": 51,
+                            "to": 60,
                             "children": [
                                 {
                                     "name": "Program",
-                                    "from": 37,
-                                    "to": 45,
+                                    "from": 51,
+                                    "to": 60,
                                     "children": [
                                         {
                                             "name": "ExpressionStatement",
-                                            "from": 37,
-                                            "to": 45,
+                                            "from": 51,
+                                            "to": 60,
                                             "children": [
-                                                { "name": "PGVariable", "from": 37, "to": 45 }
+                                                {
+                                                    "name": "ArrayAccessVariable",
+                                                    "from": 51,
+                                                    "to": 60,
+                                                    "children": [
+                                                        { "name": "ScalarVariable", "from": 51, "to": 57 },
+                                                        { "name": "[", "from": 57, "to": 58 },
+                                                        { "name": "Integer", "from": 58, "to": 59 },
+                                                        { "name": "]", "from": 59, "to": 60 }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "name": "PerlInterpolation",
+                            "from": 73,
+                            "to": 81,
+                            "children": [
+                                {
+                                    "name": "Program",
+                                    "from": 73,
+                                    "to": 81,
+                                    "children": [
+                                        {
+                                            "name": "ExpressionStatement",
+                                            "from": 73,
+                                            "to": 81,
+                                            "children": [
+                                                {
+                                                    "name": "HashAccessVariable",
+                                                    "from": 73,
+                                                    "to": 81,
+                                                    "children": [
+                                                        { "name": "ScalarVariable", "from": 73, "to": 78 },
+                                                        { "name": "{", "from": 78, "to": 79 },
+                                                        { "name": "Identifier", "from": 79, "to": 80 },
+                                                        { "name": "}", "from": 80, "to": 81 }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "name": "PerlInterpolation",
+                            "from": 120,
+                            "to": 135,
+                            "children": [
+                                {
+                                    "name": "Program",
+                                    "from": 120,
+                                    "to": 135,
+                                    "children": [
+                                        {
+                                            "name": "ExpressionStatement",
+                                            "from": 120,
+                                            "to": 135,
+                                            "children": [
+                                                {
+                                                    "name": "ArrayAccessVariable",
+                                                    "from": 120,
+                                                    "to": 135,
+                                                    "children": [
+                                                        { "name": "ScalarVariable", "from": 120, "to": 129 },
+                                                        { "name": "ArrowOperator", "from": 129, "to": 131 },
+                                                        { "name": "[", "from": 131, "to": 132 },
+                                                        { "name": "ScalarVariable", "from": 132, "to": 134 },
+                                                        { "name": "]", "from": 134, "to": 135 }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "name": "PerlInterpolation",
+                            "from": 132,
+                            "to": 134,
+                            "children": [
+                                {
+                                    "name": "Program",
+                                    "from": 132,
+                                    "to": 134,
+                                    "children": [
+                                        {
+                                            "name": "ExpressionStatement",
+                                            "from": 132,
+                                            "to": 134,
+                                            "children": [
+                                                { "name": "ScalarVariable", "from": 132, "to": 134 }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "name": "PerlInterpolation",
+                            "from": 153,
+                            "to": 166,
+                            "children": [
+                                {
+                                    "name": "Program",
+                                    "from": 153,
+                                    "to": 166,
+                                    "children": [
+                                        {
+                                            "name": "ExpressionStatement",
+                                            "from": 153,
+                                            "to": 166,
+                                            "children": [
+                                                {
+                                                    "name": "HashAccessVariable",
+                                                    "from": 153,
+                                                    "to": 166,
+                                                    "children": [
+                                                        { "name": "ScalarVariable", "from": 153, "to": 161 },
+                                                        { "name": "ArrowOperator", "from": 161, "to": 163 },
+                                                        { "name": "{", "from": 163, "to": 164 },
+                                                        { "name": "Identifier", "from": 164, "to": 165 },
+                                                        { "name": "}", "from": 165, "to": 166 }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "name": "PerlInterpolation",
+                            "from": 197,
+                            "to": 220,
+                            "children": [
+                                {
+                                    "name": "Program",
+                                    "from": 197,
+                                    "to": 220,
+                                    "children": [
+                                        {
+                                            "name": "ExpressionStatement",
+                                            "from": 197,
+                                            "to": 220,
+                                            "children": [
+                                                {
+                                                    "name": "ScalarDereference",
+                                                    "from": 197,
+                                                    "to": 220,
+                                                    "children": [
+                                                        { "name": "$", "from": 197, "to": 198 },
+                                                        { "name": "{", "from": 198, "to": 199 },
+                                                        {
+                                                            "name": "UnaryExpression",
+                                                            "from": 199,
+                                                            "to": 219,
+                                                            "children": [
+                                                                { "name": "RefOp", "from": 199, "to": 201 },
+                                                                {
+                                                                    "name": "List",
+                                                                    "from": 201,
+                                                                    "to": 219,
+                                                                    "children": [
+                                                                        { "name": "(", "from": 201, "to": 202 },
+                                                                        {
+                                                                            "name": "ListOperatorExpression",
+                                                                            "from": 202,
+                                                                            "to": 218,
+                                                                            "children": [
+                                                                                { "name": "join", "from": 202, "to": 206 },
+                                                                                {
+                                                                                    "name": "ParenthesizedArguments",
+                                                                                    "from": 206,
+                                                                                    "to": 218,
+                                                                                    "children": [
+                                                                                        { "name": "(", "from": 206, "to": 207 },
+                                                                                        { "name": "StringSingleQuoted", "from": 207, "to": 209 },
+                                                                                        { "name": "Comma", "from": 209, "to": 210 },
+                                                                                        { "name": "ArrayVariable", "from": 211, "to": 217 },
+                                                                                        { "name": ")", "from": 217, "to": 218 }
+                                                                                    ]
+                                                                                }
+                                                                            ]
+                                                                        },
+                                                                        { "name": ")", "from": 218, "to": 219 }
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        },
+                                                        { "name": "}", "from": 219, "to": 220 }
+                                                    ]
+                                                }
                                             ]
                                         }
                                     ]
@@ -176,11 +377,12 @@ END_TEXT
                         }
                     ]
                 },
-                { "name": "EndPG", "from": 55, "to": 63 }
+                { "name": "EndPG", "from": 221, "to": 229 }
             ]
         }
     ]
 }
+
 
 # emphasis
 
@@ -220,7 +422,7 @@ END_TEXT
                             ]
                         },
                         {
-                            "name": "Variable",
+                            "name": "PerlInterpolation",
                             "from": 35,
                             "to": 39,
                             "children": [
@@ -251,7 +453,7 @@ END_TEXT
                             ]
                         },
                         {
-                            "name": "Variable",
+                            "name": "PerlInterpolation",
                             "from": 72,
                             "to": 76,
                             "children": [
@@ -335,7 +537,7 @@ END_TEXT
                             "children": [
                                 { "name": "MathModeMark", "from": 11, "to": 13 },
                                 {
-                                    "name": "Variable",
+                                    "name": "PerlInterpolation",
                                     "from": 17,
                                     "to": 19,
                                     "children": [
@@ -486,7 +688,7 @@ END_TEXT
                             "children": [
                                 { "name": "ParsedMathModeMark", "from": 66, "to": 67 },
                                 {
-                                    "name": "Variable",
+                                    "name": "PerlInterpolation",
                                     "from": 67,
                                     "to": 69,
                                     "children": [

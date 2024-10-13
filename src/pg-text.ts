@@ -18,7 +18,7 @@ enum Type {
     PerlCommand,
     PerlCommandMark,
     StrongEmphasis,
-    Variable,
+    PerlInterpolation,
 
     PGTextError
 }
@@ -161,8 +161,8 @@ class BlockContext implements PartialParse {
 }
 
 interface DelimiterType {
-    nodeType: Type;
-    mark: Type;
+    nodeType?: Type;
+    mark?: Type;
 }
 
 const Delimiters: Record<string, DelimiterType> = {
@@ -170,14 +170,20 @@ const Delimiters: Record<string, DelimiterType> = {
     DisplayMathMode: { nodeType: Type.DisplayMathMode, mark: Type.MathModeMark },
     ParsedMathMode: { nodeType: Type.ParsedMathMode, mark: Type.ParsedMathModeMark },
     Emphasis: { nodeType: Type.Emphasis, mark: Type.EmphasisMark },
-    StrongEmphasis: { nodeType: Type.StrongEmphasis, mark: Type.EmphasisMark }
+    StrongEmphasis: { nodeType: Type.StrongEmphasis, mark: Type.EmphasisMark },
+    PerlInterpolation: { nodeType: Type.PerlInterpolation },
+    // These are only allowed to occur in a perl interpolation and do not resolve to actual elements.
+    Brace: {},
+    Bracket: {}
 };
 
 class InlineDelimiter {
     constructor(
         readonly type: DelimiterType,
         readonly from: number,
-        readonly to: number
+        public to: number,
+        public forceResolve = true,
+        public interpolationParent?: InlineDelimiter
     ) {}
 }
 
@@ -262,7 +268,8 @@ const InlineParsers: ((cx: InlineContext, next: number, pos: number) => number)[
             const part = cx.parts[i];
             if (
                 part instanceof InlineDelimiter &&
-                (part.type === Delimiters.Emphasis || part.type === Delimiters.StrongEmphasis)
+                (part.type === Delimiters.Emphasis || part.type === Delimiters.StrongEmphasis) &&
+                part.type.nodeType
             ) {
                 // Finish the content and replace the entire range in cx.parts with the emphasis node.
                 const content = cx.takeContent(i);
@@ -275,25 +282,88 @@ const InlineParsers: ((cx: InlineContext, next: number, pos: number) => number)[
         return -1;
     },
 
-    // Variable
-    // FIXME: This does not catch interpolation like $b[1] where @b is an array, or $b{a} where %b is a hash, or more
-    // complicated constructs like nested array or hash access or ${~~(...)} (which does work in a BEGIN_TEXT block).
-    // Those things are rarely done anyway, so this is not a high priority.  Furthermore, authors should be using PGML
-    // anyway.
+    // Perl Interpolation
+    // FIXME: Quotes and heredocs are not supported in interpolation at this point.
     (cx, next, start) => {
         const haveBrace = cx.char(start + 1) == 123; /* { */
         if (next != 36 /* $ */ || (!isVariableStartChar(cx.char(start + 1)) && !haveBrace)) return -1;
-        let pos = start + 2;
-        if (haveBrace) pos = cx.skipSpace(pos);
-        for (; pos < cx.end && isIdentifierChar(cx.char(pos)); ++pos);
         if (haveBrace) {
-            pos = cx.skipSpace(pos);
-            if (cx.char(pos) == 125 /* } */) ++pos;
-            else return cx.append(elt(Type.PGTextError, start, pos));
+            cx.addDelimiter(Delimiters.PerlInterpolation, start, start + 2, false);
+            return cx.addDelimiter(Delimiters.Brace, start + 1, start + 2, true, cx.parts.at(-1) as InlineDelimiter);
         }
-        return cx.append(
-            elt(Type.Variable, start, pos, [new TreeElement(pgPerlParser.parse(cx.slice(start, pos)), start)])
-        );
+        let pos = start + 2;
+        for (; pos < cx.end && isIdentifierChar(cx.char(pos)); ++pos);
+        return cx.addDelimiter(Delimiters.PerlInterpolation, start, pos, false);
+    },
+
+    // Brace or bracket
+    (cx, next, start) => {
+        if (next != 123 /* { */ && next != 91 /* [ */) return -1;
+        // Scan back and see if there is an open interpolation that ends here.
+        // If not, then ignore the brace or bracket.
+        for (let i = cx.parts.length - 1; i >= 0; --i) {
+            const part = cx.parts[i];
+            if (
+                part instanceof InlineDelimiter &&
+                part.type === Delimiters.PerlInterpolation &&
+                part.to == start &&
+                cx.char(part.from + 1) != 123
+            ) {
+                ++part.to;
+                return cx.addDelimiter(
+                    next == 123 ? Delimiters.Brace : Delimiters.Bracket,
+                    start,
+                    start + 1,
+                    true,
+                    part
+                );
+            }
+        }
+        return -1;
+    },
+
+    // Brace or bracket end (only in perl interpolation)
+    (cx, next, start) => {
+        if (next != 125 /* } */ && next != 93 /* ] */) return -1;
+        // Scan back to the matching start marker.
+        for (let i = cx.parts.length - 1; i >= 0; --i) {
+            const part = cx.parts[i];
+            if (
+                part instanceof InlineDelimiter &&
+                ((next == 125 && part.type === Delimiters.Brace) || (next == 93 && part.type === Delimiters.Bracket)) &&
+                part.interpolationParent
+            ) {
+                part.interpolationParent.to = start + 1;
+                cx.parts.splice(i, 1);
+                return start + 1;
+            }
+        }
+        return -1;
+    },
+
+    // Dereferencing arrow (only in perl interpolation)
+    (cx, next, start) => {
+        if (
+            next != 45 /* - */ ||
+            cx.char(start + 1) != 62 /* > */ ||
+            (cx.char(start + 2) != 123 /* { */ && cx.char(start + 2) != 91) /* [ */
+        )
+            return -1;
+        // Scan back and see if there is an open interpolation that ends here.
+        // If not, then ignore the dereferencing arrow.
+        for (let i = cx.parts.length - 1; i >= 0; --i) {
+            const part = cx.parts[i];
+            if (
+                part instanceof InlineDelimiter &&
+                part.type === Delimiters.PerlInterpolation &&
+                part.to == start &&
+                cx.char(part.from + 1) != 123
+            ) {
+                part.to += 2;
+                return start + 2;
+            }
+        }
+        return -1;
     },
 
     // Math mode
@@ -314,7 +384,8 @@ const InlineParsers: ((cx: InlineContext, next: number, pos: number) => number)[
             const part = cx.parts[i];
             if (
                 part instanceof InlineDelimiter &&
-                (part.type === Delimiters.InlineMathMode || part.type === Delimiters.DisplayMathMode)
+                (part.type === Delimiters.InlineMathMode || part.type === Delimiters.DisplayMathMode) &&
+                part.type.nodeType
             ) {
                 const content = cx.takeContent(i);
 
@@ -359,7 +430,7 @@ const InlineParsers: ((cx: InlineContext, next: number, pos: number) => number)[
         // Scan back to the last parsed math mode start marker.
         for (let i = cx.parts.length - 1; i >= 0; --i) {
             const part = cx.parts[i];
-            if (part instanceof InlineDelimiter && part.type === Delimiters.ParsedMathMode) {
+            if (part instanceof InlineDelimiter && part.type === Delimiters.ParsedMathMode && part.type.nodeType) {
                 const content = cx.takeContent(i);
 
                 const numBackticks = part.to - part.from;
@@ -427,33 +498,41 @@ class InlineContext {
 
     // Add a delimiter at this given position. `open` and `close` indicate whether this delimiter is opening, closing,
     // or both. Returns the end of the delimiter, for convenient returning from parse functions.
-    addDelimiter(type: DelimiterType, from: number, to: number) {
-        return this.append(new InlineDelimiter(type, from, to));
+    addDelimiter(type: DelimiterType, from: number, to: number, forceResolve = true, parent?: InlineDelimiter) {
+        return this.append(new InlineDelimiter(type, from, to, forceResolve, parent));
     }
 
     delimitersResolved() {
         for (const part of this.parts) {
-            if (part instanceof InlineDelimiter) return false;
+            if (part instanceof InlineDelimiter && part.forceResolve) return false;
         }
         return true;
     }
 
     // Return element parts from the given start index on as an array of elements.  All unresolved inline delimiters in
-    // the range (except a delimiter in the startIndex position if resolveStart is true) are turning into the
-    // appropriate node terminated by an error node.
+    // the range (except a delimiter in the startIndex position if resolveStart is true) are turned into the appropriate
+    // node terminated by an error node.
     takeContent(startIndex = 0, resolveStart = false) {
         const content = [];
         for (let i = startIndex; i < this.parts.length; ++i) {
             const part = this.parts[i];
             if (part instanceof Element) content.push(part);
             else if ((resolveStart || i > startIndex) && part instanceof InlineDelimiter) {
-                const to = this.parts[i + 1]?.from ?? this.end;
-                content.push(
-                    elt(part.type.nodeType, part.from, to, [
-                        elt(part.type.mark, part.from, part.to),
-                        elt(Type.PGTextError, to, to)
-                    ])
-                );
+                if (part.type.mark && part.type.nodeType) {
+                    const to = this.parts[i + 1]?.from ?? this.end;
+                    content.push(
+                        elt(part.type.nodeType, part.from, to, [
+                            elt(part.type.mark, part.from, part.to),
+                            elt(Type.PGTextError, to, to)
+                        ])
+                    );
+                } else if (part.type === Delimiters.PerlInterpolation) {
+                    content.push(
+                        elt(Type.PerlInterpolation, part.from, part.to, [
+                            new TreeElement(pgPerlParser.parse(this.slice(part.from, part.to)), part.from)
+                        ])
+                    );
+                }
             }
         }
         this.parts.length = startIndex;
