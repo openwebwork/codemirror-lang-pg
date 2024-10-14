@@ -332,7 +332,10 @@ const pgmlFormat = (block: Item, offset: number): Element<Type>[] => {
         return [elt(Type.Option, block.from + offset, block.to + offset, children)];
     } else if (block.type === 'bold' || block.type === 'italic') {
         children.unshift(elt(Type.EmphasisMark, block.from + offset, block.from + 1 + offset));
-        children.push(elt(Type.EmphasisMark, block.to - 1 + offset, block.to + offset));
+        const lastChild = block.stack?.at(-1);
+        if (lastChild instanceof Item && block.to === lastChild.to)
+            children.push(elt(Type.PGMLError, block.to + offset, block.to + offset));
+        else children.push(elt(Type.EmphasisMark, block.to - 1 + offset, block.to + offset));
         return [
             elt(
                 block.type === 'bold' ? Type.StrongEmphasis : Type.Emphasis,
