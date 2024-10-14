@@ -604,7 +604,9 @@ stack: [
 
 BEGIN_PGML
 >> ## centered heading ## <<
->> ## right-justified ##
+>> ## centered heading without heading terminator <<
+>> ## right-justified heading ##
+>> ## right-justified heading without heading terminator
 END_PGML
 
 ==>
@@ -612,18 +614,18 @@ END_PGML
 {
     "name": "Program",
     "from": 0,
-    "to": 73,
+    "to": 191,
     "children": [
         {
             "name": "PGMLBlock",
             "from": 0,
-            "to": 73,
+            "to": 191,
             "children": [
                 { "name": "BeginPG", "from": 0, "to": 10 },
                 {
                     "name": "PGMLContent",
                     "from": 10,
-                    "to": 65,
+                    "to": 183,
                     "children": [
                         {
                             "name": "Align",
@@ -646,23 +648,56 @@ END_PGML
                         {
                             "name": "Align",
                             "from": 40,
-                            "to": 65,
+                            "to": 92,
                             "children": [
                                 { "name": "AlignMark", "from": 40, "to": 43 },
                                 {
                                     "name": "Heading2",
                                     "from": 43,
-                                    "to": 64,
+                                    "to": 89,
                                     "children": [
-                                        { "name": "HeaderMark", "from": 43, "to": 45 },
-                                        { "name": "HeaderMark", "from": 62, "to": 64 }
+                                        { "name": "HeaderMark", "from": 43, "to": 45 }
+                                    ]
+                                },
+                                { "name": "AlignMark", "from": 89, "to": 92 }
+                            ]
+                        },
+                        {
+                            "name": "Align",
+                            "from": 93,
+                            "to": 126,
+                            "children": [
+                                { "name": "AlignMark", "from": 93, "to": 96 },
+                                {
+                                    "name": "Heading2",
+                                    "from": 96,
+                                    "to": 125,
+                                    "children": [
+                                        { "name": "HeaderMark", "from": 96, "to": 98 },
+                                        { "name": "HeaderMark", "from": 123, "to": 125 }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "name": "Align",
+                            "from": 126,
+                            "to": 183,
+                            "children": [
+                                { "name": "AlignMark", "from": 126, "to": 129 },
+                                {
+                                    "name": "Heading2",
+                                    "from": 129,
+                                    "to": 183,
+                                    "children": [
+                                        { "name": "HeaderMark", "from": 129, "to": 131 }
                                     ]
                                 }
                             ]
                         }
                     ]
                 },
-                { "name": "EndPG", "from": 65, "to": 73 }
+                { "name": "EndPG", "from": 183, "to": 191 }
             ]
         }
     ]
@@ -672,7 +707,7 @@ END_PGML
 
 from: '0'
 parseAll: 'true'
-to: '54'
+to: '172'
 type: 'root'
 stack: [
   [ # 0
@@ -719,35 +754,102 @@ stack: [
     ]
   ]
   [ # 2
-    align: 'right'
+    align: 'center'
     from: '29'
-    to: '54'
+    terminator: ' <<'
+    to: '81'
     token: '>> '
     type: 'align'
     stack: [
       [ # 0
         from: '32'
         n: '2'
-        terminator: '##'
-        to: '53'
+        to: '78'
         token: '##'
         type: 'heading'
         stack: [
           [ # 0
             combine: { text: 'type' }
             from: '34'
-            to: '51'
+            to: '78'
             type: 'text'
-            stack: [' right-justified ']
+            stack: [' centered heading without heading terminator']
+          ]
+        ]
+      ]
+    ]
+  ]
+  [ # 3
+    combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
+    from: '81'
+    indent: '0'
+    to: '82'
+    type: 'indent'
+    stack: [
+      [ # 0
+        combine: { text: 'type' }
+        from: '81'
+        to: '82'
+        type: 'text'
+        stack: ['\n']
+      ]
+    ]
+  ]
+  [ # 4
+    align: 'right'
+    from: '82'
+    to: '115'
+    token: '>> '
+    type: 'align'
+    stack: [
+      [ # 0
+        from: '85'
+        n: '2'
+        terminator: '##'
+        to: '114'
+        token: '##'
+        type: 'heading'
+        stack: [
+          [ # 0
+            combine: { text: 'type' }
+            from: '87'
+            to: '112'
+            type: 'text'
+            stack: [' right-justified heading ']
           ]
         ]
       ]
       [ # 1
         combine: { text: 'type' }
-        from: '53'
-        to: '54'
+        from: '114'
+        to: '115'
         type: 'text'
         stack: ['\n']
+      ]
+    ]
+  ]
+  [ # 5
+    align: 'right'
+    from: '115'
+    to: '172'
+    token: '>> '
+    type: 'align'
+    stack: [
+      [ # 0
+        from: '118'
+        n: '2'
+        to: '172'
+        token: '##'
+        type: 'heading'
+        stack: [
+          [ # 0
+            combine: { text: 'type' }
+            from: '120'
+            to: '172'
+            type: 'text'
+            stack: [' right-justified heading without heading terminator', '\n']
+          ]
+        ]
       ]
     ]
   ]

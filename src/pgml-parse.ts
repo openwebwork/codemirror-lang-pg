@@ -255,7 +255,7 @@ export class PGMLParse {
             block.to += block.terminator.length;
             if (block.terminateMethod) this[block.terminateMethod](token);
         }
-        if (prev && (block.type !== 'pre' || prev.to < block.to)) prev.to = block.to;
+        if (prev && ((block.type !== 'pre' && block.prev?.type !== 'align') || prev.to < block.to)) prev.to = block.to;
         delete block.prev;
         delete block.parseComments;
         delete block.parseSubstitutions;
@@ -474,6 +474,7 @@ export class PGMLParse {
                 this.Text(token);
                 return;
             }
+            if (block.prev) block.prev.to = block.to;
             block = block.prev;
         }
         if (this.isLineEnd(block)) {
