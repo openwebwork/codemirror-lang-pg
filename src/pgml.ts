@@ -412,7 +412,7 @@ export const pgmlHighlighting = styleTags({
     'AlignMark CodeMark EmphasisMark HeaderMark ImageMark ListMark MathModeMark OptionMark': t.processingInstruction,
     'PreMark PerlCommandMark TableMark TableCellMark TagMark VariableMark VerbatimMark': t.processingInstruction,
     CodeText: t.monospace,
-    CodeInfo: t.labelName,
+    CodeClass: t.labelName,
     HorizontalRule: t.contentSeparator,
     EscapeSequence: t.escape,
     'AnswerRule Image MathMode': t.atom,
