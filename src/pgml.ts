@@ -327,7 +327,8 @@ const pgmlFormat = (block: Item, offset: number): Element<Type>[] => {
         return [elt(Type.Tag, block.from + offset, to, children), ...options];
     } else if (block.type === 'options') {
         children.unshift(elt(Type.OptionMark, block.from + offset, block.from + 1 + offset));
-        if (block.text) children.push(new TreeElement(pgPerlParser.parse(block.text), block.from + 1 + offset));
+        if (block.text)
+            children.push(new TreeElement(pgPerlParser.parse(block.text), (block.textFrom ?? block.from + 1) + offset));
         children.push(elt(Type.OptionMark, block.to - 1 + offset, block.to + offset));
         return [elt(Type.Option, block.from + offset, block.to + offset, children)];
     } else if (block.type === 'bold' || block.type === 'italic') {

@@ -41,7 +41,6 @@ interface BlockDefinition {
     allowStar?: boolean;
     allowTriStar?: boolean;
     balance?: RegExp;
-    breakInside?: boolean;
     cancelNL?: boolean;
     cancelPar?: boolean;
     cancelUnbalanced?: boolean;
@@ -300,9 +299,7 @@ export class PGMLParse {
             if (this.block) this.block.to += 1;
             this.ignoreNL = 0;
         } else {
-            const top = this.block?.topItem();
-            if (top && top instanceof Block && top.breakInside) top.pushText(token);
-            else this.Text(token);
+            this.Text(token);
             this.ignoreNL = 1;
         }
         this.atLineStart = 1;
@@ -315,9 +312,7 @@ export class PGMLParse {
             this.Item('forced', token, { noIndent: 1 });
             this.indent = 0;
         } else {
-            const top = this.block?.topItem() as Block;
-            if (top.breakInside) top.pushItem(new Item('break', this.pos, { token }));
-            else this.Item('break', token, { noIndent: 1 });
+            this.Item('break', token, { noIndent: 1 });
         }
         this.atLineStart = this.ignoreNL = 1;
         this.actualIndent = 0;
@@ -651,6 +646,8 @@ export class PGMLParse {
         const optionBlock = this.block?.popItem();
         const block = this.block?.topItem();
         if (!(block instanceof Item) || !(optionBlock instanceof Item)) return;
+        const firstItem = optionBlock.stack?.at(0);
+        optionBlock.textFrom = firstItem instanceof Item ? firstItem.from : optionBlock.from;
         optionBlock.text = this.stackText(optionBlock.stack);
         delete optionBlock.stack;
         block.pushOption(optionBlock);
@@ -755,7 +752,6 @@ export class Item implements BlockDefinition {
     allowStar?: boolean;
     allowTriStar?: boolean;
     balance?: RegExp;
-    breakInside?: boolean;
     cancelNL?: boolean;
     cancelPar?: boolean;
     cancelUnbalanced?: boolean;
@@ -868,9 +864,10 @@ export class Block extends Item {
 
     pushItem(...items: (string | Item)[]) {
         this.to = items.reduce((max, i) => {
+            if (i instanceof Item && i.type === 'balance') return max;
             const to = i instanceof Item ? i.to : i.length;
             return to > max ? to : max;
-        }, 0);
+        }, this.to);
         this.stack?.push(...items);
     }
 

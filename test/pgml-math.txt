@@ -1079,6 +1079,7 @@ stack: [
             from: '10'
             terminator: '}'
             text: '$context'
+            textFrom: '11'
             to: '20'
             token: '{'
             type: 'options'

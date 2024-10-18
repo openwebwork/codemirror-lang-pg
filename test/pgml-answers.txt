@@ -74,6 +74,9 @@ stack: [
 
 BEGIN_PGML
 [_]{$a}{15}
+[_]{
+	$sum->cmp(mathQuillOpts => { autoCommands => 'pi sqrt root vert inf union abs Delta ' })
+}{30}
 END_PGML
 
 ==>
@@ -81,23 +84,23 @@ END_PGML
 {
     "name": "Program",
     "from": 0,
-    "to": 31,
+    "to": 132,
     "children": [
         {
             "name": "PGMLBlock",
             "from": 0,
-            "to": 31,
+            "to": 132,
             "children": [
                 { "name": "BeginPG", "from": 0, "to": 10 },
                 {
                     "name": "PGMLContent",
                     "from": 10,
-                    "to": 23,
+                    "to": 124,
                     "children": [
                         {
                             "name": "Paragraph",
                             "from": 10,
-                            "to": 23,
+                            "to": 124,
                             "children": [
                                 { "name": "AnswerRule", "from": 11, "to": 14 },
                                 {
@@ -147,12 +150,114 @@ END_PGML
                                         },
                                         { "name": "OptionMark", "from": 21, "to": 22 }
                                     ]
+                                },
+                                { "name": "AnswerRule", "from": 23, "to": 26 },
+                                {
+                                    "name": "Option",
+                                    "from": 26,
+                                    "to": 119,
+                                    "children": [
+                                        { "name": "OptionMark", "from": 26, "to": 27 },
+                                        {
+                                            "name": "Program",
+                                            "from": 28,
+                                            "to": 118,
+                                            "children": [
+                                                {
+                                                    "name": "ExpressionStatement",
+                                                    "from": 29,
+                                                    "to": 117,
+                                                    "children": [
+                                                        {
+                                                            "name": "MethodInvocation",
+                                                            "from": 29,
+                                                            "to": 117,
+                                                            "children": [
+                                                                { "name": "ScalarVariable", "from": 29, "to": 33 },
+                                                                { "name": "ArrowOperator", "from": 33, "to": 35 },
+                                                                {
+                                                                    "name": "FunctionName",
+                                                                    "from": 35,
+                                                                    "to": 38,
+                                                                    "children": [
+                                                                        { "name": "Identifier", "from": 35, "to": 38 }
+                                                                    ]
+                                                                },
+                                                                {
+                                                                    "name": "ParenthesizedArguments",
+                                                                    "from": 38,
+                                                                    "to": 117,
+                                                                    "children": [
+                                                                        { "name": "(", "from": 38, "to": 39 },
+                                                                        {
+                                                                            "name": "Pair",
+                                                                            "from": 39,
+                                                                            "to": 116,
+                                                                            "children": [
+                                                                                { "name": "Identifier", "from": 39, "to": 52 },
+                                                                                { "name": "FatComma", "from": 53, "to": 55 },
+                                                                                {
+                                                                                    "name": "HashRef",
+                                                                                    "from": 56,
+                                                                                    "to": 116,
+                                                                                    "children": [
+                                                                                        { "name": "{", "from": 56, "to": 57 },
+                                                                                        {
+                                                                                            "name": "Pair",
+                                                                                            "from": 58,
+                                                                                            "to": 114,
+                                                                                            "children": [
+                                                                                                { "name": "Identifier", "from": 58, "to": 70 },
+                                                                                                { "name": "FatComma", "from": 71, "to": 73 },
+                                                                                                { "name": "StringSingleQuoted", "from": 74, "to": 114 }
+                                                                                            ]
+                                                                                        },
+                                                                                        { "name": "}", "from": 115, "to": 116 }
+                                                                                    ]
+                                                                                }
+                                                                            ]
+                                                                        },
+                                                                        { "name": ")", "from": 116, "to": 117 }
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        { "name": "OptionMark", "from": 118, "to": 119 }
+                                    ]
+                                },
+                                {
+                                    "name": "Option",
+                                    "from": 119,
+                                    "to": 123,
+                                    "children": [
+                                        { "name": "OptionMark", "from": 119, "to": 120 },
+                                        {
+                                            "name": "Program",
+                                            "from": 120,
+                                            "to": 122,
+                                            "children": [
+                                                {
+                                                    "name": "ExpressionStatement",
+                                                    "from": 120,
+                                                    "to": 122,
+                                                    "children": [
+                                                        { "name": "Integer", "from": 120, "to": 122 }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        { "name": "OptionMark", "from": 122, "to": 123 }
+                                    ]
                                 }
                             ]
                         }
                     ]
                 },
-                { "name": "EndPG", "from": 23, "to": 31 }
+                { "name": "EndPG", "from": 124, "to": 132 }
             ]
         }
     ]
@@ -162,14 +267,14 @@ END_PGML
 
 from: '0'
 parseAll: 'true'
-to: '12'
+to: '113'
 type: 'root'
 stack: [
   [ # 0
     combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
     from: '0'
     indent: '0'
-    to: '12'
+    to: '113'
     type: 'indent'
     stack: [
       [ # 0
@@ -179,6 +284,7 @@ stack: [
             from: '3'
             terminator: '}'
             text: '$a'
+            textFrom: '4'
             to: '7'
             token: '{'
             type: 'options'
@@ -187,6 +293,7 @@ stack: [
             from: '7'
             terminator: '}'
             text: '15'
+            textFrom: '8'
             to: '11'
             token: '{'
             type: 'options'
@@ -201,6 +308,40 @@ stack: [
         combine: { text: 'type' }
         from: '11'
         to: '12'
+        type: 'text'
+        stack: ['\n']
+      ]
+      [ # 2
+        from: '12'
+        optionStack: [
+          {
+            from: '15'
+            terminator: '}'
+            text: '\t$sum->cmp(mathQuillOpts => { autoCommands => 'pi sqrt root vert inf union abs Delta ' })\n'
+            textFrom: '17'
+            to: '108'
+            token: '{'
+            type: 'options'
+          },
+          {
+            from: '108'
+            terminator: '}'
+            text: '30'
+            textFrom: '109'
+            to: '112'
+            token: '{'
+            type: 'options'
+          }
+        ]
+        options: ['answer', 'width', 'name', 'cmp_options']
+        to: '112'
+        token: '[_]'
+        type: 'answer'
+      ]
+      [ # 3
+        combine: { text: 'type' }
+        from: '112'
+        to: '113'
         type: 'text'
         stack: ['\n']
       ]
@@ -318,6 +459,7 @@ stack: [
             from: '4'
             terminator: '}'
             text: '$matrix'
+            textFrom: '5'
             to: '13'
             token: '{'
             type: 'options'
@@ -326,6 +468,7 @@ stack: [
             from: '13'
             terminator: '}'
             text: '10'
+            textFrom: '14'
             to: '17'
             token: '{'
             type: 'options'
@@ -515,6 +658,7 @@ stack: [
             from: '3'
             terminator: '}'
             text: ' answer => $pi, name => NEW_ANS_NAME(), width => 10, cmp_options => { tolerance => 0.00001 } '
+            textFrom: '4'
             to: '98'
             token: '{'
             type: 'options'
@@ -696,6 +840,7 @@ stack: [
             from: '3'
             terminator: '}'
             text: '$pi'
+            textFrom: '4'
             to: '8'
             token: '{'
             type: 'options'
@@ -704,6 +849,7 @@ stack: [
             from: '8'
             terminator: '}'
             text: '10'
+            textFrom: '9'
             to: '12'
             token: '{'
             type: 'options'
@@ -712,6 +858,7 @@ stack: [
             from: '12'
             terminator: '}'
             text: ' cmp_options => { tolerance => 0.00001 } '
+            textFrom: '13'
             to: '55'
             token: '{'
             type: 'options'
