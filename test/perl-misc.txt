@@ -4,6 +4,7 @@
 my $var = { expires  => time + 2, valid => 0 };
 my $var = Package->method($var);
 warn $_ for grep { $_ ne 'a' } @array;
+my @array = (pi / 6, pi / 4, pi / 3);
 ;
 
 ==>
@@ -52,6 +53,22 @@ Program(
                 grep,
                 Block("{", ExpressionStatement(BinaryExpression(ScalarVariable, ne, StringSingleQuoted)), "}"),
                 ArrayVariable
+            )
+        ),
+        StatementEnd(";")
+    ),
+    ExpressionStatement(
+        Assignment(
+            VariableDeclaration(my, ArrayVariable),
+            "=",
+            List(
+                "(",
+                BinaryExpression(Constant(Identifier), "/", Integer),
+                Comma,
+                BinaryExpression(Constant(Identifier), "/", Integer),
+                Comma,
+                BinaryExpression(Constant(Identifier), "/", Integer),
+                ")"
             )
         ),
         StatementEnd(";")
