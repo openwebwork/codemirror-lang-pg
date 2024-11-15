@@ -18,12 +18,20 @@ export const pgmlIndent = {
 let i = 99;
 let rank = 1;
 
-const answerRuleSnippet = snippetCompletion('[_${}]${}{${$answer}}', {
-    label: '[_]{ }',
-    info: 'answer rule',
-    section: { name: 'answer', rank },
-    boost: i--
-});
+const answerRuleSnippets = [
+    snippetCompletion('[_${}]${}{${$answer}}${}', {
+        label: '[_]{ }',
+        info: 'answer rule',
+        section: { name: 'answer', rank },
+        boost: i--
+    }),
+    snippetCompletion('[_${}]*{${$answer}}${}', {
+        label: '[_]*{ }',
+        info: 'array answer rule',
+        section: { name: 'answer', rank },
+        boost: i--
+    })
+];
 
 ++rank;
 const mathModeSnippets = [
@@ -32,7 +40,13 @@ const mathModeSnippets = [
     ['[``` ```]', 'block display math'],
     ['[: :]', 'parsed inline math'],
     ['[:: ::]', 'parsed display style math'],
-    ['[::: :::]', 'parsed block display math']
+    ['[::: :::]', 'parsed block display math'],
+    ['[: :]*', 'parsed inline math in active context'],
+    ['[:: ::]*', 'parsed display style math in active context'],
+    ['[::: :::]*', 'parsed block display math in active context'],
+    ['[: :]**', 'parsed and reduced inline math in active context'],
+    ['[:: ::]**', 'parsed and reduced display style math in active context'],
+    ['[::: :::]**', 'parsed and reduced block display math in active context']
 ].map(([label, info]) => {
     return snippetCompletion(label.replace(' ', '${ }') + '${}', {
         label,
@@ -43,21 +57,95 @@ const mathModeSnippets = [
     });
 });
 
-const variableSnippet = snippetCompletion('[$${ }]${}', {
-    label: '[$ ]',
-    info: 'variable',
-    section: { name: 'substitution', rank: ++rank },
-    type: 'variable',
-    boost: i--
-});
+const variableSnippets = [
+    snippetCompletion('[$${ }]${}', {
+        label: '[$ ]',
+        info: 'variable',
+        section: { name: 'substitution', rank: ++rank },
+        type: 'variable',
+        boost: i--
+    }),
+    snippetCompletion('[$${ }]*${}', {
+        label: '[$ ]*',
+        info: 'variable with value not HTML escaped',
+        section: { name: 'substitution', rank },
+        type: 'variable',
+        boost: i--
+    }),
+    snippetCompletion('[$${ }]**${}', {
+        label: '[$ ]**',
+        info: 'variable with value PGML parsed',
+        section: { name: 'substitution', rank },
+        type: 'variable',
+        boost: i--
+    }),
+    snippetCompletion('[$${ }]***${}', {
+        label: '[$ ]***',
+        info: 'variable with LaTeX value not HTML escaped',
+        section: { name: 'substitution', rank },
+        type: 'variable',
+        boost: i--
+    })
+];
 
-const perlCommandSnippet = snippetCompletion('[@ ${ } @]${}', {
-    label: '[@ @]',
-    info: 'perl command',
-    section: { name: 'substitution', rank },
-    type: 'variable',
-    boost: i--
-});
+const perlCommandSnippets = [
+    snippetCompletion('[@ ${ } @]${}', {
+        label: '[@ @]',
+        info: 'perl command',
+        section: { name: 'substitution', rank },
+        type: 'variable',
+        boost: i--
+    }),
+    snippetCompletion('[@ ${ } @]*${}', {
+        label: '[@ @]*',
+        info: 'perl command with result not HTML escaped',
+        section: { name: 'substitution', rank },
+        type: 'variable',
+        boost: i--
+    }),
+    snippetCompletion('[@ ${ } @]**${}', {
+        label: '[@ @]**',
+        info: 'perl command with result PGML parsed',
+        section: { name: 'substitution', rank },
+        type: 'variable',
+        boost: i--
+    }),
+    snippetCompletion('[@ ${ } @]***${}', {
+        label: '[@ @]***',
+        info: 'perl command with LaTeX result not HTML escaped',
+        section: { name: 'substitution', rank },
+        type: 'variable',
+        boost: i--
+    }),
+    snippetCompletion('[@\n\t${ }\n@]${}', {
+        label: '[@ @]',
+        info: 'perl command (multi line)',
+        section: { name: 'substitution', rank },
+        type: 'variable',
+        boost: i--
+    }),
+    snippetCompletion('[@\n\t${ }\n@]*${}', {
+        label: '[@ @]*',
+        info: 'perl command with result not HTML escaped (multi line)',
+        section: { name: 'substitution', rank },
+        type: 'variable',
+        boost: i--
+    }),
+    snippetCompletion('[@\n\t${ }\n@]**${}', {
+        label: '[@ @]**',
+        info: 'perl command with result PGML parsed (multi line)',
+        section: { name: 'substitution', rank },
+        type: 'variable',
+        boost: i--
+    }),
+    snippetCompletion('[@\n\t${ }\n@]***${}', {
+        label: '[@ @]***',
+        info: 'perl command with LaTeX result not HTML escaped (multi line)',
+        section: { name: 'substitution', rank },
+        type: 'variable',
+        boost: i--
+    })
+];
 
 const imageSnippet = snippetCompletion('[!${alt text}!]{${$source}}${}', {
     label: '[! !]{ }',
@@ -83,26 +171,60 @@ const commentSnippet = snippetCompletion('[% ${ } %]${}', {
     boost: i--
 });
 
-const tableSnippet = snippetCompletion('[#${ }#]${}', {
-    label: '[# #]',
-    info: 'table',
-    section: { name: 'table', rank: ++rank },
-    type: 'type',
-    boost: i--
-});
+const tableSnippets = [
+    snippetCompletion('[#\n\t[.${ }.]${}\n#]${}', {
+        label: '[# [. .] #]',
+        info: 'table (multi line)',
+        section: { name: 'table', rank: ++rank },
+        type: 'type',
+        boost: i--
+    }),
+    snippetCompletion('[#\n\t[.${ }.]${}\n#]*${}', {
+        label: '[# [. .] #]*',
+        info: 'layout table (multi line)',
+        section: { name: 'table', rank },
+        type: 'type',
+        boost: i--
+    }),
+    snippetCompletion('[# [.${ }.]${} #]${}', {
+        label: '[# [. .] #]',
+        info: 'table (single line)',
+        section: { name: 'table', rank },
+        type: 'type',
+        boost: i--
+    }),
+    snippetCompletion('[# [.${ }.]${} #]*${}', {
+        label: '[# [. .] #]*',
+        info: 'layout table (single line)',
+        section: { name: 'table', rank },
+        type: 'type',
+        boost: i--
+    })
+];
 
-const tableCellSnippet = snippetCompletion('[.${ }.]${}', {
-    label: '[. .]',
-    info: 'table cell',
-    section: { name: 'table', rank },
-    type: 'type',
-    boost: i--
-});
+const tableCellSnippets = [
+    snippetCompletion('[.${ }.]${}', {
+        label: '[. .]',
+        info: 'table cell',
+        section: { name: 'table', rank },
+        type: 'type',
+        boost: i--
+    }),
+    snippetCompletion('[.${ }.]*${}', {
+        label: '[. .]',
+        info: 'table cell at end of table row',
+        section: { name: 'table', rank },
+        type: 'type',
+        boost: i--
+    })
+];
 
 ++rank;
 const verbatimSnippets = [
     ['[| |]', 'verbatim'],
-    ['[|| ||]', 'verbatim with unprocessed inner verbatim']
+    ['[| |]*', 'verbatim code'],
+    ['[|| ||]', 'verbatim with unprocessed inner verbatim'],
+    ['[|| ||]*', 'verbatim code with unprocessed inner verbatim']
 ].map(([label, info]) => {
     return snippetCompletion(label.replace(' ', '${ }') + '${}', {
         label,
@@ -148,12 +270,13 @@ export const pgmlLanguageData = {
             const insideTable = inside('Table');
             if (
                 (insideTable == 2 || (insideTable == 1 && (!textBefore.endsWith('[#') || /^\s*#\]/.test(textAfter)))) &&
-                (!inside('TableCell') || (textBefore.endsWith('[.') && !/^[ \t]*.\]/.test(textAfter)))
+                ((!inside('TableCell') && !textBefore.endsWith('.]*')) ||
+                    (textBefore.endsWith('[.') && !/^[ \t]*\.\]/.test(textAfter)))
             ) {
                 const previous = context.matchBefore(/\[|\[\./);
                 return {
                     from: previous?.from ?? context.pos,
-                    options: [tableCellSnippet]
+                    options: tableCellSnippets
                 };
             }
 
@@ -168,7 +291,7 @@ export const pgmlLanguageData = {
                 if (!previous && !context.explicit) return;
                 return {
                     from: previous?.from ?? context.pos,
-                    options: [variableSnippet, perlCommandSnippet]
+                    options: [...variableSnippets, ...perlCommandSnippets]
                 };
             }
 
@@ -178,7 +301,7 @@ export const pgmlLanguageData = {
                 if (!previous && !context.explicit) return;
                 return {
                     from: previous?.from ?? context.pos,
-                    options: [variableSnippet, perlCommandSnippet]
+                    options: [...variableSnippets, ...perlCommandSnippets]
                 };
             }
 
@@ -196,14 +319,14 @@ export const pgmlLanguageData = {
                 return {
                     from: previous?.from ?? context.pos,
                     options: [
-                        answerRuleSnippet,
+                        ...answerRuleSnippets,
                         ...mathModeSnippets,
-                        variableSnippet,
-                        perlCommandSnippet,
+                        ...variableSnippets,
+                        ...perlCommandSnippets,
                         imageSnippet,
                         tagSnippet,
                         commentSnippet,
-                        tableSnippet,
+                        ...tableSnippets,
                         ...verbatimSnippets
                     ]
                 };
@@ -222,14 +345,14 @@ export const pgmlLanguageData = {
             return {
                 from: context.pos,
                 options: [
-                    answerRuleSnippet,
+                    ...answerRuleSnippets,
                     ...mathModeSnippets,
-                    variableSnippet,
-                    perlCommandSnippet,
+                    ...variableSnippets,
+                    ...perlCommandSnippets,
                     imageSnippet,
                     tagSnippet,
                     commentSnippet,
-                    tableSnippet,
+                    ...tableSnippets,
                     ...verbatimSnippets,
                     preSnippet
                 ]
