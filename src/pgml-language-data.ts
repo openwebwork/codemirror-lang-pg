@@ -10,6 +10,7 @@ import type { CompletionContext } from '@codemirror/autocomplete';
 import { snippetCompletion } from '@codemirror/autocomplete';
 
 export const pgmlIndent = {
+    PGMLContent: () => null,
     PerlCommand: delimitedIndent({ closing: '@]' }),
     Table: delimitedIndent({ closing: '#]' }),
     Tag: delimitedIndent({ closing: '>]' })
@@ -155,13 +156,22 @@ const imageSnippet = snippetCompletion('[!${alt text}!]{${$source}}${}', {
     boost: i--
 });
 
-const tagSnippet = snippetCompletion('[<${ }>]${}', {
-    label: '[< >]',
-    info: 'html tag',
-    type: 'type',
-    section: { name: 'substitution', rank: ++rank },
-    boost: i--
-});
+const tagSnippets = [
+    snippetCompletion('[<\n\t${ }\n>]${}', {
+        label: '[< >]',
+        info: 'html tag (multi line)',
+        type: 'type',
+        section: { name: 'substitution', rank: ++rank },
+        boost: i--
+    }),
+    snippetCompletion('[<${ }>]${}', {
+        label: '[< >]',
+        info: 'html tag (single line)',
+        type: 'type',
+        section: { name: 'substitution', rank },
+        boost: i--
+    })
+];
 
 const commentSnippet = snippetCompletion('[% ${ } %]${}', {
     label: '[% %]',
@@ -324,7 +334,7 @@ export const pgmlLanguageData = {
                         ...variableSnippets,
                         ...perlCommandSnippets,
                         imageSnippet,
-                        tagSnippet,
+                        ...tagSnippets,
                         commentSnippet,
                         ...tableSnippets,
                         ...verbatimSnippets
@@ -350,7 +360,7 @@ export const pgmlLanguageData = {
                     ...variableSnippets,
                     ...perlCommandSnippets,
                     imageSnippet,
-                    tagSnippet,
+                    ...tagSnippets,
                     commentSnippet,
                     ...tableSnippets,
                     ...verbatimSnippets,
