@@ -57,7 +57,8 @@ export const pgVariables = new Set([
 ]);
 
 export const pgOperators = new Set([
-    'DOCUMENT', // PG.pl
+    // PG.pl
+    'DOCUMENT',
     'ENDDOCUMENT',
     'loadMacros',
     'HEADER_TEXT',
@@ -71,7 +72,9 @@ export const pgOperators = new Set([
     'AskSage',
     'maketext',
     'insertGraph',
-    'Context', // core/Value.pl
+
+    // core/Value.pl
+    'Context',
     'Compute',
     'Real',
     'Infinity',
@@ -86,7 +89,9 @@ export const pgOperators = new Set([
     'Union',
     'Formula',
     'String',
-    'abs', // core/PGcommonFunctions.pl
+
+    // core/PGcommonFunctions.pl
+    'abs',
     'sqrt',
     'log',
     'ln',
@@ -133,7 +138,9 @@ export const pgOperators = new Set([
     'Comb',
     'P',
     'Perm',
-    'step', // core/PGauxiliaryFunctions.pl
+
+    // core/PGauxiliaryFunctions.pl
+    'step',
     'ceil',
     'floor',
     'max',
@@ -150,7 +157,9 @@ export const pgOperators = new Set([
     'random_subset',
     'repeated',
     'fact',
-    'SOLUTION', // core/PGbasicmacros.pl
+
+    // core/PGbasicmacros.pl
+    'SOLUTION',
     'HINT',
     'STATEMENT',
     'COMMENT',
@@ -179,25 +188,37 @@ export const pgOperators = new Set([
     'image',
     'embedPDF',
     'video',
-    'essay_cmp', // core/PGessaymacros.pl
+
+    // core/PGessaymacros.pl
+    'essay_cmp',
     'essay_box',
     'explanation_box',
-    'rserve_start', // core/RserveClient.pl
+
+    // core/RserveClient.pl
+    'rserve_start',
     'rserve_eval',
     'rserve_finish',
     'rserve_query',
     'rserve_start_plot',
     'rserve_finish_plot',
     'rserve_get_file',
-    'store_number_list', // core/externalData.pl
+
+    // core/externalData.pl
+    'store_number_list',
     'store_string',
     'store_number',
-    'Sage', // core/sage.pl
-    'install_weighted_grader', // core/weightedGrader.pl
+
+    // core/sage.pl
+    'Sage',
+
+    // core/weightedGrader.pl
+    'install_weighted_grader',
     'WEIGHTED_ANS',
     'NAMED_WEIGHTED_ANS',
     'CREDIT_ANS',
-    'Boolean', // context/*.pl
+
+    // context/*.pl
+    'Boolean',
     'Fraction',
     'Inequality',
     'Percent',
@@ -218,7 +239,9 @@ export const pgOperators = new Set([
     'PiecewiseFunction',
     'SetBuilder',
     'ScientificNotation',
-    'Assignment', // parser/*.pl
+    'Assignment',
+
+    // parser/*.pl
     'AutoStrings',
     'DefineStrings',
     'CheckboxList',
@@ -243,7 +266,9 @@ export const pgOperators = new Set([
     'RadioMultiAnswer',
     'SolutionFor',
     'WordCompletion',
-    'LiveGraphics3D', // graph/*.pl
+
+    // graph/*.pl
+    'LiveGraphics3D',
     'Live3Dfile',
     'Live3Ddata',
     'CylindricalPlot3D',
@@ -262,7 +287,9 @@ export const pgOperators = new Set([
     'createTikZImage',
     'GraphTool',
     'Graph3D',
-    'lp_pivot_element', // math/*.pl
+
+    // math/*.pl
+    'lp_pivot_element',
     'lp_solve',
     'lp_current_value',
     'lp_display',
@@ -289,7 +316,9 @@ export const pgOperators = new Set([
     'random_diag_matrix',
     'DraggableProof',
     'DraggableSubsets',
-    'randomPerson', // misc/*.pl
+
+    // misc/*.pl
+    'randomPerson',
     'DataTable',
     'LayoutTable',
     'QuickMatrixEntry'

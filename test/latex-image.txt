@@ -11,7 +11,7 @@ END_TIKZ
 
 Program(
     ExpressionStatement(
-        Assignment(ScalarVariable, "=", CallExpression(FunctionName(Identifier), ParenthesizedArguments("(", ")"))),
+        Assignment(ScalarVariable, "=", CallExpression(FunctionName(PGOperator), ParenthesizedArguments("(", ")"))),
         StatementEnd(";")
     ),
     LaTeXImageCode(
@@ -37,7 +37,7 @@ END_LATEX_IMAGE
 
 Program(
     ExpressionStatement(
-        Assignment(ScalarVariable, "=", CallExpression(FunctionName(Identifier), ParenthesizedArguments("(", ")"))),
+        Assignment(ScalarVariable, "=", CallExpression(FunctionName(PGOperator), ParenthesizedArguments("(", ")"))),
         StatementEnd(";")
     ),
     LaTeXImageCode(
