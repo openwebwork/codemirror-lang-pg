@@ -1,8 +1,6 @@
 // Note that 'eval' and 'do' are not in this list as they can accept a block.
 export const namedUnaryOperators = new Set([
-    'abs',
     'chr',
-    'cos',
     'defined',
     'delete',
     'evalbytes',
@@ -19,7 +17,6 @@ export const namedUnaryOperators = new Set([
     'length',
     'localtime',
     'lock',
-    'log',
     'oct',
     'ord',
     'pos',
@@ -27,8 +24,6 @@ export const namedUnaryOperators = new Set([
     'ref',
     'scalar',
     'select',
-    'sin',
-    'sqrt',
     'uc',
     'ucfirst',
     'undef',
@@ -37,7 +32,6 @@ export const namedUnaryOperators = new Set([
 
 // The list operators that can operate on a block (grep, map, join, sort, and unpack) are handled separately.
 export const listOperators = new Set([
-    'atan2',
     'chomp',
     'chop',
     'crypt',
