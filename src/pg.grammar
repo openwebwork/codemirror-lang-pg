@@ -184,18 +184,18 @@ expression[@isGroup=Expression] {
     NamedUnaryExpression { NamedUnaryOperator !namedUnary maybeParens<expression>? } |
     ListOperatorExpression { (ListOperator | builtinArrayFunction) (ParenthesizedArguments | Arguments) } |
     CallExpression {
-        FunctionName { "&"? !callExpressionName (PackageName | PGOperator | Identifier) ~methodName }
+        FunctionName {
+            "&"?
+            !callExpressionName
+            (PackageName | PGOperator | !bareword Identifier ~identifier)
+            ~methodName
+        }
         (ParenthesizedArguments | Arguments)
     } |
-    CallExpressionWithBareword {
-        FunctionName { "&" (PackageName | (!bareword Identifier)) }
-    } |
+    CallExpressionWithBareword { FunctionName { "&" (PackageName | !bareword Identifier) } } |
     Bless { kw<"bless"> maybeParens<reference (commaOperator expression)?> } |
     MethodInvocation {
-        (
-            (!bareword Identifier | PackageName | StringSingleQuoted | ScalarVariable | PGVariable | expression)
-            ~methodName
-        )
+        ((PackageName | StringSingleQuoted | ScalarVariable | PGVariable | expression) ~methodName)
         (
             ArrowOperator
             !arrowOperator
@@ -240,7 +240,7 @@ expression[@isGroup=Expression] {
     }
 }
 
-PackageName { Identifier ("::" !packageName (UnrestrictedIdentifier | Identifier))* }
+PackageName { !packageName Identifier ("::" !packageName (UnrestrictedIdentifier | Identifier))* }
 Label { Identifier ":" }
 Constant { !constant Identifier }
 
