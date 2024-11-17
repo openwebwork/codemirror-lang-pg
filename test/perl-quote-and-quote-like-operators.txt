@@ -146,6 +146,7 @@ q/a b~~/c d/;
 q # this is a comment
     # this is another comment
     (abc);
+q{};
 
 ==>
 
@@ -173,7 +174,8 @@ Program(
     ExpressionStatement(
         StringQQuoted(q, Comment, Comment, QuoteLikeStartDelimiter, StringContent, QuoteLikeEndDelimiter),
         StatementEnd(";")
-    )
+    ),
+    ExpressionStatement(StringQQuoted(q, QuoteLikeStartDelimiter, QuoteLikeEndDelimiter), StatementEnd(";"))
 )
 
 # qq quoted strings
@@ -189,6 +191,7 @@ qq[ab[c]d];
 qq # Comment
     # another Comment
     (content $var more);
+qq{};
 
 ==>
 
@@ -284,7 +287,8 @@ Program(
             QuoteLikeEndDelimiter
         ),
         StatementEnd(";")
-    )
+    ),
+    ExpressionStatement(StringQqQuoted(qq, QuoteLikeStartDelimiter, QuoteLikeEndDelimiter), StatementEnd(";"))
 )
 
 # qw lists

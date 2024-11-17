@@ -344,7 +344,7 @@ semicolon { StatementEnd | automaticSemicolon }
 
 @skip {} {
     StringDoubleQuoted { '"' interpolationContent* '"' }
-    StringQQuoted { kw<"q"> injectedComments? QuoteLikeStartDelimiter StringContent QuoteLikeEndDelimiter }
+    StringQQuoted { kw<"q"> injectedComments? QuoteLikeStartDelimiter StringContent* QuoteLikeEndDelimiter }
     StringQqQuoted { kw<"qq"> injectedComments? QuoteLikeStartDelimiter interpolationContent* QuoteLikeEndDelimiter }
     QWList { kw<"qw"> injectedComments? QWListContent { QuoteLikeStartDelimiter QWElement* QuoteLikeEndDelimiter } }
     PatternMatchM {
