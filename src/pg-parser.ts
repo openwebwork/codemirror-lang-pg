@@ -3,7 +3,7 @@ import type { Completion, CompletionContext } from '@codemirror/autocomplete';
 import { completeFromList, snippetCompletion } from '@codemirror/autocomplete';
 import type { SyntaxNode } from '@lezer/common';
 import { parser } from './pg.grammar';
-import { pgVariables, pgOperators } from './pg-variables';
+import { pgVariables, pgOperators, pgOperatorCompletions } from './pg-variables';
 
 export const pgCompletion = (isTop = false) => {
     return (context: CompletionContext) => {
@@ -78,9 +78,35 @@ export const pgCompletion = (isTop = false) => {
 
         if (
             inside(['CallExpression', 'FunctionName', 'Identifier']) &&
-            !inside(['Arguments', 'ParenthesizedArguments'])
+            !inside(['StringSingleQuoted', 'StringQQuoted', 'InterpolatedStringContent', 'UninterpolatedHeredocBody'])
         ) {
-            completionOptions.push(...Array.from(pgOperators.values()).map((label) => ({ label, type: 'variable' })));
+            for (const operator of pgOperators.values()) {
+                const completions = pgOperatorCompletions.get(operator);
+                if (completions) {
+                    for (const template of completions) {
+                        completionOptions.push(
+                            snippetCompletion(template, {
+                                label: operator,
+                                info: template
+                                    .replaceAll(/\${([^}]*)}/g, '$1')
+                                    .replaceAll(/\t/g, '')
+                                    .replaceAll(/\n/g, ' '),
+                                type: 'variable',
+                                section: { name: 'PG Methods' }
+                            })
+                        );
+                    }
+                } else {
+                    completionOptions.push(
+                        snippetCompletion(`${operator}(\${})\${}`, {
+                            label: operator,
+                            info: `${operator}()`,
+                            type: 'variable',
+                            section: { name: 'PG Methods' }
+                        })
+                    );
+                }
+            }
         }
 
         return completeFromList(completionOptions)(context);
