@@ -107,6 +107,19 @@ export const pgCompletion = (isTop = false) => {
                     );
                 }
             }
+
+            for (const part of ['Scaffold', 'Section']) {
+                for (const position of ['Begin', 'End']) {
+                    completionOptions.push(
+                        snippetCompletion(`${part}::${position}(\${});\${}`, {
+                            label: `${part}::${position}`,
+                            info: `${part}::${position}();`,
+                            type: 'variable',
+                            section: { name: 'PG Methods' }
+                        })
+                    );
+                }
+            }
         }
 
         return completeFromList(completionOptions)(context);
