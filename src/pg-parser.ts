@@ -5,6 +5,53 @@ import type { SyntaxNode } from '@lezer/common';
 import { parser } from './pg.grammar';
 import { pgVariables, pgOperators, pgOperatorCompletions } from './pg-variables';
 
+const pgOperatorCompletionOptions: Completion[] = [];
+
+for (const operator of pgOperators.values()) {
+    const completions = pgOperatorCompletions.get(operator);
+    if (completions) {
+        for (const template of completions) {
+            pgOperatorCompletionOptions.push(
+                snippetCompletion(template, {
+                    label: operator,
+                    info: template
+                        .replaceAll(/\${([^}]*)}/g, '$1')
+                        .replaceAll(/\t/g, '')
+                        .replaceAll(/\n/g, ' '),
+                    type: 'variable',
+                    section: { name: 'PG Methods', rank: 1 }
+                })
+            );
+        }
+    } else {
+        pgOperatorCompletionOptions.push(
+            snippetCompletion(`${operator}(\${})\${}`, {
+                label: operator,
+                info: `${operator}()`,
+                type: 'variable',
+                section: { name: 'PG Methods', rank: 1 }
+            })
+        );
+    }
+}
+
+for (const pkg of ['Scaffold', 'Section']) {
+    for (const position of ['Begin', 'End']) {
+        pgOperatorCompletionOptions.push(
+            snippetCompletion(`${pkg}::${position}(\${});\${}`, {
+                label: `${pkg}::${position}`,
+                info: `${pkg}::${position}();`,
+                type: 'variable',
+                section: { name: 'PG Methods', rank: 1 }
+            })
+        );
+    }
+}
+
+for (const pkg of ['Label', 'Circle', 'Fun']) {
+    pgOperatorCompletionOptions.push({ label: pkg, type: 'variable', section: { name: 'WWPlot Object', rank: 2 } });
+}
+
 export const pgCompletion = (isTop = false) => {
     return (context: CompletionContext) => {
         const nodeAt = syntaxTree(context.state).resolveInner(context.pos, -1);
@@ -78,48 +125,15 @@ export const pgCompletion = (isTop = false) => {
 
         if (
             inside(['CallExpression', 'FunctionName', 'Identifier']) &&
-            !inside(['StringSingleQuoted', 'StringQQuoted', 'InterpolatedStringContent', 'UninterpolatedHeredocBody'])
+            !inside([
+                'StringSingleQuoted',
+                'StringQQuoted',
+                'InterpolatedStringContent',
+                'UninterpolatedHeredocBody',
+                'MethodInvocation'
+            ])
         ) {
-            for (const operator of pgOperators.values()) {
-                const completions = pgOperatorCompletions.get(operator);
-                if (completions) {
-                    for (const template of completions) {
-                        completionOptions.push(
-                            snippetCompletion(template, {
-                                label: operator,
-                                info: template
-                                    .replaceAll(/\${([^}]*)}/g, '$1')
-                                    .replaceAll(/\t/g, '')
-                                    .replaceAll(/\n/g, ' '),
-                                type: 'variable',
-                                section: { name: 'PG Methods' }
-                            })
-                        );
-                    }
-                } else {
-                    completionOptions.push(
-                        snippetCompletion(`${operator}(\${})\${}`, {
-                            label: operator,
-                            info: `${operator}()`,
-                            type: 'variable',
-                            section: { name: 'PG Methods' }
-                        })
-                    );
-                }
-            }
-
-            for (const part of ['Scaffold', 'Section']) {
-                for (const position of ['Begin', 'End']) {
-                    completionOptions.push(
-                        snippetCompletion(`${part}::${position}(\${});\${}`, {
-                            label: `${part}::${position}`,
-                            info: `${part}::${position}();`,
-                            type: 'variable',
-                            section: { name: 'PG Methods' }
-                        })
-                    );
-                }
-            }
+            completionOptions.push(...pgOperatorCompletionOptions);
         }
 
         return completeFromList(completionOptions)(context);
