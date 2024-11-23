@@ -2,6 +2,8 @@
 
 BEGIN_PGML
 The following is *bold text with math [`x + 3`]*
+
+The following is bold with too many delimiters ***bold text****
 END_PGML
 
 ==>
@@ -9,23 +11,23 @@ END_PGML
 {
     "name": "Program",
     "from": 0,
-    "to": 68,
+    "to": 133,
     "children": [
         {
             "name": "PGMLBlock",
             "from": 0,
-            "to": 68,
+            "to": 133,
             "children": [
                 { "name": "BeginPG", "from": 0, "to": 10 },
                 {
                     "name": "PGMLContent",
                     "from": 10,
-                    "to": 60,
+                    "to": 125,
                     "children": [
                         {
                             "name": "Paragraph",
                             "from": 10,
-                            "to": 60,
+                            "to": 59,
                             "children": [
                                 {
                                     "name": "StrongEmphasis",
@@ -46,10 +48,26 @@ END_PGML
                                     ]
                                 }
                             ]
+                        },
+                        {
+                            "name": "Paragraph",
+                            "from": 61,
+                            "to": 124,
+                            "children": [
+                                {
+                                    "name": "StrongEmphasis",
+                                    "from": 108,
+                                    "to": 123,
+                                    "children": [
+                                        { "name": "EmphasisMark", "from": 108, "to": 111 },
+                                        { "name": "EmphasisMark", "from": 120, "to": 123 }
+                                    ]
+                                }
+                            ]
                         }
                     ]
                 },
-                { "name": "EndPG", "from": 60, "to": 68 }
+                { "name": "EndPG", "from": 125, "to": 133 }
             ]
         }
     ]
@@ -59,14 +77,14 @@ END_PGML
 
 from: '0'
 parseAll: 'true'
-to: '49'
+to: '114'
 type: 'root'
 stack: [
   [ # 0
     combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
     from: '0'
     indent: '0'
-    to: '49'
+    to: '48'
     type: 'indent'
     stack: [
       [ # 0
@@ -107,10 +125,48 @@ stack: [
           ]
         ]
       ]
+    ]
+  ]
+  [ # 1
+    from: '48'
+    noIndent: '1'
+    to: '50'
+    token: '\n\n'
+    type: 'par'
+  ]
+  [ # 2
+    combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
+    from: '50'
+    indent: '0'
+    to: '113'
+    type: 'indent'
+    stack: [
+      [ # 0
+        combine: { text: 'type' }
+        from: '50'
+        to: '97'
+        type: 'text'
+        stack: ['The following is bold with too many delimiters ']
+      ]
+      [ # 1
+        from: '97'
+        to: '112'
+        token: '***'
+        type: 'bold'
+        stack: [
+          [ # 0
+            combine: { text: 'type' }
+            from: '100'
+            to: '109'
+            type: 'text'
+            stack: ['bold text']
+          ]
+        ]
+      ]
       [ # 2
         combine: { text: 'type' }
-        from: '48'
-        to: '49'
+        from: '112'
+        to: '113'
         type: 'text'
         stack: ['\n']
       ]
@@ -122,6 +178,8 @@ stack: [
 
 BEGIN_PGML
 The following is _italic text_
+
+The following is poor taste ____italic text___
 END_PGML
 
 ==>
@@ -129,23 +187,23 @@ END_PGML
 {
     "name": "Program",
     "from": 0,
-    "to": 50,
+    "to": 98,
     "children": [
         {
             "name": "PGMLBlock",
             "from": 0,
-            "to": 50,
+            "to": 98,
             "children": [
                 { "name": "BeginPG", "from": 0, "to": 10 },
                 {
                     "name": "PGMLContent",
                     "from": 10,
-                    "to": 42,
+                    "to": 91,
                     "children": [
                         {
                             "name": "Paragraph",
                             "from": 10,
-                            "to": 42,
+                            "to": 41,
                             "children": [
                                 {
                                     "name": "Emphasis",
@@ -157,10 +215,26 @@ END_PGML
                                     ]
                                 }
                             ]
+                        },
+                        {
+                            "name": "Paragraph",
+                            "from": 43,
+                            "to": 91,
+                            "children": [
+                                {
+                                    "name": "Emphasis",
+                                    "from": 71,
+                                    "to": 90,
+                                    "children": [
+                                        { "name": "EmphasisMark", "from": 71, "to": 75 },
+                                        { "name": "EmphasisMark", "from": 86, "to": 90 }
+                                    ]
+                                }
+                            ]
                         }
                     ]
                 },
-                { "name": "EndPG", "from": 42, "to": 50 }
+                { "name": "EndPG", "from": 90, "to": 98 }
             ]
         }
     ]
@@ -170,14 +244,14 @@ END_PGML
 
 from: '0'
 parseAll: 'true'
-to: '31'
+to: '79'
 type: 'root'
 stack: [
   [ # 0
     combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
     from: '0'
     indent: '0'
-    to: '31'
+    to: '30'
     type: 'indent'
     stack: [
       [ # 0
@@ -202,10 +276,48 @@ stack: [
           ]
         ]
       ]
+    ]
+  ]
+  [ # 1
+    from: '30'
+    noIndent: '1'
+    to: '32'
+    token: '\n\n'
+    type: 'par'
+  ]
+  [ # 2
+    combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
+    from: '32'
+    indent: '0'
+    to: '80'
+    type: 'indent'
+    stack: [
+      [ # 0
+        combine: { text: 'type' }
+        from: '32'
+        to: '60'
+        type: 'text'
+        stack: ['The following is poor taste ']
+      ]
+      [ # 1
+        from: '60'
+        to: '79'
+        token: '____'
+        type: 'italic'
+        stack: [
+          [ # 0
+            combine: { text: 'type' }
+            from: '64'
+            to: '75'
+            type: 'text'
+            stack: ['italic text']
+          ]
+        ]
+      ]
       [ # 2
         combine: { text: 'type' }
-        from: '30'
-        to: '31'
+        from: '79'
+        to: '80'
         type: 'text'
         stack: ['\n']
       ]
