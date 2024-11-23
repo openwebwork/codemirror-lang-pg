@@ -1,7 +1,7 @@
 # bold text
 
 BEGIN_PGML
-*bold text with math [`x + 3`]*
+The following is *bold text with math [`x + 3`]*
 END_PGML
 
 ==>
@@ -9,47 +9,47 @@ END_PGML
 {
     "name": "Program",
     "from": 0,
-    "to": 51,
+    "to": 68,
     "children": [
         {
             "name": "PGMLBlock",
             "from": 0,
-            "to": 51,
+            "to": 68,
             "children": [
                 { "name": "BeginPG", "from": 0, "to": 10 },
                 {
                     "name": "PGMLContent",
                     "from": 10,
-                    "to": 43,
+                    "to": 60,
                     "children": [
                         {
                             "name": "Paragraph",
                             "from": 10,
-                            "to": 43,
+                            "to": 60,
                             "children": [
                                 {
                                     "name": "StrongEmphasis",
-                                    "from": 11,
-                                    "to": 42,
+                                    "from": 28,
+                                    "to": 59,
                                     "children": [
-                                        { "name": "EmphasisMark", "from": 11, "to": 12 },
+                                        { "name": "EmphasisMark", "from": 28, "to": 29 },
                                         {
                                             "name": "MathMode",
-                                            "from": 32,
-                                            "to": 41,
+                                            "from": 49,
+                                            "to": 58,
                                             "children": [
-                                                { "name": "MathModeMark", "from": 32, "to": 34 },
-                                                { "name": "MathModeMark", "from": 39, "to": 41 }
+                                                { "name": "MathModeMark", "from": 49, "to": 51 },
+                                                { "name": "MathModeMark", "from": 56, "to": 58 }
                                             ]
                                         },
-                                        { "name": "EmphasisMark", "from": 41, "to": 42 }
+                                        { "name": "EmphasisMark", "from": 58, "to": 59 }
                                     ]
                                 }
                             ]
                         }
                     ]
                 },
-                { "name": "EndPG", "from": 43, "to": 51 }
+                { "name": "EndPG", "from": 60, "to": 68 }
             ]
         }
     ]
@@ -59,26 +59,33 @@ END_PGML
 
 from: '0'
 parseAll: 'true'
-to: '32'
+to: '49'
 type: 'root'
 stack: [
   [ # 0
     combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
     from: '0'
     indent: '0'
-    to: '32'
+    to: '49'
     type: 'indent'
     stack: [
       [ # 0
+        combine: { text: 'type' }
         from: '0'
-        to: '31'
+        to: '17'
+        type: 'text'
+        stack: ['The following is ']
+      ]
+      [ # 1
+        from: '17'
+        to: '48'
         token: '*'
         type: 'bold'
         stack: [
           [ # 0
             combine: { text: 'type' }
-            from: '1'
-            to: '21'
+            from: '18'
+            to: '38'
             type: 'text'
             stack: ['bold text with math ']
           ]
@@ -86,24 +93,24 @@ stack: [
             children: [
               {
                 combine: { text: 'type' }
-                from: '23'
-                to: '28'
+                from: '40'
+                to: '45'
                 type: 'text'
                 stack: ['x + 3']
               }
             ]
-            from: '21'
+            from: '38'
             terminator: '`]'
-            to: '30'
+            to: '47'
             token: '[`'
             type: 'math'
           ]
         ]
       ]
-      [ # 1
+      [ # 2
         combine: { text: 'type' }
-        from: '31'
-        to: '32'
+        from: '48'
+        to: '49'
         type: 'text'
         stack: ['\n']
       ]
@@ -114,7 +121,7 @@ stack: [
 # italic text
 
 BEGIN_PGML
-_italic text_
+The following is _italic text_
 END_PGML
 
 ==>
@@ -122,38 +129,38 @@ END_PGML
 {
     "name": "Program",
     "from": 0,
-    "to": 33,
+    "to": 50,
     "children": [
         {
             "name": "PGMLBlock",
             "from": 0,
-            "to": 33,
+            "to": 50,
             "children": [
                 { "name": "BeginPG", "from": 0, "to": 10 },
                 {
                     "name": "PGMLContent",
                     "from": 10,
-                    "to": 25,
+                    "to": 42,
                     "children": [
                         {
                             "name": "Paragraph",
                             "from": 10,
-                            "to": 25,
+                            "to": 42,
                             "children": [
                                 {
                                     "name": "Emphasis",
-                                    "from": 11,
-                                    "to": 24,
+                                    "from": 28,
+                                    "to": 41,
                                     "children": [
-                                        { "name": "EmphasisMark", "from": 11, "to": 12 },
-                                        { "name": "EmphasisMark", "from": 23, "to": 24 }
+                                        { "name": "EmphasisMark", "from": 28, "to": 29 },
+                                        { "name": "EmphasisMark", "from": 40, "to": 41 }
                                     ]
                                 }
                             ]
                         }
                     ]
                 },
-                { "name": "EndPG", "from": 25, "to": 33 }
+                { "name": "EndPG", "from": 42, "to": 50 }
             ]
         }
     ]
@@ -163,35 +170,42 @@ END_PGML
 
 from: '0'
 parseAll: 'true'
-to: '14'
+to: '31'
 type: 'root'
 stack: [
   [ # 0
     combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
     from: '0'
     indent: '0'
-    to: '14'
+    to: '31'
     type: 'indent'
     stack: [
       [ # 0
+        combine: { text: 'type' }
         from: '0'
-        to: '13'
+        to: '17'
+        type: 'text'
+        stack: ['The following is ']
+      ]
+      [ # 1
+        from: '17'
+        to: '30'
         token: '_'
         type: 'italic'
         stack: [
           [ # 0
             combine: { text: 'type' }
-            from: '1'
-            to: '12'
+            from: '18'
+            to: '29'
             type: 'text'
             stack: ['italic text']
           ]
         ]
       ]
-      [ # 1
+      [ # 2
         combine: { text: 'type' }
-        from: '13'
-        to: '14'
+        from: '30'
+        to: '31'
         type: 'text'
         stack: ['\n']
       ]

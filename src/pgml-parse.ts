@@ -110,17 +110,19 @@ export class PGMLParse {
     }
 
     nextChar(defaultNext?: string) {
-        if (typeof defaultNext === 'undefined') defaultNext = '';
-        return (this.split[this.i] ?? this.split[this.i + 1] ?? defaultNext).substring(0, 1);
+        return (
+            this.split[this.i] ??
+            this.split[this.i + 1] ??
+            (typeof defaultNext === 'undefined' ? '' : defaultNext)
+        ).substring(0, 1);
     }
 
     prevChar(defaultPrev?: string) {
-        if (typeof defaultPrev === 'undefined') defaultPrev = '';
-        let i2 = this.i - 2;
-        if (i2 < 0) i2 = 0;
-        let i3 = this.i - 3;
-        if (i3 < 0) i3 = 0;
-        return (this.split[i2] ?? this.split[i3] ?? defaultPrev).substring(-1, 1);
+        return (
+            this.split[this.i - 2] ??
+            this.split[this.i - 3] ??
+            (typeof defaultPrev === 'undefined' ? '' : defaultPrev)
+        ).slice(-1);
     }
 
     Parse(split: (string | undefined)[]) {
