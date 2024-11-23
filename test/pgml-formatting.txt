@@ -52,15 +52,15 @@ END_PGML
                         {
                             "name": "Paragraph",
                             "from": 61,
-                            "to": 124,
+                            "to": 125,
                             "children": [
                                 {
                                     "name": "StrongEmphasis",
                                     "from": 108,
-                                    "to": 123,
+                                    "to": 124,
                                     "children": [
                                         { "name": "EmphasisMark", "from": 108, "to": 111 },
-                                        { "name": "EmphasisMark", "from": 120, "to": 123 }
+                                        { "name": "EmphasisMark", "from": 120, "to": 124 }
                                     ]
                                 }
                             ]
@@ -138,7 +138,7 @@ stack: [
     combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
     from: '50'
     indent: '0'
-    to: '113'
+    to: '114'
     type: 'indent'
     stack: [
       [ # 0
@@ -150,7 +150,7 @@ stack: [
       ]
       [ # 1
         from: '97'
-        to: '112'
+        to: '113'
         token: '***'
         type: 'bold'
         stack: [
@@ -165,8 +165,8 @@ stack: [
       ]
       [ # 2
         combine: { text: 'type' }
-        from: '112'
-        to: '113'
+        from: '113'
+        to: '114'
         type: 'text'
         stack: ['\n']
       ]
@@ -198,7 +198,7 @@ END_PGML
                 {
                     "name": "PGMLContent",
                     "from": 10,
-                    "to": 91,
+                    "to": 90,
                     "children": [
                         {
                             "name": "Paragraph",
@@ -219,15 +219,15 @@ END_PGML
                         {
                             "name": "Paragraph",
                             "from": 43,
-                            "to": 91,
+                            "to": 90,
                             "children": [
                                 {
                                     "name": "Emphasis",
                                     "from": 71,
-                                    "to": 90,
+                                    "to": 89,
                                     "children": [
                                         { "name": "EmphasisMark", "from": 71, "to": 75 },
-                                        { "name": "EmphasisMark", "from": 86, "to": 90 }
+                                        { "name": "EmphasisMark", "from": 86, "to": 89 }
                                     ]
                                 }
                             ]
@@ -289,7 +289,7 @@ stack: [
     combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
     from: '32'
     indent: '0'
-    to: '80'
+    to: '79'
     type: 'indent'
     stack: [
       [ # 0
@@ -301,7 +301,7 @@ stack: [
       ]
       [ # 1
         from: '60'
-        to: '79'
+        to: '78'
         token: '____'
         type: 'italic'
         stack: [
@@ -316,8 +316,8 @@ stack: [
       ]
       [ # 2
         combine: { text: 'type' }
-        from: '79'
-        to: '80'
+        from: '78'
+        to: '79'
         type: 'text'
         stack: ['\n']
       ]

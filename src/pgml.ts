@@ -336,7 +336,14 @@ const pgmlFormat = (block: Item, offset: number): Element<Type>[] => {
         const lastChild = block.stack?.at(-1);
         if (lastChild instanceof Item && block.to === lastChild.to)
             children.push(elt(Type.PGMLError, block.to + offset, block.to + offset));
-        else children.push(elt(Type.EmphasisMark, block.to - (block.token?.length ?? 1) + offset, block.to + offset));
+        else
+            children.push(
+                elt(
+                    Type.EmphasisMark,
+                    (lastChild instanceof Item ? lastChild.to : block.to - (block.token?.length ?? 1)) + offset,
+                    block.to + offset
+                )
+            );
         return [
             elt(
                 block.type === 'bold' ? Type.StrongEmphasis : Type.Emphasis,

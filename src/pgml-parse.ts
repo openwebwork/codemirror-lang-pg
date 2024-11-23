@@ -379,14 +379,14 @@ export class PGMLParse {
         const type = BlockDefs[token.substring(0, 1)]?.type;
         let block = this.block;
         if (block && block.type === type) {
-            block.to += block.token?.length ?? 1;
+            block.to += token.length;
             this.Terminate();
             return;
         }
         while (block?.type !== 'root') {
             if (block && block.prev?.type === type) {
                 this.End(`end of ${type ?? ''}`, block);
-                block.to += block.token?.length ?? 1;
+                block.to += token.length;
                 this.Terminate();
                 return;
             }
