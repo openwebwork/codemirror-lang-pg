@@ -1,10 +1,10 @@
 # double quoted strings
 
 "variable: $var";
-"array access: $a[1]";
-"deref array access: $a->[1] $a->[-1] $b->[1][1] $c->[1]->[1]";
-"hash access: $var{b}";
-"deref hash access: $var->{b} $var2->{a}{b} $var3->{a}->{b}";
+"array access: $a[1] $a[(-1)] $a[($index)] $a[$index]";
+"deref array access: $a->[1] $a->[(-1)] $b->[1][1] $c->[1]->[1] $d->[$index] $d->[($index)]";
+"hash access: $var{b} $var{$key} $var{('b')} $var{($key)}";
+"deref hash access: $var->{b} $var2->{a}{b} $var3->{a}->{b} $var4->{$key} $var4->{('a')} $var4->{($key)}";
 "mixed deref hash and array access: $var1->{a}[1] $var2->{a}->[1] $var3->[1]{a} $var4->[1]->{a}";
 "dereferenced scalar reference ${~~($a + 2)}";
 "dereferenced arary reference @{['a' . 'b']}";
@@ -15,7 +15,16 @@
 Program(
     ExpressionStatement(StringDoubleQuoted(InterpolatedStringContent, ScalarVariable), StatementEnd(";")),
     ExpressionStatement(
-        StringDoubleQuoted(InterpolatedStringContent, ArrayAccessVariable(ScalarVariable, "[", Integer, "]")),
+        StringDoubleQuoted(
+            InterpolatedStringContent,
+            ArrayAccessVariable(ScalarVariable, "[", Integer, "]"),
+            InterpolatedStringContent,
+            ArrayAccessVariable(ScalarVariable, "[", "(", ArithOp, Integer, ")", "]"),
+            InterpolatedStringContent,
+            ArrayAccessVariable(ScalarVariable, "[", "(", ScalarVariable, ")", "]"),
+            InterpolatedStringContent,
+            ArrayAccessVariable(ScalarVariable, "[", ScalarVariable, "]")
+        ),
         StatementEnd(";")
     ),
     ExpressionStatement(
@@ -23,7 +32,7 @@ Program(
             InterpolatedStringContent,
             ArrayAccessVariable(ScalarVariable, ArrowOperator, "[", Integer, "]"),
             InterpolatedStringContent,
-            ArrayAccessVariable(ScalarVariable, ArrowOperator, "[", ArithOp, Integer, "]"),
+            ArrayAccessVariable(ScalarVariable, ArrowOperator, "[", "(", ArithOp, Integer, ")", "]"),
             InterpolatedStringContent,
             ArrayAccessVariable(
                 ArrayAccessVariable(ScalarVariable, ArrowOperator, "[", Integer, "]"),
@@ -38,12 +47,25 @@ Program(
                 "[",
                 Integer,
                 "]"
-            )
+            ),
+            InterpolatedStringContent,
+            ArrayAccessVariable(ScalarVariable, ArrowOperator, "[", ScalarVariable, "]"),
+            InterpolatedStringContent,
+            ArrayAccessVariable(ScalarVariable, ArrowOperator, "[", "(", ScalarVariable, ")", "]")
         ),
         StatementEnd(";")
     ),
     ExpressionStatement(
-        StringDoubleQuoted(InterpolatedStringContent, HashAccessVariable(ScalarVariable, "{", Identifier, "}")),
+        StringDoubleQuoted(
+            InterpolatedStringContent,
+            HashAccessVariable(ScalarVariable, "{", Identifier, "}"),
+            InterpolatedStringContent,
+            HashAccessVariable(ScalarVariable, "{", ScalarVariable, "}"),
+            InterpolatedStringContent,
+            HashAccessVariable(ScalarVariable, "{", "(", StringSingleQuoted, ")", "}"),
+            InterpolatedStringContent,
+            HashAccessVariable(ScalarVariable, "{", "(", ScalarVariable, ")", "}")
+        ),
         StatementEnd(";")
     ),
     ExpressionStatement(
@@ -64,7 +86,13 @@ Program(
                 "{",
                 Identifier,
                 "}"
-            )
+            ),
+            InterpolatedStringContent,
+            HashAccessVariable(ScalarVariable, ArrowOperator, "{", ScalarVariable, "}"),
+            InterpolatedStringContent,
+            HashAccessVariable(ScalarVariable, ArrowOperator, "{", "(", StringSingleQuoted, ")", "}"),
+            InterpolatedStringContent,
+            HashAccessVariable(ScalarVariable, ArrowOperator, "{", "(", ScalarVariable, ")", "}")
         ),
         StatementEnd(";")
     ),
