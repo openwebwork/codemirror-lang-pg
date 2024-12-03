@@ -123,17 +123,13 @@ expression[@isGroup=Expression] {
         (ScalarVariable | PGVariable | expression)
         !arrayMember
         (ArrowOperator !arrowOperator)?
-        "["
-        expression
-        "]"
+        arrayAccessor
     } |
     HashAccessVariable {
         (ScalarVariable | PGVariable | expression)
         !hashMember
         (ArrowOperator !arrowOperator)?
-        "{"
-        ((!bareword Identifier) | expression)
-        "}"
+        hashAccessor
     } |
     PatternMatchM |
     PatternMatch |
@@ -308,6 +304,9 @@ List { !list "(" !listContents commaSep<expression> ")" }
 ArrayRef { "[" commaSep<expression> "]" }
 HashRef { ArithOp<"+">? "{" commaSep<expression> "}" }
 
+arrayAccessor { "[" expression "]" }
+hashAccessor { "{" ((!bareword Identifier) | expression) "}" }
+
 ScalarDereference { "$" (ScalarDereference | ScalarVariable | PGVariable | "{" expression "}") }
 ArrayDereference { "@" (ScalarDereference | ScalarVariable | PGVariable | "{" expression "}") }
 HashDereference { "%" (ScalarDereference | ScalarVariable | PGVariable | "{" expression "}") }
@@ -430,18 +429,14 @@ semicolon { StatementEnd | automaticSemicolon }
         afterInterpolation?
         !arrayMember
         (ArrowOperator !arrowOperator)?
-        "["
-        maybeParens<ArithOp<"-">? Integer | Float | ScalarVariable | PGVariable | quotedString>
-        "]"
+        arrayAccessor
     }
     HashAccessVariable {
         (ScalarVariable | PGVariable | ArrayAccessVariable | HashAccessVariable)
         afterInterpolation?
         !hashMember
         (ArrowOperator !arrowOperator)?
-        "{"
-        (!bareword Identifier | maybeParens<ScalarVariable | PGVariable | quotedString>)
-        "}"
+        hashAccessor
     }
 
     PodStatement { PodDirective PodContent PodCut }

@@ -19,9 +19,9 @@ Program(
             InterpolatedStringContent,
             ArrayAccessVariable(ScalarVariable, "[", Integer, "]"),
             InterpolatedStringContent,
-            ArrayAccessVariable(ScalarVariable, "[", "(", ArithOp, Integer, ")", "]"),
+            ArrayAccessVariable(ScalarVariable, "[", List("(", UnaryExpression(ArithOp, Integer), ")"), "]"),
             InterpolatedStringContent,
-            ArrayAccessVariable(ScalarVariable, "[", "(", ScalarVariable, ")", "]"),
+            ArrayAccessVariable(ScalarVariable, "[", List("(", ScalarVariable, ")"), "]"),
             InterpolatedStringContent,
             ArrayAccessVariable(ScalarVariable, "[", ScalarVariable, "]")
         ),
@@ -32,7 +32,13 @@ Program(
             InterpolatedStringContent,
             ArrayAccessVariable(ScalarVariable, ArrowOperator, "[", Integer, "]"),
             InterpolatedStringContent,
-            ArrayAccessVariable(ScalarVariable, ArrowOperator, "[", "(", ArithOp, Integer, ")", "]"),
+            ArrayAccessVariable(
+                ScalarVariable,
+                ArrowOperator,
+                "[",
+                List("(", UnaryExpression(ArithOp, Integer), ")"),
+                "]"
+            ),
             InterpolatedStringContent,
             ArrayAccessVariable(
                 ArrayAccessVariable(ScalarVariable, ArrowOperator, "[", Integer, "]"),
@@ -51,7 +57,7 @@ Program(
             InterpolatedStringContent,
             ArrayAccessVariable(ScalarVariable, ArrowOperator, "[", ScalarVariable, "]"),
             InterpolatedStringContent,
-            ArrayAccessVariable(ScalarVariable, ArrowOperator, "[", "(", ScalarVariable, ")", "]")
+            ArrayAccessVariable(ScalarVariable, ArrowOperator, "[", List("(", ScalarVariable, ")"), "]")
         ),
         StatementEnd(";")
     ),
@@ -62,9 +68,9 @@ Program(
             InterpolatedStringContent,
             HashAccessVariable(ScalarVariable, "{", ScalarVariable, "}"),
             InterpolatedStringContent,
-            HashAccessVariable(ScalarVariable, "{", "(", StringSingleQuoted, ")", "}"),
+            HashAccessVariable(ScalarVariable, "{", List("(", StringSingleQuoted, ")"), "}"),
             InterpolatedStringContent,
-            HashAccessVariable(ScalarVariable, "{", "(", ScalarVariable, ")", "}")
+            HashAccessVariable(ScalarVariable, "{", List("(", ScalarVariable, ")"), "}")
         ),
         StatementEnd(";")
     ),
@@ -90,9 +96,9 @@ Program(
             InterpolatedStringContent,
             HashAccessVariable(ScalarVariable, ArrowOperator, "{", ScalarVariable, "}"),
             InterpolatedStringContent,
-            HashAccessVariable(ScalarVariable, ArrowOperator, "{", "(", StringSingleQuoted, ")", "}"),
+            HashAccessVariable(ScalarVariable, ArrowOperator, "{", List("(", StringSingleQuoted, ")"), "}"),
             InterpolatedStringContent,
-            HashAccessVariable(ScalarVariable, ArrowOperator, "{", "(", ScalarVariable, ")", "}")
+            HashAccessVariable(ScalarVariable, ArrowOperator, "{", List("(", ScalarVariable, ")"), "}")
         ),
         StatementEnd(";")
     ),
@@ -243,7 +249,7 @@ Program(
             qq,
             QuoteLikeStartDelimiter,
             InterpolatedStringContent,
-            ArrayAccessVariable(ScalarVariable, ArrowOperator, "[", ArithOp, Integer, "]"),
+            ArrayAccessVariable(ScalarVariable, ArrowOperator, "[", UnaryExpression(ArithOp, Integer), "]"),
             QuoteLikeEndDelimiter
         ),
         StatementEnd(";")

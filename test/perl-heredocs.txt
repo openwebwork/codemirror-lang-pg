@@ -94,7 +94,7 @@ Program(
                 InterpolatedStringContent,
                 ArrayAccessVariable(ScalarVariable, ArrowOperator, "[", Integer, "]"),
                 InterpolatedStringContent,
-                ArrayAccessVariable(ScalarVariable, ArrowOperator, "[", ArithOp, Integer, "]"),
+                ArrayAccessVariable(ScalarVariable, ArrowOperator, "[", UnaryExpression(ArithOp, Integer), "]"),
                 InterpolatedStringContent,
                 ArrayAccessVariable(
                     ArrayAccessVariable(ScalarVariable, ArrowOperator, "[", Integer, "]"),
