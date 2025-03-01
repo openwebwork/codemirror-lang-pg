@@ -149,6 +149,7 @@ export class PGMLParse {
                 this.Terminate(token);
             else if (
                 !block.containerEnd &&
+                block.type !== 'balance' &&
                 block.prev?.terminator &&
                 RegExp(
                     `^${

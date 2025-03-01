@@ -6,6 +6,7 @@ BEGIN_PGML
 [@ '<div>hello</div>' @]***
 [@ %f = (q => 4); $f{q} @]
 [@ q}asdf} @]
+[@ '[@ "inner code" @]' @]**
 END_PGML
 
 ==>
@@ -13,23 +14,23 @@ END_PGML
 {
     "name": "Program",
     "from": 0,
-    "to": 165,
+    "to": 194,
     "children": [
         {
             "name": "PGMLBlock",
             "from": 0,
-            "to": 165,
+            "to": 194,
             "children": [
                 { "name": "BeginPG", "from": 0, "to": 10 },
                 {
-                   "name": "PGMLContent",
+                    "name": "PGMLContent",
                     "from": 10,
-                    "to": 157,
+                    "to": 186,
                     "children": [
                         {
                             "name": "Paragraph",
                             "from": 10,
-                            "to": 157,
+                            "to": 186,
                             "children": [
                                 {
                                     "name": "PerlCommand",
@@ -258,12 +259,36 @@ END_PGML
                                         },
                                         { "name": "PerlCommandMark", "from": 154, "to": 156 }
                                     ]
+                                },
+                                {
+                                    "name": "PerlCommand",
+                                    "from": 157,
+                                    "to": 185,
+                                    "children": [
+                                        { "name": "PerlCommandMark", "from": 157, "to": 159 },
+                                        {
+                                            "name": "Program",
+                                            "from": 159,
+                                            "to": 181,
+                                            "children": [
+                                                {
+                                                    "name": "ExpressionStatement",
+                                                    "from": 160,
+                                                    "to": 180,
+                                                    "children": [
+                                                        { "name": "StringSingleQuoted", "from": 160, "to": 180 }
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        { "name": "PerlCommandMark", "from": 181, "to": 185 }
+                                    ]
                                 }
                             ]
                         }
                     ]
                 },
-                { "name": "EndPG", "from": 157, "to": 165 }
+                { "name": "EndPG", "from": 186, "to": 194 }
             ]
         }
     ]
@@ -273,14 +298,14 @@ END_PGML
 
 from: '0'
 parseAll: 'true'
-to: '146'
+to: '175'
 type: 'root'
 stack: [
   [ # 0
     combine: { indent: 'indent', list: { indent: '1' }, par: 'true' }
     from: '0'
     indent: '0'
-    to: '146'
+    to: '175'
     type: 'indent'
     stack: [
       [ # 0
@@ -383,6 +408,27 @@ stack: [
         combine: { text: 'type' }
         from: '145'
         to: '146'
+        type: 'text'
+        stack: ['\n']
+      ]
+      [ # 10
+        allowDblStar: 'true'
+        allowStar: 'true'
+        allowTriStar: 'true'
+        from: '146'
+        hasDblStar: 'true'
+        parseQuoted: 'true'
+        terminator: '@]'
+        text: ' '[@ "inner code" @]' '
+        textFrom: '148'
+        to: '174'
+        token: '[@'
+        type: 'command'
+      ]
+      [ # 11
+        combine: { text: 'type' }
+        from: '174'
+        to: '175'
         type: 'text'
         stack: ['\n']
       ]
