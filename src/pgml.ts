@@ -222,6 +222,7 @@ const pgmlFormat = (block: Item, offset: number): Element<Type>[] => {
             children.push(
                 elt(
                     Type.VariableMark,
+                    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
                     block.to - 1 - (block.hasStar ? block.hasStar : block.hasDblStar ? 2 : 0) + offset,
                     block.to + offset
                 )
@@ -237,6 +238,7 @@ const pgmlFormat = (block: Item, offset: number): Element<Type>[] => {
             children.push(
                 elt(
                     Type.PerlCommandMark,
+                    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
                     block.to - (block.hasStar ? block.hasStar : block.hasDblStar ? 2 : 0) - 2 + offset,
                     block.to + offset
                 )
@@ -287,6 +289,7 @@ const pgmlFormat = (block: Item, offset: number): Element<Type>[] => {
             children.push(
                 elt(
                     Type.MathModeMark,
+                    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
                     to - block.terminator.length - (block.hasStar ? block.hasStar : block.hasDblStar ? 2 : 0),
                     to
                 )

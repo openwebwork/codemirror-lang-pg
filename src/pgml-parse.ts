@@ -520,6 +520,7 @@ export class PGMLParse {
 
     Quoted(token: string) {
         if (!this.split[this.i]) this.pos += this.split[this.i + 1]?.length ?? 0;
+        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
         const next = (this.split[this.i] ? this.split[this.i] : this.split[++this.i]) ?? '';
         const quote = next.substring(0, 1);
         this.pos += 1;
@@ -800,6 +801,10 @@ export class Item implements BlockDefinition {
         return input;
     }
 
+    toString() {
+        return '';
+    }
+
     stringifyObject(obj: object): string {
         return (
             '{ ' +
@@ -820,7 +825,7 @@ export class Item implements BlockDefinition {
     }
 
     show(indent?: string): string {
-        if (!indent) indent = '';
+        indent ??= '';
         const strings = [];
         for (const id of Object.keys(this).sort()) {
             if (id === 'stack' || id === 'prev' || !Object.hasOwn(this, id)) continue;
@@ -833,7 +838,6 @@ export class Item implements BlockDefinition {
                         .join(`\n${indent}  },\n${indent}  {\n`)}\n${indent}  }\n${indent}]`
                 );
             } else if (value instanceof Array) {
-                // eslint-disable-next-line @typescript-eslint/no-base-to-string
                 strings.push(`${indent}${id}: [${value.map((e) => `'${this.quote(e.toString())}'`).join(', ')}]`);
             } else if (typeof value === 'object' && !(value instanceof RegExp)) {
                 strings.push(`${indent}${id}: ${this.stringifyObject(value)}`);
@@ -973,7 +977,7 @@ export class Block extends Item {
     }
 
     show(indent?: string) {
-        if (!indent) indent = '';
+        indent ??= '';
         const strings = [super.show(indent)];
         if (this.stack) {
             strings.push(`${indent}stack: [`);
@@ -1056,7 +1060,7 @@ export class Text extends Item {
     }
 
     show(indent?: string) {
-        if (!indent) indent = '';
+        indent ??= '';
         const strings = [super.show(indent)];
         if (this.stack)
             strings.push(
