@@ -293,7 +293,9 @@ export class PGMLParse {
     Item(type: string, token: string, options: { noIndent?: number; options?: string[]; hasStar?: number } = {}) {
         const def = { ...options, token };
         const top = this.block?.topItem();
-        this.block?.pushItem(new Item(type, top instanceof Item ? top.to : this.block.to, def));
+        this.block?.pushItem(
+            new Item(type, top instanceof Item && top.to > this.block.to ? top.to : this.block.to, def)
+        );
         this.atBlockStart = 0;
     }
 

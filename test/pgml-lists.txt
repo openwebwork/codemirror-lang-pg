@@ -1416,3 +1416,258 @@ stack: [
     ]
   ]
 ]
+
+# enumerated list with indentation
+
+BEGIN_PGML
+a) An item. Followed by a new line and an indented block.
+
+    Followed by an answer block causes the incorrect highlighting.
+
+    [_]{1}
+
+b) If the indention is after a new line, it
+    misses the first few characters.
+
+    [_]{2}
+END_PGML
+
+==>
+
+{
+    "name": "Program",
+    "from": 0,
+    "to": 251,
+    "children": [
+        {
+            "name": "PGMLBlock",
+            "from": 0,
+            "to": 251,
+            "children": [
+                { "name": "BeginPG", "from": 0, "to": 10 },
+                {
+                    "name": "PGMLContent",
+                    "from": 10,
+                    "to": 243,
+                    "children": [
+                        {
+                            "name": "OrderedList",
+                            "from": 11,
+                            "to": 198,
+                            "children": [
+                                {
+                                    "name": "ListItem",
+                                    "from": 11,
+                                    "to": 148,
+                                    "children": [
+                                        { "name": "ListMark", "from": 11, "to": 14 },
+                                        {
+                                            "name": "Paragraph",
+                                            "from": 14,
+                                            "to": 148,
+                                            "children": [
+                                                { "name": "AnswerRule", "from": 142, "to": 145 },
+                                                {
+                                                    "name": "Option",
+                                                    "from": 145,
+                                                    "to": 148,
+                                                    "children": [
+                                                        { "name": "OptionMark", "from": 145, "to": 146 },
+                                                        {
+                                                            "name": "Program",
+                                                            "from": 146,
+                                                            "to": 147,
+                                                            "children": [
+                                                                {
+                                                                    "name": "ExpressionStatement",
+                                                                    "from": 146,
+                                                                    "to": 147,
+                                                                    "children": [
+                                                                        { "name": "Integer", "from": 146, "to": 147 }
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        },
+                                                        { "name": "OptionMark", "from": 147, "to": 148 }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name": "ListItem",
+                                    "from": 150,
+                                    "to": 243,
+                                    "children": [
+                                        { "name": "ListMark", "from": 150, "to": 153 },
+                                        {
+                                            "name": "Paragraph",
+                                            "from": 153,
+                                            "to": 243,
+                                            "children": [
+                                                { "name": "AnswerRule", "from": 236, "to": 239 },
+                                                {
+                                                    "name": "Option",
+                                                    "from": 239,
+                                                    "to": 242,
+                                                    "children": [
+                                                        { "name": "OptionMark", "from": 239, "to": 240 },
+                                                        {
+                                                            "name": "Program",
+                                                            "from": 240,
+                                                            "to": 241,
+                                                            "children": [
+                                                                {
+                                                                    "name": "ExpressionStatement",
+                                                                    "from": 240,
+                                                                    "to": 241,
+                                                                    "children": [
+                                                                        { "name": "Integer", "from": 240, "to": 241 }
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        },
+                                                        { "name": "OptionMark", "from": 241, "to": 242 }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                { "name": "EndPG", "from": 243, "to": 251 }
+            ]
+        }
+    ]
+}
+
+==>
+
+from: '0'
+parseAll: 'true'
+to: '232'
+type: 'root'
+stack: [
+  [ # 0
+    bullet: 'alpha'
+    combine: { list: 'bullet', par: 'true' }
+    from: '0'
+    to: '187'
+    token: ''
+    type: 'list'
+    stack: [
+      [ # 0
+        from: '0'
+        to: '137'
+        token: 'a) '
+        type: 'bullet'
+        stack: [
+          [ # 0
+            combine: { text: 'type' }
+            from: '3'
+            to: '57'
+            type: 'text'
+            stack: ['An item. Followed by a new line and an indented block.']
+          ]
+          [ # 1
+            from: '57'
+            noIndent: '1'
+            to: '59'
+            token: '\n\n'
+            type: 'par'
+          ]
+          [ # 2
+            combine: { text: 'type' }
+            from: '63'
+            to: '125'
+            type: 'text'
+            stack: ['Followed by an answer block causes the incorrect highlighting.']
+          ]
+          [ # 3
+            from: '125'
+            noIndent: '1'
+            to: '127'
+            token: '\n\n'
+            type: 'par'
+          ]
+          [ # 4
+            from: '131'
+            optionStack: [
+              {
+                from: '134'
+                terminator: '}'
+                text: '1'
+                textFrom: '135'
+                to: '137'
+                token: '{'
+                type: 'options'
+              }
+            ]
+            options: ['answer', 'width', 'name', 'cmp_options']
+            to: '137'
+            token: '[_]'
+            type: 'answer'
+          ]
+        ]
+      ]
+      [ # 1
+        from: '137'
+        noIndent: '1'
+        to: '139'
+        token: '\n\n'
+        type: 'par'
+      ]
+      [ # 2
+        from: '139'
+        to: '232'
+        token: 'b) '
+        type: 'bullet'
+        stack: [
+          [ # 0
+            combine: { text: 'type' }
+            from: '142'
+            to: '219'
+            type: 'text'
+            stack: ['If the indention is after a new line, it', '\n', 'misses the first few characters.']
+          ]
+          [ # 1
+            from: '219'
+            noIndent: '1'
+            to: '221'
+            token: '\n\n'
+            type: 'par'
+          ]
+          [ # 2
+            from: '225'
+            optionStack: [
+              {
+                from: '228'
+                terminator: '}'
+                text: '2'
+                textFrom: '229'
+                to: '231'
+                token: '{'
+                type: 'options'
+              }
+            ]
+            options: ['answer', 'width', 'name', 'cmp_options']
+            to: '231'
+            token: '[_]'
+            type: 'answer'
+          ]
+          [ # 3
+            combine: { text: 'type' }
+            from: '231'
+            to: '232'
+            type: 'text'
+            stack: ['\n']
+          ]
+        ]
+      ]
+    ]
+  ]
+]
