@@ -658,7 +658,12 @@ export const quoteLikeOperator = new ExternalTokenizer(
             let nextChar = input.next;
             while (isWhitespace(nextChar)) nextChar = input.peek(pos++);
 
-            if (stack.canShift(QuoteLikeStartDelimiter) && nextChar >= 0 && (!haveWhitespace || nextChar !== 35)) {
+            if (
+                stack.canShift(QuoteLikeStartDelimiter) &&
+                nextChar >= 0 &&
+                (!haveWhitespace || nextChar !== 35) &&
+                (nextChar !== 61 || input.peek(pos) !== 62) // Do not accept "=" if followed by ">" (i.e., a fat comma).
+            ) {
                 input.acceptToken(QuoteLikeStartDelimiter, pos);
                 return;
             }

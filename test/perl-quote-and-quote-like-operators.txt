@@ -701,3 +701,56 @@ Program(
         StatementEnd(";")
     )
 )
+
+# fat comma cannot be quote like start delimiter
+
+my $a = { y => 1, b => 2, c => 3 };
+
+my $b = { tr => 1, b  => 2, c  => 3 };
+
+my $c = { q => 1, b => 2 };
+
+==>
+
+Program(
+    ExpressionStatement(
+        Assignment(
+            VariableDeclaration(my, ScalarVariable),
+            "=",
+            HashRef(
+                "{",
+                Pair(Identifier, FatComma, Integer),
+                Comma,
+                Pair(Identifier, FatComma, Integer),
+                Comma,
+                Pair(Identifier, FatComma, Integer),
+                "}"
+            )
+        ),
+        StatementEnd(";")
+    ),
+    ExpressionStatement(
+        Assignment(
+            VariableDeclaration(my, ScalarVariable),
+            "=",
+            HashRef(
+                "{",
+                Pair(Identifier, FatComma, Integer),
+                Comma,
+                Pair(Identifier, FatComma, Integer),
+                Comma,
+                Pair(Identifier, FatComma, Integer),
+                "}"
+            )
+        ),
+        StatementEnd(";")
+    ),
+    ExpressionStatement(
+        Assignment(
+            VariableDeclaration(my, ScalarVariable),
+            "=",
+            HashRef("{", Pair(Identifier, FatComma, Integer), Comma, Pair(Identifier, FatComma, Integer), "}")
+        ),
+        StatementEnd(";")
+    )
+)
