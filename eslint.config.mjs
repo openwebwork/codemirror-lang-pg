@@ -9,7 +9,7 @@ export default [
     { ignores: ['**/dist/*', 'src/pg.grammar.terms.js'] },
     { files: ['**/*.{js,mjs,cjs,ts}'] },
     pluginJs.configs.recommended,
-    mochaPlugin.configs.flat.recommended,
+    mochaPlugin.configs.recommended,
     ...tseslint.configs.strictTypeChecked,
     ...tseslint.configs.stylisticTypeChecked,
     {
