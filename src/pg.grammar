@@ -304,7 +304,7 @@ List { !list "(" !listContents commaSep<expression> ")" }
 ArrayRef { "[" commaSep<expression> "]" }
 HashRef { ArithOp<"+">? "{" commaSep<expression> "}" }
 
-arrayAccessor { "[" expression "]" }
+arrayAccessor { "[" commaSep<expression> "]" }
 hashAccessor { "{" ((!bareword Identifier) | expression) "}" }
 
 ScalarDereference { "$" (ScalarDereference | ScalarVariable | PGVariable | "{" expression "}") }

@@ -157,6 +157,7 @@ $var->[1];
 $var->[-1];
 $var->[1][1];
 $var->[1]->[1];
+@var[0, 1, 2];
 $var{a};
 $var{a}{b};
 $var->{a};
@@ -189,6 +190,10 @@ Program(
             Integer,
             "]"
         ),
+        StatementEnd(";")
+    ),
+    ExpressionStatement(
+        ArrayAccessVariable(ArrayVariable, "[", Integer, Comma, Integer, Comma, Integer, "]"),
         StatementEnd(";")
     ),
     ExpressionStatement(HashAccessVariable(ScalarVariable, "{", Identifier, "}"), StatementEnd(";")),
