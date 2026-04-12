@@ -3,11 +3,12 @@
         "target": "es2022",
         "lib": ["esnext"],
         "module": "esnext",
-        "moduleResolution": "node",
+        "moduleResolution": "bundler",
         "noImplicitReturns": true,
         "noUnusedLocals": true,
         "strict": true,
-        "newLine": "lf"
+        "newLine": "lf",
+        "types": ["mocha", "node"]
     },
     "include": ["*.ts"]
 }

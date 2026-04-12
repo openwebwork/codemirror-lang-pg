@@ -184,7 +184,7 @@ export class PGMLParse {
             this.pos += this.split[this.i - 1]?.length ?? 0;
         }
 
-        this.End('END_PGML');
+        this.End();
         this.root.to = this.pos;
         delete this.root.parser;
     }
@@ -235,8 +235,7 @@ export class PGMLParse {
         this.atBlockStart = 1;
     }
 
-    End(action: string | undefined, endAt?: Block) {
-        if (typeof action === 'undefined') action = 'paragraph ends';
+    End(endAt?: Block) {
         let block = this.block;
         if (block?.isContainer) return;
         const topItem = block?.topItem();
@@ -313,7 +312,7 @@ export class PGMLParse {
 
     ForceBreak(token: string) {
         if (token === '   ') {
-            this.End('forced break');
+            this.End();
             this.Item('forced', token, { noIndent: 1 });
             this.indent = 0;
         } else {
@@ -327,7 +326,7 @@ export class PGMLParse {
         if (this.block?.allowPar) {
             this.Text('\n\n');
         } else {
-            this.End(undefined, endAt);
+            this.End(endAt);
             this.Item('par', token, { noIndent: 1 });
             this.atLineStart = this.ignoreNL = 1;
             this.indent = this.actualIndent = 0;
@@ -343,7 +342,7 @@ export class PGMLParse {
             const top = this.block?.topItem();
             if (top && top instanceof Text) top.to += token.length;
             if (indent !== this.indent) {
-                this.End('indentation change');
+                this.End();
                 this.indent = indent;
             }
         } else {
@@ -388,7 +387,7 @@ export class PGMLParse {
         }
         while (block?.type !== 'root') {
             if (block && block.prev?.type === type) {
-                this.End(`end of ${type ?? ''}`, block);
+                this.End(block);
                 block.to += token.length;
                 this.Terminate();
                 return;
@@ -428,7 +427,7 @@ export class PGMLParse {
         let block = this.block;
         if (block?.type !== 'root' && !block?.align) {
             while (block?.type !== 'root' && !block?.prev?.align) block = block?.prev;
-            this.End('start of list item', block);
+            this.End(block);
         }
         this.indent = this.actualIndent;
         this.Begin('', 'list', { bullet });
@@ -445,7 +444,7 @@ export class PGMLParse {
         if (this.atLineStart) {
             if (block?.type !== 'root' && block?.type !== 'align') {
                 while (block && block.type !== 'root' && block.prev?.type !== 'align') block = block.prev;
-                this.End('start of heading', block);
+                this.End(block);
             }
             this.Begin(token, '#', { n });
         } else {
@@ -458,7 +457,7 @@ export class PGMLParse {
             }
             if (this.isLineEnd(block)) {
                 if (block) block.to += token.length;
-                this.End('end of heading', block);
+                this.End(block);
                 if (block) block.terminator = token;
                 this.indent = 0;
             } else {
@@ -483,7 +482,7 @@ export class PGMLParse {
                 block.terminator = token;
                 block.to += token.length;
             }
-            this.End('end of centering', block);
+            this.End(block);
         } else {
             this.Text(token);
         }
@@ -494,7 +493,7 @@ export class PGMLParse {
             this.Text(token);
             return;
         }
-        this.End('start of aligned text');
+        this.End();
         this.indent = this.actualIndent;
         this.Begin(token, '>>');
         this.atLineStart = this.ignoreNL = 1;
@@ -505,7 +504,7 @@ export class PGMLParse {
             this.Text(token);
             return;
         }
-        this.End('start of preformatted code');
+        this.End();
         this.indent = this.actualIndent;
         this.Begin(token, '```');
     }
@@ -515,7 +514,7 @@ export class PGMLParse {
             this.Text(token);
             return;
         }
-        this.End('start of preformatted text');
+        this.End();
         this.indent = this.actualIndent;
         this.Begin(token, ':   ');
     }

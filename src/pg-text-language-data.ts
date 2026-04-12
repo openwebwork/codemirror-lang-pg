@@ -25,6 +25,7 @@ const displayMathSnippet = snippetCompletion('\\[${ }\\]${}', {
     label: '\\[ \\]',
     info: 'display math',
     type: 'constant',
+    // eslint-disable-next-line no-useless-assignment
     boost: i--
 });
 

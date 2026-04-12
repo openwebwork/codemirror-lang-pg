@@ -2,11 +2,12 @@
     "compilerOptions": {
         "target": "es2022",
         "module": "esnext",
-        "moduleResolution": "node",
+        "moduleResolution": "bundler",
         "allowJs": true,
         "strict": true,
         "declaration": true,
         "noEmit": true,
+        "rootDir": "./src",
         "outDir": "dist",
         "newLine": "lf"
     },

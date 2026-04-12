@@ -1,6 +1,6 @@
 {
     "name": "@openwebwork/codemirror-lang-pg",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "description": "PG language support for CodeMirror",
     "author": "The WeBWorK Project",
     "license": "MIT",
@@ -29,26 +29,31 @@
     "types": "dist/index.d.ts",
     "sideEffects": false,
     "dependencies": {
-        "@codemirror/language": "^6.11.3",
+        "@codemirror/language": "^6.12.3",
         "@lezer/highlight": "^1.2.3",
-        "@lezer/lr": "^1.4.4"
+        "@lezer/lr": "^1.4.8"
     },
     "devDependencies": {
-        "@codemirror/autocomplete": "^6.20.0",
+        "@codemirror/autocomplete": "^6.20.1",
+        "@eslint/js": "^10.0.1",
         "@lezer/generator": "^1.8.0",
         "@rollup/plugin-typescript": "^12.3.0",
-        "@stylistic/eslint-plugin": "^5.6.1",
+        "@stylistic/eslint-plugin": "^5.10.0",
         "@types/mocha": "^10.0.10",
-        "eslint": "^9.39.1",
+        "eslint": "^10.2.0",
         "eslint-config-prettier": "^10.1.8",
         "eslint-plugin-mocha": "^11.2.0",
         "mocha": "^11.7.5",
-        "prettier": "^3.7.3",
-        "rollup": "^4.53.3",
-        "rollup-plugin-dts": "^6.3.0",
+        "prettier": "^3.8.2",
+        "rollup": "^4.60.1",
+        "rollup-plugin-dts": "^6.4.1",
         "ts-node": "^10.9.2",
         "tslib": "^2.8.1",
-        "typescript": "^5.9.3",
-        "typescript-eslint": "^8.48.1"
+        "typescript": "^6.0.2",
+        "typescript-eslint": "^8.58.1"
+    },
+    "overrides": {
+        "diff": "^8.0.3",
+        "serialize-javascript": "^7.0.2"
     }
 }
