@@ -415,22 +415,33 @@ const peekLCWord = (input: InputStream): [string, number] => {
     return [word, nextChar];
 };
 
+const fatCommaAhead = (input: InputStream, startPos = 0) => {
+    let offset = startPos;
+    while (isWhitespace(input.peek(offset))) ++offset;
+    if (input.peek(offset) === 61 /* = */ && input.peek(offset + 1) === 62 /* > */) {
+        return true;
+    }
+    return false;
+};
+
 export const builtinOperator = new ExternalTokenizer((input, stack) => {
     if (stack.canShift(PGOperator)) {
         const [word, nextChar] = peekWord(input);
         if (word.startsWith('ENDDOCUMENT')) input.acceptToken(ENDDOCUMENT, 11);
-        else if (pgOperators.has(word) && !isIdentifierChar(nextChar)) input.acceptToken(PGOperator, word.length);
+        else if (pgOperators.has(word) && !isIdentifierChar(nextChar) && !fatCommaAhead(input, word.length))
+            input.acceptToken(PGOperator, word.length);
     }
 
     if (stack.canShift(NamedUnaryOperator)) {
         const [word, nextChar] = peekLCWord(input);
-        if (namedUnaryOperators.has(word) && !isIdentifierChar(nextChar))
+        if (namedUnaryOperators.has(word) && !isIdentifierChar(nextChar) && !fatCommaAhead(input, word.length))
             input.acceptToken(NamedUnaryOperator, word.length);
     }
 
     if (stack.canShift(ListOperator)) {
         const [word, nextChar] = peekLCWord(input);
-        if (listOperators.has(word) && !isIdentifierChar(nextChar)) input.acceptToken(ListOperator, word.length);
+        if (listOperators.has(word) && !isIdentifierChar(nextChar) && !fatCommaAhead(input, word.length))
+            input.acceptToken(ListOperator, word.length);
     }
 });
 

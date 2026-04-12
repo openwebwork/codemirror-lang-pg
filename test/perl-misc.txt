@@ -75,3 +75,29 @@ Program(
     ),
     EmptyStatement(";")
 )
+
+# built in operator can not be first in pair
+
+%hash = (
+    defined => 1,
+    split   => 1
+);
+
+==>
+
+Program(
+    ExpressionStatement(
+        Assignment(
+            HashVariable,
+            "=",
+            List(
+                "(",
+                Pair(Identifier, FatComma, Integer),
+                Comma,
+                Pair(Identifier, FatComma, Integer),
+                ")"
+            )
+        ),
+        StatementEnd(";")
+    )
+)
