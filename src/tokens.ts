@@ -33,6 +33,7 @@ import {
     PodContent,
     PodCut,
     endDataBlock,
+    Float,
     m,
     q,
     qq,
@@ -42,6 +43,7 @@ import {
     tr,
     y,
     Prototype,
+    Version,
     BeginPG,
     PGMLContent,
     PGTextContent,
@@ -54,6 +56,7 @@ import {
     isUpperCaseASCIILetter,
     isLowerCaseASCIILetter,
     isASCIILetter,
+    isDigit,
     isIdentifierChar,
     isVariableStartChar,
     isSpecialVariableChar,
@@ -548,10 +551,10 @@ const scanEscape = (input: InputStream) => {
         return size;
     }
 
-    // Restricted range hexidecimal character
+    // Restricted range hexadecimal character
     if (after == 120 /* x */ && isHex(input.peek(3))) return isHex(input.peek(4)) ? 5 : 4;
 
-    // Hexidecimal character
+    // Hexadecimal character
     if (after == 120 /* x */ && input.peek(3) == 123 /* { */) {
         // FIXME: There could be optional blanks at the beginning and end inside the braces.
         for (let size = 4; ; ++size) {
@@ -839,6 +842,52 @@ export const endData = new ExternalTokenizer((input, stack) => {
         while (input.advance() >= 0);
         input.acceptToken(endDataBlock);
     }
+});
+
+// Scan to the end of a sequence of digits beginning at start. Underscores are allowed in the sequence where Perl allows
+// them.  Returns the position at the end of the sequence, which is the position started at if there were no digits at
+// the start position.
+const scanDigits = (input: InputStream, start: number) => {
+    let pos = start;
+    while (isDigit(input.peek(pos))) ++pos;
+    if (pos == start) return start;
+    while (input.peek(pos) == 95 /* _ */ && isDigit(input.peek(pos + 1))) {
+        while (isDigit(input.peek(++pos)));
+    }
+    return pos;
+};
+
+const scanExponent = (input: InputStream, start: number) => {
+    if (input.peek(start) != 101 /* e */ && input.peek(start) != 69 /* E */) return start;
+    let pos = start + 1;
+    if (input.peek(pos) == 43 /* + */ || input.peek(pos) == 45 /* - */) ++pos;
+    const end = scanDigits(input, pos);
+    return end == pos ? start : end;
+};
+
+// This tokenizer distinguishes a decimal point in a number from the first period in a range operator.
+export const number = new ExternalTokenizer((input, stack) => {
+    // A Version is preferred to a Float wherever one is allowed.
+    if (!stack.canShift(Float) || stack.canShift(Version)) return;
+
+    let pos = scanDigits(input, 0);
+    let isFloat = false;
+
+    if (input.peek(pos) == 46 /* . */ && input.peek(pos + 1) != 46 /* . */) {
+        const fraction = scanDigits(input, pos + 1);
+        // A dot with digits on neither side of it is the concatenation operator.
+        if (fraction == pos + 1 && pos == 0) return;
+        pos = fraction;
+        isFloat = true;
+    } else if (pos == 0) return;
+
+    const exponentEnd = scanExponent(input, pos);
+    if (exponentEnd > pos) {
+        pos = exponentEnd;
+        isFloat = true;
+    }
+
+    if (isFloat) input.acceptToken(Float, pos);
 });
 
 export const pgText = new ExternalTokenizer(

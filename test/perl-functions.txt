@@ -213,7 +213,7 @@ Program(
     )
 )
 
-# indrect method invocations
+# indirect method invocations
 
 my $object1 = new Frog::Foo($arg1, $arg2);
 my $object2 = new Fish::Foo;

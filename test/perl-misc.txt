@@ -101,3 +101,13 @@ Program(
         StatementEnd(";")
     )
 )
+
+# a module version is a version and not a float
+
+package Foo::Package 1.23;
+
+==>
+
+Program(
+    PackageStatement(package, PackageName(Identifier, "::", Identifier), Version, StatementEnd(";"))
+)

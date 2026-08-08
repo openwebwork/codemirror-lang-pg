@@ -404,7 +404,7 @@ semicolon { StatementEnd | automaticSemicolon }
     InterpolatedHeredocBody { interpolatedHeredocStart interpolationContent* HeredocEndIdentifier }
 
     // The afterInterpolation, packageNamePart, and afterPackageName tokens are invisible markers used to signal
-    // (via canShift) that the tokenzier shouldn't consume things that the grammar should tokenize.
+    // (via canShift) that the tokenizer shouldn't consume things that the grammar should tokenize.
     interpolationContent {
         InterpolatedStringContent |
         EscapeSequence |
@@ -486,6 +486,7 @@ maybeParens<content> { !noParens content | "(" !parens content ")" }
 @external tokens regex from "./tokens" { patternMatchStart, RegexOptions, regexEnd }
 @external tokens pod from "./tokens" { PodDirective, PodContent, PodCut }
 @external tokens endData from "./tokens" { endDataBlock }
+@external tokens number from "./tokens" { Float }
 @external tokens pgText from "./tokens" { BeginPG[closedBy=EndPG], PGMLContent, PGTextContent, EndPG[openedBy=BeginPG] }
 
 @tokens {
@@ -496,13 +497,6 @@ maybeParens<content> { !noParens content | "(" !parens content ")" }
     oct { $[0-7] }
 
     separatedDigits { ("_" @digit+)* }
-
-    exponent { $[eE] $[+-]? @digit+ separatedDigits }
-
-    Float {
-        @digit+ separatedDigits ("." @digit* separatedDigits exponent? | exponent) |
-        "." @digit+ separatedDigits exponent?
-    }
 
     Integer {
         @digit+ separatedDigits |
@@ -559,7 +553,6 @@ maybeParens<content> { !noParens content | "(" !parens content ")" }
     @precedence {
         StringSingleQuoted,
         Version,
-        Float,
         Integer,
         RefOp<"~~">,
         Identifier,

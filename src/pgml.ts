@@ -92,7 +92,7 @@ class BlockContext implements PartialParse {
     contentStart: number;
     contentEnd: number;
 
-    // The current parsed postion in the content relative to contentStart,
+    // The current parsed position in the content relative to contentStart,
     // i.e., the position in the current content string.
     contentPos = 0;
 

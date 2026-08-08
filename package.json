@@ -1,6 +1,6 @@
 {
     "name": "@openwebwork/codemirror-lang-pg",
-    "version": "0.0.5",
+    "version": "0.0.6",
     "description": "PG language support for CodeMirror",
     "author": "The WeBWorK Project",
     "license": "MIT",

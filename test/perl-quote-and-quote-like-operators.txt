@@ -170,6 +170,31 @@ Program(
     )
 )
 
+# hexadecimal numbers
+
+"~~x31~~x32~~x33~~x34~~x35~~x36~~x37~~x38~~x39";
+"~~x{263A}";
+
+==>
+
+Program(
+    ExpressionStatement(
+        StringDoubleQuoted(
+            EscapeSequence,
+            EscapeSequence,
+            EscapeSequence,
+            EscapeSequence,
+            EscapeSequence,
+            EscapeSequence,
+            EscapeSequence,
+            EscapeSequence,
+            EscapeSequence
+        )
+        StatementEnd(";")
+    ),
+    ExpressionStatement(StringDoubleQuoted(EscapeSequence), StatementEnd(";"))
+)
+
 # q quoted strings
 
 q/abc/;
@@ -689,6 +714,8 @@ Program(
             ArrayVariable,
             InterpolatedStringContent,
             ArrayVariable,
+            InterpolatedStringContent,
+            SpecialScalarVariable,
             InterpolatedStringContent,
             SpecialScalarVariable,
             InterpolatedStringContent,

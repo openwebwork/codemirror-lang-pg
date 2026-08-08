@@ -516,7 +516,7 @@ Program(
 
 my $m =  << "END1";
 first heredoc before
-@{[ qq{quoteLike before @{[<< 'END2' ]}qouteLike after} ]}
+@{[ qq{quoteLike before @{[<< 'END2' ]}quoteLike after} ]}
 inner heredoc content
 END2
 first heredoc after
