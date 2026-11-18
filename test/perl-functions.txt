@@ -422,3 +422,22 @@ Program(
         )
     )
 )
+
+# list operators with no arguments
+
+while (@list) { chomp; }
+my @ids = split;
+
+==>
+
+Program(
+    WhileStatement(
+        while,
+        ParenthesizedArguments("(", ArrayVariable, ")"),
+        Block("{", ExpressionStatement(ListOperatorExpression(ListOperator), StatementEnd(";")), "}")
+    ),
+    ExpressionStatement(
+        Assignment(VariableDeclaration(my, ArrayVariable), "=", ListOperatorExpression(ListOperator)),
+        StatementEnd(";")
+    )
+)

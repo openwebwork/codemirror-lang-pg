@@ -268,3 +268,84 @@ Program(
         StatementEnd(";")
     )
 )
+
+# repetition operator with no space before its right operand
+
+my $s = "~~0"x256;
+my $t = $u x3;
+my @a = (1)x3;
+my $v = $h{x1} + x2();
+
+==>
+
+Program(
+    ExpressionStatement(
+        Assignment(
+            VariableDeclaration(my, ScalarVariable),
+            "=",
+            BinaryExpression(StringDoubleQuoted(EscapeSequence), x, Integer)
+        ),
+        StatementEnd(";")
+    ),
+    ExpressionStatement(
+        Assignment(VariableDeclaration(my, ScalarVariable), "=", BinaryExpression(ScalarVariable, x, Integer)),
+        StatementEnd(";")
+    ),
+    ExpressionStatement(
+        Assignment(VariableDeclaration(my, ArrayVariable), "=", BinaryExpression(List("(", Integer, ")"), x, Integer)),
+        StatementEnd(";")
+    ),
+    ExpressionStatement(
+        Assignment(
+            VariableDeclaration(my, ScalarVariable),
+            "=",
+            BinaryExpression(
+                HashAccessVariable(ScalarVariable, "{", Identifier, "}"),
+                ArithOp,
+                CallExpression(FunctionName(Identifier), ParenthesizedArguments("(", ")"))
+            )
+        ),
+        StatementEnd(";")
+    )
+)
+
+# for loops
+
+for my $var (@list) { warn $var }
+for ($i = 0; $i < 10; ++$i) { warn $i }
+for (; $i < 10; ++$i) { warn $i }
+for (;;) { last }
+
+==>
+
+Program(
+    ForStatement2(
+        for,
+        my,
+        ScalarVariable,
+        ParenthesizedArguments("(", ArrayVariable, ")"),
+        Block("{", ExpressionStatement(ListOperatorExpression(ListOperator, Arguments(ScalarVariable))), "}")
+    ),
+    ForStatement1(
+        for,
+        "(",
+        Assignment(ScalarVariable, "=", Integer),
+        StatementEnd(";"),
+        BinaryExpression(ScalarVariable, CompareOp, Integer),
+        StatementEnd(";"),
+        UpdateExpression(ArithOp, ScalarVariable),
+        ")",
+        Block("{", ExpressionStatement(ListOperatorExpression(ListOperator, Arguments(ScalarVariable))), "}")
+    ),
+    ForStatement1(
+        for,
+        "(",
+        StatementEnd(";"),
+        BinaryExpression(ScalarVariable, CompareOp, Integer),
+        StatementEnd(";"),
+        UpdateExpression(ArithOp, ScalarVariable),
+        ")",
+        Block("{", ExpressionStatement(ListOperatorExpression(ListOperator, Arguments(ScalarVariable))), "}")
+    ),
+    ForStatement1(for, "(", StatementEnd(";"), StatementEnd(";"), ")", Block("{", LoopControlStatement(last), "}"))
+)

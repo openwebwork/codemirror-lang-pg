@@ -113,6 +113,29 @@ Program(
     ExpressionStatement(FunctionDereference("&", ScalarVariable), StatementEnd(";"))
 )
 
+# calling a dereferenced function
+
+&$orig();
+&$orig(1, 2);
+&{ $orig }();
+
+==>
+
+Program(
+    ExpressionStatement(
+        FunctionDereference("&", ScalarVariable, ParenthesizedArguments("(", ")")),
+        StatementEnd(";")
+    ),
+    ExpressionStatement(
+        FunctionDereference("&", ScalarVariable, ParenthesizedArguments("(", Integer, Comma, Integer, ")")),
+        StatementEnd(";")
+    ),
+    ExpressionStatement(
+        FunctionDereference("&", "{", ScalarVariable, "}", ParenthesizedArguments("(", ")")),
+        StatementEnd(";")
+    )
+)
+
 # hash and array references
 
 my $var = ~~@array;
@@ -164,6 +187,7 @@ $var->{a};
 $var->{'-1 + 3'};
 $var->{a}{a};
 $var->{a}->{a};
+$::{$pack};
 
 ==>
 
@@ -224,7 +248,8 @@ Program(
             "}"
         ),
         StatementEnd(";")
-    )
+    ),
+    ExpressionStatement(HashAccessVariable(SpecialScalarVariable, "{", ScalarVariable, "}"), StatementEnd(";"))
 )
 
 # special scalar variables
@@ -315,6 +340,43 @@ Program(
             ),
             "=",
             Integer
+        ),
+        StatementEnd(";")
+    )
+)
+
+# fully qualified constants used as expressions
+
+my @a = @{Foo::Bar::LIST};
+my $r = Foo->new(Foo::Bar::CONST, 1);
+
+==>
+
+Program(
+    ExpressionStatement(
+        Assignment(
+            VariableDeclaration(my, ArrayVariable),
+            "=",
+            ArrayDereference(Constant(Identifier, "::", Identifier, "::", Identifier))
+        ),
+        StatementEnd(";")
+    ),
+    ExpressionStatement(
+        Assignment(
+            VariableDeclaration(my, ScalarVariable),
+            "=",
+            MethodInvocation(
+                PackageName(Identifier),
+                ArrowOperator,
+                FunctionName(Identifier),
+                ParenthesizedArguments(
+                    "(",
+                    Constant(Identifier, "::", Identifier, "::", Identifier),
+                    Comma,
+                    Integer,
+                    ")"
+                )
+            )
         ),
         StatementEnd(";")
     )

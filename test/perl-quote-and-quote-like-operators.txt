@@ -591,6 +591,8 @@ y # comment at beginning end of line
     # comment at middle on next line
     {b}cdsr;
 
+tr/a//;
+
 ==>
 
 Program(
@@ -647,6 +649,16 @@ Program(
             StringContent,
             QuoteLikeEndDelimiter,
             RegexOptions
+        ),
+        StatementEnd(";")
+    ),
+    ExpressionStatement(
+        TransliterationTrOrY(
+            tr,
+            QuoteLikeStartDelimiter,
+            StringContent,
+            QuoteLikeSeparatorDelimiter,
+            QuoteLikeEndDelimiter
         ),
         StatementEnd(";")
     )
@@ -777,6 +789,63 @@ Program(
             VariableDeclaration(my, ScalarVariable),
             "=",
             HashRef("{", Pair(Identifier, FatComma, Integer), Comma, Pair(Identifier, FatComma, Integer), "}")
+        ),
+        StatementEnd(";")
+    )
+)
+
+# pattern matches with an empty pattern or following a list operator
+
+my @a = split //, $x;
+my @b = split /,/, $x;
+my @c = split(//, $x);
+$x =~ //;
+my $d = $y // 0;
+my $e = $y / $z / 2;
+
+==>
+
+Program(
+    ExpressionStatement(
+        Assignment(
+            VariableDeclaration(my, ArrayVariable),
+            "=",
+            ListOperatorExpression(ListOperator, Arguments(PatternMatch("/", "/"), Comma, ScalarVariable))
+        ),
+        StatementEnd(";")
+    ),
+    ExpressionStatement(
+        Assignment(
+            VariableDeclaration(my, ArrayVariable),
+            "=",
+            ListOperatorExpression(
+                ListOperator,
+                Arguments(PatternMatch("/", InterpolatedStringContent, "/"), Comma, ScalarVariable)
+            )
+        ),
+        StatementEnd(";")
+    ),
+    ExpressionStatement(
+        Assignment(
+            VariableDeclaration(my, ArrayVariable),
+            "=",
+            ListOperatorExpression(
+                ListOperator,
+                ParenthesizedArguments("(", PatternMatch("/", "/"), Comma, ScalarVariable, ")")
+            )
+        ),
+        StatementEnd(";")
+    ),
+    ExpressionStatement(BinaryExpression(ScalarVariable, BindingOp, PatternMatch("/", "/")), StatementEnd(";")),
+    ExpressionStatement(
+        Assignment(VariableDeclaration(my, ScalarVariable), "=", BinaryExpression(ScalarVariable, LogicOp, Integer)),
+        StatementEnd(";")
+    ),
+    ExpressionStatement(
+        Assignment(
+            VariableDeclaration(my, ScalarVariable),
+            "=",
+            BinaryExpression(BinaryExpression(ScalarVariable, "/", ScalarVariable), "/", Integer)
         ),
         StatementEnd(";")
     )

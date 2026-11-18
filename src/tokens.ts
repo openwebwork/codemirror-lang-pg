@@ -27,6 +27,7 @@ import {
     StringContent,
     QWElement,
     patternMatchStart,
+    repetitionOperator,
     RegexOptions,
     regexEnd,
     PodDirective,
@@ -387,6 +388,13 @@ export const specialScalarVariable = new ExternalTokenizer((input, stack) => {
         }
         if (!isSpecialVariableChar(first)) return;
         if (first == 36 /* $ */ && isIdentifierChar(second)) return;
+
+        // `$::` is the main package sigil, not the `$:` special variable followed by a bare `:`.
+        if (first == 58 /* : */ && second == 58 /* : */) {
+            input.acceptToken(SpecialScalarVariable, 3);
+            return;
+        }
+
         input.acceptToken(SpecialScalarVariable, 2);
         return;
     }
@@ -761,12 +769,32 @@ export const quoteLikeOperator = new ExternalTokenizer(
     { contextual: true }
 );
 
+const precededByListOperator = (input: InputStream) => {
+    let offset = -1;
+    while (isWhitespace(input.peek(offset))) --offset;
+    const end = offset;
+    while (isIdentifierChar(input.peek(offset))) --offset;
+    if (offset == end) return false;
+    // Make sure this is not a variable, method call, package name, or hash key.
+    const before = input.peek(offset);
+    if (before == 36 /* $ */ || before == 64 /* @ */ || before == 37 /* % */ || before == 38 /* & */) return false;
+    if (before == 62 /* > */ && input.peek(offset - 1) == 45 /* - */) return false;
+    if (before == 58 /* : */ && input.peek(offset - 1) == 58 /* : */) return false;
+    let word = '';
+    for (let i = offset + 1; i <= end; ++i) word += String.fromCharCode(input.peek(i));
+    return listOperators.has(word);
+};
+
 export const regex = new ExternalTokenizer(
     (input, stack) => {
         if (stack.canShift(patternMatchStart) && input.next == 47 /* / */) {
-            const divisionToken = stack.parser.nodeSet.types.find((t) => t.name == '/')?.id;
-            if (typeof divisionToken === 'number' && !stack.canShift(divisionToken))
-                input.acceptToken(patternMatchStart);
+            const divisionToken = stack.parser.nodeSet.types.find(
+                (t) => t.name == '/' && t.id !== patternMatchStart
+            )?.id;
+            if (typeof divisionToken !== 'number' || !stack.canShift(divisionToken) || precededByListOperator(input)) {
+                input.acceptToken(patternMatchStart, 1);
+                return;
+            }
         }
 
         if (!(stack.context instanceof Context) || !stack.context.type.endsWith('regex')) return;
@@ -937,3 +965,13 @@ export const pgVariable = (name: string) => {
         ? PGVariable
         : -1;
 };
+
+export const repetition = new ExternalTokenizer((input, stack) => {
+    if (
+        input.next == 120 /* x */ &&
+        isDigit(input.peek(1)) &&
+        stack.canShift(repetitionOperator) &&
+        !precededByListOperator(input)
+    )
+        input.acceptToken(repetitionOperator, 1);
+});
