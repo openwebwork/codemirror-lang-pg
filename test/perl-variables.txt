@@ -381,3 +381,24 @@ Program(
         StatementEnd(";")
     )
 )
+
+# builtin function names as bareword hash keys
+
+$h{split};
+$h->{length};
+@h{split};
+$h{lc $k};
+sub f { shift }
+
+==>
+
+Program(
+    ExpressionStatement(HashAccessVariable(ScalarVariable, "{", Identifier, "}"), StatementEnd(";")),
+    ExpressionStatement(HashAccessVariable(ScalarVariable, ArrowOperator, "{", Identifier, "}"), StatementEnd(";")),
+    ExpressionStatement(HashAccessVariable(ArrayVariable, "{", Identifier, "}"), StatementEnd(";")),
+    ExpressionStatement(
+        HashAccessVariable(ScalarVariable, "{", NamedUnaryExpression(NamedUnaryOperator, ScalarVariable), "}"),
+        StatementEnd(";")
+    ),
+    FunctionDefinition(sub, FunctionName(Identifier), Block("{", ExpressionStatement(ArrayPopOrShift(shift)), "}"))
+)
