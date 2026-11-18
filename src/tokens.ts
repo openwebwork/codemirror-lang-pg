@@ -44,6 +44,7 @@ import {
     tr,
     y,
     Prototype,
+    attributeArgumentsStart,
     Version,
     BeginPG,
     PGMLContent,
@@ -361,6 +362,11 @@ export const unrestrictedIdentifier = new ExternalTokenizer((input, stack) => {
         while (input.next >= 0 && isIdentifierChar(input.next)) input.advance();
         input.acceptToken(UnrestrictedIdentifier);
     }
+});
+
+export const attribute = new ExternalTokenizer((input, stack) => {
+    if (stack.canShift(attributeArgumentsStart) && input.next == 40 /* ( */ && isIdentifierChar(input.peek(-1)))
+        input.acceptToken(attributeArgumentsStart, 0);
 });
 
 // Note that is only to pick up special variables that won't be considered as a ScalarVariable already.

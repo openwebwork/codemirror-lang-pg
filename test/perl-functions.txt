@@ -441,3 +441,43 @@ Program(
         StatementEnd(";")
     )
 )
+
+# function attributes
+
+sub a :lvalue { 1 }
+sub b :lvalue :Args(1) { 1 }
+sub c :prototype($) :lvalue { 1 }
+my $d = sub :lvalue { 1 };
+
+==>
+
+Program(
+    FunctionDefinition(
+        sub,
+        FunctionName(Identifier),
+        FunctionAttribute(":", Identifier),
+        Block("{", ExpressionStatement(Integer), "}")
+    ),
+    FunctionDefinition(
+        sub,
+        FunctionName(Identifier),
+        FunctionAttribute(":", Identifier),
+        FunctionAttribute(":", Identifier, ParenthesizedArguments("(", Integer, ")")),
+        Block("{", ExpressionStatement(Integer), "}")
+    ),
+    FunctionDefinition(
+        sub,
+        FunctionName(Identifier),
+        FunctionPrototypeAttribute(":", prototype, FunctionPrototype("(", Prototype, ")")),
+        FunctionAttribute(":", Identifier),
+        Block("{", ExpressionStatement(Integer), "}")
+    ),
+    ExpressionStatement(
+        Assignment(
+            VariableDeclaration(my, ScalarVariable),
+            "=",
+            AnonymousFunction(sub, FunctionAttribute(":", Identifier), Block("{", ExpressionStatement(Integer), "}"))
+        ),
+        StatementEnd(";")
+    )
+)

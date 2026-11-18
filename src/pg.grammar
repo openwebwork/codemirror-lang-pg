@@ -40,7 +40,6 @@
     list,
     listContents,
     prototype,
-    attribute,
     named,
 
     bareword,
@@ -65,7 +64,11 @@ statement[@isGroup=Statement] {
         (scope)?
         kw<"sub">
         FunctionName { !bareword Identifier }
-        (FunctionPrototype FunctionAttribute* | FunctionAttribute* FunctionPrototypeAttribute FunctionAttribute*)?
+        (
+            FunctionPrototype FunctionAttribute* |
+            FunctionAttribute+ |
+            FunctionAttribute* FunctionPrototypeAttribute FunctionAttribute*
+        )?
         (semicolon | Block)
     } |
     SingleLineStatement { (expression | ReturnExpression) statementModifier semicolon } |
@@ -242,7 +245,7 @@ Constant { !constant Identifier ("::" !packageName (UnrestrictedIdentifier | Ide
 
 FunctionPrototype { !prototype "(" Prototype? ")" }
 FunctionPrototypeAttribute { ":" kw<"prototype"> FunctionPrototype }
-FunctionAttribute { ":" (Identifier (!attribute ParenthesizedArguments)?) }
+FunctionAttribute { ":" Identifier (attributeArgumentsStart ParenthesizedArguments)? }
 
 ParenthesizedArguments { "(" !parens commaSep<expression> ")" }
 Arguments { !noParens commaSep1<expression> }
@@ -317,6 +320,7 @@ AnonymousFunction {
     kw<"sub">
     (
         FunctionPrototype FunctionAttribute* |
+        FunctionAttribute+ |
         FunctionAttribute* FunctionPrototypeAttribute FunctionAttribute*
     )?
     Block
@@ -459,6 +463,7 @@ maybeParens<content> { !noParens content | "(" !parens content ")" }
 @context contextTracker from "./tokens.js"
 @external tokens semicolon from "./tokens" { automaticSemicolon, statementEnd }
 @external tokens unrestrictedIdentifier from "./tokens" { UnrestrictedIdentifier }
+@external tokens attribute from "./tokens" { attributeArgumentsStart }
 @external tokens specialScalarVariable from "./tokens" { SpecialScalarVariable }
 @external tokens builtinOperator from "./tokens" { NamedUnaryOperator, ListOperator, PGOperator }
 @external specialize { ScalarVariable } pgVariable from "./tokens" { PGVariable }
